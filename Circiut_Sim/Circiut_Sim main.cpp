@@ -310,11 +310,6 @@ int main() {
 
 						virSprite[0].setPosition(tempX, tempY);
 					}
-
-					/*Dim while hold*/
-					/*for (int v = 0; v < virSerial.size(); v++) {
-						comp[virSerial[v]].sprite.setColor(tempDimColor);
-					}*/
 				}
 
 			if (Drag) {
