@@ -1,0 +1,5 @@
+sfml-audio.lib
+sfml-graphics.lib
+sfml-network.lib
+sfml-system.lib
+sfml-window.lib
