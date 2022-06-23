@@ -145,12 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Circiut_Sim main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Screen_Classes.h" />
     <ClInclude Include="Screen_Entity.h" />
     <ClInclude Include="Screen_Global.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Circiut_Sim_main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
