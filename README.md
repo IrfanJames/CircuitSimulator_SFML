@@ -1,6 +1,6 @@
 // Hi,
 
-// If you just want to run application -> App
+// If you just want to run application -> App (VS or GCC required)
 
 // Check out my Projects, and enjoy
 
