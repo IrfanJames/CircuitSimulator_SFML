@@ -10,6 +10,7 @@ taskkill /F /IM Circiut_Sim.exe
 using namespace sf;
 using std::cout; using std::to_string; using std::vector;
 
+float trim(float num, int wrt);
 
 int main() {
 
@@ -197,11 +198,12 @@ int main() {
 						MIntool = 0;
 						float tempNewCompX = 150 + view.getCenter().x - W / 2, tempNewCompY = 150 + view.getCenter().y - H / 2;
 						
-						tempNewCompX = tempNewCompX - (int)(tempNewCompX) % gap;
-						tempNewCompY = tempNewCompY - (int)(tempNewCompY) % gap;
-
 						/*Collisions*/
 						for (int c = 0; c < comp.size(); c++) {
+
+							tempNewCompX = trim(tempNewCompX, gap);
+							tempNewCompY = trim(tempNewCompY, gap);
+
 							if (tempNewCompX == comp[c].x) {
 								if (tempNewCompY == comp[c].y) {
 									tempNewCompX += 6 * gap;
@@ -305,8 +307,8 @@ int main() {
 						float tempX = Mouse::getPosition(app).x + view.getCenter().x - W / 2;
 						float tempY = Mouse::getPosition(app).y + view.getCenter().y - H / 2;
 
-						comp[virSerial[c]].x = tempX;
-						comp[virSerial[c]].y = tempY;
+						comp[virSerial[c]].x = trim(tempX, gap);
+						comp[virSerial[c]].y = trim(tempY, gap);
 
 						virSprite[0].setPosition(tempX, tempY);
 					}
@@ -423,4 +425,8 @@ int main() {
 	}
 
 	system("pause");
+}
+
+float trim(float num, int wrt) {
+	return num - (int)num % wrt;
 }

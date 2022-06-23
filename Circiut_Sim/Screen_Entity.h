@@ -21,9 +21,9 @@ public:
 
 	void draw(RenderWindow& app, int Gap) {
 		
-		/*Just On Sqr*/
-		x = x - (int)x % Gap;
-		y = y - (int)y % Gap;
+		/*Just On Sqr
+		//x = trim(x, Gap);
+		//y = trim(y, Gap);*/
 
 		sprite.setPosition(x, y);
 		sprite.setRotation(angle);
