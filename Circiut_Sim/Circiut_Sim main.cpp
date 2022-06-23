@@ -11,13 +11,14 @@ using namespace sf;
 using std::cout; using std::to_string; using std::vector;
 
 float trim(float num, int wrt);
+sf::Vector2f cursorInSim();
+
+//RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
+sf::RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
+sf::View view(sf::Vector2f(W / 2, H / 2), sf::Vector2f(W, H));
 
 int main() {
-
-	RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
-	//RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
 	W = app.getSize().x; H = app.getSize().y;
-	sf::View view(sf::Vector2f(W / 2, H / 2), sf::Vector2f(W, H));
 	app.setVerticalSyncEnabled(1);
 	app.setFramerateLimit(60);
 	srand(time(NULL));
@@ -75,9 +76,9 @@ int main() {
 		compTex[2].loadFromFile("Images/Dod.png");
 		compTex[3].loadFromFile("Images/Ind.png");
 		compTex[4].loadFromFile("Images/Res.png");
-		compTex[5].loadFromFile("Images/SwC.png");
-		compTex[6].loadFromFile("Images/SwO.png");
-		compTex[7].loadFromFile("Images/Vol.png");
+		compTex[5].loadFromFile("Images/SwO.png");
+		compTex[6].loadFromFile("Images/Vol.png");
+		compTex[7].loadFromFile("Images/SwC.png");
 	}
 
 	////////////////////////////////////////////// ToolBox
@@ -90,15 +91,15 @@ int main() {
 	float ToolLilWinRestingPosX = 0, ToolLilWinRestingPosY = 0;
 	ToolBoxLittleBox.setFillColor(sf::Color(160, 160, 160, 120));
 
-	sf::Sprite ToolSpr[8];
-	float ToolSprXY[2][8];
-	for (int c = 0; c < 8; c++) {
+	sf::Sprite ToolSpr[7];
+	sf::Vector2f ToolSprPOS[7];
+	for (int c = 0; c < 7; c++) {
 		ToolSpr[c].setTexture(compTex[c]);
 		ToolSpr[c].setOrigin(compTex[c].getSize().x / 2, 0);
 		//compSpr[c].setRotation(45);
-		ToolSprXY[0][c] = ToolBoxWin.getSize().x / 2;
-		ToolSprXY[1][c] = c * ToolBoxWin.getSize().x + (int)(ToolBoxWin.getSize().x - compTex[c].getSize().y) / 2;
-		ToolSpr[c].setPosition(ToolSprXY[0][c], ToolSprXY[1][c]);
+		ToolSprPOS[c].x = ToolBoxWin.getSize().x / 2;
+		ToolSprPOS[c].y = c * ToolBoxWin.getSize().x + (int)(ToolBoxWin.getSize().x - compTex[c].getSize().y) / 2;
+		ToolSpr[c].setPosition(ToolSprPOS[c].x, ToolSprPOS[c].y);
 	}
 
 	////////////////////////////////////////////// VirutalComps
@@ -108,7 +109,7 @@ int main() {
 	virSprite.reserve(8);
 
 
-
+	int wxyz = 5;
 
 
 
@@ -139,7 +140,7 @@ int main() {
 
 			float t_TollWx = ToolBoxWin.getPosition().x;
 			bool MInTool = !!(0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= t_TollWX);
-			bool MIntool = !!(0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= t_TollWX && Mouse::getPosition(app).y < 8 * t_TollWX);
+			bool MIntool = !!(MInTool && Mouse::getPosition(app).y < 8 * t_TollWX);
 			delComp = 0; rotComp = 0;
 
 
@@ -260,6 +261,7 @@ int main() {
 							viewX = view.getCenter().x, viewY = view.getCenter().y;
 							verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 							horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
+							wxyz = verBrightCount;
 						}
 					}
 				}
@@ -304,8 +306,8 @@ int main() {
 			if (mouseOnCompsBool) {
 					/*Follow Mouse*/
 					for (int c = 0; c < virSerial.size(); c++) {
-						float tempX = Mouse::getPosition(app).x + view.getCenter().x - W / 2;
-						float tempY = Mouse::getPosition(app).y + view.getCenter().y - H / 2;
+						float tempX = cursorInSim().x;
+						float tempY = cursorInSim().y;
 
 						comp[virSerial[c]].x = trim(tempX, gap);
 						comp[virSerial[c]].y = trim(tempY, gap);
@@ -322,61 +324,54 @@ int main() {
 
 					float verBrightX = vLines[verBrightCount].getPosition().x;
 					for (int c = 0; c < vLines.size(); c++) {
-						vLines[c].setPosition(newHorX - (int)newHorX % gap + c * gap, newVerY);
+						vLines[c].setPosition(trim(newHorX, gap) + c * gap, newVerY);
 					}
-
 					float horBrightY = hLines[horBrightCount].getPosition().y;
 					for (int c = 0; c < hLines.size(); c++) {
-						hLines[c].setPosition(newHorX, newVerY - (int)newVerY % gap + c * gap);
+						hLines[c].setPosition(newHorX, trim(newVerY, gap) + c * gap);
 					}
 
 					verBrightX -= vLines[verBrightCount].getPosition().x;
-					if (verBrightX > gap / 2) {
-						verBrightCount--;
-						verBrightCount = (verBrightCount < 1) * (5 + verBrightCount % 5) + (1 <= verBrightCount) * ((verBrightCount - 1) % 5 + 1);
-					}
-					else if (verBrightX < -gap / 2) {
-						verBrightCount++;
-						verBrightCount = (verBrightCount < 1) * (5 + verBrightCount % 5) + (1 <= verBrightCount) * ((verBrightCount - 1) % 5 + 1);
-					}
+					if (verBrightX > gap * 0.9) verBrightCount--; else if (verBrightX < -gap * 0.9) verBrightCount++;
+					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + (int)horX % gap) / gap;
+					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + (-virtualBoarder - trim(horX,gap))) / gap;
+					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + horX - (horX / (float)gap)*gap) / gap;
+					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x + (-virtualBoarder + viewX - W / 2) - verX) / gap);
+					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) - (int)horX / gap) / gap;
+					//cout << "\n" << mouseX - (float)Mouse::getPosition(app).x << ", " << + (-virtualBoarder + viewX - W / 2) - verX << ", " << verBrightCount;
+					
+					verBrightCount = abs((verBrightCount < 1) * (5 + verBrightCount % 5) + (1 <= verBrightCount) * ((verBrightCount - 1) % 5 + 1)) % 6;
+					//cout << "\n" << verBrightCount << "\n";
 					for (int c = 0; c < vLines.size(); c++) {
 						tempColor.a = 20 + ((c + verBrightCount) % 5 == 0) * 15;
 						vLines[c].setFillColor(tempColor);
 					}
 
+
 					horBrightY -= hLines[horBrightCount].getPosition().y;
-					if (horBrightY > gap / 2) {
-						horBrightCount--;
-						horBrightCount = (horBrightCount < 1) * (5 + horBrightCount % 5) + (1 <= horBrightCount) * ((horBrightCount - 1) % 5 + 1);
-					}
-					else if (horBrightY < -gap / 2) {
-						horBrightCount++;
-						horBrightCount = (horBrightCount < 1) * (5 + horBrightCount % 5) + (1 <= horBrightCount) * ((horBrightCount - 1) % 5 + 1);
-					}
+					if (horBrightY > gap * 0.9) horBrightCount--; else if (horBrightY < -gap * 0.9) horBrightCount++;
+					horBrightCount = abs((horBrightCount < 1) * (5 + horBrightCount % 5) + (1 <= horBrightCount) * ((horBrightCount - 1) % 5 + 1)) % 6;
+					//cout << "\n" << horBrightCount << "\n";
 					for (int c = 0; c < hLines.size(); c++) {
 						tempColor.a = 20 + ((c + horBrightCount) % 5 == 0) * 15;
 						hLines[c].setFillColor(tempColor);
 					}
 
-
+					/*Resting Pos of Tool Bar*/
 					ToolBoxWinRestingPosX = newHorX + virtualBoarder; ToolBoxWinRestingPosY = newVerY + virtualBoarder;
 					ToolLilWinRestingPosX = newHorX + virtualBoarder; ToolLilWinRestingPosY = newVerY + virtualBoarder;
-
-					for (int c = 0; c < 8; c++) {
-						ToolSpr[c].setPosition(newHorX + virtualBoarder + ToolSprXY[0][c], newVerY + virtualBoarder + ToolSprXY[1][c]);
-					}
+					for (int c = 0; c < 7; c++) ToolSpr[c].setPosition(newHorX + virtualBoarder + ToolSprPOS[c].x, newVerY + virtualBoarder + ToolSprPOS[c].y);
 
 				}
+
+
 			// ----------------------------------------	Update
 
 			/*Tool Win*/ ToolBoxWin.setPosition((MInTool)* (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolBoxWinRestingPosY);
 
 			/*Tool Sqr*/ t_TollWx = ToolBoxLittleBox.getPosition().x;
-			ToolBoxLittleBox.setPosition((MIntool)* (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolLilWinRestingPosY + Mouse::getPosition(app).y - (int)Mouse::getPosition(app).y % (int)ToolBoxLittleBox.getSize().x);
+			ToolBoxLittleBox.setPosition((MIntool)* (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, (int)ToolBoxLittleBox.getSize().x));
 			if (MIntool) serialToolMouse = (int)(Mouse::getPosition(app).y / ToolBoxLittleBox.getSize().x); else serialToolMouse = 0;
-
-
-
 			
 			// ----------------------------------------	Draw
 			{
@@ -399,13 +394,14 @@ int main() {
 					//for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
 					/*Tool Win*/ {
-						if (0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= t_TollWX) {
+						if (MInTool) {
 							app.draw(ToolBoxWin);
-							for (int c = 0; c < 8; c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
-							for (int c = 0; c < 8; c++) { app.draw(ToolSpr[c]); }
-							if (Mouse::getPosition(app).y < 8 * ToolBoxLittleBox.getSize().x) app.draw(ToolBoxLittleBox);
+							for (int c = 0; c < 7; c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
+							for (int c = 0; c < 7; c++) { app.draw(ToolSpr[c]); }
 						}
-						else { for (int c = 0; c < 8; c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); } }
+						else { for (int c = 0; c < 7; c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); } }
+						
+						if (MIntool) app.draw(ToolBoxLittleBox);
 					}
 
 					app.display();
@@ -429,4 +425,8 @@ int main() {
 
 float trim(float num, int wrt) {
 	return num - (int)num % wrt;
+}
+
+sf::Vector2f cursorInSim() {
+	return sf::Vector2f(Mouse::getPosition(app).x + view.getCenter().x - W / 2, Mouse::getPosition(app).y + view.getCenter().y - H / 2);
 }
