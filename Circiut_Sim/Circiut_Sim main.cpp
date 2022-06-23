@@ -140,7 +140,7 @@ int main() {
 
 			float t_TollWx = ToolBoxWin.getPosition().x;
 			bool MInTool = !!(0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= t_TollWX);
-			bool MIntool = !!(MInTool && Mouse::getPosition(app).y < 8 * t_TollWX);
+			bool MIntool = !!(MInTool && Mouse::getPosition(app).y < 7 * t_TollWX);
 			delComp = 0; rotComp = 0;
 
 
@@ -162,11 +162,11 @@ int main() {
 					if (evnt.key.code == Keyboard::P) { printScreen = 1; }
 					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; cout << "\ndebug\n"; }
 
-					int difr = 10;
+					/*int difr = 10;
 					if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
 					if (evnt.key.code == Keyboard::Down) { view.setCenter(view.getCenter().x, view.getCenter().y + difr); }
 					if (evnt.key.code == Keyboard::Right) { view.setCenter(view.getCenter().x + difr, view.getCenter().y); }
-					if (evnt.key.code == Keyboard::Left) { view.setCenter(view.getCenter().x - difr, view.getCenter().y); }
+					if (evnt.key.code == Keyboard::Left) { view.setCenter(view.getCenter().x - difr, view.getCenter().y); }*/
 
 					if (evnt.key.code == Keyboard::Delete) { delComp = 1; }
 
@@ -304,17 +304,24 @@ int main() {
 
 			/*Continoue while hold*/
 			if (mouseOnCompsBool) {
-					/*Follow Mouse*/
-					for (int c = 0; c < virSerial.size(); c++) {
-						float tempX = cursorInSim().x;
-						float tempY = cursorInSim().y;
+				/*Follow Mouse*/
+				int tempRotArr[4][2] = {
+					{0, -2},
+					{2, 0},
+					{0, 2},
+					{-2, 0}
+				};
+				for (int c = 0; c < virSerial.size(); c++) {
 
-						comp[virSerial[c]].x = trim(tempX, gap);
-						comp[virSerial[c]].y = trim(tempY, gap);
+					float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0];
+					float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1];
 
-						virSprite[0].setPosition(tempX, tempY);
-					}
+					comp[virSerial[c]].x = trim(tempX, gap);
+					comp[virSerial[c]].y = trim(tempY, gap);
+
+					virSprite[0].setPosition(tempX, tempY);
 				}
+			}
 
 			if (Drag) {
 					view.setCenter(sf::Vector2f(viewX + mouseX - (float)Mouse::getPosition(app).x, viewY + mouseY - (float)Mouse::getPosition(app).y));
