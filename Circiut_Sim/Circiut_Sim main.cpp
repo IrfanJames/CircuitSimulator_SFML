@@ -29,7 +29,7 @@ int main() {
 
 	bool releaseBool = 1;
 
-	bool Drag = 0, mouseOnCompsBool = 0;
+	bool Click = 0, Drag = 0, mouseOnCompsBool = 0;
 	bool onceOptComp = 0, delComp = 0, rotComp = 0;
 
 	int serialCompMouse = 0, serialToolMouse = 0;
@@ -70,7 +70,7 @@ int main() {
 	}
 
 	////////////////////////////////////////////// Tool Textures
-	sf::Texture compTex[8]; {
+	{
 		compTex[0].loadFromFile("Images/Cap.png");
 		compTex[1].loadFromFile("Images/Cur.png");
 		compTex[2].loadFromFile("Images/Dod.png");
@@ -159,7 +159,7 @@ int main() {
 					if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; goto END; }
 					if (evnt.key.code == Keyboard::Space) { Pause = !Pause; cout << "\n------------------   Pause   -----------------\n"; }
 					//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
-					if (evnt.key.code == Keyboard::P) { printScreen = 1; }
+					//if (evnt.key.code == Keyboard::P) { printScreen = 1; }
 					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; cout << "\ndebug\n"; }
 
 					/*int difr = 10;
@@ -193,6 +193,7 @@ int main() {
 			if (Mouse::isButtonPressed(Mouse::Left)) {
 				if (releaseBool) {
 					releaseBool = 0;
+					mouseX = (float)Mouse::getPosition(app).x; mouseY = (float)Mouse::getPosition(app).y;
 
 					/*new Comp*/
 					if (MIntool) {
@@ -214,7 +215,7 @@ int main() {
 							}
 						}
 						
-						comp.emplace_back(&compTex[serialToolMouse], tempNewCompX, tempNewCompY, 0);
+						comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
 					}
 					else {
 						mouseOnCompsBool = 0;
@@ -238,7 +239,6 @@ int main() {
 							}
 
 							if ((tempCompX - A < -W / 2 + view.getCenter().x + Mouse::getPosition(app).x) && (-W / 2 + view.getCenter().x + Mouse::getPosition(app).x < tempCompX + B)) {
-
 								if ((tempCompY - C < -H / 2 + view.getCenter().y + Mouse::getPosition(app).y) && (-H / 2 + view.getCenter().y + Mouse::getPosition(app).y < tempCompY + D)) {
 									virSerial.emplace_back(c);
 
@@ -257,7 +257,6 @@ int main() {
 						/*Drag Background*/
 						if (!mouseOnCompsBool) {
 							Drag = 1; mouseOnCompsBool = 0;
-							mouseX = (float)Mouse::getPosition(app).x; mouseY = (float)Mouse::getPosition(app).y;
 							viewX = view.getCenter().x, viewY = view.getCenter().y;
 							verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 							horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
@@ -290,6 +289,15 @@ int main() {
 			}
 			else {
 				Drag = 0; mouseOnCompsBool = 0;
+				/*Click*/
+				if (mouseX == (float)Mouse::getPosition(app).x && mouseY == (float)Mouse::getPosition(app).y) {
+					for (int v = 0; v < virSerial.size(); v++) {
+						int tempCompClick = comp[virSerial[v]].serial;
+						comp[virSerial[v]].serial = (tempCompClick == 5) * 7 + (tempCompClick == 7) * 5 + (tempCompClick != 5 && tempCompClick != 7) * (tempCompClick);
+						comp[virSerial[v]].sprite.setTexture(compTex[comp[virSerial[v]].serial]);
+					}
+				}
+
 				virSprite.clear();
 
 				/*Recolor back to normal    & clear serials*/
@@ -302,8 +310,12 @@ int main() {
 				}
 			}
 
+
+
+			
+
 			/*Continoue while hold*/
-			if (mouseOnCompsBool) {
+			if (mouseOnCompsBool && (mouseX != (float)Mouse::getPosition(app).x || mouseY != (float)Mouse::getPosition(app).y)) {
 				/*Follow Mouse*/
 				int tempRotArr[4][2] = {
 					{0, -2},
