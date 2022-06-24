@@ -3,6 +3,8 @@
 taskkill /F /IM Circiut_Sim.exe
 */
 
+#include "imgui.h"
+#include "imgui-SFML.h"
 #include <iostream>
 #include <vector>
 #include "Screen_Classes.h"
@@ -24,10 +26,15 @@ vector<Entity> comp;
 bool Occupied = 0;
 
 int main() {
+
+	ImGui::SFML::Init(app);//
+	sf::Clock deltaClock;//
+
 	W = app.getSize().x; H = app.getSize().y;
 	app.setVerticalSyncEnabled(1);
 	app.setFramerateLimit(60);
 	srand(time(NULL));
+
 
 	time_t frame = clock();
 	bool End = 0, Pause = 0, printScreen = 0;
@@ -45,6 +52,18 @@ int main() {
 	///////////////////////////////////////////////
 
 	/*Rayn*/ //Texture t; t.loadFromFile("Images/0 Rayn.png"); Sprite Rayn(t), Rayn2(t); Rayn.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn2.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn.setPosition(app.getSize().x / 2, app.getSize().y / 2); Rayn2.setPosition(app.getSize().x + 10, app.getSize().y + 10);
+
+	bool DrawCircle = 1;
+	float t_radius = 60, t_Colors[3] = { (float)204 / 255, (float)77 / 255, (float)5 / 255 };
+	int t_vertices = 34;
+	sf::CircleShape testCircle(t_radius, t_vertices);
+	testCircle.setOrigin(t_radius, t_radius);
+	testCircle.setPosition(W / 2, H / 2);
+	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));
+
+
+
+
 
 	////////////////////////////////////////////// Grid
 	int gap = 15, virtualBoarder = 80;
@@ -141,6 +160,9 @@ int main() {
 
 			Event evnt;
 			while (app.pollEvent(evnt)) {
+
+				ImGui::SFML::ProcessEvent(evnt);
+
 				if (evnt.type == evnt.Closed) {
 					app.close();
 					End = 1;
@@ -283,11 +305,10 @@ int main() {
 				virSprite.clear();
 
 				/*Recolor back to normal    & clear serials*/
-				if (comp.size() != 0 && virSerial.size() != 0) {
-					for (int v = 0; v < virSerial.size(); v++) {
+				if (virSerial.size() != 0) {
+					for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
 						comp[virSerial[v]].sprite.setColor(normalCompColor);
 					}
-
 					virSerial.clear();
 				}
 			}
@@ -384,6 +405,24 @@ int main() {
 
 			// ----------------------------------------	Update
 
+			/*ImGui*/
+			ImGui::SFML::Update(app, deltaClock.restart());//
+			ImGui::Begin("Frist ImGui Win");
+			ImGui::Text("My Project will be on Steroids");
+			ImGui::Checkbox("Draw Circle", &DrawCircle);
+			ImGui::SliderFloat("Radius", &t_radius, 0, 200);
+			ImGui::SliderInt("Sides", &t_vertices, 3, 35);
+			ImGui::ColorEdit3("Color", t_Colors);
+			ImGui::End();
+
+
+
+			testCircle.setRadius(t_radius);
+			testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
+			testCircle.setPointCount(t_vertices);
+			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));
+
+
 			/*Tool Win*/ ToolBoxWin.setPosition((MInTool)* (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolBoxWinRestingPosY);
 
 			/*Tool Sqr*/ t_TollWx = ToolBoxLittleBox.getPosition().x;
@@ -410,6 +449,8 @@ int main() {
 
 					if(Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
+					if(DrawCircle) app.draw(testCircle);
+
 					/*Tool Win*/ {
 						if (MInTool) {
 							app.draw(ToolBoxWin);
@@ -420,6 +461,10 @@ int main() {
 						
 						if (MIntool) app.draw(ToolBoxLittleBox);
 					}
+
+
+					/*ImGui*/
+					ImGui::SFML::Render(app);//Last Thing to render
 
 					app.display();
 				}
@@ -437,7 +482,9 @@ int main() {
 		Pause = 0; printScreen = 0;
 	}
 
+	ImGui::SFML::Shutdown();
 	system("pause");
+	return 0;
 }
 
 float trim(float num, int wrt) {
