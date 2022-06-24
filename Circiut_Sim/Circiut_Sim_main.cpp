@@ -553,7 +553,7 @@ void getBounds(Entity Comp, int arr[4]) {
 	float tempCompX = Comp.x, tempCompY = Comp.y;
 
 	/*Dealing with Origin*/
-	int a = 30, b = 7, d = 45;
+	int a = 0, b = 15, d = 75;
 	int A = 15, B = 15, C = 0, D = 75, i = Comp.angle;
 	i %= 360;
 	if ((i / 90) % 2 == 0) {
