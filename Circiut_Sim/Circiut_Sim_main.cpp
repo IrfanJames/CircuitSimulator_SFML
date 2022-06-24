@@ -215,19 +215,23 @@ int main() {
 					if (MIntool) {
 						MIntool = 0;
 						float tempNewCompX = 150 + view.getCenter().x - W / 2, tempNewCompY = 150 + view.getCenter().y - H / 2;
+						tempNewCompX = trim(tempNewCompX, gap);
 						tempNewCompY = trim(tempNewCompY, gap);
+
+						comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
 
 						/*Collisions*/
 						tempNewCompX = trim(tempNewCompX, gap);
-						while (occupiedAt(comp.size(), sf::Vector2f(tempNewCompX, tempNewCompY))) /*Index has to be of the one call func*/ {
+						while (occupiedAt(comp.size() - 1, sf::Vector2f(tempNewCompX, tempNewCompY))) {
 							tempNewCompX = trim(tempNewCompX + 6 * gap, gap);
-							
+
 							if (tempNewCompX + 7 * gap - 150 - view.getCenter().x + W / 2 + 91 >= W) {
 								tempNewCompX = 150 + view.getCenter().x - W / 2;
 								tempNewCompY = trim(tempNewCompY + 6 * gap, gap);
 							}
 						}
-						comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
+
+						comp.back().x = tempNewCompX; comp.back().y = tempNewCompY;
 					}
 					else {
 						mouseOnCompsBool = 0;
@@ -303,14 +307,15 @@ int main() {
 				}
 
 				virSprite.clear();
+				virSerial.clear();
 
-				/*Recolor back to normal    & clear serials*/
+				/*ZZzzzz Recolor back to normal    & clear serials
 				if (virSerial.size() != 0) {
 					for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
+						cout << "\nChanging" << virSerial[v];
 						comp[virSerial[v]].sprite.setColor(normalCompColor);
 					}
-					virSerial.clear();
-				}
+				}*/
 			}
 
 
@@ -496,15 +501,17 @@ sf::Vector2f cursorInSim() {
 }
 
 bool occupiedAt(int Index, sf::Vector2f At) {
-
-	/*for (int c = 0; c < comp.size(); c++) {
+	for (int c = 0; c < comp.size(); c++) {
 		if (c == Index) continue;
-		if (At.x == comp[c].x) {
-			if (At.y == comp[c].y) {
+		
+		if (At.x == comp[c].x && At.y == comp[c].y) {
+			if (comp[Index].angle != comp[c].angle) {
+				Occupied = 0; return 0;
+			}else {
 				Occupied = 1; return 1;
 			}
 		}
-	}*/
+	}
 
 
 	int TempArr[4] = { 0,0,0,0 };
