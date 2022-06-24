@@ -1,0 +1,18 @@
+New:
+ImGui
+
+Stable:
+Procedual Background Grid
+Rotation, hold, Drag(smooth)
+New Items at different places
+
+Unstable:
+Delete
+Seudo-Static Elements when window resized
+
+Issues:
+Collisions while creating new components
+Collisions while hold
+
+No:
+Project in ImGui window
