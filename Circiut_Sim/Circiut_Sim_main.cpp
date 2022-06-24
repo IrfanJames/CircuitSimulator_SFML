@@ -3,8 +3,8 @@
 taskkill /F /IM Circiut_Sim.exe
 */
 
-#include "imgui.h"
-#include "imgui-SFML.h"
+//#include "imgui.h"
+//#include "imgui-SFML.h"
 #include <iostream>
 #include <vector>
 #include "Screen_Classes.h"
@@ -27,8 +27,8 @@ bool Occupied = 0;
 
 int main() {
 
-	ImGui::SFML::Init(app);//
-	sf::Clock deltaClock;//
+	//ImGui::SFML::Init(app);//
+	//sf::Clock deltaClock;//
 
 	W = app.getSize().x; H = app.getSize().y;
 	app.setVerticalSyncEnabled(1);
@@ -53,17 +53,13 @@ int main() {
 
 	/*Rayn*/ //Texture t; t.loadFromFile("Images/0 Rayn.png"); Sprite Rayn(t), Rayn2(t); Rayn.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn2.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn.setPosition(app.getSize().x / 2, app.getSize().y / 2); Rayn2.setPosition(app.getSize().x + 10, app.getSize().y + 10);
 
-	bool DrawCircle = 1;
+	/*bool DrawCircle = 1;
 	float t_radius = 60, t_Colors[3] = { (float)204 / 255, (float)77 / 255, (float)5 / 255 };
 	int t_vertices = 34;
 	sf::CircleShape testCircle(t_radius, t_vertices);
 	testCircle.setOrigin(t_radius, t_radius);
 	testCircle.setPosition(W / 2, H / 2);
-	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));
-
-
-
-
+	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
 
 	////////////////////////////////////////////// Grid
 	int gap = 15, virtualBoarder = 80;
@@ -161,7 +157,7 @@ int main() {
 			Event evnt;
 			while (app.pollEvent(evnt)) {
 
-				ImGui::SFML::ProcessEvent(evnt);
+				//ImGui::SFML::ProcessEvent(evnt);
 
 				if (evnt.type == evnt.Closed) {
 					app.close();
@@ -411,7 +407,7 @@ int main() {
 			// ----------------------------------------	Update
 
 			/*ImGui*/
-			ImGui::SFML::Update(app, deltaClock.restart());//
+			/*ImGui::SFML::Update(app, deltaClock.restart());//
 			ImGui::Begin("Frist ImGui Win");
 			ImGui::Text("My Project will be on Steroids");
 			ImGui::Checkbox("Draw Circle", &DrawCircle);
@@ -425,7 +421,7 @@ int main() {
 			testCircle.setRadius(t_radius);
 			testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
 			testCircle.setPointCount(t_vertices);
-			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));
+			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
 
 
 			/*Tool Win*/ ToolBoxWin.setPosition((MInTool)* (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolBoxWinRestingPosY);
@@ -454,7 +450,7 @@ int main() {
 
 					if(Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
-					if(DrawCircle) app.draw(testCircle);
+					//if(DrawCircle) app.draw(testCircle);
 
 					/*Tool Win*/ {
 						if (MInTool) {
@@ -469,7 +465,7 @@ int main() {
 
 
 					/*ImGui*/
-					ImGui::SFML::Render(app);//Last Thing to render
+					//ImGui::SFML::Render(app);//Last Thing to render
 
 					app.display();
 				}
@@ -487,7 +483,7 @@ int main() {
 		Pause = 0; printScreen = 0;
 	}
 
-	ImGui::SFML::Shutdown();
+	//ImGui::SFML::Shutdown();
 	system("pause");
 	return 0;
 }
@@ -503,23 +499,28 @@ sf::Vector2f cursorInSim() {
 bool occupiedAt(int Index, sf::Vector2f At) {
 	for (int c = 0; c < comp.size(); c++) {
 		if (c == Index) continue;
-		
+
 		if (At.x == comp[c].x && At.y == comp[c].y) {
 			if (comp[Index].angle != comp[c].angle) {
 				Occupied = 0; return 0;
-			}else {
+			}
+			else {
 				Occupied = 1; return 1;
 			}
 		}
-	}
+		if (At.x == comp[c].x - 75 * (int)sin(comp[c].angle * DegToRad) && At.y == comp[c].y + 75 * (int)cos(comp[c].angle * DegToRad)) {
+			if (abs(comp[Index].angle - comp[c].angle) != 180) {
+				Occupied = 0; return 0;
+			}
+			else {
+				Occupied = 1; return 1;
+			}
+		}
 
 
-	int TempArr[4] = { 0,0,0,0 };
-	for (int c = 0; c < comp.size(); c++) {
-		if (c == Index) continue;
 
+		int TempArr[4] = { 0,0,0,0 };
 		float tempCompX = comp[c].x, tempCompY = comp[c].y;
-
 		getBounds(comp[c], TempArr);
 
 		if ((tempCompX - TempArr[0] < At.x) && (At.x < tempCompX + TempArr[1])) {
