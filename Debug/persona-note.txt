@@ -1,5 +1,6 @@
 New:
-Collisions include both nodes
+Collision detection optimized
+Improved Click
 ImGui
 
 Stable:

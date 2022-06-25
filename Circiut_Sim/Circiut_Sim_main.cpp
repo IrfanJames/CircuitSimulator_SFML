@@ -294,7 +294,7 @@ int main() {
 			else {
 				Drag = 0; mouseOnCompsBool = 0;
 				/*Click*/
-				if (mouseX == (float)Mouse::getPosition(app).x && mouseY == (float)Mouse::getPosition(app).y) {
+				if (abs(mouseX - (float)Mouse::getPosition(app).x) <= gap && abs(mouseY - (float)Mouse::getPosition(app).y) <= gap) {
 					for (int v = 0; v < virSerial.size(); v++) {
 						int tempCompClick = comp[virSerial[v]].serial;
 						comp[virSerial[v]].serial = (tempCompClick == 5) * 7 + (tempCompClick == 7) * 5 + (tempCompClick != 5 && tempCompClick != 7) * (tempCompClick);
@@ -325,12 +325,6 @@ int main() {
 					{0, 2},
 					{-2, 0}
 				};
-				/*tempRotArr[4][2] = {
-					{0, 0},
-					{0, 0},
-					{0, 0},
-					{0, 0}
-				};*/
 				for (int c = 0; c < virSerial.size(); c++) {
 
 					float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0];
@@ -498,8 +492,7 @@ sf::Vector2f cursorInSim() {
 
 bool occupiedAt(int Index, sf::Vector2f At) {
 	for (int c = 0; c < comp.size(); c++) {
-		if (c == Index) continue;
-
+		if (c == Index || abs(comp[c].x - At.x) >= 100 || abs(comp[c].y - At.y) >= 100) continue;
 		if (At.x == comp[c].x && At.y == comp[c].y) {
 			if (comp[Index].angle != comp[c].angle) {
 				Occupied = 0; return 0;
@@ -517,7 +510,10 @@ bool occupiedAt(int Index, sf::Vector2f At) {
 			}
 		}
 
+	}
 
+	for (int c = 0; c < comp.size(); c++) {
+		if (c == Index || abs(comp[c].x - At.x) >= 100 || abs(comp[c].y - At.y) >= 100) continue;
 
 		int TempArr[4] = { 0,0,0,0 };
 		float tempCompX = comp[c].x, tempCompY = comp[c].y;
@@ -528,6 +524,7 @@ bool occupiedAt(int Index, sf::Vector2f At) {
 				Occupied = 1; return 1;
 			}
 		}
+
 	}
 
 	Occupied = 0;
