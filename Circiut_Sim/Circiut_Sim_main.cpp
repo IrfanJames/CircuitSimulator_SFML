@@ -129,6 +129,13 @@ int main() {
 	virSerial.reserve(8);
 	virSprite.reserve(8);
 
+	sf::RectangleShape selSqr;
+	sf::Vector2f selSqrInital;
+	selSqr.setFillColor(sf::Color(0, 0, 0,0));
+	selSqr.setOutlineThickness(1.0f);
+	selSqr.setOutlineColor(sf::Color(255, 0, 255));
+
+
 	////////////////////////////////////////////// Tool
 	
 	comp.reserve(8);
@@ -137,7 +144,7 @@ int main() {
 	///////////////////////////////////////////////
 	while (!End) {
 
-		float mouseX = Mouse::getPosition(app).x, mouseY = Mouse::getPosition(app).y;
+		float mouseHoldX = Mouse::getPosition(app).x, mouseHoldY = Mouse::getPosition(app).y;
 		float viewX = view.getCenter().x, viewY = view.getCenter().y;
 		float verX = vLines[0].getPosition().x, verY = vLines[0].getPosition().y;
 		float horX = hLines[0].getPosition().x, horY = hLines[0].getPosition().y;
@@ -201,11 +208,11 @@ int main() {
 
 
 			// ----------------------------------------	Options
-
+			/*Mouse Hold*/
 			if (Mouse::isButtonPressed(Mouse::Left)) {
 				if (releaseBool) {
 					releaseBool = 0;
-					mouseX = (float)Mouse::getPosition(app).x; mouseY = (float)Mouse::getPosition(app).y;
+					mouseHoldX = (float)Mouse::getPosition(app).x; mouseHoldY = (float)Mouse::getPosition(app).y;
 
 					/*new Comp*/
 					if (MIntool) {
@@ -258,8 +265,11 @@ int main() {
 							}
 						}
 
+						//////////// Urgent need of enums , State Machine
+						if (!mouseOnCompsBool && selectSquare) { selSqrInital = cursorInSim(); }
+
 						/*Drag Background*/
-						if (!mouseOnCompsBool) {
+						if (!mouseOnCompsBool && !selectSquare) {
 							Drag = 1; mouseOnCompsBool = 0;
 							viewX = view.getCenter().x, viewY = view.getCenter().y;
 							verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
@@ -294,7 +304,7 @@ int main() {
 			else {
 				Drag = 0; mouseOnCompsBool = 0;
 				/*Click*/
-				if (abs(mouseX - (float)Mouse::getPosition(app).x) <= gap && abs(mouseY - (float)Mouse::getPosition(app).y) <= gap) {
+				if (abs(mouseHoldX - (float)Mouse::getPosition(app).x) <= gap && abs(mouseHoldY - (float)Mouse::getPosition(app).y) <= gap) {
 					for (int v = 0; v < virSerial.size(); v++) {
 						int tempCompClick = comp[virSerial[v]].serial;
 						comp[virSerial[v]].serial = (tempCompClick == 5) * 7 + (tempCompClick == 7) * 5 + (tempCompClick != 5 && tempCompClick != 7) * (tempCompClick);
@@ -317,7 +327,7 @@ int main() {
 
 
 			/*Continoue while hold*/
-			if (mouseOnCompsBool && (mouseX != (float)Mouse::getPosition(app).x || mouseY != (float)Mouse::getPosition(app).y)) {
+			if (mouseOnCompsBool && (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y)) {
 				/*Follow Mouse*/
 				int tempRotArr[4][2] = {
 					{0, -2},
@@ -343,16 +353,36 @@ int main() {
 			}
 
 			/*Select Sqr*/
-			if (selectSquare) {
+			if (selectSquare && !releaseBool) {
+
+				/*Sel Sqr*/
+				selSqr.setPosition(selSqrInital.x, selSqrInital.y);
+				selSqr.setSize(sf::Vector2f(cursorInSim().x - selSqrInital.x, cursorInSim().y - selSqrInital.y));
+
+				/*Selection*/
 				for (int c = 0; c < comp.size(); c++) {
-					;
+
+					bool compFound = 0;
+					int v = 0;
+					for (; v < virSerial.size(); v++) {
+						if (c == virSerial[v]) { compFound = 1; break; }
+					};
+
+					if (compIn(comp[c], selSqrInital, cursorInSim())) {
+						if (!compFound) virSerial.emplace_back(c);
+					}
+					else {
+						if (compFound) virSerial.erase(virSerial.begin() + v);
+					}
 				}
 			}
 
+			cout << "\n" << virSerial.size();
+
 			if (Drag) {
-					view.setCenter(sf::Vector2f(viewX + mouseX - (float)Mouse::getPosition(app).x, viewY + mouseY - (float)Mouse::getPosition(app).y));
-					float newVerY = verY + mouseY - (float)Mouse::getPosition(app).y;
-					float newHorX = horX + mouseX - (float)Mouse::getPosition(app).x;
+					view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)Mouse::getPosition(app).x, viewY + mouseHoldY - (float)Mouse::getPosition(app).y));
+					float newVerY = verY + mouseHoldY - (float)Mouse::getPosition(app).y;
+					float newHorX = horX + mouseHoldX - (float)Mouse::getPosition(app).x;
 
 
 					float verBrightX = vLines[verBrightCount].getPosition().x;
@@ -446,6 +476,10 @@ int main() {
 
 					//if(DrawCircle) app.draw(testCircle);
 
+					selectSquare = debugBool;
+
+					if (selectSquare && !releaseBool)app.draw(selSqr);
+
 					/*Tool Win*/ {
 						if (MInTool) {
 							app.draw(ToolBoxWin);
@@ -536,9 +570,12 @@ bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
 	float tempCompX = Comp.x, tempCompY = Comp.y;
 	int bounds[4];
 	getBounds(Comp, bounds);
+	float A = 0, B = 0, C = 0, D = 0;
+	if (Ini.x <= Fin.x) { A = Ini.x; B = Fin.x; } else { B = Ini.x; A = Fin.x; }
+	if (Ini.y <= Fin.y) { C = Ini.y; D = Fin.y; } else { D = Ini.y; C = Fin.y; }
 	
-	if ((Ini.x <= tempCompX - bounds[0]) && (tempCompX + bounds[1] <= Fin.x)) {
-		if ((Ini.y <= tempCompY - bounds[2]) && (tempCompY + bounds[3] <= Fin.y)) {
+	if ((A <= tempCompX - bounds[0]) && (tempCompX + bounds[1] <= B)) {
+		if ((C <= tempCompY - bounds[2]) && (tempCompY + bounds[3] <= D)) {
 			return 1;
 		}
 	}

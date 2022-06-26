@@ -1,13 +1,12 @@
 New:
-Collision detection optimized
-Improved Click
-ImGui
+Selection
 
 Stable:
-Collisions include both nodes
 Procedual Background Grid
+Collisions include both nodes
 Rotation, hold, Drag(smooth)
 New Items at different places
+Selection
 
 Unstable:
 Seudo-Static Elements when window resized
@@ -15,5 +14,7 @@ Seudo-Static Elements when window resized
 Issues:
 
 No:
+Nothing after Selection
 Project in ImGui window
 Threads
+enum (State Machine for hold)
