@@ -1,5 +1,5 @@
 New:
-Selection
+Save as Image(PNG)
 
 Stable:
 Procedual Background Grid
@@ -7,6 +7,7 @@ Collisions include both nodes
 Rotation, hold, Drag(smooth)
 New Items at different places
 Selection
+Save as Image(PNG)
 
 Unstable:
 Seudo-Static Elements when window resized
@@ -14,6 +15,7 @@ Seudo-Static Elements when window resized
 Issues:
 
 No:
+Saves as same name
 Nothing after Selection
 Project in ImGui window
 Threads

@@ -6,7 +6,9 @@
 
 3. (Hold component) then Del       -> Delete
 
-4. Esc   Escape
+4. P	PrintScreen; Save as Image(PNG)
+
+5. Esc   Escape
 
 Enjoy!
 

@@ -13,6 +13,7 @@ using namespace sf;
 using std::cout; using std::to_string; using std::vector;
 
 float trim(float num, int wrt);
+sf::Vector2f endNodePos(Entity Comp);
 sf::Vector2f cursorInSim();
 bool occupiedAt(int Index, sf::Vector2f At);
 bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin);
@@ -141,6 +142,7 @@ int main() {
 	comp.reserve(8);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
+
 	///////////////////////////////////////////////
 	while (!End) {
 
@@ -178,8 +180,8 @@ int main() {
 					if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; goto END; }
 					if (evnt.key.code == Keyboard::Space) { Pause = !Pause; cout << "\n------------------   Pause   -----------------\n"; }
 					//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
-					//if (evnt.key.code == Keyboard::P) { printScreen = 1; }
-					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; cout << "\ndebug\n"; }
+					if (evnt.key.code == Keyboard::P) { printScreen = 1; }
+					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
 
 					/*int difr = 10;
 					if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
@@ -267,7 +269,7 @@ int main() {
 
 						//////////// Urgent need of enums , State Machine
 						if (!mouseOnCompsBool && selectSquare) { selSqrInital = cursorInSim(); }
-
+						
 						/*Drag Background*/
 						if (!mouseOnCompsBool && !selectSquare) {
 							Drag = 1; mouseOnCompsBool = 0;
@@ -279,7 +281,10 @@ int main() {
 					}
 				}
 				
+				if (virSerial.size() > 0) mouseOnCompsBool = 1;
+
 				/*Once while hold*/
+				//cout << "\n" << mouseOnCompsBool << " " << rotComp;
 				if (mouseOnCompsBool && rotComp) {
 					if (onceOptComp) {
 						for (int v = 0; v < virSerial.size(); v++) {
@@ -293,6 +298,8 @@ int main() {
 					if (onceOptComp) {
 						for (int v = 0; v < virSerial.size(); v++) {
 							if (comp.size() > 0) comp.erase(comp.begin() + virSerial[v]);
+							if (virSerial.size() > 0) virSerial.erase(virSerial.begin() + v);
+							if (virSprite.size() > 0) virSprite.erase(virSprite.begin() + v);
 						}
 
 					}
@@ -310,18 +317,19 @@ int main() {
 						comp[virSerial[v]].serial = (tempCompClick == 5) * 7 + (tempCompClick == 7) * 5 + (tempCompClick != 5 && tempCompClick != 7) * (tempCompClick);
 						comp[virSerial[v]].sprite.setTexture(compTex[comp[virSerial[v]].serial]);
 					}
+
 				}
 
-				virSprite.clear();
-				virSerial.clear();
+				virSprite.clear();  /////
+				virSerial.clear();  /////
 
-				/*ZZzzzz Recolor back to normal    & clear serials
-				if (virSerial.size() != 0) {
-					for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
-						cout << "\nChanging" << virSerial[v];
-						comp[virSerial[v]].sprite.setColor(normalCompColor);
-					}
-				}*/
+			/*ZZzzzz Recolor back to normal    & clear serials
+			if (virSerial.size() != 0) {
+				for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
+					cout << "\nChanging" << virSerial[v];
+					comp[virSerial[v]].sprite.setColor(normalCompColor);
+				}
+			}*/
 			}
 
 
@@ -337,9 +345,9 @@ int main() {
 				};
 				for (int c = 0; c < virSerial.size(); c++) {
 
-					float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0];
-					float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1];
-					virSprite[0].setPosition(tempX, tempY);
+					float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
+					float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
+					for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
 
 					tempX = trim(tempX, gap);
 					tempY = trim(tempY, gap);
@@ -377,7 +385,104 @@ int main() {
 				}
 			}
 
-			cout << "\n" << virSerial.size();
+			//cout << "\n" << virSerial.size() << " " << virSprite.size();
+
+			/*PrintScreen*/
+			if (printScreen) {
+				printScreen = 0;
+				sf::Image OutputImage;
+				int compArr[4];
+				int A = 0, B = 0, C = 0, D = 0;
+
+				if (comp.size() != 0) {
+					getBounds(comp[0], compArr);
+					A = comp[0].x - compArr[0], B = comp[0].x + compArr[1], C = comp[0].y - compArr[2], D = comp[0].y + compArr[3]; // Borders
+
+					for (int c = 0; c < comp.size(); c++) {
+						getBounds(comp[c], compArr);
+						if (comp[c].x - compArr[0] <= A) A = comp[c].x - compArr[0];
+						if (comp[c].x + compArr[1] >= B) B = comp[c].x + compArr[1];
+						if (comp[c].y - compArr[2] <= C) C = comp[c].y - compArr[2];
+						if (comp[c].y + compArr[3] >= D) D = comp[c].y + compArr[3];
+					}
+					/*for (int c = 0; c < comp.size(); c++) {
+						sf::Vector2f tempEndNode = endNodePos(comp[c]);
+						if (tempEndNode.x < A) A = tempEndNode.x;
+						if (tempEndNode.x > B) B = tempEndNode.x;
+						if (tempEndNode.y < C) C = tempEndNode.y;
+						if (tempEndNode.y > D) D = tempEndNode.y;
+					}*/
+					OutputImage.create(abs(A - B) + 30, abs(C - D) + 30);
+					//cout << "\n" << "S: " << abs(A - B) << ", " << abs(C - D);
+					//cout << "\n" << A << ", " << B << ", " << C << ", " << D;
+				}
+				else { OutputImage.create(10, 10); }
+
+				//cout << "\n" << "S: " << OutputImage.getSize().x << ", " << OutputImage.getSize().y;
+
+				for (int c = 0; c < comp.size(); c++) {
+					sf::Vector2f tempEndNode = endNodePos(comp[c]);
+					getBounds(comp[c], compArr);
+
+					sf::Image tempCompImg;
+					//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
+
+					if (comp[c].angle == 0) {
+						tempCompImg = compTex[comp[c].serial].copyToImage();
+					}
+					else if (comp[c].angle == 180) {
+						tempCompImg = compTex[comp[c].serial].copyToImage();
+						tempCompImg.flipVertically();
+						tempCompImg.flipHorizontally();
+					}
+					else {
+						sf::Image tempTempCompImg(compTex[comp[c].serial].copyToImage());
+						tempCompImg.create(tempTempCompImg.getSize().y, tempTempCompImg.getSize().x);
+
+						for (int j = 0; j < tempTempCompImg.getSize().y; j++) {
+							for (int i = 0; i < tempTempCompImg.getSize().x; i++) {
+								tempCompImg.setPixel(j, i, tempTempCompImg.getPixel(i, j));
+							}
+						}
+						tempCompImg.flipHorizontally();
+
+
+						if (comp[c].angle == 90) {
+							;
+						}
+						else if (comp[c].angle == 270) {
+							tempCompImg.flipVertically();
+							tempCompImg.flipHorizontally();
+
+						}
+					}
+
+					//float OffX = (comp[c].x + (compArr[1] - compArr[0]) / 2) - A; float OffY = (comp[c].y + (compArr[3] - compArr[2]) / 2) - C;
+
+					bool rotBool = ((((int)comp[c].angle) / 90) % 2 == 1);
+					//cout << "\nrotBool " << rotBool;
+					
+					int fakeGap = 15 - (comp[c].serial == 5) * 5;
+
+					float OffX = comp[c].x - compArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + gap;
+					float OffY = comp[c].y - compArr[2] - C -  rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + gap;
+					//cout << "\n" << OffX << ", " << OffY; 
+					
+					for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
+						for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
+							if (tempCompImg.getPixel(i, j).a == 0) continue;
+
+							//cout << "\n" << j << ", " << i;
+							OutputImage.setPixel(OffX + i, OffY + j, tempCompImg.getPixel(i, j));
+							//OutputImage.setPixel(i, j, tempCompImg.getPixel(i, j));
+						}
+					}
+
+				}
+				//cout << "\n" << "S: " << OutputImage.getSize().x << ", " << OutputImage.getSize().y;
+
+				OutputImage.saveToFile("Saved-Images/0 OuputImage.png");
+			}
 
 			if (Drag) {
 					view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)Mouse::getPosition(app).x, viewY + mouseHoldY - (float)Mouse::getPosition(app).y));
@@ -520,6 +625,10 @@ float trim(float num, int wrt) {
 	return num - (int)num % wrt;
 }
 
+sf::Vector2f endNodePos(Entity Comp) {
+	return sf::Vector2f(Comp.x - 75 * (int)sin(Comp.angle * DegToRad), Comp.y + 75 * (int)cos(Comp.angle * DegToRad));
+}
+
 sf::Vector2f cursorInSim() {
 	return sf::Vector2f(Mouse::getPosition(app).x + view.getCenter().x - W / 2, Mouse::getPosition(app).y + view.getCenter().y - H / 2);
 }
@@ -535,7 +644,7 @@ bool occupiedAt(int Index, sf::Vector2f At) {
 				Occupied = 1; return 1;
 			}
 		}
-		if (At.x == comp[c].x - 75 * (int)sin(comp[c].angle * DegToRad) && At.y == comp[c].y + 75 * (int)cos(comp[c].angle * DegToRad)) {
+		if (At.x == endNodePos(comp[c]).x && At.y == endNodePos(comp[c]).y) {
 			if (abs(comp[Index].angle - comp[c].angle) != 180) {
 				Occupied = 0; return 0;
 			}
@@ -571,6 +680,7 @@ bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
 	int bounds[4];
 	getBounds(Comp, bounds);
 	float A = 0, B = 0, C = 0, D = 0;
+
 	if (Ini.x <= Fin.x) { A = Ini.x; B = Fin.x; } else { B = Ini.x; A = Fin.x; }
 	if (Ini.y <= Fin.y) { C = Ini.y; D = Fin.y; } else { D = Ini.y; C = Fin.y; }
 	
