@@ -6,11 +6,14 @@ taskkill /F /IM Circiut_Sim.exe
 //#include "imgui.h"
 //#include "imgui-SFML.h"
 #include <iostream>
+#include <fstream>
 #include <vector>
-#include "Screen_Classes.h"
+
+#include "Screen_Entity.h"
+#include "Screen_Graph.h"
 
 using namespace sf;
-using std::cout; using std::to_string; using std::vector;
+using std::cout; using std::to_string; using std::vector; using std::fstream;
 
 float trim(float num, int wrt);
 sf::Vector2f endNodePos(Entity Comp);
@@ -27,6 +30,38 @@ vector<Entity> comp;
 bool Occupied = 0;
 
 int main() {
+
+	Graph graph;
+
+	graph.Vector.emplace_back(0);
+	graph.Vector.emplace_back(1);
+	graph.Vector.emplace_back(2);
+	graph.Vector.emplace_back(3);
+	graph.Vector.emplace_back(4);
+	graph.Vector.emplace_back(5);
+	graph.Vector.emplace_back(6);
+
+
+	graph.Vector[0].neighbors.emplace_back(&graph.Vector[5]);
+	graph.Vector[0].neighbors.emplace_back(&graph.Vector[4]);
+	graph.Vector[0].neighbors.emplace_back(&graph.Vector[1]);
+	graph.Vector[5].neighbors.emplace_back(&graph.Vector[3]);
+	graph.Vector[0].neighbors.emplace_back(&graph.Vector[6]);
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
 
 	//ImGui::SFML::Init(app);//
 	//sf::Clock deltaClock;//
@@ -143,8 +178,19 @@ int main() {
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
 
+	
+
+	fstream testFile;
+
+	
+
+
+
+
 	///////////////////////////////////////////////
 	while (!End) {
+		
+		graph.setGraph();
 
 		float mouseHoldX = Mouse::getPosition(app).x, mouseHoldY = Mouse::getPosition(app).y;
 		float viewX = view.getCenter().x, viewY = view.getCenter().y;
@@ -154,6 +200,9 @@ int main() {
 		int verBrightCount = 5, horBrightCount = 5;
 
 		while (app.isOpen() && !End) {
+
+
+
 			W = app.getSize().x; H = app.getSize().y;
 
 			float t_TollWx = ToolBoxWin.getPosition().x;
@@ -534,6 +583,8 @@ int main() {
 
 
 			// ----------------------------------------	Update
+
+			if (graph.win->isOpen()) graph.updateWin();
 
 			/*ImGui*/
 			/*ImGui::SFML::Update(app, deltaClock.restart());//

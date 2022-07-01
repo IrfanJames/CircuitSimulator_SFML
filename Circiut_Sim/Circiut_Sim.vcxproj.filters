@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Screen_Classes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Screen_Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -49,6 +46,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen_Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
