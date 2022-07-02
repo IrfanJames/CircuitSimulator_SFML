@@ -154,9 +154,10 @@
     <ClInclude Include="..\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\imgui\imstb_textedit.h" />
     <ClInclude Include="..\imgui\imstb_truetype.h" />
-    <ClInclude Include="Screen_Entity.h" />
-    <ClInclude Include="Screen_Global.h" />
-    <ClInclude Include="Screen_Graph.h" />
+    <ClInclude Include="Circuit_wire.h" />
+    <ClInclude Include="Circuit_Entity.h" />
+    <ClInclude Include="Circuit_Global.h" />
+    <ClInclude Include="Circuit_Graph.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\imgui\imgui-SFML.cpp" />

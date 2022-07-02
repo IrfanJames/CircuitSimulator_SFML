@@ -7,61 +7,34 @@ taskkill /F /IM Circiut_Sim.exe
 //#include "imgui-SFML.h"
 #include <iostream>
 #include <fstream>
-#include <vector>
+//#include <vector>
 
-#include "Screen_Entity.h"
-#include "Screen_Graph.h"
+#include "Circuit_Entity.h"
+#include "Circuit_Graph.h"
+#include "Circuit_wire.h"
 
 using namespace sf;
 using std::cout; using std::to_string; using std::vector; using std::fstream;
 
-float trim(float num, int wrt);
-sf::Vector2f endNodePos(Entity Comp);
 sf::Vector2f cursorInSim();
+bool Click(int Sensitivity);
+float trim(float num, int wrt);
+
+sf::Vector2f endNodePos(Entity Comp);
 bool occupiedAt(int Index, sf::Vector2f At);
 bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin);
 void getBounds(Entity Comp, int arr[4]);
 
 //RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
 sf::RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
+float mouseHoldX = Mouse::getPosition(app).x, mouseHoldY = Mouse::getPosition(app).y;
+
 sf::View view(sf::Vector2f(W / 2, H / 2), sf::Vector2f(W, H));
 vector<Entity> comp;
 
 bool Occupied = 0;
 
 int main() {
-
-	Graph graph;
-
-	graph.Vector.emplace_back(0);
-	graph.Vector.emplace_back(1);
-	graph.Vector.emplace_back(2);
-	graph.Vector.emplace_back(3);
-	graph.Vector.emplace_back(4);
-	graph.Vector.emplace_back(5);
-	graph.Vector.emplace_back(6);
-
-
-	graph.Vector[0].neighbors.emplace_back(&graph.Vector[5]);
-	graph.Vector[0].neighbors.emplace_back(&graph.Vector[4]);
-	graph.Vector[0].neighbors.emplace_back(&graph.Vector[1]);
-	graph.Vector[5].neighbors.emplace_back(&graph.Vector[3]);
-	graph.Vector[0].neighbors.emplace_back(&graph.Vector[6]);
-
-
-
-
-
-
-
-	
-
-
-
-
-
-
-
 
 	//ImGui::SFML::Init(app);//
 	//sf::Clock deltaClock;//
@@ -85,6 +58,11 @@ int main() {
 	int serialCompMouse = 0, serialToolMouse = 0;
 
 	sf::Color normalCompColor(255, 255, 255), tempDimColor(150, 150, 150);
+
+	std::vector<Wire> wires;
+	wires.reserve(3);
+	wires.emplace_back(sf::Vector2f(300, 300));
+
 	///////////////////////////////////////////////
 
 	/*Rayn*/ //Texture t; t.loadFromFile("Images/0 Rayn.png"); Sprite Rayn(t), Rayn2(t); Rayn.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn2.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn.setPosition(app.getSize().x / 2, app.getSize().y / 2); Rayn2.setPosition(app.getSize().x + 10, app.getSize().y + 10);
@@ -190,9 +168,6 @@ int main() {
 	///////////////////////////////////////////////
 	while (!End) {
 		
-		graph.setGraph();
-
-		float mouseHoldX = Mouse::getPosition(app).x, mouseHoldY = Mouse::getPosition(app).y;
 		float viewX = view.getCenter().x, viewY = view.getCenter().y;
 		float verX = vLines[0].getPosition().x, verY = vLines[0].getPosition().y;
 		float horX = hLines[0].getPosition().x, horY = hLines[0].getPosition().y;
@@ -264,6 +239,8 @@ int main() {
 				if (releaseBool) {
 					releaseBool = 0;
 					mouseHoldX = (float)Mouse::getPosition(app).x; mouseHoldY = (float)Mouse::getPosition(app).y;
+
+					wires[0].newEdge();
 
 					/*new Comp*/
 					if (MIntool) {
@@ -381,32 +358,36 @@ int main() {
 			}*/
 			}
 
-
+			wires[0].makeWire(app);
 
 			/*Continoue while hold*/
-			if (mouseOnCompsBool && (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y)) {
+			if (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y) {
 				/*Follow Mouse*/
-				int tempRotArr[4][2] = {
-					{0, -2},
-					{2, 0},
-					{0, 2},
-					{-2, 0}
-				};
-				for (int c = 0; c < virSerial.size(); c++) {
+				if (mouseOnCompsBool) {
+					int tempRotArr[4][2] = {
+						{0, -2},
+						{2, 0},
+						{0, 2},
+						{-2, 0}
+					};
+					for (int c = 0; c < virSerial.size(); c++) {
 
-					float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
-					float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
-					for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
+						float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
+						float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
+						for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
 
-					tempX = trim(tempX, gap);
-					tempY = trim(tempY, gap);
+						tempX = trim(tempX, gap);
+						tempY = trim(tempY, gap);
 
-					if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
-						comp[virSerial[c]].x = tempX;
-						comp[virSerial[c]].y = tempY;
+						if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
+							comp[virSerial[c]].x = tempX;
+							comp[virSerial[c]].y = tempY;
+						}
 					}
-					//cout << "\nYYAAAHHH";
 				}
+
+
+
 			}
 
 			/*Select Sqr*/
@@ -433,8 +414,6 @@ int main() {
 					}
 				}
 			}
-
-			//cout << "\n" << virSerial.size() << " " << virSprite.size();
 
 			/*PrintScreen*/
 			if (printScreen) {
@@ -584,8 +563,6 @@ int main() {
 
 			// ----------------------------------------	Update
 
-			if (graph.win->isOpen()) graph.updateWin();
-
 			/*ImGui*/
 			/*ImGui::SFML::Update(app, deltaClock.restart());//
 			ImGui::Begin("Frist ImGui Win");
@@ -627,6 +604,11 @@ int main() {
 						for (int c = 0; c < comp.size(); c++) { comp[c].draw(app, gap); }
 					}
 
+					/*Wires*/ /*{
+						for (int c = 0; c < wires.size(); c++) {
+							wires[c].draw(app);
+						}
+					}*/
 
 					if(Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
@@ -672,6 +654,8 @@ int main() {
 	return 0;
 }
 
+
+
 float trim(float num, int wrt) {
 	return num - (int)num % wrt;
 }
@@ -682,6 +666,10 @@ sf::Vector2f endNodePos(Entity Comp) {
 
 sf::Vector2f cursorInSim() {
 	return sf::Vector2f(Mouse::getPosition(app).x + view.getCenter().x - W / 2, Mouse::getPosition(app).y + view.getCenter().y - H / 2);
+}
+
+bool Click(int Sensitivity) {
+	return !!( Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(app).y) <= Sensitivity);
 }
 
 bool occupiedAt(int Index, sf::Vector2f At) {
