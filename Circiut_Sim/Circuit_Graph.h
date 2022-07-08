@@ -21,11 +21,14 @@ class Graph {
 
 public:
 	std::vector<Corner> Vector;
-	sf::RenderWindow* win = new sf::RenderWindow(sf::VideoMode(550, 550), "Graph", sf::Style::Default, sf::ContextSettings(0));
+	sf::RenderWindow* win;
 	// View
 
 	Graph() {
 		Vector.reserve(2);
+		sf::ContextSettings settings;
+		settings.antialiasingLevel = 8;
+		win = new sf::RenderWindow(sf::VideoMode(700, 700), "Graph", sf::Style::Default, settings);
 	}
 
 	void printCorner(Corner corner) {

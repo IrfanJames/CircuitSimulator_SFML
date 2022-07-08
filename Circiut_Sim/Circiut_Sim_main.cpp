@@ -54,6 +54,7 @@ int main() {
 
 	bool Click = 0, Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
 	bool onceOptComp = 0, delComp = 0, rotComp = 0;
+	bool wireBool = 0;
 
 	int serialCompMouse = 0, serialToolMouse = 0;
 
@@ -206,6 +207,7 @@ int main() {
 					//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
 					if (evnt.key.code == Keyboard::P) { printScreen = 1; }
 					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
+					if (evnt.key.code == Keyboard::B) { wireBool= !wireBool; /*cout << "\ndebug\n";*/ }
 
 					/*int difr = 10;
 					if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
@@ -358,7 +360,7 @@ int main() {
 			}*/
 			}
 
-			wires[0].makeWire(app);
+			if (wireBool) wires[0].makeWire(app);
 
 			/*Continoue while hold*/
 			if (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y) {
@@ -604,11 +606,7 @@ int main() {
 						for (int c = 0; c < comp.size(); c++) { comp[c].draw(app, gap); }
 					}
 
-					/*Wires*/ /*{
-						for (int c = 0; c < wires.size(); c++) {
-							wires[c].draw(app);
-						}
-					}*/
+					/*Wires*/ if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
 
 					if(Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
