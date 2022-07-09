@@ -17,18 +17,22 @@ class Graph {
 	};
 	std::vector<sf::CircleShape> allCircles;
 	std::vector<sf::RectangleShape> allVertices;
+	sf::RenderWindow win;
 
 
 public:
 	std::vector<Corner> Vector;
-	sf::RenderWindow* win;
 	// View
 
 	Graph() {
 		Vector.reserve(2);
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 8;
-		win = new sf::RenderWindow(sf::VideoMode(700, 700), "Graph", sf::Style::Default, settings);
+		win.create(sf::VideoMode(700, 700), "Graph", sf::Style::Default, settings);
+	}
+	void linkWith(int Index, int Link) {
+		if (Vector.size() > Index && Vector.size() > Link)
+			Vector.at(Index).neighbors.emplace_back(&Vector.at(Link));
 	}
 
 	void printCorner(Corner corner) {
@@ -46,7 +50,7 @@ public:
 	}
 
 	void setGraph() {
-		win->clear(sf::Color(0, 0, 0));
+		win.clear(sf::Color(0, 0, 0));
 
 		/*Edges*/
 		allCircles.reserve(Vector.size());
@@ -57,7 +61,7 @@ public:
 			allCircles.back().setFillColor(sf::Color(23, 24, 25));
 			allCircles.back().setOutlineColor(sf::Color(0, 90, 170));
 
-			allCircles.back().setPosition(cos(360 / Vector.size() * c * DegToRad) * 250 + win->getSize().x / 2, -sin(360 / Vector.size() * c * DegToRad) * 250 + win->getSize().y / 2);
+			allCircles.back().setPosition(cos(360 / Vector.size() * c * DegToRad) * 250 + win.getSize().x / 2, -sin(360 / Vector.size() * c * DegToRad) * 250 + win.getSize().y / 2);
 		}
 
 
@@ -79,24 +83,16 @@ public:
 		}
 
 
-		for (int c = 0; c < allVertices.size(); c++) { win->draw(allVertices[c]); }
-		for (int c = 0; c < allCircles.size(); c++) { win->draw(allCircles[c]); }
+		for (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
+		for (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
 
-		win->display();
+		win.display();
 	}
-
 	void updateWin() {
-		if (win->isOpen()) {
+		if (win.isOpen()) {
 			sf::Event evnt;
-			while (win->pollEvent(evnt)) {
-				if (evnt.type == evnt.Closed) {
-					win->close();
-					break;
-				}
-				if (evnt.type == evnt.KeyPressed) {
-					if (evnt.key.code == sf::Keyboard::Escape) { win->close(); break; }
-				}
-			}
+			while (win.pollEvent(evnt)) { if (evnt.type == evnt.Closed || evnt.key.code == sf::Keyboard::Escape) { win.close(); break; } }
+			
 
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 
@@ -104,10 +100,11 @@ public:
 				for (int c = 0; c < allCircles.size(); c++) {
 					sf::Vector2f tempPos = allCircles[c].getPosition();
 
-					if (30 * 30 >= (tempPos.x - (float)sf::Mouse::getPosition(*win).x) * (tempPos.x - (float)sf::Mouse::getPosition(*win).x) +
-						(tempPos.y - (float)sf::Mouse::getPosition(*win).y) * (tempPos.y - (float)sf::Mouse::getPosition(*win).y)) {
+					if (40 * 40 >=
+						(tempPos.x - (float)sf::Mouse::getPosition(win).x) * (tempPos.x - (float)sf::Mouse::getPosition(win).x) +
+						(tempPos.y - (float)sf::Mouse::getPosition(win).y) * (tempPos.y - (float)sf::Mouse::getPosition(win).y)) {
 
-						allCircles[c].setPosition(sf::Vector2f(sf::Mouse::getPosition(*win)));
+						allCircles[c].setPosition(sf::Vector2f(sf::Mouse::getPosition(win)));
 
 
 						/*Vertices*/
@@ -126,10 +123,10 @@ public:
 						}
 
 						/*Drawing*/
-						win->clear(sf::Color(0, 0, 0));
-						for (int c = 0; c < allVertices.size(); c++) { win->draw(allVertices[c]); }
-						for (int c = 0; c < allCircles.size(); c++) { win->draw(allCircles[c]); }
-						win->display();
+						win.clear(sf::Color(0, 0, 0));
+						for (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
+						for (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
+						win.display();
 
 						break;
 					}
@@ -139,6 +136,5 @@ public:
 	};
 
 	~Graph() { ; }
-
 
 };
