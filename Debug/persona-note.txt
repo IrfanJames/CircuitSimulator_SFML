@@ -1,4 +1,7 @@
 New:
+Save Projects (different names)
+Open latest saved project
+Save as Image(different names)
 
 Stable:
 Procedual Background Grid
@@ -6,7 +9,7 @@ Collisions include both nodes
 Rotation, hold, Drag(smooth)
 New Items at different places
 Selection
-Save as Image(PNG)
+Save as Image(different names)
 Smart Display (only on Stimuli)
 Save Projects (different names)
 Open latest saved project
@@ -17,7 +20,6 @@ Seudo-Static Elements when window resized
 Issues:
 
 No:
-Saves as same name
 Nothing after Selection
 Project in ImGui window
 Threads

@@ -482,13 +482,13 @@ int main() {
 
 					bool rotBool = ((((int)comp[c].angle) / 90) % 2 == 1);
 					//cout << "\nrotBool " << rotBool;
-					
+
 					int fakeGap = 15 - (comp[c].serial == 5) * 5;
 
 					float OffX = comp[c].x - compArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + gap;
-					float OffY = comp[c].y - compArr[2] - C -  rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + gap;
+					float OffY = comp[c].y - compArr[2] - C - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + gap;
 					//cout << "\n" << OffX << ", " << OffY; 
-					
+
 					for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
 						for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
 							if (tempCompImg.getPixel(i, j).a == 0) continue;
@@ -502,7 +502,15 @@ int main() {
 				}
 				//cout << "\n" << "S: " << OutputImage.getSize().x << ", " << OutputImage.getSize().y;
 
-				OutputImage.saveToFile("Saved-Images/0 OuputImage.png");
+				int picNo = 0;
+				std::string picDir = "Saved-Images/Untitled-", picType = ".png";
+				sf::Image test;
+
+				while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
+					cout << "\n" << picNo;
+				}
+
+				OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
 			}
 
 			/*File*/
