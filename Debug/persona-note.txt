@@ -1,5 +1,4 @@
 New:
-Made a Graph.h
 
 Stable:
 Procedual Background Grid
@@ -8,6 +7,9 @@ Rotation, hold, Drag(smooth)
 New Items at different places
 Selection
 Save as Image(PNG)
+Smart Display (only on Stimuli)
+Save Projects (different names)
+Open latest saved project
 
 Unstable:
 Seudo-Static Elements when window resized

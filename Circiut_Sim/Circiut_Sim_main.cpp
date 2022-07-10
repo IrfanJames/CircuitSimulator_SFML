@@ -14,7 +14,7 @@ taskkill /F /IM Circiut_Sim.exe
 #include "Circuit_wire.h"
 
 using namespace sf;
-using std::cout; using std::vector; using std::fstream;
+using std::cout; using std::vector;
 
 sf::Vector2f cursorInSim();
 bool Click(int Sensitivity);
@@ -49,8 +49,7 @@ int main() {
 
 
 	time_t frame = clock();
-	bool End = 0, Stimuli = 1, printScreen = 0;
-	bool debugBool = 0;
+	bool End = 0, Stimuli = 1, debugBool = 0;
 
 	/*Flags*/
 	bool releaseBool = 1;
@@ -58,6 +57,7 @@ int main() {
 	bool Click = 0, Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
 	bool onceOptComp = 0, delComp = 0, rotComp = 0;
 	bool wireBool = 0;
+	bool save = 0, saveNew = 0, open = 0, printScreen = 0;
 
 	int serialCompMouse = 0, serialToolMouse = 0;
 
@@ -147,23 +147,15 @@ int main() {
 
 	sf::RectangleShape selSqr;
 	sf::Vector2f selSqrInital;
-	selSqr.setFillColor(sf::Color(0, 0, 0,0));
+	selSqr.setFillColor(sf::Color(0, 0, 0, 0));
 	selSqr.setOutlineThickness(1.0f);
 	selSqr.setOutlineColor(sf::Color(255, 0, 255));
 
 
 	////////////////////////////////////////////// Tool
-	
+
 	comp.reserve(8);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
-
-
-	
-
-	fstream testFile;
-
-	
-
 
 
 
@@ -199,6 +191,8 @@ int main() {
 					if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; goto END; }
 					//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
 					if (evnt.key.code == Keyboard::P) { printScreen = 1; }
+					if (evnt.key.code == Keyboard::S) { save = 1; }
+					if (evnt.key.code == Keyboard::O) { open = 1; }
 					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
 					if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
 					if (evnt.key.code == Keyboard::Delete) { delComp = 1; }
@@ -211,8 +205,10 @@ int main() {
 
 				}
 			}
+
 			///////////////////////////////////////////////
-			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { rotComp = 1; /*cout << "Rotate";*/ }
+			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { rotComp = 1; Stimuli = 1; }
+			if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { saveNew = 1; }
 			/*else if (evnt.key.code == Keyboard::R) {
 				view.setCenter(W / 2, H / 2);
 				viewX = view.getCenter().x; viewY = view.getCenter().y;
@@ -413,6 +409,7 @@ int main() {
 
 			/*PrintScreen*/
 			if (printScreen) {
+
 				printScreen = 0;
 				sf::Image OutputImage;
 				int compArr[4];
@@ -506,6 +503,51 @@ int main() {
 				//cout << "\n" << "S: " << OutputImage.getSize().x << ", " << OutputImage.getSize().y;
 
 				OutputImage.saveToFile("Saved-Images/0 OuputImage.png");
+			}
+
+			/*File*/
+			if (save) {
+				int fileNo = 0;
+				std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+				std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
+
+				while (test.good()) {
+					test.close();
+					test.open(fileDir + std::to_string(++fileNo) + fileType);
+				}
+
+				std::ofstream output(fileDir + std::to_string(fileNo) + fileType);
+
+				output << comp.size() << "\n";
+				for (int c = 0; c < comp.size(); c++) {
+					output << comp[c].serial << "\t" << comp[c].x << "\t" << comp[c].y << "\t" << comp[c].angle << "\n";
+				}
+				output.close();
+
+			}
+
+			if (open) {
+				int fileNo = 0;
+				std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+				std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
+
+				while (input.good()) {
+					input.close();
+					input.open(fileDir + std::to_string(++fileNo) + fileType);
+				}
+				input.open(fileDir + std::to_string(fileNo - 1) + fileType);
+
+				comp.clear();
+				virSprite.clear();
+				virSerial.clear();
+				int no = 0;
+				input >> no;
+				for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
+					input >> S >> X >> Y >> A;
+					comp.emplace_back(S, X, Y, A);
+				}
+				input.close();
+
 			}
 
 			if (Drag) {
@@ -630,16 +672,16 @@ int main() {
 				}
 			}
 
-			app.setTitle("CircuitSIm   " + std::to_string((float)(CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
+			app.setTitle("CircuitSIm   " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
 			frame = clock();
 
 
-			printScreen = 0; Stimuli = 0;
+			printScreen = 0; save = 0; saveNew = 0; open = 0; Stimuli = 0;
 		}
 
 	END:
 		;
-		printScreen = 0; Stimuli = 1;
+		printScreen = 0; save = 0; saveNew = 0; open = 0; Stimuli = 1;
 	}
 
 	//ImGui::SFML::Shutdown();
