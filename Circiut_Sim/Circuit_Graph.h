@@ -7,49 +7,24 @@ class Graph {
 	float DegToRad = 0.01745329f;
 	float RadToDeg = 57.295779f;
 	struct Corner {
-		int data = 0;
+		int item = 0;
 		std::vector<Corner*> neighbors;
 
-		Corner(int Data) {
-			data = Data;
+		Corner(int Item) {
+			item = Item;
 			neighbors.reserve(2);
 		}
 	};
 	std::vector<sf::CircleShape> allCircles;
 	std::vector<sf::RectangleShape> allVertices;
 	sf::RenderWindow win;
-
-
-public:
 	std::vector<Corner> Vector;
-	// View
-
-	Graph() {
-		Vector.reserve(2);
-		sf::ContextSettings settings;
-		settings.antialiasingLevel = 8;
-		win.create(sf::VideoMode(700, 700), "Graph", sf::Style::Default, settings);
-	}
-	void linkWith(int Index, int Link) {
-		if (Vector.size() > Index && Vector.size() > Link)
-			Vector.at(Index).neighbors.emplace_back(&Vector.at(Link));
-	}
-
-	void printCorner(Corner corner) {
-		std::cout << "\n" << corner.data << ":\t";
-		for (int c = 0; c < corner.neighbors.size(); c++) {
-			std::cout << " " << corner.neighbors[c]->data;
-		}
-	}
-	void printGraph() {
-		std::cout << "\n";
-		for (int c = 0; c < Vector.size(); c++) {
-			printCorner(Vector[c]);
-		}
-		std::cout << "\n";
-	}
 
 	void setGraph() {
+		win.setVisible(1);
+
+		allCircles.clear();
+		allVertices.clear();
 		win.clear(sf::Color(0, 0, 0));
 
 		/*Edges*/
@@ -60,8 +35,7 @@ public:
 			allCircles.back().setOutlineThickness(3);
 			allCircles.back().setFillColor(sf::Color(23, 24, 25));
 			allCircles.back().setOutlineColor(sf::Color(0, 90, 170));
-
-			allCircles.back().setPosition(cos(360 / Vector.size() * c * DegToRad) * 250 + win.getSize().x / 2, -sin(360 / Vector.size() * c * DegToRad) * 250 + win.getSize().y / 2);
+			allCircles.back().setPosition(cos(360.0f / (float)Vector.size() * c * DegToRad) * 200 + win.getSize().x / 2, -sin(360.0f / (float)Vector.size() * c * DegToRad) * 200 + win.getSize().y / 2);
 		}
 
 
@@ -88,11 +62,43 @@ public:
 
 		win.display();
 	}
+public:
+
+	Graph() {
+		Vector.reserve(5);
+		sf::ContextSettings settings;
+		settings.antialiasingLevel = 8;
+		win.create(sf::VideoMode(500, 500), "Graph", sf::Style::Default, settings);
+		win.setVisible(0);
+	}
+	void newItem(int serial) {
+		Vector.emplace_back(serial);
+		setGraph();
+	}
+	void link(int Index, int Link) {
+		if (Vector.size() > Index && Vector.size() > Link)
+			Vector.at(Index).neighbors.emplace_back(&Vector.at(Link));
+	}
+
+	void printCorner(Corner corner) {
+		std::cout << "\n" << corner.item << ":\t";
+		for (int c = 0; c < corner.neighbors.size(); c++) {
+			std::cout << " " << corner.neighbors[c]->item;
+		}
+	}
+	void printGraph() {
+		std::cout << "\n";
+		for (int c = 0; c < Vector.size(); c++) {
+			printCorner(Vector[c]);
+		}
+		std::cout << "\n";
+	}
+
 	void updateWin() {
 		if (win.isOpen()) {
 			sf::Event evnt;
 			while (win.pollEvent(evnt)) { if (evnt.type == evnt.Closed || evnt.key.code == sf::Keyboard::Escape) { win.close(); break; } }
-			
+
 
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 

@@ -16,7 +16,7 @@ public:
 	Wire(sf::Vector2f IniPoint) {
 		wire.reserve(2);
 		normalColor.r = 255; normalColor.g = 255; normalColor.b = 255;
-		
+
 		wire.emplace_back(sf::Vector2f(3, 20));
 		wire.back().setOrigin(1, 0);
 		wire.back().setPosition(IniPoint);
@@ -25,8 +25,9 @@ public:
 
 	void newEdge() {
 		sf::Vector2f nextPos(wire.back().getPosition());
-		if (wire.size() % 2 == 1) { nextPos.y += wire.back().getSize().y; } else
-		if (wire.size() % 2 == 0) { nextPos.x += wire.back().getSize().x; }
+		if (wire.size() % 2 == 1) { nextPos.y += wire.back().getSize().y; }
+		else
+			if (wire.size() % 2 == 0) { nextPos.x += wire.back().getSize().x; }
 
 		nextPos.x = trim(nextPos.x, 15);
 		nextPos.y = trim(nextPos.y, 15);

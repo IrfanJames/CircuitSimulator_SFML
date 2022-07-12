@@ -23,7 +23,7 @@ public:
 	virtual void update() {};
 
 	void draw(sf::RenderWindow& app, int Gap) {
-		
+
 		/*Just On Sqr
 		//x = trim(x, Gap);
 		//y = trim(y, Gap);*/
@@ -32,6 +32,11 @@ public:
 		sprite.setRotation(angle);
 		app.draw(sprite);
 	}
+
+	sf::Vector2f endNodePos() {
+		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
+	}
+
 	~Entity() {
 		;
 	}
