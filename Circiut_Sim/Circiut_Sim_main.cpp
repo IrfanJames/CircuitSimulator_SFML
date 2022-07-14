@@ -53,7 +53,7 @@ int main() {
 	/*Flags*/
 	bool releaseBool = 1;
 
-	bool Click = 0, Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
+	bool Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
 	bool onceOptComp = 0, delComp = 0, rotComp = 0;
 	bool wireBool = 0;
 	bool save = 0, saveNew = 0, open = 0, printScreen = 0;
@@ -139,16 +139,14 @@ int main() {
 	}
 
 	////////////////////////////////////////////// VirutalComps
-	vector<int> virSerial;
-	vector<sf::Sprite> virSprite;
-	virSerial.reserve(8);
-	virSprite.reserve(8);
+	vector<int> virSerial; virSerial.reserve(8);
+	vector<sf::Sprite> virSprite; virSprite.reserve(8);
 
-	sf::RectangleShape selSqr;
-	sf::Vector2f selSqrInital;
-	selSqr.setFillColor(sf::Color(0, 0, 0, 0));
-	selSqr.setOutlineThickness(1.0f);
-	selSqr.setOutlineColor(sf::Color(255, 0, 255));
+	/*Sel Sqr*/
+	sf::RectangleShape selSqr; {
+		selSqr.setFillColor(sf::Color(0, 0, 0, 0));
+		selSqr.setOutlineThickness(1.0f);
+		selSqr.setOutlineColor(sf::Color(255, 0, 255)); }
 
 
 	////////////////////////////////////////////// Tool
@@ -158,8 +156,7 @@ int main() {
 
 	Graph circuit;
 
-	vector<sf::Vector2f> allNodes;
-	allNodes.reserve(5);
+	vector<sf::Vector2f> allNodes; allNodes.reserve(5);
 
 	///////////////////////////////////////////////
 	while (!End) {
@@ -225,25 +222,6 @@ int main() {
 			///////////////////////////////////////////////
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			// ----------------------------------------	Options
 			{
 				/*Mouse Hold*/
@@ -306,7 +284,7 @@ int main() {
 							}
 
 							//////////// Urgent need of enums , State Machine
-							if (!mouseOnCompsBool && selectSquare) { selSqrInital = cursorInSim(); }
+							if (!mouseOnCompsBool && selectSquare) { selSqr.setPosition(cursorInSim()); }
 
 							/*Drag Background*/
 							if (!mouseOnCompsBool && !selectSquare) {
@@ -336,11 +314,15 @@ int main() {
 					else if (mouseOnCompsBool && delComp) {
 						if (onceOptComp) {
 							Stimuli = 1;
-							for (int v = 0; v < virSerial.size(); v++) {
-								if (comp.size() > 0) comp.erase(comp.begin() + virSerial[v]);
-								if (virSerial.size() > 0) virSerial.erase(virSerial.begin() + v);
-								if (virSprite.size() > 0) virSprite.erase(virSprite.begin() + v);
+
+							sort(virSerial.begin(), virSerial.end());
+
+							while (0 < virSerial.size()) {
+								if (comp.size() > 0) comp.erase(comp.begin() + virSerial.back());
+								if (virSerial.size() > 0) virSerial.erase(virSerial.begin() + virSerial.back());
+								if (virSprite.size() > 0) virSprite.erase(virSprite.begin() + virSerial.back());
 							}
+
 						}
 						onceOptComp = 0;
 						mouseOnCompsBool = 0;
@@ -350,7 +332,8 @@ int main() {
 				else {
 					Drag = 0; mouseOnCompsBool = 0;
 					/*Click*/
-					if (abs(mouseHoldX - (float)Mouse::getPosition(app).x) <= gap && abs(mouseHoldY - (float)Mouse::getPosition(app).y) <= gap) {
+					
+					if (Click(gap)) {
 						Stimuli = 1;
 						for (int v = 0; v < virSerial.size(); v++) {
 							int tempCompClick = comp[virSerial[v]].serial;
@@ -360,8 +343,10 @@ int main() {
 
 					}
 
-					virSprite.clear();  /////
-					virSerial.clear();  /////
+					//if (Click(gap)) {
+						virSprite.clear();  /////
+						virSerial.clear();  /////
+					//}
 
 				/*ZZzzzz Recolor back to normal    & clear serials
 				if (virSerial.size() != 0) {
@@ -372,32 +357,39 @@ int main() {
 				}*/
 				}
 
-				if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
+
 
 				/*Continoue while hold*/
 				if (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y) {
 
 					/*Follow Mouse*/
 					if (mouseOnCompsBool) {
-						Stimuli = 1;
-						int tempRotArr[4][2] = {
-							{0, -2},
-							{2, 0},
-							{0, 2},
-							{-2, 0}
-						};
-						for (int c = 0; c < virSerial.size(); c++) {
+						if (!selectSquare/* && releaseBool*/) {
+							Stimuli = 1;
+							int tempRotArr[4][2] = {
+								{0, -2},
+								{2, 0},
+								{0, 2},
+								{-2, 0}
+							};
+							for (int c = 0; c < virSerial.size(); c++) {
 
-							float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
-							float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
-							for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
+								float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
+								float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
 
-							tempX = trim(tempX, gap);
-							tempY = trim(tempY, gap);
+								//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
+								//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
 
-							if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
-								comp[virSerial[c]].x = tempX;
-								comp[virSerial[c]].y = tempY;
+								for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
+								for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX, tempY); }
+
+								tempX = trim(tempX, gap);
+								tempY = trim(tempY, gap);
+
+								if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
+									comp[virSerial[c]].x = tempX; // += (were "=" before)
+									comp[virSerial[c]].y = tempY; // += (were "=" before)
+								}
 							}
 						}
 					}
@@ -407,9 +399,9 @@ int main() {
 				/*Select Sqr*/
 				if (selectSquare && !releaseBool) {
 					Stimuli = 1;
+
 					/*Sel Sqr*/
-					selSqr.setPosition(selSqrInital.x, selSqrInital.y);
-					selSqr.setSize(sf::Vector2f(cursorInSim().x - selSqrInital.x, cursorInSim().y - selSqrInital.y));
+					selSqr.setSize(sf::Vector2f(cursorInSim().x - selSqr.getPosition().x, cursorInSim().y - selSqr.getPosition().y));
 
 					/*Selection*/
 					for (int c = 0; c < comp.size(); c++) {
@@ -420,7 +412,7 @@ int main() {
 							if (c == virSerial[v]) { compFound = 1; break; }
 						};
 
-						if (compIn(comp[c], selSqrInital, cursorInSim())) {
+						if (compIn(comp[c], selSqr.getPosition(), cursorInSim())) {
 							if (!compFound) virSerial.emplace_back(c);
 						}
 						else {
@@ -428,6 +420,11 @@ int main() {
 						}
 					}
 				}
+
+
+
+
+				if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
 
 				if (printScreen) {
 
@@ -532,9 +529,6 @@ int main() {
 					OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
 				}
 
-
-
-				/*File*/
 				if (save) {
 					int fileNo = 0;
 					std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
@@ -577,7 +571,6 @@ int main() {
 					}
 					input.close();
 				}
-
 
 				if (Drag) {
 					Stimuli = 1;
@@ -718,6 +711,8 @@ int main() {
 		printScreen = 0; save = 0; saveNew = 0; open = 0; Stimuli = 1;
 	}
 
+
+
 	//ImGui::SFML::Shutdown();
 	system("pause");
 	return 0;
@@ -734,7 +729,7 @@ sf::Vector2f cursorInSim() {
 }
 
 bool Click(int Sensitivity) {
-	return !!(Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(app).y) <= Sensitivity);
+	return !!(!Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(app).y) <= Sensitivity);
 }
 
 bool occupiedAt(int Index, sf::Vector2f At) {
@@ -791,6 +786,7 @@ bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
 
 	if (Ini.x <= Fin.x) { A = Ini.x; B = Fin.x; }
 	else { B = Ini.x; A = Fin.x; }
+
 	if (Ini.y <= Fin.y) { C = Ini.y; D = Fin.y; }
 	else { D = Ini.y; C = Fin.y; }
 

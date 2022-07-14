@@ -1,11 +1,4 @@
-﻿  imgui-SFML.cpp
-D:\Programming\C++\CircuitSimulator_SFML\imgui\imgui-SFML.cpp(559,67): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\imgui\imgui-SFML.cpp(559,48): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-  imgui.cpp
-  imgui_draw.cpp
-  imgui_tables.cpp
-  imgui_widgets.cpp
-  Circiut_Sim_main.cpp
+﻿  Circiut_Sim_main.cpp
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circuit_Entity.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circuit_Entity.h(14,19): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circuit_Entity.h(14,30): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
@@ -86,61 +79,61 @@ D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(134,47
           [
               T=unsigned int
           ]
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(189,106): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(283,47): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(288,26): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(296,29): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(298,130): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(186,106): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(261,47): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(266,26): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(274,29): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(276,130): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(298,82): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(276,82): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(329,26): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(339,26): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(355,25): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(389,25): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(393,26): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(415,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(419,16): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(441,21): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(441,49): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(441,77): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(441,105): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(443,25): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(307,26): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(338,25): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(375,26): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(383,27): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(384,27): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(407,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(411,16): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(438,21): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(438,49): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(438,77): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(438,105): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(440,25): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(442,55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(443,55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(444,55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(445,55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(446,55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(447,55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(448,55): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(463,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(482,26): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(483,27): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(511,41): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(512,43): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(516,45): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(516,35): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(551,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(590,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(594,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(609,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(619,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(659,233): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(460,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(479,26): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(480,27): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(508,41): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(509,43): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(513,45): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(513,35): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(545,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(583,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(587,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(602,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(612,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(652,233): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=int
           ]
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(673,25): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(674,25): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(678,25): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(681,50): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(683,38): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(743,20): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(767,20): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(812,39): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(666,25): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(667,25): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(671,25): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(674,50): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(676,38): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(738,20): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(762,20): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(808,39): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\xmemory(681,68): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
           with
           [
@@ -182,7 +175,5 @@ C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\1
               _Objty=Entity
           ]
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\include\vector(726): message : see reference to function template instantiation 'void std::vector<Entity,std::allocator<Entity>>::_Emplace_back_with_unused_capacity<int&,int&,int&,int&>(int &,int &,int &,int &)' being compiled
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(576): message : see reference to function template instantiation 'void std::vector<Entity,std::allocator<Entity>>::emplace_back<int&,int&,int&,int&>(int &,int &,int &,int &)' being compiled
-  Generating Code...
-  LINK : D:\Programming\C++\CircuitSimulator_SFML\Debug\Circiut_Sim.exe not found or not built by the last incremental link; performing full link
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\Circiut_Sim_main.cpp(570): message : see reference to function template instantiation 'void std::vector<Entity,std::allocator<Entity>>::emplace_back<int&,int&,int&,int&>(int &,int &,int &,int &)' being compiled
   Circiut_Sim.vcxproj -> D:\Programming\C++\CircuitSimulator_SFML\Debug\Circiut_Sim.exe

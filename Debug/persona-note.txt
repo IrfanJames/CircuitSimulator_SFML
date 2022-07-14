@@ -1,26 +1,24 @@
 New:
-Save Projects (different names)
-Open latest saved project
-Save as Image(different names)
+Delete Stable in selection mode
+
+Unstable:
+
 
 Stable:
 Procedual Background Grid
 Collisions include both nodes
 Rotation, hold, Drag(smooth)
 New Items at different places
-Selection
+Selection (, delete option, not rotate)
 Save as Image(different names)
 Smart Display (only on Stimuli)
 Save Projects (different names)
 Open latest saved project
 
-Unstable:
-Seudo-Static Elements when window resized
 
 Issues:
 
 No:
-Nothing after Selection
 Project in ImGui window
 Threads
 enum (State Machine for hold)
