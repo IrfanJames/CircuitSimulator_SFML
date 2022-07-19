@@ -1,5 +1,5 @@
 New:
-Delete Stable in selection mode
+Bugs fixed in Delete
 
 Unstable:
 
@@ -10,6 +10,7 @@ Collisions include both nodes
 Rotation, hold, Drag(smooth)
 New Items at different places
 Selection (, delete option, not rotate)
+Delete
 Save as Image(different names)
 Smart Display (only on Stimuli)
 Save Projects (different names)

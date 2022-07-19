@@ -8,7 +8,11 @@
 
 4. P	PrintScreen; Save as Image(PNG)
 
-5. Esc   Escape
+5. S	Save Project
+
+6. S	Open (saved) Project
+
+7. Esc   Escape
 
 Enjoy!
 

@@ -62,9 +62,10 @@ int main() {
 
 	sf::Color normalCompColor(255, 255, 255), tempDimColor(150, 150, 150);
 
-	std::vector<Wire> wires;
+	/*Wires*/
+	/*std::vector<Wire> wires;
 	wires.reserve(3);
-	wires.emplace_back(sf::Vector2f(300, 300));
+	wires.emplace_back(sf::Vector2f(300, 300));*/
 
 	///////////////////////////////////////////////
 
@@ -192,7 +193,7 @@ int main() {
 					if (evnt.key.code == Keyboard::S) { save = 1; }
 					if (evnt.key.code == Keyboard::O) { open = 1; }
 					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
-					if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
+					//if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
 					if (evnt.key.code == Keyboard::Delete) { delComp = 1; }
 
 					/*int difr = 10;
@@ -222,6 +223,16 @@ int main() {
 			///////////////////////////////////////////////
 
 
+
+
+
+
+
+
+
+
+
+
 			// ----------------------------------------	Options
 			{
 				/*Mouse Hold*/
@@ -230,7 +241,7 @@ int main() {
 						releaseBool = 0;
 						mouseHoldX = (float)Mouse::getPosition(app).x; mouseHoldY = (float)Mouse::getPosition(app).y;
 
-						wires[0].newEdge();
+						//wires[0].newEdge();
 
 						/*new Comp*/
 						if (MIntool) {
@@ -271,8 +282,8 @@ int main() {
 									if ((tempCompY - bounds[2] < cursorInSim().y) && (cursorInSim().y < tempCompY + bounds[3])) {
 										virSerial.emplace_back(c);
 
-										for (int v = 0; v < virSerial.size(); v++) {
-											virSprite.emplace_back(comp[virSerial[0]].sprite);
+										for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
+											virSprite.emplace_back(comp[virSerial[v]].sprite);
 											virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
 											virSprite.back().setColor(tempDimColor);
 										}
@@ -315,14 +326,16 @@ int main() {
 						if (onceOptComp) {
 							Stimuli = 1;
 
-							sort(virSerial.begin(), virSerial.end());
-
 							while (0 < virSerial.size()) {
-								if (comp.size() > 0) comp.erase(comp.begin() + virSerial.back());
-								if (virSerial.size() > 0) virSerial.erase(virSerial.begin() + virSerial.back());
-								if (virSprite.size() > 0) virSprite.erase(virSprite.begin() + virSerial.back());
-							}
+								if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
+								if (virSprite.size() > 0) virSprite.erase(virSprite.begin());
 
+								for (int c = 1; c < virSerial.size(); c++) {
+									if (virSerial[c] > virSerial[0]) virSerial[c]--;
+								}
+
+								virSerial.erase(virSerial.begin());
+							}
 						}
 						onceOptComp = 0;
 						mouseOnCompsBool = 0;
@@ -356,7 +369,6 @@ int main() {
 					}
 				}*/
 				}
-
 
 
 				/*Continoue while hold*/
@@ -413,10 +425,20 @@ int main() {
 						};
 
 						if (compIn(comp[c], selSqr.getPosition(), cursorInSim())) {
-							if (!compFound) virSerial.emplace_back(c);
+							if (!compFound) {
+								virSerial.emplace_back(c);
+
+								virSprite.emplace_back(comp[virSerial.back()].sprite);
+								/*virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+								virSprite.back().setColor(tempDimColor);*/
+							}
 						}
 						else {
-							if (compFound) virSerial.erase(virSerial.begin() + v);
+							if (compFound) {
+								virSerial.erase(virSerial.begin() + v);
+
+								virSprite.erase(virSprite.begin() + v);
+							}
 						}
 					}
 				}
@@ -424,7 +446,7 @@ int main() {
 
 
 
-				if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
+				//if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
 
 				if (printScreen) {
 
@@ -623,7 +645,7 @@ int main() {
 			}
 
 			// ----------------------------------------	Update
-			circuit.updateWin();
+			//circuit.updateWin();
 
 			if (MInTool) { Stimuli = 1; }
 			{
@@ -671,7 +693,7 @@ int main() {
 						for (int c = 0; c < comp.size(); c++) { comp[c].draw(app, gap); }
 					}
 
-					/*Wires*/ if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
+					///*Wires*/ if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
 
 					if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
