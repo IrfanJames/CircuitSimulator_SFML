@@ -40,7 +40,8 @@ bool Occupied = 0;
 
 int main() {
 
-	//sf::ContextSettings settings; settings.antialiasingLevel = 8; app.create(VideoMode(W, H), "CircuitSim", Style::Default, settings);
+	//sf::ContextSettings settings; settings.antialiasingLevel = 8
+	//app.create(VideoMode(W, H), "CircuitSim", Style::Default, settings);
 	app.create(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
 
 	//ImGui::SFML::Init(app);//
@@ -53,9 +54,10 @@ int main() {
 
 
 	time_t frame = clock();
-	bool End = 0, Stimuli = 1, debugBool = 0;
+	bool End = 0, debugBool = 0;
 
-	/*Flags*/
+	bool stimuliDisplay = 1, stimuliEndNodes = 1;
+
 	bool releaseBool = 1;
 
 	bool Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
@@ -158,12 +160,21 @@ int main() {
 	/*Circuit*/
 
 	comp.reserve(8);
+	allEnds.reserve(10);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
+
+
 
 	////////////////////////////////////////////// Solve
 	Graph circuit;
 
-	vector<sf::Vector2f> allNodes; allNodes.reserve(5);
+	sf::CircleShape nodePic(4, 15);
+	nodePic.setOrigin(4, 4);
+	nodePic.setFillColor(normalCompColor);
+	vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(5);
+
+
+
 
 	///////////////////////////////////////////////
 	while (!End) {
@@ -186,7 +197,7 @@ int main() {
 
 			Event evnt;
 			while (app.pollEvent(evnt)) {
-				Stimuli = 1;
+				stimuliDisplay = 1;
 				//ImGui::SFML::ProcessEvent(evnt);
 
 				if (evnt.type == evnt.Closed) { app.close(); End = 1; }
@@ -211,7 +222,7 @@ int main() {
 				}
 			}
 
-			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { rotComp = 1; Stimuli = 1; }
+			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { rotComp = 1; stimuliDisplay = 1; }
 			if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { saveNew = 1; }
 			/*else if (evnt.key.code == Keyboard::R) {
 				view.setCenter(W / 2, H / 2);
@@ -227,8 +238,6 @@ int main() {
 			}*/
 
 			///////////////////////////////////////////////
-
-
 
 
 
@@ -270,6 +279,9 @@ int main() {
 							}
 
 							comp.back().x = tempNewCompX; comp.back().y = tempNewCompY;
+
+							updateAllEnds(); stimuliEndNodes = 1;
+
 						}
 						else {
 							mouseOnCompsBool = 0;
@@ -320,17 +332,20 @@ int main() {
 					//cout << "\n" << mouseOnCompsBool << " " << rotComp;
 					if (mouseOnCompsBool && rotComp) {
 						if (onceOptComp) {
-							Stimuli = 1;
+							stimuliDisplay = 1;
+
 							for (int v = 0; v < virSerial.size(); v++) {
 								comp[virSerial[v]].angle += 90;
 								comp[virSerial[v]].angle -= (int)(comp[virSerial[v]].angle / 360) * 360;
 							}
+
+							updateAllEnds(); stimuliEndNodes = 1;
 						}
 						onceOptComp = 0;
 					}
 					else if (mouseOnCompsBool && delComp) {
 						if (onceOptComp) {
-							Stimuli = 1;
+							stimuliDisplay = 1;
 
 							while (0 < virSerial.size()) {
 								if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
@@ -342,6 +357,8 @@ int main() {
 
 								virSerial.erase(virSerial.begin());
 							}
+
+							updateAllEnds(); stimuliEndNodes = 1;
 						}
 						onceOptComp = 0;
 						mouseOnCompsBool = 0;
@@ -353,7 +370,7 @@ int main() {
 					/*Click*/
 					
 					if (Click(gap)) {
-						Stimuli = 1;
+						stimuliDisplay = 1;
 						for (int v = 0; v < virSerial.size(); v++) {
 							int tempCompClick = comp[virSerial[v]].serial;
 							comp[virSerial[v]].serial = (tempCompClick == 5) * 7 + (tempCompClick == 7) * 5 + (tempCompClick != 5 && tempCompClick != 7) * (tempCompClick);
@@ -383,7 +400,7 @@ int main() {
 					/*Follow Mouse*/
 					if (mouseOnCompsBool) {
 						if (!selectSquare/* && releaseBool*/) {
-							Stimuli = 1;
+							stimuliDisplay = 1;
 							int tempRotArr[4][2] = {
 								{0, -2},
 								{2, 0},
@@ -410,13 +427,15 @@ int main() {
 								}
 							}
 						}
+
+						updateAllEnds(); stimuliEndNodes = 1;
 					}
 
 				}
 
 				/*Select Sqr*/
 				if (selectSquare && !releaseBool) {
-					Stimuli = 1;
+					stimuliDisplay = 1;
 
 					/*Sel Sqr*/
 					selSqr.setSize(sf::Vector2f(cursorInSim().x - selSqr.getPosition().x, cursorInSim().y - selSqr.getPosition().y));
@@ -602,10 +621,12 @@ int main() {
 						comp.emplace_back(S, X, Y, A);
 					}
 					input.close();
+
+					updateAllEnds(); stimuliEndNodes = 1;
 				}
 
 				if (Drag) {
-					Stimuli = 1;
+					stimuliDisplay = 1;
 					view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)Mouse::getPosition(app).x, viewY + mouseHoldY - (float)Mouse::getPosition(app).y));
 					float newVerY = verY + mouseHoldY - (float)Mouse::getPosition(app).y;
 					float newHorX = horX + mouseHoldX - (float)Mouse::getPosition(app).x;
@@ -657,7 +678,7 @@ int main() {
 			// ----------------------------------------	Update
 			//circuit.updateWin();
 
-			if (MInTool) { Stimuli = 1; }
+			if (MInTool) { stimuliDisplay = 1; }
 			{
 				/*ImGui*/
 				/*ImGui::SFML::Update(app, deltaClock.restart());//
@@ -676,7 +697,7 @@ int main() {
 						testCircle.setPointCount(t_vertices);
 						testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
 
-				//Tool Win
+						//Tool Win
 				ToolBoxWin.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolBoxWinRestingPosY);
 
 				//Tool Sqr
@@ -684,12 +705,29 @@ int main() {
 				ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, (int)ToolBoxLittleBox.getSize().x));
 				if (MIntool) serialToolMouse = (int)(Mouse::getPosition(app).y / ToolBoxLittleBox.getSize().x); else serialToolMouse = 0;
 
+				/*endNodes*/ {
+					if (stimuliEndNodes) {
+						while (allEnds.size() < allEndCircles.size()) {
+							allEndCircles.pop_back();
+						}
+
+						while (allEndCircles.size() < allEnds.size()) {
+							allEndCircles.emplace_back(nodePic);
+						}
+
+						for (int e = 0; e < allEndCircles.size(); e++) {
+							allEndCircles[e].setPosition(allEnds[e]);
+						}
+					}
+				}
+
 			}
+
 
 			// ----------------------------------------	Draw
 			{
 				app.setView(view);
-				if (Stimuli) {
+				if (stimuliDisplay) {
 					app.clear(sf::Color(23, 24, 25));
 					//app.draw(Rayn);
 					//app.draw(Rayn2);
@@ -704,6 +742,10 @@ int main() {
 					}
 
 					///*Wires*/ if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
+
+					/*Nodes*/ {
+						for (int e = 0; e < allEndCircles.size(); e++) { app.draw(allEndCircles[e]); }
+					}
 
 					if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
@@ -735,12 +777,12 @@ int main() {
 			frame = clock();
 
 
-			printScreen = 0; save = 0; saveNew = 0; open = 0; Stimuli = 0;
+			printScreen = 0; save = 0; saveNew = 0; open = 0; stimuliDisplay = 0; stimuliEndNodes = 0;
 		}
 
 	END:
 		;
-		printScreen = 0; save = 0; saveNew = 0; open = 0; Stimuli = 1;
+		printScreen = 0; save = 0; saveNew = 0; open = 0; stimuliDisplay = 1; stimuliEndNodes = 1;
 	}
 
 
@@ -755,8 +797,8 @@ void updateAllEnds() {
 
 	allEnds.clear();
 
-	sf::Vector2f tempEnd;
 	for (int c = 0; c < comp.size(); c++) {
+		static sf::Vector2f tempEnd;
 
 		for (int cc = 0; cc < 2; cc++) {
 
@@ -774,7 +816,7 @@ void updateAllEnds() {
 			}
 
 			for (int e = 0; e < allEnds.size(); e++) {
-				if (sf::Vector2f(comp[c].x, comp[c].y) == allEnds[e]) {
+				if (tempEnd == allEnds[e]) {
 					found = 1;
 					break;
 				}
@@ -787,7 +829,6 @@ void updateAllEnds() {
 		}
 
 	}
-
 
 }
 

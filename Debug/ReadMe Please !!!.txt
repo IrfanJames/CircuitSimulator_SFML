@@ -10,7 +10,7 @@
 
 5. S	Save Project
 
-6. S	Open (saved) Project
+6. O	Open (saved) Project
 
 7. Esc   Escape
 
