@@ -6,6 +6,7 @@ taskkill /F /IM Circiut_Sim.exe
 //#include "imgui.h"
 //#include "imgui-SFML.h"
 #include <iostream>
+#include <future>
 #include <fstream>
 //#include <vector>
 
@@ -24,14 +25,18 @@ bool occupiedAt(int Index, sf::Vector2f At);
 bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin);
 void getBounds(Entity Comp, int arr[4]);
 
+void updateAllEnds();
+
 //RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
 sf::RenderWindow app;
 float mouseHoldX = Mouse::getPosition(app).x, mouseHoldY = Mouse::getPosition(app).y;
 
 sf::View view(sf::Vector2f(W / 2, H / 2), sf::Vector2f(W, H));
-vector<Entity> comp;
+std::vector<Entity> comp;
+std::vector<sf::Vector2f> allEnds;
 
 bool Occupied = 0;
+
 
 int main() {
 
@@ -150,11 +155,12 @@ int main() {
 		selSqr.setOutlineColor(sf::Color(255, 0, 255)); }
 
 
-	////////////////////////////////////////////// Tool
+	/*Circuit*/
 
 	comp.reserve(8);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
+	////////////////////////////////////////////// Solve
 	Graph circuit;
 
 	vector<sf::Vector2f> allNodes; allNodes.reserve(5);
@@ -448,9 +454,9 @@ int main() {
 
 				//if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
 
-				if (printScreen) {
+				
 
-					printScreen = 0;
+				if (printScreen) {
 					sf::Image OutputImage;
 					int compArr[4];
 					int A = 0, B = 0, C = 0, D = 0;
@@ -523,8 +529,8 @@ int main() {
 
 						int fakeGap = 15 - (comp[c].serial == 5) * 5;
 
-						float OffX = comp[c].x - compArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + gap;
-						float OffY = comp[c].y - compArr[2] - C - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + gap;
+						float OffX = comp[c].x - compArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+						float OffY = comp[c].y - compArr[2] - C - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
 						//cout << "\n" << OffX << ", " << OffY; 
 
 						for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
@@ -532,6 +538,9 @@ int main() {
 								if (tempCompImg.getPixel(i, j).a == 0) continue;
 
 								//cout << "\n" << j << ", " << i;
+								//std::async(std::launch::async, setPixcelImage, OffX + i, OffY + j, tempCompImg.getPixel(i, j));
+								//std::async(std::launch::async, setPixcelImage, OutputImage, OffX + i, OffY + j, i, j, tempCompImg);
+
 								OutputImage.setPixel(OffX + i, OffY + j, tempCompImg.getPixel(i, j));
 								//OutputImage.setPixel(i, j, tempCompImg.getPixel(i, j));
 							}
@@ -545,7 +554,8 @@ int main() {
 					sf::Image test;
 
 					while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
-						cout << "\n" << picNo;
+						;
+						//cout << "\n" << picNo;
 					}
 
 					OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
@@ -739,6 +749,53 @@ int main() {
 	system("pause");
 	return 0;
 }
+
+
+void updateAllEnds() {
+
+	allEnds.clear();
+
+	sf::Vector2f tempEnd;
+	for (int c = 0; c < comp.size(); c++) {
+
+		for (int cc = 0; cc < 2; cc++) {
+
+
+			bool found = 0;
+
+			if (cc == 0) {
+				/*Front*/
+				tempEnd.x = comp[c].x;
+				tempEnd.y = comp[c].y;
+			}
+			else if (cc == 1) {
+				/*Rear*/
+				tempEnd = comp[c].endNodePos();
+			}
+
+			for (int e = 0; e < allEnds.size(); e++) {
+				if (sf::Vector2f(comp[c].x, comp[c].y) == allEnds[e]) {
+					found = 1;
+					break;
+				}
+			}
+
+			if (!found) {
+				allEnds.emplace_back(tempEnd);
+			}
+
+		}
+
+	}
+
+
+}
+
+
+
+
+
+
 
 
 

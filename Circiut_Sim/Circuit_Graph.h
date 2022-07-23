@@ -12,7 +12,7 @@ class Graph {
 
 		Corner(int Item) {
 			item = Item;
-			neighbors.reserve(2);
+			neighbors.reserve(8);
 		}
 	};
 	std::vector<sf::CircleShape> allCircles;
