@@ -6,16 +6,18 @@ taskkill /F /IM Circiut_Sim.exe
 //#include "imgui.h"
 //#include "imgui-SFML.h"
 #include <iostream>
-#include <future>
 #include <fstream>
+#include <future>
 //#include <vector>
 
 #include "Circuit_Entity.h"
 #include "Circuit_Graph.h"
 #include "Circuit_wire.h"
 
+#include "clipboardxx.hpp"
+
 using namespace sf;
-using std::cout; using std::vector;
+using std::cout;
 
 sf::Vector2f cursorInSim();
 bool Click(int Sensitivity);
@@ -40,10 +42,9 @@ bool Occupied = 0;
 
 int main() {
 
-	//sf::ContextSettings settings; settings.antialiasingLevel = 8
-	//app.create(VideoMode(W, H), "CircuitSim", Style::Default, settings);
-	app.create(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
-
+	sf::ContextSettings settings; settings.antialiasingLevel = 8;
+	app.create(VideoMode(W, H), "CircuitSim", Style::Close, settings);
+	//app.create(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
 	//ImGui::SFML::Init(app);//
 	//sf::Clock deltaClock;//
 
@@ -61,9 +62,9 @@ int main() {
 	bool releaseBool = 1;
 
 	bool Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
-	bool onceOptComp = 0, delComp = 0, rotComp = 0;
+	bool onceOptMounsePressed = 0, delComp = 0, rotComp = 0;
 	bool wireBool = 0;
-	bool save = 0, saveNew = 0, open = 0, printScreen = 0;
+	bool save = 0, saveNew = 0, open = 0, printScreen = 0, copy = 0, paste = 0, onceOptComp = 0;
 
 	int serialCompMouse = 0, serialToolMouse = 0;
 
@@ -87,8 +88,8 @@ int main() {
 
 	/*Grid*/
 	int gap = 15, virtualBoarder = 80;
-	vector<sf::RectangleShape> vLines;
-	vector<sf::RectangleShape> hLines;
+	std::vector<sf::RectangleShape> vLines;
+	std::vector<sf::RectangleShape> hLines;
 	sf::Color gridColor(100, 105, 110, 20);
 	{
 		vLines.reserve((W + 2 * virtualBoarder) / gap + 2);
@@ -147,8 +148,8 @@ int main() {
 	}
 
 	////////////////////////////////////////////// VirutalComps
-	vector<int> virSerial; virSerial.reserve(8);
-	vector<sf::Sprite> virSprite; virSprite.reserve(8);
+	std::vector<int> virSerial; virSerial.reserve(8);
+	std::vector<sf::Sprite> virSprite; virSprite.reserve(8);
 
 	/*Sel Sqr*/
 	sf::RectangleShape selSqr; {
@@ -171,13 +172,14 @@ int main() {
 	sf::CircleShape nodePic(4, 15);
 	nodePic.setOrigin(4, 4);
 	nodePic.setFillColor(normalCompColor);
-	vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(5);
-
+	std::vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(5);
 
 
 
 	///////////////////////////////////////////////
 	while (!End) {
+
+		clipboardxx::clipboard clipboard;
 
 		float viewX = view.getCenter().x, viewY = view.getCenter().y;
 		float verX = vLines[0].getPosition().x, verY = vLines[0].getPosition().y;
@@ -192,7 +194,7 @@ int main() {
 			float t_TollWx = ToolBoxWin.getPosition().x;
 			bool MInTool = !!(0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= t_TollWX);
 			bool MIntool = !!(MInTool && Mouse::getPosition(app).y < 7 * t_TollWX);
-			delComp = 0; rotComp = 0;
+			delComp = 0; rotComp = 0; paste = 0;
 			Occupied = 0;
 
 			Event evnt;
@@ -211,7 +213,7 @@ int main() {
 					if (evnt.key.code == Keyboard::O) { open = 1; }
 					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
 					//if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
-					if (evnt.key.code == Keyboard::Delete) { delComp = 1; }
+					if (evnt.key.code == Keyboard::Delete) { delComp = 1; stimuliDisplay = 1; }
 
 					/*int difr = 10;
 					if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
@@ -222,8 +224,6 @@ int main() {
 				}
 			}
 
-			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { rotComp = 1; stimuliDisplay = 1; }
-			if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { saveNew = 1; }
 			/*else if (evnt.key.code == Keyboard::R) {
 				view.setCenter(W / 2, H / 2);
 				viewX = view.getCenter().x; viewY = view.getCenter().y;
@@ -236,8 +236,20 @@ int main() {
 				verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 				horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
 			}*/
-
+			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { rotComp = 1; stimuliDisplay = 1; }
+			if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { saveNew = 1; }
+			
+			if ((Keyboard::isKeyPressed(Keyboard::C)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { copy = 1; }
+			else {
+				copy = 0;
+				if ((Keyboard::isKeyPressed(Keyboard::V)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { paste = 1; stimuliDisplay = 1; }
+				else {
+					paste = 0;
+					onceOptComp = 1;
+				}
+			}
 			///////////////////////////////////////////////
+			
 
 
 
@@ -280,7 +292,7 @@ int main() {
 
 							comp.back().x = tempNewCompX; comp.back().y = tempNewCompY;
 
-							updateAllEnds(); stimuliEndNodes = 1;
+							stimuliEndNodes = 1;
 
 						}
 						else {
@@ -329,24 +341,20 @@ int main() {
 					if (virSerial.size() > 0) mouseOnCompsBool = 1;
 
 					/*Once while hold*/
-					//cout << "\n" << mouseOnCompsBool << " " << rotComp;
 					if (mouseOnCompsBool && rotComp) {
-						if (onceOptComp) {
-							stimuliDisplay = 1;
-
+						if (onceOptMounsePressed) {
 							for (int v = 0; v < virSerial.size(); v++) {
 								comp[virSerial[v]].angle += 90;
 								comp[virSerial[v]].angle -= (int)(comp[virSerial[v]].angle / 360) * 360;
 							}
 
-							updateAllEnds(); stimuliEndNodes = 1;
+							stimuliDisplay = 1;
+							stimuliEndNodes = 1;
 						}
-						onceOptComp = 0;
+						onceOptMounsePressed = 0;
 					}
 					else if (mouseOnCompsBool && delComp) {
-						if (onceOptComp) {
-							stimuliDisplay = 1;
-
+						if (onceOptMounsePressed) {
 							while (0 < virSerial.size()) {
 								if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
 								if (virSprite.size() > 0) virSprite.erase(virSprite.begin());
@@ -358,12 +366,13 @@ int main() {
 								virSerial.erase(virSerial.begin());
 							}
 
-							updateAllEnds(); stimuliEndNodes = 1;
+							stimuliDisplay = 1;
+							stimuliEndNodes = 1;
 						}
-						onceOptComp = 0;
 						mouseOnCompsBool = 0;
+						onceOptMounsePressed = 0;
 					}
-					else onceOptComp = 1;
+					else onceOptMounsePressed = 1;
 				}
 				else {
 					Drag = 0; mouseOnCompsBool = 0;
@@ -392,7 +401,6 @@ int main() {
 					}
 				}*/
 				}
-
 
 				/*Continoue while hold*/
 				if (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y) {
@@ -428,7 +436,7 @@ int main() {
 							}
 						}
 
-						updateAllEnds(); stimuliEndNodes = 1;
+						stimuliEndNodes = 1;
 					}
 
 				}
@@ -468,14 +476,10 @@ int main() {
 					}
 				}
 
-
-
-
 				//if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
 
-				
-
 				if (printScreen) {
+					printScreen = 0;
 					sf::Image OutputImage;
 					int compArr[4];
 					int A = 0, B = 0, C = 0, D = 0;
@@ -580,51 +584,121 @@ int main() {
 					OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
 				}
 
-				if (save) {
-					int fileNo = 0;
-					std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-					std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
+				if (paste) {
+					if (onceOptComp) {
+						std::string inString;
+						std::vector<int> integers; integers.reserve(5);
+						clipboard >> inString;
 
-					while (test.good()) {
-						test.close();
-						test.open(fileDir + std::to_string(++fileNo) + fileType);
+						cout << inString;
+
+						bool negative = 0;
+						for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
+							temp = (int)inString[c];
+
+							if (48 <= temp && temp <= 57) {
+								x = x * 10 + temp - 48;
+							}
+							else if (temp == 45) negative = 1;
+							else if (temp == 10 || temp == 9) { // else if (temp == (int)('\n') || temp == (int)('\t')) {
+								if (negative) x *= -1;
+								integers.emplace_back(x);
+								negative = 0;
+								x = 0;
+							}
+
+						}
+
+						//cout << "\n"; for (int c = 0; c < integers.size(); c++) cout << integers[c] << " ";
+
+						for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
+							S = integers[++c];
+							X = integers[++c];
+							Y = integers[++c];
+							A = integers[++c];
+							comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+						}
+
+						stimuliDisplay = 1;
+						stimuliEndNodes = 1;
 					}
-
-					std::ofstream output(fileDir + std::to_string(fileNo) + fileType);
-
-					output << comp.size() << "\n";
-					for (int c = 0; c < comp.size(); c++) {
-						output << comp[c].serial << "\t" << comp[c].x << "\t" << comp[c].y << "\t" << comp[c].angle << "\n";
-					}
-					output.close();
-
+					onceOptComp = 0; copy = 0;
 				}
 
+				if (save || (copy && onceOptComp)) {
+
+					std::ofstream output;
+
+					if (!copy) {
+						int fileNo = 0;
+						std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+						std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
+
+						while (test.good()) {
+							test.close();
+							test.open(fileDir + std::to_string(++fileNo) + fileType);
+						}
+
+						output.open(fileDir + std::to_string(fileNo) + fileType);
+
+					}
+
+					std::string tempStr;
+					if (copy) {
+						tempStr = std::to_string((int)virSerial.size()) + "\n";
+					}
+					else {
+						tempStr = std::to_string((int)comp.size()) + "\n";
+					}
+
+					int size = ((int)comp.size()) * (!copy) + ((int)virSerial.size()) * (copy);
+					for (int c = 0; c < size; c++) {
+						if (copy)
+							tempStr += std::to_string(comp[virSerial[c]].serial) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
+						else
+							tempStr += std::to_string(comp[c].serial) + "\t" + std::to_string((int)comp[c].x) + "\t" + std::to_string((int)comp[c].y) + "\t" + std::to_string((int)comp[c].angle) + "\n";
+					}
+
+					if (copy) {
+						clipboard << tempStr;
+					}
+					else {
+						output << tempStr;
+						output.close();
+					}
+
+					save = 0; saveNew = 0;
+					onceOptComp = 0;
+					copy = 0;
+				}
+				
 				if (open) {
-					int fileNo = 0;
-					std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-					std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
 
-					while (input.good()) {
+						int fileNo = 0;
+						std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+						std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
+
+						while (input.good()) {
+							input.close();
+							input.open(fileDir + std::to_string(++fileNo) + fileType);
+						}
+						input.open(fileDir + std::to_string(fileNo - 1) + fileType);
+
+						comp.clear();
+						virSprite.clear();
+						virSerial.clear();
+						int no = 0;
+						input >> no;
+						for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
+							input >> S >> X >> Y >> A;
+							comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+						}
 						input.close();
-						input.open(fileDir + std::to_string(++fileNo) + fileType);
+
+						stimuliEndNodes = 1;
+						open = 0;
 					}
-					input.open(fileDir + std::to_string(fileNo - 1) + fileType);
-
-					comp.clear();
-					virSprite.clear();
-					virSerial.clear();
-					int no = 0;
-					input >> no;
-					for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
-						input >> S >> X >> Y >> A;
-						comp.emplace_back(S, X, Y, A);
-					}
-					input.close();
-
-					updateAllEnds(); stimuliEndNodes = 1;
-				}
-
+				
 				if (Drag) {
 					stimuliDisplay = 1;
 					view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)Mouse::getPosition(app).x, viewY + mouseHoldY - (float)Mouse::getPosition(app).y));
@@ -677,7 +751,6 @@ int main() {
 
 			// ----------------------------------------	Update
 			//circuit.updateWin();
-
 			if (MInTool) { stimuliDisplay = 1; }
 			{
 				/*ImGui*/
@@ -697,7 +770,7 @@ int main() {
 						testCircle.setPointCount(t_vertices);
 						testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
 
-						//Tool Win
+				//Tool Win
 				ToolBoxWin.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolBoxWinRestingPosY);
 
 				//Tool Sqr
@@ -707,6 +780,9 @@ int main() {
 
 				/*endNodes*/ {
 					if (stimuliEndNodes) {
+
+						updateAllEnds();
+
 						while (allEnds.size() < allEndCircles.size()) {
 							allEndCircles.pop_back();
 						}
@@ -718,6 +794,8 @@ int main() {
 						for (int e = 0; e < allEndCircles.size(); e++) {
 							allEndCircles[e].setPosition(allEnds[e]);
 						}
+
+						//cout << "\n" << allEnds.size();
 					}
 				}
 
@@ -726,8 +804,8 @@ int main() {
 
 			// ----------------------------------------	Draw
 			{
-				app.setView(view);
 				if (stimuliDisplay) {
+					app.setView(view);
 					app.clear(sf::Color(23, 24, 25));
 					//app.draw(Rayn);
 					//app.draw(Rayn2);
@@ -777,12 +855,12 @@ int main() {
 			frame = clock();
 
 
-			printScreen = 0; save = 0; saveNew = 0; open = 0; stimuliDisplay = 0; stimuliEndNodes = 0;
+			stimuliDisplay = 0; stimuliEndNodes = 0;
 		}
 
 	END:
 		;
-		printScreen = 0; save = 0; saveNew = 0; open = 0; stimuliDisplay = 1; stimuliEndNodes = 1;
+		stimuliDisplay = 1; stimuliEndNodes = 1;
 	}
 
 
@@ -797,13 +875,11 @@ void updateAllEnds() {
 
 	allEnds.clear();
 
+	int nodeCount = -1;
 	for (int c = 0; c < comp.size(); c++) {
 		static sf::Vector2f tempEnd;
 
 		for (int cc = 0; cc < 2; cc++) {
-
-
-			bool found = 0;
 
 			if (cc == 0) {
 				/*Front*/
@@ -815,6 +891,7 @@ void updateAllEnds() {
 				tempEnd = comp[c].endNodePos();
 			}
 
+			bool found = 0;
 			for (int e = 0; e < allEnds.size(); e++) {
 				if (tempEnd == allEnds[e]) {
 					found = 1;
@@ -823,12 +900,19 @@ void updateAllEnds() {
 			}
 
 			if (!found) {
-				allEnds.emplace_back(tempEnd);
+				/*nodeCount++;
+				if (nodeCount < allEnds.size()) allEnds[nodeCount] = tempEnd;
+				else */allEnds.emplace_back(tempEnd);
 			}
 
 		}
 
 	}
+	//cout << "\nnodes " << nodeCount;
+
+	/*while (nodeCount + 1 < allEnds.size()) {
+		allEnds.pop_back();
+	}*/
 
 }
 

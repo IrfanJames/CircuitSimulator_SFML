@@ -2,17 +2,23 @@
 
 1. Hover Cursor to the Left of the window for ToolBar
 
+2. Hold(one element) or Selection mode(N) (multiple elements)
+
 2. (Hold component) then Shift + R -> Rotate
 
-3. (Hold component) then Del       -> Delete
+3. (Hold component) then Shift + C -> Copy
 
-4. P	PrintScreen; Save as Image(PNG)
+4. (Hold component) then Shift + V -> Paste
 
-5. S	Save Project
+5. (Hold component) then Del       -> Delete
 
-6. O	Open (saved) Project
+6. P	PrintScreen; Save as Image(PNG)
 
-7. Esc   Escape
+7. S	Save Project
+
+8. O	Open (saved) Project
+
+9. Esc   Escape
 
 Enjoy!
 

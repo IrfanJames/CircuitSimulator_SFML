@@ -1,7 +1,7 @@
 #pragma once
 
-int W = 1500;
-int H = 850;
+int W = 1400;
+int H = 800;
 
 int noOfComps = 8;
 

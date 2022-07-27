@@ -54,6 +54,9 @@
     <ClInclude Include="Circuit_wire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="clipboardxx.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Circiut_Sim_main.cpp">

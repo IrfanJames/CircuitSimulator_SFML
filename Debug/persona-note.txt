@@ -1,5 +1,5 @@
 New:
-EndNodes, endNode-Circles
+Copy/Paste
 
 Unstable:
 
@@ -15,7 +15,8 @@ Save as Image(different names)
 Smart Display (only on Stimuli)
 Save Projects (different names)
 Open latest saved project
-
+EndNodes, endNode-Circles
+Copy/Paste
 
 Issues:
 

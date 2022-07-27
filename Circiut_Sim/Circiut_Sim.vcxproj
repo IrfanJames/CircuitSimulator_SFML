@@ -164,6 +164,7 @@
     <ClInclude Include="Circuit_Entity.h" />
     <ClInclude Include="Circuit_Global.h" />
     <ClInclude Include="Circuit_Graph.h" />
+    <ClInclude Include="clipboardxx.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\imgui\imgui-SFML.cpp" />
