@@ -9,13 +9,13 @@ float trim(float num, int wrt);
 
 
 class Wire {
-	sf::Color normalColor;
+	static sf::Color normalColor;
 public:
 	std::vector<sf::RectangleShape> wire;
 
 	Wire(sf::Vector2f IniPoint) {
 		wire.reserve(2);
-		normalColor.r = 255; normalColor.g = 255; normalColor.b = 255;
+		//normalColor.r = 255; normalColor.g = 255; normalColor.b = 255;
 
 		wire.emplace_back(sf::Vector2f(3, 20));
 		wire.back().setOrigin(1, 0);

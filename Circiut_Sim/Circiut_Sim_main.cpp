@@ -6,6 +6,7 @@ taskkill /F /IM Circiut_Sim.exe
 //#include "imgui.h"
 //#include "imgui-SFML.h"
 #include <iostream>
+#include <thread>
 #include <fstream>
 #include <future>
 //#include <vector>
@@ -26,6 +27,8 @@ float trim(float num, int wrt);
 bool occupiedAt(int Index, sf::Vector2f At);
 bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin);
 void getBounds(Entity Comp, int arr[4]);
+
+void printScreen();
 
 void updateAllEnds();
 
@@ -64,7 +67,7 @@ int main() {
 	bool Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
 	bool onceOptMounsePressed = 0, delComp = 0, rotComp = 0;
 	bool wireBool = 0;
-	bool save = 0, saveNew = 0, open = 0, printScreen = 0, copy = 0, paste = 0, onceOptComp = 0;
+	bool save = 0, saveNew = 0, open = 0, printScreenBool = 0, copy = 0, paste = 0, onceOptComp = 0;
 
 	int serialCompMouse = 0, serialToolMouse = 0;
 
@@ -164,8 +167,7 @@ int main() {
 	allEnds.reserve(10);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
-
-
+	
 	////////////////////////////////////////////// Solve
 	Graph circuit;
 
@@ -174,6 +176,9 @@ int main() {
 	nodePic.setFillColor(normalCompColor);
 	std::vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(5);
 
+	//////////////////////////////////////////////
+
+	//std::thread printScreenTread;
 
 
 	///////////////////////////////////////////////
@@ -208,7 +213,7 @@ int main() {
 				if (evnt.type == evnt.KeyPressed) {
 					if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; goto END; }
 					//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
-					if (evnt.key.code == Keyboard::P) { printScreen = 1; }
+					if (evnt.key.code == Keyboard::P) { printScreenBool = 1; }
 					if (evnt.key.code == Keyboard::S) { save = 1; }
 					if (evnt.key.code == Keyboard::O) { open = 1; }
 					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
@@ -236,23 +241,19 @@ int main() {
 				verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 				horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
 			}*/
-			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { rotComp = 1; stimuliDisplay = 1; }
-			if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { saveNew = 1; }
+			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { rotComp = 1; stimuliDisplay = 1; }
+			if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { saveNew = 1; }
 			
-			if ((Keyboard::isKeyPressed(Keyboard::C)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { copy = 1; }
+			if ((Keyboard::isKeyPressed(Keyboard::C)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { copy = 1; }
 			else {
 				copy = 0;
-				if ((Keyboard::isKeyPressed(Keyboard::V)) && (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift))) { paste = 1; stimuliDisplay = 1; }
+				if ((Keyboard::isKeyPressed(Keyboard::V)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { paste = 1; stimuliDisplay = 1; }
 				else {
 					paste = 0;
 					onceOptComp = 1;
 				}
 			}
 			///////////////////////////////////////////////
-			
-
-
-
 
 
 
@@ -478,122 +479,34 @@ int main() {
 
 				//if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
 
-				if (printScreen) {
-					printScreen = 0;
-					sf::Image OutputImage;
-					int compArr[4];
-					int A = 0, B = 0, C = 0, D = 0;
+				if (printScreenBool) {
+					printScreenBool = 0;
 
-					if (comp.size() != 0) {
-						getBounds(comp[0], compArr);
-						A = comp[0].x - compArr[0], B = comp[0].x + compArr[1], C = comp[0].y - compArr[2], D = comp[0].y + compArr[3]; // Borders
+					time_t print = clock();
 
-						for (int c = 0; c < comp.size(); c++) {
-							getBounds(comp[c], compArr);
-							if (comp[c].x - compArr[0] <= A) A = comp[c].x - compArr[0];
-							if (comp[c].x + compArr[1] >= B) B = comp[c].x + compArr[1];
-							if (comp[c].y - compArr[2] <= C) C = comp[c].y - compArr[2];
-							if (comp[c].y + compArr[3] >= D) D = comp[c].y + compArr[3];
-						}
-						/*for (int c = 0; c < comp.size(); c++) {
-							sf::Vector2f tempEndNode = endNodePos(comp[c]);
-							if (tempEndNode.x < A) A = tempEndNode.x;
-							if (tempEndNode.x > B) B = tempEndNode.x;
-							if (tempEndNode.y < C) C = tempEndNode.y;
-							if (tempEndNode.y > D) D = tempEndNode.y;
-						}*/
-						OutputImage.create(abs(A - B) + 30, abs(C - D) + 30);
-						//cout << "\n" << "S: " << abs(A - B) << ", " << abs(C - D);
-						//cout << "\n" << A << ", " << B << ", " << C << ", " << D;
+					for (int c = 0; c < 1; c++) {
+						//std::thread printScreenTread { printScreen }; printScreenTread.join();
+
+						//std::async(std::launch::async, printScreen);
+						
+						printScreen();
 					}
-					else { OutputImage.create(10, 10); }
+					cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
+					print = clock();
 
-					for (int c = 0; c < comp.size(); c++) {
-						sf::Vector2f tempEndNode = comp[c].endNodePos();
-						getBounds(comp[c], compArr);
-
-						sf::Image tempCompImg;
-						//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
-
-						if (comp[c].angle == 0) {
-							tempCompImg = compTex[comp[c].serial].copyToImage();
-						}
-						else if (comp[c].angle == 180) {
-							tempCompImg = compTex[comp[c].serial].copyToImage();
-							tempCompImg.flipVertically();
-							tempCompImg.flipHorizontally();
-						}
-						else {
-							sf::Image tempTempCompImg(compTex[comp[c].serial].copyToImage());
-							tempCompImg.create(tempTempCompImg.getSize().y, tempTempCompImg.getSize().x);
-
-							for (int j = 0; j < tempTempCompImg.getSize().y; j++) {
-								for (int i = 0; i < tempTempCompImg.getSize().x; i++) {
-									tempCompImg.setPixel(j, i, tempTempCompImg.getPixel(i, j));
-								}
-							}
-							tempCompImg.flipHorizontally();
-
-
-							if (comp[c].angle == 90) {
-								;
-							}
-							else if (comp[c].angle == 270) {
-								tempCompImg.flipVertically();
-								tempCompImg.flipHorizontally();
-
-							}
-						}
-
-						//float OffX = (comp[c].x + (compArr[1] - compArr[0]) / 2) - A; float OffY = (comp[c].y + (compArr[3] - compArr[2]) / 2) - C;
-
-						bool rotBool = ((((int)comp[c].angle) / 90) % 2 == 1);
-						//cout << "\nrotBool " << rotBool;
-
-						int fakeGap = 15 - (comp[c].serial == 5) * 5;
-
-						float OffX = comp[c].x - compArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-						float OffY = comp[c].y - compArr[2] - C - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-						//cout << "\n" << OffX << ", " << OffY; 
-
-						for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
-							for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
-								if (tempCompImg.getPixel(i, j).a == 0) continue;
-
-								//cout << "\n" << j << ", " << i;
-								//std::async(std::launch::async, setPixcelImage, OffX + i, OffY + j, tempCompImg.getPixel(i, j));
-								//std::async(std::launch::async, setPixcelImage, OutputImage, OffX + i, OffY + j, i, j, tempCompImg);
-
-								OutputImage.setPixel(OffX + i, OffY + j, tempCompImg.getPixel(i, j));
-								//OutputImage.setPixel(i, j, tempCompImg.getPixel(i, j));
-							}
-						}
-
-					}
-					//cout << "\n" << "S: " << OutputImage.getSize().x << ", " << OutputImage.getSize().y;
-
-					int picNo = 0;
-					std::string picDir = "Saved-Images/Untitled-", picType = ".png";
-					sf::Image test;
-
-					while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
-						;
-						//cout << "\n" << picNo;
-					}
-
-					OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
 				}
 
 				if (paste) {
 					if (onceOptComp) {
 						std::string inString;
-						std::vector<int> integers; integers.reserve(5);
+						std::vector<int> integers; integers.reserve(9);
 						clipboard >> inString;
 
-						cout << inString;
+						//cout << inString;
 
 						bool negative = 0;
 						for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
+
 							temp = (int)inString[c];
 
 							if (48 <= temp && temp <= 57) {
@@ -699,6 +612,30 @@ int main() {
 						open = 0;
 					}
 				
+			}
+
+			// ----------------------------------------	Update
+			
+			//circuit.updateWin();
+			if (MInTool) { stimuliDisplay = 1; }
+			{
+				/*ImGui*/
+				/*ImGui::SFML::Update(app, deltaClock.restart());//
+						ImGui::Begin("Frist ImGui Win");
+						ImGui::Text("My Project will be on Steroids");
+						ImGui::Checkbox("Draw Circle", &DrawCircle);
+						ImGui::SliderFloat("Radius", &t_radius, 0, 200);
+						ImGui::SliderInt("Sides", &t_vertices, 3, 35);
+						ImGui::ColorEdit3("Color", t_Colors);
+						ImGui::End();
+
+
+
+						testCircle.setRadius(t_radius);
+						testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
+						testCircle.setPointCount(t_vertices);
+						testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
+
 				if (Drag) {
 					stimuliDisplay = 1;
 					view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)Mouse::getPosition(app).x, viewY + mouseHoldY - (float)Mouse::getPosition(app).y));
@@ -747,28 +684,6 @@ int main() {
 					for (int c = 0; c < 7; c++) ToolSpr[c].setPosition(newHorX + virtualBoarder + ToolSprPOS[c].x, newVerY + virtualBoarder + ToolSprPOS[c].y);
 
 				}
-			}
-
-			// ----------------------------------------	Update
-			//circuit.updateWin();
-			if (MInTool) { stimuliDisplay = 1; }
-			{
-				/*ImGui*/
-				/*ImGui::SFML::Update(app, deltaClock.restart());//
-						ImGui::Begin("Frist ImGui Win");
-						ImGui::Text("My Project will be on Steroids");
-						ImGui::Checkbox("Draw Circle", &DrawCircle);
-						ImGui::SliderFloat("Radius", &t_radius, 0, 200);
-						ImGui::SliderInt("Sides", &t_vertices, 3, 35);
-						ImGui::ColorEdit3("Color", t_Colors);
-						ImGui::End();
-
-
-
-						testCircle.setRadius(t_radius);
-						testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
-						testCircle.setPointCount(t_vertices);
-						testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
 
 				//Tool Win
 				ToolBoxWin.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolBoxWinRestingPosY);
@@ -816,7 +731,7 @@ int main() {
 					}
 
 					/*comp*/ {
-						for (int c = 0; c < comp.size(); c++) { comp[c].draw(app, gap); }
+						for (int c = 0; c < comp.size(); c++) { comp[c].draw(app); }
 					}
 
 					///*Wires*/ if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
@@ -916,10 +831,101 @@ void updateAllEnds() {
 
 }
 
+void printScreen() {
+	sf::Image OutputImage;
+	int compArr[4];
+	int A = 0, B = 0, C = 0, D = 0;
+
+	if (comp.size() != 0) {
+		getBounds(comp[0], compArr);
+		A = comp[0].x - compArr[0], B = comp[0].x + compArr[1], C = comp[0].y - compArr[2], D = comp[0].y + compArr[3]; // Borders
+
+		for (int c = 0; c < comp.size(); c++) {
+			getBounds(comp[c], compArr);
+			if (comp[c].x - compArr[0] <= A) A = comp[c].x - compArr[0];
+			if (comp[c].x + compArr[1] >= B) B = comp[c].x + compArr[1];
+			if (comp[c].y - compArr[2] <= C) C = comp[c].y - compArr[2];
+			if (comp[c].y + compArr[3] >= D) D = comp[c].y + compArr[3];
+		}
+		/*for (int c = 0; c < comp.size(); c++) {
+			sf::Vector2f tempEndNode = endNodePos(comp[c]);
+			if (tempEndNode.x < A) A = tempEndNode.x;
+			if (tempEndNode.x > B) B = tempEndNode.x;
+			if (tempEndNode.y < C) C = tempEndNode.y;
+			if (tempEndNode.y > D) D = tempEndNode.y;
+		}*/
+		OutputImage.create(abs(A - B) + 30, abs(C - D) + 30);
+		//cout << "\n" << "S: " << abs(A - B) << ", " << abs(C - D);
+		//cout << "\n" << A << ", " << B << ", " << C << ", " << D;
+	}
+	else { OutputImage.create(10, 10); }
+
+	for (int c = 0; c < comp.size(); c++) {
+		sf::Vector2f tempEndNode = comp[c].endNodePos();
+		getBounds(comp[c], compArr);
+
+		sf::Image tempCompImg;
+		//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
+
+		if (comp[c].angle == 0) {
+			tempCompImg = compTex[comp[c].serial].copyToImage();
+		}
+		else if (comp[c].angle == 180) {
+			tempCompImg = compTex[comp[c].serial].copyToImage();
+			tempCompImg.flipVertically();
+			tempCompImg.flipHorizontally();
+		}
+		else {
+			sf::Image tempTempCompImg(compTex[comp[c].serial].copyToImage());
+			tempCompImg.create(tempTempCompImg.getSize().y, tempTempCompImg.getSize().x);
+
+			for (int j = 0; j < tempTempCompImg.getSize().y; j++) {
+				for (int i = 0; i < tempTempCompImg.getSize().x; i++) {
+					tempCompImg.setPixel(j, i, tempTempCompImg.getPixel(i, j));
+				}
+			}
+			tempCompImg.flipHorizontally();
 
 
+			if (comp[c].angle == 90) {
+				;
+			}
+			else if (comp[c].angle == 270) {
+				tempCompImg.flipVertically();
+				tempCompImg.flipHorizontally();
 
+			}
+		}
 
+		bool rotBool = ((((int)comp[c].angle) / 90) % 2 == 1);
+
+		int fakeGap = 15 - (comp[c].serial == 5) * 5;
+
+		float OffX = comp[c].x - compArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+		float OffY = comp[c].y - compArr[2] - C - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+
+		for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
+			for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
+				if (tempCompImg.getPixel(i, j).a == 0) continue;
+				//std::async(std::launch::async, &sf::Image::setPixel, &OutputImage, OffX + i, OffY + j, tempCompImg.getPixel(i, j));
+				
+				OutputImage.setPixel(OffX + i, OffY + j, tempCompImg.getPixel(i, j));
+			}
+		}
+
+	}
+
+	int picNo = 0;
+	std::string picDir = "Saved-Images/Untitled-", picType = ".png";
+	sf::Image test;
+
+	while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
+		;
+		//cout << "\n" << picNo;
+	}
+
+	OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
+}
 
 
 

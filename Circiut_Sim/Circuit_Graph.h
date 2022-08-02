@@ -4,9 +4,9 @@
 #include <SFML/Graphics.hpp>
 
 class Graph {
-	float DegToRad = 0.01745329f;
-	float RadToDeg = 57.295779f;
-	struct Corner {
+	const float RadToDeg = 57.295779f;
+	const float DegToRad = 0.01745329f;
+	static struct Corner {
 		int item = 0;
 		std::vector<Corner*> neighbors;
 
@@ -38,7 +38,6 @@ class Graph {
 			allCircles.back().setPosition(cos(360.0f / (float)Vector.size() * c * DegToRad) * 200 + win.getSize().x / 2, -sin(360.0f / (float)Vector.size() * c * DegToRad) * 200 + win.getSize().y / 2);
 		}
 
-
 		/*Vertices*/
 		allVertices.reserve(5 + Vector.size());
 		for (int c = 0; c < Vector.size(); c++) {
@@ -67,8 +66,8 @@ public:
 	Graph() {
 		Vector.reserve(5);
 		sf::ContextSettings settings;
-		settings.antialiasingLevel = 8;
-		win.create(sf::VideoMode(500, 500), "Graph", sf::Style::Default, settings);
+		settings.antialiasingLevel = 4;
+		win.create(sf::VideoMode(500, 500), "Graph", sf::Style::Close, settings);
 		win.setVisible(0);
 	}
 	void newItem(int serial) {
@@ -80,7 +79,7 @@ public:
 			Vector.at(Index).neighbors.emplace_back(&Vector.at(Link));
 	}
 
-	void printCorner(Corner corner) {
+	void printCorner(const Corner& corner) {
 		std::cout << "\n" << corner.item << ":\t";
 		for (int c = 0; c < corner.neighbors.size(); c++) {
 			std::cout << " " << corner.neighbors[c]->item;

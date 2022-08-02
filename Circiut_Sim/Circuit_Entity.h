@@ -12,7 +12,6 @@ public:
 	sf::Sprite sprite;
 
 	Entity() { x = W / 2; y = H / 2; angle = 0.0f; }
-
 	Entity(int s, float _x, float _y, float Angle = 0.0f) {
 		x = _x; y = _y; angle = Angle;
 		serial = s;
@@ -20,9 +19,10 @@ public:
 		sprite.setOrigin(compTex[s].getSize().x / 2, 0);
 	}
 
-	virtual void update() {};
-
-	void draw(sf::RenderWindow& app, int Gap) {
+	sf::Vector2f endNodePos() {
+		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
+	}
+	void draw(sf::RenderWindow& app) {
 
 		/*Just On Sqr
 		//x = trim(x, Gap);
@@ -33,9 +33,9 @@ public:
 		app.draw(sprite);
 	}
 
-	sf::Vector2f endNodePos() {
-		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
-	}
+
+	virtual void update() {};
+	
 
 	~Entity() {
 		;
