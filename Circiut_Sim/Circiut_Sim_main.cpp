@@ -6,14 +6,14 @@ taskkill /F /IM Circiut_Sim.exe
 //#include "imgui.h"
 //#include "imgui-SFML.h"
 #include <iostream>
-#include <thread>
+//#include <thread>
 #include <fstream>
-#include <future>
+//#include <future>
 //#include <vector>
 
 #include "Circuit_Entity.h"
-#include "Circuit_Graph.h"
-#include "Circuit_wire.h"
+//#include "Circuit_Graph.h"
+//#include "Circuit_wire.h"
 
 #include "clipboardxx.hpp"
 
@@ -48,14 +48,16 @@ int main() {
 	sf::ContextSettings settings; settings.antialiasingLevel = 8;
 	app.create(VideoMode(W, H), "CircuitSim", Style::Close, settings);
 	//app.create(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
-	//ImGui::SFML::Init(app);//
-	//sf::Clock deltaClock;//
-
+	
 	W = app.getSize().x; H = app.getSize().y;
 	app.setVerticalSyncEnabled(1);
 	app.setFramerateLimit(60);
 	srand(time(NULL));
 
+	app.setPosition(sf::Vector2i(100, 100));
+
+	//ImGui::SFML::Init(app);//
+	//sf::Clock deltaClock;//
 
 	time_t frame = clock();
 	bool End = 0, debugBool = 0;
@@ -169,7 +171,7 @@ int main() {
 
 	
 	////////////////////////////////////////////// Solve
-	Graph circuit;
+	//Graph circuit;
 
 	sf::CircleShape nodePic(4, 15);
 	nodePic.setOrigin(4, 4);
@@ -256,7 +258,7 @@ int main() {
 			///////////////////////////////////////////////
 
 
-
+			
 
 
 
@@ -300,7 +302,7 @@ int main() {
 							mouseOnCompsBool = 0;
 
 							/*Check every component for Mouse*/
-							for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
+							 for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
 								float tempCompX = comp[c].x, tempCompY = comp[c].y;
 
 								/*Dealing with Origin*/
@@ -403,12 +405,14 @@ int main() {
 				}*/
 				}
 
+				selectSquare = 0;
+
 				/*Continoue while hold*/
 				if (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y) {
 
 					/*Follow Mouse*/
 					if (mouseOnCompsBool) {
-						if (!selectSquare/* && releaseBool*/) {
+						if (!selectSquare && releaseBool) {
 							stimuliDisplay = 1;
 							int tempRotArr[4][2] = {
 								{0, -2},

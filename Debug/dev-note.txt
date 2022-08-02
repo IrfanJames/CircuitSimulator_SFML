@@ -1,6 +1,7 @@
 New:
 Copy/Paste
 
+
 Unstable:
 
 
@@ -19,6 +20,7 @@ EndNodes, endNode-Circles
 Copy/Paste
 
 Issues:
+
 
 No:
 Project in ImGui window
