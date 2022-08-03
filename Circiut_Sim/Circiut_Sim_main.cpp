@@ -303,25 +303,27 @@ int main() {
 
 							/*Check every component for Mouse*/
 							 for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
-								float tempCompX = comp[c].x, tempCompY = comp[c].y;
 
 								/*Dealing with Origin*/
-								int a = 0, b = 20, d = 75;
-								int bounds[4], i = comp[c].angle;
+								int compBoundArr[4];
+								getBounds(comp[c], compBoundArr);
 
-								getBounds(comp[c], bounds);
+								if ((compBoundArr[0] < cursorInSim().x) && (cursorInSim().x < compBoundArr[1])) {
+									if ((compBoundArr[2] < cursorInSim().y) && (cursorInSim().y < compBoundArr[3])) {
+										
+										mouseOnCompsBool = 1; Drag = 0;
 
-								if ((tempCompX - bounds[0] < cursorInSim().x) && (cursorInSim().x < tempCompX + bounds[1])) {
-									if ((tempCompY - bounds[2] < cursorInSim().y) && (cursorInSim().y < tempCompY + bounds[3])) {
 										virSerial.emplace_back(c);
 
+										//copied in sel square selection
+										virSprite.emplace_back(comp[virSerial.back()].sprite);
+										virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+										virSprite.back().setColor(tempDimColor);/*
 										for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
 											virSprite.emplace_back(comp[virSerial[v]].sprite);
 											virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
 											virSprite.back().setColor(tempDimColor);
-										}
-
-										mouseOnCompsBool = 1; Drag = 0;
+										}*/
 									}
 
 								}
@@ -336,7 +338,6 @@ int main() {
 								viewX = view.getCenter().x, viewY = view.getCenter().y;
 								verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 								horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
-								//wxyz = verBrightCount;
 							}
 						}
 					}
@@ -380,7 +381,7 @@ int main() {
 				else {
 					Drag = 0; mouseOnCompsBool = 0;
 					/*Click*/
-					
+
 					if (Click(gap)) {
 						stimuliDisplay = 1;
 						for (int v = 0; v < virSerial.size(); v++) {
@@ -392,28 +393,25 @@ int main() {
 					}
 
 					//if (Click(gap)) {
-						virSprite.clear();  /////
-						virSerial.clear();  /////
+					virSprite.clear();  ///// 
+					virSerial.clear();  ///// 
 					//}
 
-				/*ZZzzzz Recolor back to normal    & clear serials
-				if (virSerial.size() != 0) {
-					for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
-						cout << "\nChanging" << virSerial[v];
-						comp[virSerial[v]].sprite.setColor(normalCompColor);
-					}
-				}*/
+					/* //ZZzzzz Recolor back to normal    & clear serials
+					if (virSerial.size() != 0) {
+						for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
+							//cout << "\nChanging" << virSerial[v];
+							comp[virSerial[v]].sprite.setColor(normalCompColor);
+						}
+					}*/
 				}
-
-				selectSquare = 0;
 
 				/*Continoue while hold*/
 				if (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y) {
 
 					/*Follow Mouse*/
 					if (mouseOnCompsBool) {
-						if (!selectSquare && releaseBool) {
-							stimuliDisplay = 1;
+						if (!selectSquare /*&& releaseBool*/) {
 							int tempRotArr[4][2] = {
 								{0, -2},
 								{2, 0},
@@ -428,11 +426,12 @@ int main() {
 								//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
 								//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
 
-								for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
-								for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX, tempY); }
-
 								tempX = trim(tempX, gap);
 								tempY = trim(tempY, gap);
+
+								for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
+								//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX, tempY); }
+
 
 								if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
 									comp[virSerial[c]].x = tempX; // += (were "=" before)
@@ -441,7 +440,7 @@ int main() {
 							}
 						}
 
-						stimuliEndNodes = 1;
+						stimuliEndNodes = 1; stimuliDisplay = 1;
 					}
 
 				}
@@ -618,6 +617,7 @@ int main() {
 				
 			}
 
+
 			// ----------------------------------------	Update
 			
 			//circuit.updateWin();
@@ -738,7 +738,7 @@ int main() {
 						for (int c = 0; c < comp.size(); c++) { comp[c].draw(app); }
 					}
 
-					///*Wires*/ if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
+					/*Wires*/ //if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
 
 					/*Nodes*/ {
 						for (int e = 0; e < allEndCircles.size(); e++) { app.draw(allEndCircles[e]); }
@@ -749,7 +749,7 @@ int main() {
 					//if(DrawCircle) app.draw(testCircle);
 
 					selectSquare = debugBool;
-					if (selectSquare && !releaseBool)app.draw(selSqr);
+					if (selectSquare && !releaseBool) app.draw(selSqr);
 
 					/*Tool Win*/ {
 						if (MInTool) {
@@ -794,21 +794,15 @@ void updateAllEnds() {
 
 	allEnds.clear();
 
-	int nodeCount = -1;
+	int nodeCount = 0;
 	for (int c = 0; c < comp.size(); c++) {
 		static sf::Vector2f tempEnd;
 
 		for (int cc = 0; cc < 2; cc++) {
 
-			if (cc == 0) {
-				/*Front*/
-				tempEnd.x = comp[c].x;
-				tempEnd.y = comp[c].y;
-			}
-			else if (cc == 1) {
-				/*Rear*/
-				tempEnd = comp[c].endNodePos();
-			}
+			//tempEnd
+			if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
+			if (cc == 1) { /*Rear*/  tempEnd = comp[c].endNodePos(); }
 
 			bool found = 0;
 			for (int e = 0; e < allEnds.size(); e++) {
@@ -819,37 +813,35 @@ void updateAllEnds() {
 			}
 
 			if (!found) {
-				/*nodeCount++;
-				if (nodeCount < allEnds.size()) allEnds[nodeCount] = tempEnd;
-				else */allEnds.emplace_back(tempEnd);
+				nodeCount++;
+
+				if (nodeCount <= allEnds.size()) allEnds[nodeCount] = tempEnd;
+				else allEnds.emplace_back(tempEnd);
 			}
 
 		}
-
 	}
-	//cout << "\nnodes " << nodeCount;
 
-	/*while (nodeCount + 1 < allEnds.size()) {
+	while (nodeCount < allEnds.size())
 		allEnds.pop_back();
-	}*/
 
 }
 
 void printScreen() {
 	sf::Image OutputImage;
-	int compArr[4];
+	int compBoundArr[4];
 	int A = 0, B = 0, C = 0, D = 0;
 
 	if (comp.size() != 0) {
-		getBounds(comp[0], compArr);
-		A = comp[0].x - compArr[0], B = comp[0].x + compArr[1], C = comp[0].y - compArr[2], D = comp[0].y + compArr[3]; // Borders
+		getBounds(comp[0], compBoundArr);
+		A = compBoundArr[0], B = compBoundArr[1], C = compBoundArr[2], D = compBoundArr[3]; // Borders
 
 		for (int c = 0; c < comp.size(); c++) {
-			getBounds(comp[c], compArr);
-			if (comp[c].x - compArr[0] <= A) A = comp[c].x - compArr[0];
-			if (comp[c].x + compArr[1] >= B) B = comp[c].x + compArr[1];
-			if (comp[c].y - compArr[2] <= C) C = comp[c].y - compArr[2];
-			if (comp[c].y + compArr[3] >= D) D = comp[c].y + compArr[3];
+			getBounds(comp[c], compBoundArr);
+			if (compBoundArr[0] < A) A = compBoundArr[0];
+			if (compBoundArr[1] > B) B = compBoundArr[1];
+			if (compBoundArr[2] < C) C = compBoundArr[2];
+			if (compBoundArr[3] > D) D = compBoundArr[3];
 		}
 		/*for (int c = 0; c < comp.size(); c++) {
 			sf::Vector2f tempEndNode = endNodePos(comp[c]);
@@ -866,7 +858,7 @@ void printScreen() {
 
 	for (int c = 0; c < comp.size(); c++) {
 		sf::Vector2f tempEndNode = comp[c].endNodePos();
-		getBounds(comp[c], compArr);
+		getBounds(comp[c], compBoundArr);
 
 		sf::Image tempCompImg;
 		//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
@@ -905,8 +897,8 @@ void printScreen() {
 
 		int fakeGap = 15 - (comp[c].serial == 5) * 5;
 
-		float OffX = comp[c].x - compArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-		float OffY = comp[c].y - compArr[2] - C - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+		float OffX = compBoundArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+		float OffY = compBoundArr[2] - C -  rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
 
 		for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
 			for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
@@ -976,12 +968,11 @@ bool occupiedAt(int Index, sf::Vector2f At) {
 	for (int c = 0; c < comp.size(); c++) {
 		if (c == Index || abs(comp[c].x - At.x) >= 100 || abs(comp[c].y - At.y) >= 100) continue;
 
-		int TempArr[4] = { 0,0,0,0 };
-		float tempCompX = comp[c].x, tempCompY = comp[c].y;
-		getBounds(comp[c], TempArr);
+		int compBoundArr[4];
+		getBounds(comp[c], compBoundArr);
 
-		if ((tempCompX - TempArr[0] < At.x) && (At.x < tempCompX + TempArr[1])) {
-			if ((tempCompY - TempArr[2] < At.y) && (At.y < tempCompY + TempArr[3])) {
+		if ((compBoundArr[0] < At.x) && (At.x < compBoundArr[1])) {
+			if ((compBoundArr[2] < At.y) && (At.y < compBoundArr[3])) {
 				Occupied = 1; return 1;
 			}
 		}
@@ -993,9 +984,8 @@ bool occupiedAt(int Index, sf::Vector2f At) {
 
 bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
 
-	float tempCompX = Comp.x, tempCompY = Comp.y;
-	int bounds[4];
-	getBounds(Comp, bounds);
+	int compBoundArr[4];
+	getBounds(Comp, compBoundArr);
 	float A = 0, B = 0, C = 0, D = 0;
 
 	if (Ini.x <= Fin.x) { A = Ini.x; B = Fin.x; }
@@ -1004,8 +994,8 @@ bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
 	if (Ini.y <= Fin.y) { C = Ini.y; D = Fin.y; }
 	else { D = Ini.y; C = Fin.y; }
 
-	if ((A <= tempCompX - bounds[0]) && (tempCompX + bounds[1] <= B)) {
-		if ((C <= tempCompY - bounds[2]) && (tempCompY + bounds[3] <= D)) {
+	if ((A <= compBoundArr[0]) && (compBoundArr[1] <= B)) {
+		if ((C <= compBoundArr[2]) && (compBoundArr[3] <= D)) {
 			return 1;
 		}
 	}
@@ -1015,22 +1005,15 @@ bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
 
 void getBounds(Entity Comp, int arr[4]) {
 
-	float tempCompX = Comp.x, tempCompY = Comp.y;
-
 	/*Dealing with Origin*/
 	int a = 0, b = 15, d = 75;
-	int A = 15, B = 15, C = 0, D = 75, i = Comp.angle;
-	i %= 360;
-	if ((i / 90) % 2 == 0) {
-		A = b; B = b;
-		if ((i / 90) == 0) { C = a; D = d; }
-		else { C = d; D = a; }
-	}
-	else {
-		C = b; D = b;
-		if ((i / 90) - 1 == 0) { A = d; B = a; }
-		else { A = a; B = d; }
-	}
+	int A = 15, B = 15, C = 0, D = 75, i = (int)Comp.angle % 360;
 
-	arr[0] = A; arr[1] = B; arr[2] = C; arr[3] = D;
+	if (i == 0)        { A = b; B = b; C = a; D = d; }
+	else if (i == 90)  { A = d; B = a; C = b; D = b; }
+	else if (i == 180) { A = b; B = b; C = d; D = a; }
+	else if (i == 270) { A = a; B = d; C = b; D = b; }
+
+	arr[0] = Comp.x - A; arr[1] = Comp.x + B; arr[2] = Comp.y - C; arr[3] = Comp.y + D; // Borders
+
 }

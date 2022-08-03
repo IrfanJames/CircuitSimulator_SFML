@@ -1,6 +1,6 @@
 New:
-Copy/Paste
-
+getBounds now gives boubds in space(not 0, 15, 75)
+optimized setEndNodes
 
 Unstable:
 
