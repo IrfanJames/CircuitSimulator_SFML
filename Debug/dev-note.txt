@@ -1,11 +1,27 @@
-New:
-getBounds now gives boubds in space(not 0, 15, 75)
-optimized setEndNodes
+New------------------------------------
+cursorInSim smooth*
+win: default
+win resizing: smooth**
+toolColumn resizes with winResize(viewSize)
+smartDisplay temp turned off (causes 100 cpu load)
+repeated coad in (last of drag) & (resizing window) of tool column
 
-Unstable:
+
+Issues:--------------------------------
+*sometimes while hold+drag serialSprite comes up (occupied==1)
+**somtimes resizing causes textue to pixelate (becomes normal when hold+drag)
+paste causes pastes in all open windows
 
 
-Stable:
+Unstable:------------------------------
+When win minimized (hangs computer {all nust labs; mine at 3 windows})
+|__-> appearently solved by disabling stimuli display (x=1)
+|
+|__-> smart display(using): (normal cpu 25-30),(100)
+|__-> smart display( not ): (normal cpu  6-15)
+
+
+Stable:--------------------------------
 Procedual Background Grid
 Collisions include both nodes
 Rotation, hold, Drag(smooth)
@@ -19,10 +35,8 @@ Open latest saved project
 EndNodes, endNode-Circles
 Copy/Paste
 
-Issues:
 
-
-No:
+No:-------------------------------------
 Project in ImGui window
 Threads
 enum (State Machine for hold)

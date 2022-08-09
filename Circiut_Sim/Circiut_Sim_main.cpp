@@ -46,9 +46,9 @@ bool Occupied = 0;
 int main() {
 
 	sf::ContextSettings settings; settings.antialiasingLevel = 8;
-	app.create(VideoMode(W, H), "CircuitSim", Style::Close, settings);
+	app.create(VideoMode(W, H), "CircuitSim", Style::Default, settings);
 	//app.create(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
-	
+
 	W = app.getSize().x; H = app.getSize().y;
 	app.setVerticalSyncEnabled(1);
 	app.setFramerateLimit(60);
@@ -83,13 +83,14 @@ int main() {
 	///////////////////////////////////////////////
 
 	/*Rayn*/ //Texture t; t.loadFromFile("Images/0 Rayn.png"); Sprite Rayn(t), Rayn2(t); Rayn.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn2.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn.setPosition(app.getSize().x / 2, app.getSize().y / 2); Rayn2.setPosition(app.getSize().x + 10, app.getSize().y + 10);
-	/*bool DrawCircle = 1;
+
+	bool DrawCircle = 1;
 	float t_radius = 60, t_Colors[3] = { (float)204 / 255, (float)77 / 255, (float)5 / 255 };
 	int t_vertices = 34;
 	sf::CircleShape testCircle(t_radius, t_vertices);
 	testCircle.setOrigin(t_radius, t_radius);
 	testCircle.setPosition(W / 2, H / 2);
-	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
+	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));
 
 	/*Grid*/
 	int gap = 15, virtualBoarder = 80;
@@ -141,9 +142,9 @@ int main() {
 	float ToolLilWinRestingPosX = 0, ToolLilWinRestingPosY = 0;
 	ToolBoxLittleBox.setFillColor(sf::Color(160, 160, 160, 120));
 
-	sf::Sprite ToolSpr[7];
-	sf::Vector2f ToolSprPOS[7];
-	for (int c = 0; c < 7; c++) {
+	sf::Sprite ToolSpr[7]; //noOfComps-1
+	sf::Vector2f ToolSprPOS[7]; //noOfComps-1
+	for (int c = 0; c < (noOfComps - 1); c++) {
 		ToolSpr[c].setTexture(compTex[c]);
 		ToolSpr[c].setOrigin(compTex[c].getSize().x / 2, 0);
 		//compSpr[c].setRotation(45);
@@ -160,7 +161,7 @@ int main() {
 	sf::RectangleShape selSqr; {
 		selSqr.setFillColor(sf::Color(0, 0, 0, 0));
 		selSqr.setOutlineThickness(1.0f);
-		selSqr.setOutlineColor(sf::Color(255, 0, 255)); }
+		selSqr.setOutlineColor(sf::Color(66, 135, 245)); }
 
 
 	/*Circuit*/
@@ -169,7 +170,7 @@ int main() {
 	allEnds.reserve(10);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
-	
+
 	////////////////////////////////////////////// Solve
 	//Graph circuit;
 
@@ -200,7 +201,7 @@ int main() {
 
 			float t_TollWx = ToolBoxWin.getPosition().x;
 			bool MInTool = !!(0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= t_TollWX);
-			bool MIntool = !!(MInTool && Mouse::getPosition(app).y < 7 * t_TollWX);
+			bool MIntool = !!(MInTool && Mouse::getPosition(app).y < (noOfComps - 1)* t_TollWX);
 			delComp = 0; rotComp = 0; paste = 0;
 			Occupied = 0;
 
@@ -210,8 +211,19 @@ int main() {
 				//ImGui::SFML::ProcessEvent(evnt);
 
 				if (evnt.type == evnt.Closed) { app.close(); End = 1; }
-				if (evnt.type == evnt.Resized) { view.setSize(H * ((float)app.getSize().x / (float)app.getSize().y), H); }
+				if (evnt.type == evnt.Resized) {
+					view.setCenter(view.getCenter());
+					view.setSize(evnt.size.width, evnt.size.height);
+
+					/*Resting Pos of Tool Bar   (Repeated at the at of Drag{}) */ {
+						ToolBoxWin.setSize(sf::Vector2f(ToolBoxWin.getSize().x, view.getSize().y));
+						ToolBoxWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolBoxWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
+						ToolLilWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolLilWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
+						for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
+					}
+				}
 				if (evnt.type == evnt.MouseButtonReleased) { releaseBool = 1; }
+
 				if (evnt.type == evnt.KeyPressed) {
 					if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; goto END; }
 					//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
@@ -245,7 +257,7 @@ int main() {
 			}*/
 			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { rotComp = 1; stimuliDisplay = 1; }
 			if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { saveNew = 1; }
-			
+
 			if ((Keyboard::isKeyPressed(Keyboard::C)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { copy = 1; }
 			else {
 				copy = 0;
@@ -258,7 +270,7 @@ int main() {
 			///////////////////////////////////////////////
 
 
-			
+
 
 
 
@@ -302,7 +314,7 @@ int main() {
 							mouseOnCompsBool = 0;
 
 							/*Check every component for Mouse*/
-							 for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
+							for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
 
 								/*Dealing with Origin*/
 								int compBoundArr[4];
@@ -310,7 +322,7 @@ int main() {
 
 								if ((compBoundArr[0] < cursorInSim().x) && (cursorInSim().x < compBoundArr[1])) {
 									if ((compBoundArr[2] < cursorInSim().y) && (cursorInSim().y < compBoundArr[3])) {
-										
+
 										mouseOnCompsBool = 1; Drag = 0;
 
 										virSerial.emplace_back(c);
@@ -426,12 +438,12 @@ int main() {
 								//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
 								//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
 
+
+								//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
+								for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX, tempY); }
+
 								tempX = trim(tempX, gap);
 								tempY = trim(tempY, gap);
-
-								for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
-								//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX, tempY); }
-
 
 								if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
 									comp[virSerial[c]].x = tempX; // += (were "=" before)
@@ -491,7 +503,7 @@ int main() {
 						//std::thread printScreenTread { printScreen }; printScreenTread.join();
 
 						//std::async(std::launch::async, printScreen);
-						
+
 						printScreen();
 					}
 					cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
@@ -587,39 +599,39 @@ int main() {
 					onceOptComp = 0;
 					copy = 0;
 				}
-				
+
 				if (open) {
 
-						int fileNo = 0;
-						std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-						std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
+					int fileNo = 0;
+					std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+					std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
 
-						while (input.good()) {
-							input.close();
-							input.open(fileDir + std::to_string(++fileNo) + fileType);
-						}
-						input.open(fileDir + std::to_string(fileNo - 1) + fileType);
-
-						comp.clear();
-						virSprite.clear();
-						virSerial.clear();
-						int no = 0;
-						input >> no;
-						for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
-							input >> S >> X >> Y >> A;
-							comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
-						}
+					while (input.good()) {
 						input.close();
-
-						stimuliEndNodes = 1;
-						open = 0;
+						input.open(fileDir + std::to_string(++fileNo) + fileType);
 					}
-				
+					input.open(fileDir + std::to_string(fileNo - 1) + fileType);
+
+					comp.clear();
+					virSprite.clear();
+					virSerial.clear();
+					int no = 0;
+					input >> no;
+					for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
+						input >> S >> X >> Y >> A;
+						comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+					}
+					input.close();
+
+					stimuliEndNodes = 1;
+					open = 0;
+				}
+
 			}
 
 
 			// ----------------------------------------	Update
-			
+
 			//circuit.updateWin();
 			if (MInTool) { stimuliDisplay = 1; }
 			{
@@ -682,19 +694,19 @@ int main() {
 						hLines[c].setFillColor(gridColor);
 					}
 
-					/*Resting Pos of Tool Bar*/
-					ToolBoxWinRestingPosX = newHorX + virtualBoarder; ToolBoxWinRestingPosY = newVerY + virtualBoarder;
-					ToolLilWinRestingPosX = newHorX + virtualBoarder; ToolLilWinRestingPosY = newVerY + virtualBoarder;
-					for (int c = 0; c < 7; c++) ToolSpr[c].setPosition(newHorX + virtualBoarder + ToolSprPOS[c].x, newVerY + virtualBoarder + ToolSprPOS[c].y);
+					/*Resting Pos of Tool Bar   (Repeated at the at of Resize window) */
+					ToolBoxWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolBoxWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
+					ToolLilWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolLilWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
+					for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
 
 				}
 
 				//Tool Win
-				ToolBoxWin.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolBoxWinRestingPosY);
+				ToolBoxWin.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / (noOfComps - 1)), ToolBoxWinRestingPosY);
 
 				//Tool Sqr
 				t_TollWx = ToolBoxLittleBox.getPosition().x;
-				ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / 7) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / 7), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, (int)ToolBoxLittleBox.getSize().x));
+				ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - t_TollWX - t_TollWx) / (noOfComps - 1)), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, (int)ToolBoxLittleBox.getSize().x));
 				if (MIntool) serialToolMouse = (int)(Mouse::getPosition(app).y / ToolBoxLittleBox.getSize().x); else serialToolMouse = 0;
 
 				/*endNodes*/ {
@@ -718,12 +730,14 @@ int main() {
 					}
 				}
 
+				testCircle.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2 + 200);
+
 			}
 
 
 			// ----------------------------------------	Draw
 			{
-				if (stimuliDisplay) {
+				if (1 || stimuliDisplay) { // zero causes 100 cpu load
 					app.setView(view);
 					app.clear(sf::Color(23, 24, 25));
 					//app.draw(Rayn);
@@ -746,7 +760,7 @@ int main() {
 
 					if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
-					//if(DrawCircle) app.draw(testCircle);
+					if (DrawCircle) app.draw(testCircle);
 
 					selectSquare = debugBool;
 					if (selectSquare && !releaseBool) app.draw(selSqr);
@@ -754,10 +768,10 @@ int main() {
 					/*Tool Win*/ {
 						if (MInTool) {
 							app.draw(ToolBoxWin);
-							for (int c = 0; c < 7; c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
-							for (int c = 0; c < 7; c++) { app.draw(ToolSpr[c]); }
+							for (int c = 0; c < (noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
+							for (int c = 0; c < (noOfComps - 1); c++) { app.draw(ToolSpr[c]); }
 						}
-						else { for (int c = 0; c < 7; c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); } }
+						else { for (int c = 0; c < (noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); } }
 
 						if (MIntool) app.draw(ToolBoxLittleBox);
 					}
@@ -898,13 +912,13 @@ void printScreen() {
 		int fakeGap = 15 - (comp[c].serial == 5) * 5;
 
 		float OffX = compBoundArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-		float OffY = compBoundArr[2] - C -  rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+		float OffY = compBoundArr[2] - C - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
 
 		for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
 			for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
 				if (tempCompImg.getPixel(i, j).a == 0) continue;
 				//std::async(std::launch::async, &sf::Image::setPixel, &OutputImage, OffX + i, OffY + j, tempCompImg.getPixel(i, j));
-				
+
 				OutputImage.setPixel(OffX + i, OffY + j, tempCompImg.getPixel(i, j));
 			}
 		}
@@ -931,7 +945,7 @@ float trim(float num, int wrt) {
 }
 
 sf::Vector2f cursorInSim() {
-	return sf::Vector2f(Mouse::getPosition(app).x + view.getCenter().x - W / 2, Mouse::getPosition(app).y + view.getCenter().y - H / 2);
+	return app.mapPixelToCoords(sf::Mouse::getPosition(app));
 }
 
 bool Click(int Sensitivity) {
@@ -1009,8 +1023,8 @@ void getBounds(Entity Comp, int arr[4]) {
 	int a = 0, b = 15, d = 75;
 	int A = 15, B = 15, C = 0, D = 75, i = (int)Comp.angle % 360;
 
-	if (i == 0)        { A = b; B = b; C = a; D = d; }
-	else if (i == 90)  { A = d; B = a; C = b; D = b; }
+	if (i == 0) { A = b; B = b; C = a; D = d; }
+	else if (i == 90) { A = d; B = a; C = b; D = b; }
 	else if (i == 180) { A = b; B = b; C = d; D = a; }
 	else if (i == 270) { A = a; B = d; C = b; D = b; }
 
