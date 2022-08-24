@@ -3,7 +3,7 @@
 int W = 1400;
 int H = 800;
 
-int noOfComps = 8;
+const int noOfComps = 8;//when 10 toolColBox start with a y-offset
 
-float DegToRad = 0.01745329f;
-float RadToDeg = 57.295779f;
+const float DegToRad = 0.01745329f;
+const float RadToDeg = 57.295779f;

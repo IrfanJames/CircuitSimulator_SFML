@@ -1,4 +1,4 @@
-### [Application](https://irfan-james.itch.io/circuit-simulator)
+### [Click to Download](https://irfan-james.itch.io/circuit-simulator)
 
 
 
