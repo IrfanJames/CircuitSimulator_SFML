@@ -3,7 +3,7 @@ Source Code: https://github.com/IrfanJames/CircuitSimulator_SFML.git
 
 Controls:
 ---------------------------------------------------------
-0. You can Drag the Background
+0. Drag the View by Pressing Scroll Wheel
 1. Hover Cursor to the Left of the window for ToolBar
 
 2. Hold(one element) or Selection mode(N) (multiple elements)

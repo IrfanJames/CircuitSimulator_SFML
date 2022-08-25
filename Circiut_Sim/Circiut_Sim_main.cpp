@@ -122,14 +122,14 @@ int main() {
 	}
 
 	/*Tool Textures*/ {
-		compTex[0].loadFromFile("Images/Cap.png");
-		compTex[1].loadFromFile("Images/Cur.png");
-		compTex[2].loadFromFile("Images/Dod.png");
-		compTex[3].loadFromFile("Images/Ind.png");
-		compTex[4].loadFromFile("Images/Res.png");
-		compTex[5].loadFromFile("Images/SwO.png");
-		compTex[6].loadFromFile("Images/Vol.png");
-		compTex[7].loadFromFile("Images/SwC.png");
+		compTex[0].loadFromFile("assets/Images/Cap.png");
+		compTex[1].loadFromFile("assets/Images/Cur.png");
+		compTex[2].loadFromFile("assets/Images/Dod.png");
+		compTex[3].loadFromFile("assets/Images/Ind.png");
+		compTex[4].loadFromFile("assets/Images/Res.png");
+		compTex[5].loadFromFile("assets/Images/SwO.png");
+		compTex[6].loadFromFile("assets/Images/Vol.png");
+		compTex[7].loadFromFile("assets/Images/SwC.png");
 	}
 
 	////////////////////////////////////////////// ToolBox
@@ -187,622 +187,632 @@ int main() {
 
 
 	///////////////////////////////////////////////
-	while (!End) {
 
-		clipboardxx::clipboard clipboard;
+	clipboardxx::clipboard clipboard;
 
-		float viewX = view.getCenter().x, viewY = view.getCenter().y;
-		float verX = vLines[0].getPosition().x, verY = vLines[0].getPosition().y;
-		float horX = hLines[0].getPosition().x, horY = hLines[0].getPosition().y;
+	float viewX = view.getCenter().x, viewY = view.getCenter().y;
+	float verX = vLines[0].getPosition().x, verY = vLines[0].getPosition().y;
+	float horX = hLines[0].getPosition().x, horY = hLines[0].getPosition().y;
 
-		int verBrightCount = 5, horBrightCount = 5;
+	int verBrightCount = 5, horBrightCount = 5;
 
-		while (app.isOpen() && !End) {
+	while (app.isOpen() && !End) {
 
-			W = app.getSize().x; H = app.getSize().y;
+		W = app.getSize().x; H = app.getSize().y;
 
-			float t_TollWx = toolCol.getPosition().x;
-			bool MInTool = !!(0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= c_toolColWidth);
-			bool MIntool = !!(MInTool && Mouse::getPosition(app).y < (noOfComps - 1)* c_toolColWidth);
-			delComp = 0; rotComp = 0; paste = 0;
-			Occupied = 0;
+		float t_TollWx = toolCol.getPosition().x;
+		bool MInTool = !!(0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= c_toolColWidth);
+		bool MIntool = !!(MInTool && Mouse::getPosition(app).y < (noOfComps - 1)* c_toolColWidth);
+		delComp = 0; rotComp = 0; paste = 0;
+		Occupied = 0;
 
-			Event evnt;
-			while (app.pollEvent(evnt)) {
-				stimuliDisplay = 1;
-				//ImGui::SFML::ProcessEvent(evnt);
+		Event evnt;
+		while (app.pollEvent(evnt)) {
+			stimuliDisplay = 1;
+			//ImGui::SFML::ProcessEvent(evnt);
 
-				if (evnt.type == evnt.Closed) { app.close(); End = 1; }
-				
-				if (evnt.type == evnt.Resized) {
+			if (evnt.type == evnt.Closed) { app.close(); End = 1; }
 
-					//view = sf::View(sf::FloatRect(view.getViewport().top - view.getCenter().x, view.getViewport().left - view.getCenter().y, evnt.size.width, evnt.size.height));
+			if (evnt.type == evnt.Resized) {
 
-					view.setCenter(view.getCenter());
-					view.setSize(evnt.size.width, evnt.size.height);
+				//view = sf::View(sf::FloatRect(view.getCenter().x - ((float)evnt.size.width) / 2, view.getCenter().y - ((float)evnt.size.height) / 2, evnt.size.width, evnt.size.height));
+				/*view.setCenter(view.getCenter());*/ view.setSize(evnt.size.width, evnt.size.height);
 
-					/*Resting Pos of Tool Bar   (Repeated at the at of Drag{}) */ {
-						toolCol.setSize(sf::Vector2f(toolCol.getSize().x, view.getSize().y));
-						ToolBoxWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolBoxWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
-						ToolLilWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolLilWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
-						for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
-					}
-				}
-				if (evnt.type == evnt.MouseButtonReleased) { releaseBool = 1; }
-
-				if (evnt.type == evnt.KeyPressed) {
-					if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; goto END; }
-					//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
-					if (evnt.key.code == Keyboard::P) { printScreenBool = 1; }
-					if (evnt.key.code == Keyboard::S) { save = 1; }
-					if (evnt.key.code == Keyboard::O) { open = 1; }
-					if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
-					//if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
-					if (evnt.key.code == Keyboard::Delete) { delComp = 1; stimuliDisplay = 1; }
-
-					/*int difr = 10;
-					if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
-					if (evnt.key.code == Keyboard::Down) { view.setCenter(view.getCenter().x, view.getCenter().y + difr); }
-					if (evnt.key.code == Keyboard::Right) { view.setCenter(view.getCenter().x + difr, view.getCenter().y); }
-					if (evnt.key.code == Keyboard::Left) { view.setCenter(view.getCenter().x - difr, view.getCenter().y); }*/
-
+				/*Resting Pos of Tool Bar   (Repeated at the at of Drag{}) */ {
+					toolCol.setSize(sf::Vector2f(toolCol.getSize().x, view.getSize().y));
+					ToolBoxWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolBoxWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
+					ToolLilWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolLilWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
+					for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
 				}
 			}
+			if (evnt.type == evnt.MouseButtonReleased) { releaseBool = 1; }
 
-			/*else if (evnt.key.code == Keyboard::R) {
-				view.setCenter(W / 2, H / 2);
-				viewX = view.getCenter().x; viewY = view.getCenter().y;
-				for (int c = 0; c < vLines.size(); c++)
-					vLines[c].setPosition(-virtualBoarder - (int)(-virtualBoarder) % gap + c * gap, -virtualBoarder);
+			if (evnt.type == evnt.KeyPressed) {
+				if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; goto END; }
+				//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
+				if (evnt.key.code == Keyboard::P) { printScreenBool = 1; }
+				if (evnt.key.code == Keyboard::S) { save = 1; }
+				if (evnt.key.code == Keyboard::O) { open = 1; }
+				if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
+				//if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
+				if (evnt.key.code == Keyboard::Delete) { delComp = 1; stimuliDisplay = 1; }
 
-				for (int c = 0; c < hLines.size(); c++)
-					hLines[c].setPosition(-virtualBoarder, -virtualBoarder - (int)(-virtualBoarder) % gap + c * gap);
+				/*int difr = 10;
+				if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
+				if (evnt.key.code == Keyboard::Down) { view.setCenter(view.getCenter().x, view.getCenter().y + difr); }
+				if (evnt.key.code == Keyboard::Right) { view.setCenter(view.getCenter().x + difr, view.getCenter().y); }
+				if (evnt.key.code == Keyboard::Left) { view.setCenter(view.getCenter().x - difr, view.getCenter().y); }*/
 
-				verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
-				horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
-			}*/
-			if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { rotComp = 1; stimuliDisplay = 1; }
-			if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { saveNew = 1; }
+			}
+		}
 
-			if ((Keyboard::isKeyPressed(Keyboard::C)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { copy = 1; }
+		/*else if (evnt.key.code == Keyboard::R) {
+			view.setCenter(W / 2, H / 2);
+			viewX = view.getCenter().x; viewY = view.getCenter().y;
+			for (int c = 0; c < vLines.size(); c++)
+				vLines[c].setPosition(-virtualBoarder - (int)(-virtualBoarder) % gap + c * gap, -virtualBoarder);
+
+			for (int c = 0; c < hLines.size(); c++)
+				hLines[c].setPosition(-virtualBoarder, -virtualBoarder - (int)(-virtualBoarder) % gap + c * gap);
+
+			verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
+			horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
+		}*/
+		if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { rotComp = 1; stimuliDisplay = 1; }
+		if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { saveNew = 1; }
+
+		if ((Keyboard::isKeyPressed(Keyboard::C)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { copy = 1; }
+		else {
+			copy = 0;
+			if ((Keyboard::isKeyPressed(Keyboard::V)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { paste = 1; stimuliDisplay = 1; }
 			else {
-				copy = 0;
-				if ((Keyboard::isKeyPressed(Keyboard::V)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { paste = 1; stimuliDisplay = 1; }
-				else {
-					paste = 0;
-					onceOptComp = 1;
-				}
+				paste = 0;
+				onceOptComp = 1;
 			}
-			///////////////////////////////////////////////
+		}
+
+		///////////////////////////////////////////////
 
 
 
 
 
+		// ----------------------------------------	Options
+		{
+			/*Mouse Hold*/
+			if (Mouse::isButtonPressed(Mouse::Left)) {
+				if (releaseBool) {
+					releaseBool = 0;
+					mouseHoldX = (float)Mouse::getPosition(app).x; mouseHoldY = (float)Mouse::getPosition(app).y;
 
+					//wires[0].newEdge();
+					/*new Comp*/
+					if (MIntool) {
+						MIntool = 0;
+						float tempNewCompX = 150 + view.getCenter().x - W / 2, tempNewCompY = 150 + view.getCenter().y - H / 2;
+						tempNewCompX = trim(tempNewCompX, gap);
+						tempNewCompY = trim(tempNewCompY, gap);
 
-			// ----------------------------------------	Options
-			{
-				/*Mouse Hold*/
-				if (Mouse::isButtonPressed(Mouse::Left)) {
-					if (releaseBool) {
-						releaseBool = 0;
-						mouseHoldX = (float)Mouse::getPosition(app).x; mouseHoldY = (float)Mouse::getPosition(app).y;
+						comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
 
-						//wires[0].newEdge();
+						/*Collisions*/
+						tempNewCompX = trim(tempNewCompX, gap);
+						while (occupiedAt(comp.size() - 1, sf::Vector2f(tempNewCompX, tempNewCompY))) {
+							tempNewCompX = trim(tempNewCompX + 6 * gap, gap);
 
-						/*new Comp*/
-						if (MIntool) {
-							MIntool = 0;
-							float tempNewCompX = 150 + view.getCenter().x - W / 2, tempNewCompY = 150 + view.getCenter().y - H / 2;
-							tempNewCompX = trim(tempNewCompX, gap);
-							tempNewCompY = trim(tempNewCompY, gap);
-
-							comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
-
-							/*Collisions*/
-							tempNewCompX = trim(tempNewCompX, gap);
-							while (occupiedAt(comp.size() - 1, sf::Vector2f(tempNewCompX, tempNewCompY))) {
-								tempNewCompX = trim(tempNewCompX + 6 * gap, gap);
-
-								if (tempNewCompX + 7 * gap - 150 - view.getCenter().x + W / 2 + 91 >= W) {
-									tempNewCompX = 150 + view.getCenter().x - W / 2;
-									tempNewCompY = trim(tempNewCompY + 6 * gap, gap);
-								}
-							}
-
-							comp.back().x = tempNewCompX; comp.back().y = tempNewCompY;
-
-							stimuliEndNodes = 1;
-
-						}
-						else {
-							mouseOnCompsBool = 0;
-
-							/*Check every component for Mouse*/
-							for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
-
-								/*Dealing with Origin*/
-								int compBoundArr[4];
-								getBounds(comp[c], compBoundArr);
-
-								if ((compBoundArr[0] < cursorInSim().x) && (cursorInSim().x < compBoundArr[1])) {
-									if ((compBoundArr[2] < cursorInSim().y) && (cursorInSim().y < compBoundArr[3])) {
-
-										mouseOnCompsBool = 1; Drag = 0;
-
-										virSerial.emplace_back(c);
-
-										//copied in sel square selection
-										virSprite.emplace_back(comp[virSerial.back()].sprite);
-										virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-										virSprite.back().setColor(tempDimColor);/*
-										for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
-											virSprite.emplace_back(comp[virSerial[v]].sprite);
-											virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-											virSprite.back().setColor(tempDimColor);
-										}*/
-									}
-
-								}
-							}
-
-							//////////// Urgent need of enums , State Machine
-							if (!mouseOnCompsBool && selectSquare) { selSqr.setPosition(cursorInSim()); }
-
-							/*Drag Background*/
-							if (!mouseOnCompsBool && !selectSquare) {
-								Drag = 1; mouseOnCompsBool = 0;
-								viewX = view.getCenter().x, viewY = view.getCenter().y;
-								verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
-								horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
+							if (tempNewCompX + 7 * gap - 150 - view.getCenter().x + W / 2 + 91 >= W) {
+								tempNewCompX = 150 + view.getCenter().x - W / 2;
+								tempNewCompY = trim(tempNewCompY + 6 * gap, gap);
 							}
 						}
+
+						comp.back().x = tempNewCompX; comp.back().y = tempNewCompY;
+
+						stimuliEndNodes = 1;
+
 					}
-
-					if (virSerial.size() > 0) mouseOnCompsBool = 1;
-
-					/*Once while hold*/
-					if (mouseOnCompsBool && rotComp) {
-						if (onceOptMounsePressed) {
-							for (int v = 0; v < virSerial.size(); v++) {
-								comp[virSerial[v]].angle += 90;
-								comp[virSerial[v]].angle -= (int)(comp[virSerial[v]].angle / 360) * 360;
-							}
-
-							stimuliDisplay = 1;
-							stimuliEndNodes = 1;
-						}
-						onceOptMounsePressed = 0;
-					}
-					else if (mouseOnCompsBool && delComp) {
-						if (onceOptMounsePressed) {
-							while (0 < virSerial.size()) {
-								if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
-								if (virSprite.size() > 0) virSprite.erase(virSprite.begin());
-
-								for (int c = 1; c < virSerial.size(); c++) {
-									if (virSerial[c] > virSerial[0]) virSerial[c]--;
-								}
-
-								virSerial.erase(virSerial.begin());
-							}
-
-							stimuliDisplay = 1;
-							stimuliEndNodes = 1;
-						}
+					else {
 						mouseOnCompsBool = 0;
-						onceOptMounsePressed = 0;
-					}
-					else onceOptMounsePressed = 1;
-				}
-				else {
-					Drag = 0; mouseOnCompsBool = 0;
-					/*Click*/
 
-					if (Click(gap)) {
-						stimuliDisplay = 1;
-						for (int v = 0; v < virSerial.size(); v++) {
-							int tempCompClick = comp[virSerial[v]].serial;
-							comp[virSerial[v]].serial = (tempCompClick == 5) * 7 + (tempCompClick == 7) * 5 + (tempCompClick != 5 && tempCompClick != 7) * (tempCompClick);
-							comp[virSerial[v]].sprite.setTexture(compTex[comp[virSerial[v]].serial]);
-						}
+						/*Check every component for Mouse*/
+						for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
 
-					}
+							/*Dealing with Origin*/
+							int compBoundArr[4];
+							getBounds(comp[c], compBoundArr);
 
-					//if (Click(gap)) {
-					virSprite.clear();  ///// 
-					virSerial.clear();  ///// 
-					//}
+							if ((compBoundArr[0] < cursorInSim().x) && (cursorInSim().x < compBoundArr[1])) {
+								if ((compBoundArr[2] < cursorInSim().y) && (cursorInSim().y < compBoundArr[3])) {
 
-					/* //ZZzzzz Recolor back to normal    & clear serials
-					if (virSerial.size() != 0) {
-						for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
-							//cout << "\nChanging" << virSerial[v];
-							comp[virSerial[v]].sprite.setColor(normalCompColor);
-						}
-					}*/
-				}
+									mouseOnCompsBool = 1; Drag = 0;
 
-				/*Continoue while hold*/
-				if (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y) {
+									virSerial.emplace_back(c);
 
-					/*Follow Mouse*/
-					if (mouseOnCompsBool) {
-						if (!selectSquare /*&& releaseBool*/) {
-							int tempRotArr[4][2] = {
-								{0, -2},
-								{2, 0},
-								{0, 2},
-								{-2, 0}
-							};
-							for (int c = 0; c < virSerial.size(); c++) {
-
-								float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
-								float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
-
-								//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
-								//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
-
-
-								//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
-								for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX, tempY); }
-
-								tempX = trim(tempX, gap);
-								tempY = trim(tempY, gap);
-
-								if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
-									comp[virSerial[c]].x = tempX; // += (were "=" before)
-									comp[virSerial[c]].y = tempY; // += (were "=" before)
+									//copied in sel square selection
+									virSprite.emplace_back(comp[virSerial.back()].sprite);
+									virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+									virSprite.back().setColor(tempDimColor);/*
+									for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
+										virSprite.emplace_back(comp[virSerial[v]].sprite);
+										virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+										virSprite.back().setColor(tempDimColor);
+									}*/
 								}
+
 							}
 						}
 
-						stimuliEndNodes = 1; stimuliDisplay = 1;
-					}
+						//////////// Urgent need of enums , State Machine
+						if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; selSqr.setPosition(cursorInSim()); }
 
-				}
-
-				/*Select Sqr*/
-				if (selectSquare && !releaseBool) {
-					stimuliDisplay = 1;
-
-					/*Sel Sqr*/
-					selSqr.setSize(sf::Vector2f(cursorInSim().x - selSqr.getPosition().x, cursorInSim().y - selSqr.getPosition().y));
-
-					/*Selection*/
-					for (int c = 0; c < comp.size(); c++) {
-
-						bool compFound = 0;
-						int v = 0;
-						for (; v < virSerial.size(); v++) {
-							if (c == virSerial[v]) { compFound = 1; break; }
-						};
-
-						if (compIn(comp[c], selSqr.getPosition(), cursorInSim())) {
-							if (!compFound) {
-								virSerial.emplace_back(c);
-
-								virSprite.emplace_back(comp[virSerial.back()].sprite);
-								/*virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-								virSprite.back().setColor(tempDimColor);*/
-							}
-						}
-						else {
-							if (compFound) {
-								virSerial.erase(virSerial.begin() + v);
-
-								virSprite.erase(virSprite.begin() + v);
-							}
-						}
+						/*Wheel*/
+						/*Drag Background*/
+						/*if (!mouseOnCompsBool && !selectSquare) {
+							Drag = 1; mouseOnCompsBool = 0;
+							viewX = view.getCenter().x, viewY = view.getCenter().y;
+							verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
+							horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
+						}*/
 					}
 				}
 
-				//if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
+				if (virSerial.size() > 0) mouseOnCompsBool = 1;
 
-				if (printScreenBool) {
-					printScreenBool = 0;
-
-					time_t print = clock();
-
-					for (int c = 0; c < 1; c++) {
-						//std::thread printScreenTread { printScreen }; printScreenTread.join();
-
-						//std::async(std::launch::async, printScreen);
-
-						printScreen();
-					}
-					cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
-					print = clock();
-
-				}
-
-				
-				if (paste) {
-					if (onceOptComp) {
-						std::string inString;
-						std::vector<int> integers; integers.reserve(9);
-						clipboard >> inString;
-
-						//cout << inString;
-
-						bool negative = 0;
-						for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
-
-							temp = (int)inString[c];
-
-							if (48 <= temp && temp <= 57) {
-								x = x * 10 + temp - 48;
-							}
-							else if (temp == 45) negative = 1;
-							else if (temp == 10 || temp == 9) { // else if (temp == (int)('\n') || temp == (int)('\t')) {
-								if (negative) x *= -1;
-								integers.emplace_back(x);
-								negative = 0;
-								x = 0;
-							}
-
-						}
-
-						//cout << "\n"; for (int c = 0; c < integers.size(); c++) cout << integers[c] << " ";
-
-						for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
-							S = integers[++c];
-							X = integers[++c];
-							Y = integers[++c];
-							A = integers[++c];
-							comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+				/*Once while hold*/
+				if (mouseOnCompsBool && rotComp) {
+					if (onceOptMounsePressed) {
+						for (int v = 0; v < virSerial.size(); v++) {
+							comp[virSerial[v]].angle += 90;
+							comp[virSerial[v]].angle -= (int)(comp[virSerial[v]].angle / 360) * 360;
 						}
 
 						stimuliDisplay = 1;
 						stimuliEndNodes = 1;
 					}
-					onceOptComp = 0; copy = 0;
+					onceOptMounsePressed = 0;
 				}
+				else if (mouseOnCompsBool && delComp) {
+					if (onceOptMounsePressed) {
+						while (0 < virSerial.size()) {
+							if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
+							if (virSprite.size() > 0) virSprite.erase(virSprite.begin());
 
-				if (save  || (copy && onceOptComp)) {
+							for (int c = 1; c < virSerial.size(); c++) {
+								if (virSerial[c] > virSerial[0]) virSerial[c]--;
+							}
 
-					std::ofstream output;
-
-					if (!copy) {
-						int fileNo = 0;
-						std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-						std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
-
-						while (test.good()) {
-							test.close();
-							test.open(fileDir + std::to_string(++fileNo) + fileType);
+							virSerial.erase(virSerial.begin());
 						}
 
-						output.open(fileDir + std::to_string(fileNo) + fileType);
+						stimuliDisplay = 1;
+						stimuliEndNodes = 1;
+					}
+					mouseOnCompsBool = 0;
+					onceOptMounsePressed = 0;
+				}
+				else onceOptMounsePressed = 1;
+			}
+			else {
+			/*Wheel*//*Drag = 0;*/ mouseOnCompsBool = 0; selectSquare = 0;
+				/*Click*/
 
-					}
-
-					std::string tempStr;
-					
-					if (copy) {
-						tempStr = std::to_string((int)virSerial.size()) + "\n";
-					}
-					else {
-						tempStr = std::to_string((int)comp.size()) + "\n";
-					}
-
-					int size = ((int)comp.size()) * (!copy) + ((int)virSerial.size()) * (copy);
-					for (int c = 0; c < size; c++) {
-						if (copy)
-							tempStr += std::to_string(comp[virSerial[c]].serial) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
-						else
-							tempStr += std::to_string(comp[c].serial) + "\t" + std::to_string((int)comp[c].x) + "\t" + std::to_string((int)comp[c].y) + "\t" + std::to_string((int)comp[c].angle) + "\n";
-					}
-					
-					if (copy) {
-						clipboard << tempStr;
-					}
-					else {
-						output << tempStr;
-						output.close();
+				if (Click(gap)) {
+					stimuliDisplay = 1;
+					for (int v = 0; v < virSerial.size(); v++) {
+						int tempCompClick = comp[virSerial[v]].serial;
+						comp[virSerial[v]].serial = (tempCompClick == 5) * 7 + (tempCompClick == 7) * 5 + (tempCompClick != 5 && tempCompClick != 7) * (tempCompClick);
+						comp[virSerial[v]].sprite.setTexture(compTex[comp[virSerial[v]].serial]);
 					}
 
-					save = 0; saveNew = 0;
-					onceOptComp = 0;
-					copy = 0;
 				}
 
-				if (open) {
+				//if (Click(gap)) {
+				virSprite.clear();  ///// 
+				virSerial.clear();  ///// 
+				//}
 
-					int fileNo = 0;
-					std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-					std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
-
-					while (input.good()) {
-						input.close();
-						input.open(fileDir + std::to_string(++fileNo) + fileType);
+				/* //ZZzzzz Recolor back to normal    & clear serials
+				if (virSerial.size() != 0) {
+					for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
+						//cout << "\nChanging" << virSerial[v];
+						comp[virSerial[v]].sprite.setColor(normalCompColor);
 					}
-					input.open(fileDir + std::to_string(fileNo - 1) + fileType);
+				}*/
+			}
 
-					comp.clear();
-					virSprite.clear();
-					virSerial.clear();
-					int no = 0;
-					input >> no;
-					for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
-						input >> S >> X >> Y >> A;
+			/*Wheel*/
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)) {
+				/*Drag Background*/
+				if (releaseBool /*!mouseOnCompsBool && !selectSquare*/) {
+					mouseHoldX = (float)Mouse::getPosition(app).x; mouseHoldY = (float)Mouse::getPosition(app).y;
+					Drag = 1; mouseOnCompsBool = 0;
+					viewX = view.getCenter().x, viewY = view.getCenter().y;
+					verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
+					horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
+				}
+				releaseBool = 0;
+			}
+			else { Drag = 0; }
+
+			/*Continoue while hold*/
+			if (mouseHoldX != (float)Mouse::getPosition(app).x || mouseHoldY != (float)Mouse::getPosition(app).y) {
+
+				/*Follow Mouse*/
+				if (mouseOnCompsBool) {
+					if (!selectSquare /*&& releaseBool*/) {
+						int tempRotArr[4][2] = {
+							{0, -2},
+							{2, 0},
+							{0, 2},
+							{-2, 0}
+						};
+						for (int c = 0; c < virSerial.size(); c++) {
+
+							float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
+							float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
+
+							//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
+							//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
+
+
+							//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
+							for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX, tempY); }
+
+							tempX = trim(tempX, gap);
+							tempY = trim(tempY, gap);
+
+							if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
+								comp[virSerial[c]].x = tempX; // += (were "=" before)
+								comp[virSerial[c]].y = tempY; // += (were "=" before)
+							}
+						}
+					}
+
+					stimuliEndNodes = 1; stimuliDisplay = 1;
+				}
+
+			}
+
+			/*Select Sqr*/
+			if (selectSquare && !releaseBool) {
+				stimuliDisplay = 1;
+
+				/*Sel Sqr*/
+				selSqr.setSize(sf::Vector2f(cursorInSim().x - selSqr.getPosition().x, cursorInSim().y - selSqr.getPosition().y));
+
+				/*Selection*/
+				for (int c = 0; c < comp.size(); c++) {
+
+					bool compFound = 0;
+					int v = 0;
+					for (; v < virSerial.size(); v++) {
+						if (c == virSerial[v]) { compFound = 1; break; }
+					};
+
+					if (compIn(comp[c], selSqr.getPosition(), cursorInSim())) {
+						if (!compFound) {
+							virSerial.emplace_back(c);
+
+							virSprite.emplace_back(comp[virSerial.back()].sprite);
+							/*virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+							virSprite.back().setColor(tempDimColor);*/
+						}
+					}
+					else {
+						if (compFound) {
+							virSerial.erase(virSerial.begin() + v);
+
+							virSprite.erase(virSprite.begin() + v);
+						}
+					}
+				}
+			}
+
+			//if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
+
+
+
+			if (printScreenBool) {
+				printScreenBool = 0;
+
+				time_t print = clock();
+
+				for (int c = 0; c < 1; c++) {
+					//std::thread printScreenTread { printScreen }; printScreenTread.join();
+
+					//std::async(std::launch::async, printScreen);
+
+					printScreen();
+				}
+				cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
+				print = clock();
+
+			}
+
+			if (paste) {
+				if (onceOptComp) {
+					std::string inString;
+					std::vector<int> integers; integers.reserve(9);
+					clipboard >> inString;
+
+					//cout << inString;
+
+					bool negative = 0;
+					for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
+
+						temp = (int)inString[c];
+
+						if (48 <= temp && temp <= 57) {
+							x = x * 10 + temp - 48;
+						}
+						else if (temp == 45) negative = 1;
+						else if (temp == 10 || temp == 9) { // else if (temp == (int)('\n') || temp == (int)('\t')) {
+							if (negative) x *= -1;
+							integers.emplace_back(x);
+							negative = 0;
+							x = 0;
+						}
+
+					}
+
+					//cout << "\n"; for (int c = 0; c < integers.size(); c++) cout << integers[c] << " ";
+
+					for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
+						S = integers[++c];
+						X = integers[++c];
+						Y = integers[++c];
+						A = integers[++c];
 						comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
 					}
-					input.close();
 
-					stimuliEndNodes = 1;
-					open = 0;
-				}
-
-			}
-
-
-			// ----------------------------------------	Update
-
-			//circuit.updateWin();
-			if (MInTool) { stimuliDisplay = 1; }
-			{
-				/*ImGui*/
-				/*ImGui::SFML::Update(app, deltaClock.restart());//
-						ImGui::Begin("Frist ImGui Win");
-						ImGui::Text("My Project will be on Steroids");
-						ImGui::Checkbox("Draw Circle", &DrawCircle);
-						ImGui::SliderFloat("Radius", &t_radius, 0, 200);
-						ImGui::SliderInt("Sides", &t_vertices, 3, 35);
-						ImGui::ColorEdit3("Color", t_Colors);
-						ImGui::End();
-
-
-
-						testCircle.setRadius(t_radius);
-						testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
-						testCircle.setPointCount(t_vertices);
-						testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
-
-				if (Drag) {
 					stimuliDisplay = 1;
-					view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)Mouse::getPosition(app).x, viewY + mouseHoldY - (float)Mouse::getPosition(app).y));
-					float newVerY = verY + mouseHoldY - (float)Mouse::getPosition(app).y;
-					float newHorX = horX + mouseHoldX - (float)Mouse::getPosition(app).x;
+					stimuliEndNodes = 1;
+				}
+				onceOptComp = 0; copy = 0;
+			}
 
+			if (save || (copy && onceOptComp)) {
 
-					float verBrightX = vLines[verBrightCount].getPosition().x;
-					for (int c = 0; c < vLines.size(); c++) {
-						vLines[c].setPosition(trim(newHorX, gap) + c * gap, newVerY);
-					}
-					float horBrightY = hLines[horBrightCount].getPosition().y;
-					for (int c = 0; c < hLines.size(); c++) {
-						hLines[c].setPosition(newHorX, trim(newVerY, gap) + c * gap);
-					}
+				std::ofstream output;
 
-					verBrightX -= vLines[verBrightCount].getPosition().x;
-					if (verBrightX > gap * 0.9) verBrightCount--; else if (verBrightX < -gap * 0.9) verBrightCount++;
-					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + (int)horX % gap) / gap;
-					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + (-virtualBoarder - trim(horX,gap))) / gap;
-					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + horX - (horX / (float)gap)*gap) / gap;
-					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x + (-virtualBoarder + viewX - W / 2) - verX) / gap);
-					//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) - (int)horX / gap) / gap;
-					//cout << "\n" << mouseX - (float)Mouse::getPosition(app).x << ", " << + (-virtualBoarder + viewX - W / 2) - verX << ", " << verBrightCount;
+				if (!copy) {
+					int fileNo = 0;
+					std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+					std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
 
-					verBrightCount = abs((verBrightCount < 1) * (5 + verBrightCount % 5) + (1 <= verBrightCount) * ((verBrightCount - 1) % 5 + 1)) % 6;
-					//cout << "\n" << verBrightCount << "\n";
-					for (int c = 0; c < vLines.size(); c++) {
-						gridColor.a = 20 + ((c + verBrightCount) % 5 == 0) * 15;
-						vLines[c].setFillColor(gridColor);
+					while (test.good()) {
+						test.close();
+						test.open(fileDir + std::to_string(++fileNo) + fileType);
 					}
 
-
-					horBrightY -= hLines[horBrightCount].getPosition().y;
-					if (horBrightY > gap * 0.9) horBrightCount--; else if (horBrightY < -gap * 0.9) horBrightCount++;
-					horBrightCount = abs((horBrightCount < 1) * (5 + horBrightCount % 5) + (1 <= horBrightCount) * ((horBrightCount - 1) % 5 + 1)) % 6;
-					//cout << "\n" << horBrightCount << "\n";
-					for (int c = 0; c < hLines.size(); c++) {
-						gridColor.a = 20 + ((c + horBrightCount) % 5 == 0) * 15;
-						hLines[c].setFillColor(gridColor);
-					}
-
-					/*Resting Pos of Tool Bar   (Repeated at the at of Resize window) */
-					ToolBoxWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolBoxWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
-					ToolLilWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolLilWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
-					for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
+					output.open(fileDir + std::to_string(fileNo) + fileType);
 
 				}
 
-				//Tool Win
-				toolCol.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolBoxWinRestingPosY);
+				std::string tempStr;
 
-				//Tool Sqr
-				t_TollWx = ToolBoxLittleBox.getPosition().x;
-				ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, c_toolColWidth));
-				if (MIntool) serialToolMouse = (int)(Mouse::getPosition(app).y / c_toolColWidth); else serialToolMouse = 0;
-
-				/*endNodes*/ {
-					if (stimuliEndNodes) {
-
-						updateAllEnds();
-
-						while (allEnds.size() < allEndCircles.size()) {
-							allEndCircles.pop_back();
-						}
-
-						while (allEndCircles.size() < allEnds.size()) {
-							allEndCircles.emplace_back(nodePic);
-						}
-
-						for (int e = 0; e < allEndCircles.size(); e++) {
-							allEndCircles[e].setPosition(allEnds[e]);
-						}
-
-						//cout << "\n" << allEnds.size();
-					}
+				if (copy) {
+					tempStr = std::to_string((int)virSerial.size()) + "\n";
+				}
+				else {
+					tempStr = std::to_string((int)comp.size()) + "\n";
 				}
 
-				//testCircle.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2 + 200);
+				int size = ((int)comp.size()) * (!copy) + ((int)virSerial.size()) * (copy);
+				for (int c = 0; c < size; c++) {
+					if (copy)
+						tempStr += std::to_string(comp[virSerial[c]].serial) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
+					else
+						tempStr += std::to_string(comp[c].serial) + "\t" + std::to_string((int)comp[c].x) + "\t" + std::to_string((int)comp[c].y) + "\t" + std::to_string((int)comp[c].angle) + "\n";
+				}
+
+				if (copy) {
+					clipboard << tempStr;
+				}
+				else {
+					output << tempStr;
+					output.close();
+				}
+
+				save = 0; saveNew = 0;
+				onceOptComp = 0;
+				copy = 0;
+			}
+
+			if (open) {
+
+				int fileNo = 0;
+				std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+				std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
+
+				while (input.good()) {
+					input.close();
+					input.open(fileDir + std::to_string(++fileNo) + fileType);
+				}
+				input.open(fileDir + std::to_string(fileNo - 1) + fileType);
+
+				comp.clear();
+				virSprite.clear();
+				virSerial.clear();
+				int no = 0;
+				input >> no;
+				for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
+					input >> S >> X >> Y >> A;
+					comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+				}
+				input.close();
+
+				stimuliEndNodes = 1;
+				open = 0;
+			}
+
+		}
+
+
+		// ----------------------------------------	Update
+
+		//circuit.updateWin();
+		if (MInTool) { stimuliDisplay = 1; }
+		{
+			/*ImGui*/
+			/*ImGui::SFML::Update(app, deltaClock.restart());//
+					ImGui::Begin("Frist ImGui Win");
+					ImGui::Text("My Project will be on Steroids");
+					ImGui::Checkbox("Draw Circle", &DrawCircle);
+					ImGui::SliderFloat("Radius", &t_radius, 0, 200);
+					ImGui::SliderInt("Sides", &t_vertices, 3, 35);
+					ImGui::ColorEdit3("Color", t_Colors);
+					ImGui::End();
+
+
+
+					testCircle.setRadius(t_radius);
+					testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
+					testCircle.setPointCount(t_vertices);
+					testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
+
+			if (Drag) {
+				stimuliDisplay = 1;
+				view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)Mouse::getPosition(app).x, viewY + mouseHoldY - (float)Mouse::getPosition(app).y));
+				float newVerY = verY + mouseHoldY - (float)Mouse::getPosition(app).y;
+				float newHorX = horX + mouseHoldX - (float)Mouse::getPosition(app).x;
+
+
+				float verBrightX = vLines[verBrightCount].getPosition().x;
+				for (int c = 0; c < vLines.size(); c++) {
+					vLines[c].setPosition(trim(newHorX, gap) + c * gap, newVerY);
+				}
+				float horBrightY = hLines[horBrightCount].getPosition().y;
+				for (int c = 0; c < hLines.size(); c++) {
+					hLines[c].setPosition(newHorX, trim(newVerY, gap) + c * gap);
+				}
+
+				verBrightX -= vLines[verBrightCount].getPosition().x;
+				if (verBrightX > gap * 0.9) verBrightCount--; else if (verBrightX < -gap * 0.9) verBrightCount++;
+				//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + (int)horX % gap) / gap;
+				//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + (-virtualBoarder - trim(horX,gap))) / gap;
+				//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) + horX - (horX / (float)gap)*gap) / gap;
+				//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x + (-virtualBoarder + viewX - W / 2) - verX) / gap);
+				//verBrightCount = wxyz + (int)((mouseX - (float)Mouse::getPosition(app).x) - (int)horX / gap) / gap;
+				//cout << "\n" << mouseX - (float)Mouse::getPosition(app).x << ", " << + (-virtualBoarder + viewX - W / 2) - verX << ", " << verBrightCount;
+
+				verBrightCount = abs((verBrightCount < 1) * (5 + verBrightCount % 5) + (1 <= verBrightCount) * ((verBrightCount - 1) % 5 + 1)) % 6;
+				//cout << "\n" << verBrightCount << "\n";
+				for (int c = 0; c < vLines.size(); c++) {
+					gridColor.a = 20 + ((c + verBrightCount) % 5 == 0) * 15;
+					vLines[c].setFillColor(gridColor);
+				}
+
+
+				horBrightY -= hLines[horBrightCount].getPosition().y;
+				if (horBrightY > gap * 0.9) horBrightCount--; else if (horBrightY < -gap * 0.9) horBrightCount++;
+				horBrightCount = abs((horBrightCount < 1) * (5 + horBrightCount % 5) + (1 <= horBrightCount) * ((horBrightCount - 1) % 5 + 1)) % 6;
+				//cout << "\n" << horBrightCount << "\n";
+				for (int c = 0; c < hLines.size(); c++) {
+					gridColor.a = 20 + ((c + horBrightCount) % 5 == 0) * 15;
+					hLines[c].setFillColor(gridColor);
+				}
+
+				/*Resting Pos of Tool Bar   (Repeated at the at of Resize window) */
+				ToolBoxWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolBoxWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
+				ToolLilWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolLilWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
+				for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
 
 			}
 
+			//Tool Win
+			toolCol.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolBoxWinRestingPosY);
 
-			// ----------------------------------------	Draw
-			{
-				if (1 || stimuliDisplay) { // zero causes 100 cpu load
-					app.setView(view);
-					app.clear(sf::Color(23, 24, 25));
-					//app.draw(Rayn);
-					//app.draw(Rayn2);
+			//Tool Sqr
+			t_TollWx = ToolBoxLittleBox.getPosition().x;
+			ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, c_toolColWidth));
+			if (MIntool) serialToolMouse = (int)(Mouse::getPosition(app).y / c_toolColWidth); else serialToolMouse = 0;
 
-					/*grid*/ {
-						for (int c = 0; c < vLines.size(); c++) { app.draw(vLines[c]); }
-						for (int c = 0; c < hLines.size(); c++) { app.draw(hLines[c]); }
+			/*endNodes*/ {
+				if (stimuliEndNodes) {
+
+					updateAllEnds();
+
+					while (allEnds.size() < allEndCircles.size()) {
+						allEndCircles.pop_back();
 					}
 
-					/*comp*/ {
-						for (int c = 0; c < comp.size(); c++) { comp[c].draw(app); }
+					while (allEndCircles.size() < allEnds.size()) {
+						allEndCircles.emplace_back(nodePic);
 					}
 
-					/*Wires*/ //if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
-
-					/*Nodes*/ {
-						for (int e = 0; e < allEndCircles.size(); e++) { app.draw(allEndCircles[e]); }
+					for (int e = 0; e < allEndCircles.size(); e++) {
+						allEndCircles[e].setPosition(allEnds[e]);
 					}
 
-					if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
-
-					//if (DrawCircle) app.draw(testCircle);
-
-					selectSquare = debugBool;
-					if (selectSquare && !releaseBool) app.draw(selSqr);
-
-					/*Tool Win*/ {
-						if (MInTool) {
-							app.draw(toolCol);
-							for (int c = 0; c < (noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
-							for (int c = 0; c < (noOfComps - 1); c++) { app.draw(ToolSpr[c]); }
-						}
-						else { for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); }
-
-						if (MIntool) app.draw(ToolBoxLittleBox);
-					}
-
-
-					/*ImGui*/
-					//ImGui::SFML::Render(app);//Last Thing to render
-
-					app.display();
+					//cout << "\n" << allEnds.size();
 				}
 			}
-			
-			app.setTitle("CircuitSIm   " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
-			frame = clock();
+
+			//testCircle.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2 + 200);
+
+		}
 
 
-			stimuliDisplay = 0; stimuliEndNodes = 0;
+		// ----------------------------------------	Draw
+		{
+			if (1 || stimuliDisplay) { // zero causes 100 cpu load
+				app.setView(view);
+				app.clear(sf::Color(23, 24, 25));
+				//app.draw(Rayn);
+				//app.draw(Rayn2);
+
+				/*grid*/ {
+					for (int c = 0; c < vLines.size(); c++) { app.draw(vLines[c]); }
+					for (int c = 0; c < hLines.size(); c++) { app.draw(hLines[c]); }
+				}
+
+				/*comp*/ {
+					for (int c = 0; c < comp.size(); c++) { comp[c].draw(app); }
+				}
+
+				/*Wires*/ //if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
+
+				/*Nodes*/ {
+					for (int e = 0; e < allEndCircles.size(); e++) { app.draw(allEndCircles[e]); }
+				}
+
+				if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
+
+				//if (DrawCircle) app.draw(testCircle);
+
+				if (selectSquare && !releaseBool) app.draw(selSqr);
+
+				/*Tool Win*/ {
+					if (MInTool) {
+						app.draw(toolCol);
+						for (int c = 0; c < (noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
+						for (int c = 0; c < (noOfComps - 1); c++) { app.draw(ToolSpr[c]); }
+					}
+					else { for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); }
+
+					if (MIntool) app.draw(ToolBoxLittleBox);
+				}
+
+
+				/*ImGui*/
+				//ImGui::SFML::Render(app);//Last Thing to render
+
+				app.display();
+			}
 		}
 
 	END:
-		;
-		stimuliDisplay = 1; stimuliEndNodes = 1;
+
+		app.setTitle("CircuitSIm   " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
+		frame = clock();
+
+
+		stimuliDisplay = 0; stimuliEndNodes = 0;
 	}
+
+	
+	stimuliDisplay = 1; stimuliEndNodes = 1;
 
 
 

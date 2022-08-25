@@ -1,4 +1,7 @@
 New------------------------------------
+drag by pressing scroll wheel
+deleted while(!End) loop
+assets/Images (assets/Fonts)
 cursorInSim smooth*
 win: default
 win resizing: smooth**
@@ -14,7 +17,7 @@ paste causes pastes in all open windows
 
 
 Unstable:------------------------------
-When win minimized (hangs computer {all nust labs; mine at 3 windows})
+When win minimized (hangs computer {all nust labs; mine at 3 windows}) [Possible cause Smart Display]
 |__-> appearently solved by disabling stimuli display (x=1)
 |
 |__-> smart display(using): (normal cpu 25-30),(100)
