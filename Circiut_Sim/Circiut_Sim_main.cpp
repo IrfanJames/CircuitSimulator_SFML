@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /*
 taskkill /F /IM Circiut_Sim.exe
 */
@@ -42,7 +42,7 @@ std::vector<sf::Vector2f> allEnds;
 
 bool Occupied = 0;
 
-
+//int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
 int main() {
 
 	sf::ContextSettings settings; settings.antialiasingLevel = 8;
@@ -122,15 +122,21 @@ int main() {
 	}
 
 	/*Tool Textures*/ {
-		compTex[0].loadFromFile("assets/Images/Cap.png");
-		compTex[1].loadFromFile("assets/Images/Cur.png");
-		compTex[2].loadFromFile("assets/Images/Dod.png");
-		compTex[3].loadFromFile("assets/Images/Ind.png");
-		compTex[4].loadFromFile("assets/Images/Res.png");
-		compTex[5].loadFromFile("assets/Images/SwO.png");
-		compTex[6].loadFromFile("assets/Images/Vol.png");
-		compTex[7].loadFromFile("assets/Images/SwC.png");
+		compTex[Cap].loadFromFile("assets/Images/Cap.png");
+		compTex[Cur].loadFromFile("assets/Images/Cur.png");
+		compTex[Dod].loadFromFile("assets/Images/Dod.png");
+		compTex[Ind].loadFromFile("assets/Images/Ind.png");
+		compTex[Res].loadFromFile("assets/Images/Res.png");
+		compTex[SwO].loadFromFile("assets/Images/SwO.png");
+		compTex[Vol].loadFromFile("assets/Images/Vol.png");
+		compTex[SwC].loadFromFile("assets/Images/SwC.png");
 	}
+
+	/*Fonts*/
+	sf::Font calibriFont;
+	calibriFont.loadFromFile("assets/Fonts/CalibriL_1.ttf");/*CALIBRI_1*/
+	sf::Font greekFont;
+	greekFont.loadFromFile("assets/Fonts/GREEK.ttf");
 
 	////////////////////////////////////////////// ToolBox
 	const float c_toolColWidth = 100;
@@ -168,7 +174,7 @@ int main() {
 
 	/*Circuit*/
 
-	comp.reserve(8);
+	comp.reserve(3);
 	allEnds.reserve(10);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
@@ -216,7 +222,7 @@ int main() {
 			if (evnt.type == evnt.Resized) {
 
 				//view = sf::View(sf::FloatRect(view.getCenter().x - ((float)evnt.size.width) / 2, view.getCenter().y - ((float)evnt.size.height) / 2, evnt.size.width, evnt.size.height));
-				/*view.setCenter(view.getCenter());*/ view.setSize(evnt.size.width, evnt.size.height);
+				view.setCenter(view.getCenter()); view.setSize(evnt.size.width, evnt.size.height);
 
 				/*Resting Pos of Tool Bar   (Repeated at the at of Drag{}) */ {
 					toolCol.setSize(sf::Vector2f(toolCol.getSize().x, view.getSize().y));
@@ -228,7 +234,7 @@ int main() {
 			if (evnt.type == evnt.MouseButtonReleased) { releaseBool = 1; }
 
 			if (evnt.type == evnt.KeyPressed) {
-				if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; goto END; }
+				if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; continue; /*goto END;*/ }
 				//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
 				if (evnt.key.code == Keyboard::P) { printScreenBool = 1; }
 				if (evnt.key.code == Keyboard::S) { save = 1; }
@@ -440,7 +446,7 @@ int main() {
 				/*Follow Mouse*/
 				if (mouseOnCompsBool) {
 					if (!selectSquare /*&& releaseBool*/) {
-						int tempRotArr[4][2] = {
+						int offSet[4][2] = {
 							{0, -2},
 							{2, 0},
 							{0, 2},
@@ -448,12 +454,11 @@ int main() {
 						};
 						for (int c = 0; c < virSerial.size(); c++) {
 
-							float tempX = cursorInSim().x + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
-							float tempY = cursorInSim().y + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
+							float tempX = (int)cursorInSim().x + gap * offSet[(int)comp[virSerial[c]].angle / 90][0]; ///
+							float tempY = (int)cursorInSim().y + gap * offSet[(int)comp[virSerial[c]].angle / 90][1]; ///
 
 							//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
 							//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
-
 
 							//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
 							for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX, tempY); }
@@ -462,8 +467,8 @@ int main() {
 							tempY = trim(tempY, gap);
 
 							if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
-								comp[virSerial[c]].x = tempX; // += (were "=" before)
-								comp[virSerial[c]].y = tempY; // += (were "=" before)
+								comp[virSerial[c]].x = (int)tempX; // += (were "=" before)
+								comp[virSerial[c]].y = (int)tempY; // += (were "=" before)
 							}
 						}
 					}
@@ -515,7 +520,7 @@ int main() {
 			if (printScreenBool) {
 				printScreenBool = 0;
 
-				time_t print = clock();
+				//time_t print = clock();
 
 				for (int c = 0; c < 1; c++) {
 					//std::thread printScreenTread { printScreen }; printScreenTread.join();
@@ -524,8 +529,8 @@ int main() {
 
 					printScreen();
 				}
-				cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
-				print = clock();
+
+				//cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
 
 			}
 
@@ -755,54 +760,53 @@ int main() {
 
 
 		// ----------------------------------------	Draw
-		{
-			if (1 || stimuliDisplay) { // zero causes 100 cpu load
-				app.setView(view);
-				app.clear(sf::Color(23, 24, 25));
-				//app.draw(Rayn);
-				//app.draw(Rayn2);
+		if (1 || stimuliDisplay) { // zero causes 100 cpu load
+			app.setView(view);
+			app.clear(sf::Color(23, 24, 25));
+			//app.draw(Rayn);
+			//app.draw(Rayn2);
 
-				/*grid*/ {
-					for (int c = 0; c < vLines.size(); c++) { app.draw(vLines[c]); }
-					for (int c = 0; c < hLines.size(); c++) { app.draw(hLines[c]); }
-				}
-
-				/*comp*/ {
-					for (int c = 0; c < comp.size(); c++) { comp[c].draw(app); }
-				}
-
-				/*Wires*/ //if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
-
-				/*Nodes*/ {
-					for (int e = 0; e < allEndCircles.size(); e++) { app.draw(allEndCircles[e]); }
-				}
-
-				if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
-
-				//if (DrawCircle) app.draw(testCircle);
-
-				if (selectSquare && !releaseBool) app.draw(selSqr);
-
-				/*Tool Win*/ {
-					if (MInTool) {
-						app.draw(toolCol);
-						for (int c = 0; c < (noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
-						for (int c = 0; c < (noOfComps - 1); c++) { app.draw(ToolSpr[c]); }
-					}
-					else { for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); }
-
-					if (MIntool) app.draw(ToolBoxLittleBox);
-				}
-
-
-				/*ImGui*/
-				//ImGui::SFML::Render(app);//Last Thing to render
-
-				app.display();
+			/*grid*/ {
+				for (int c = 0; c < vLines.size(); c++) { app.draw(vLines[c]); }
+				for (int c = 0; c < hLines.size(); c++) { app.draw(hLines[c]); }
 			}
+
+			/*comp*/ {
+				for (int c = 0; c < comp.size(); c++) { comp[c].draw(app); }
+			}
+
+			/*Wires*/ //if (wireBool) { for (int c = 0; c < wires.size(); c++) wires[c].draw(app); }
+
+			/*Nodes*/ {
+				for (int e = 0; e < allEndCircles.size(); e++) { app.draw(allEndCircles[e]); }
+			}
+
+			if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
+
+			//if (DrawCircle) app.draw(testCircle);
+
+			if (selectSquare && !releaseBool) app.draw(selSqr);
+
+			/*Tool Win*/ {
+				if (MInTool) {
+					app.draw(toolCol);
+					for (int c = 0; c < (noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
+					for (int c = 0; c < (noOfComps - 1); c++) { app.draw(ToolSpr[c]); }
+				}
+				else { for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); }
+
+				if (MIntool) app.draw(ToolBoxLittleBox);
+			}
+
+
+			/*ImGui*/
+			//ImGui::SFML::Render(app);//Last Thing to render
+
+			app.display();
 		}
 
-	END:
+
+		//END:
 
 		app.setTitle("CircuitSIm   " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
 		frame = clock();

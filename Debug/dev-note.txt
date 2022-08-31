@@ -1,4 +1,5 @@
 New------------------------------------
+Text (1.2 mA)
 drag by pressing scroll wheel
 deleted while(!End) loop
 assets/Images (assets/Fonts)
