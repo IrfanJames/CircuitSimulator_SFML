@@ -1,4 +1,10 @@
 New------------------------------------
+Optimization Entity comp -> const Entity& comp
+Click() now also uses time to dectect a Click
+Components stay selected until a Click
+Rotation an Delete independent of Mouse Pressed
+Switch Open Close only affects the Swith directly beneath the cursor.
+boarders
 Text (1.2 mA)
 drag by pressing scroll wheel
 deleted while(!End) loop
