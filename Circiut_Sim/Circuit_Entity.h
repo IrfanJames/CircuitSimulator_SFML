@@ -57,7 +57,7 @@ public:
 		
 		std::string str;
 		double value = 0;
-		static std::string preScalers = "nµmkMG";
+		const static std::string preScalers = "nµmkMG";
 
 		/*Value*/
 		switch (serial) {
@@ -116,12 +116,12 @@ public:
 		switch (serial) {
 		case Cap: { str += "F";		break; }
 		case Cur: { str += "A";		break; }
-		case Dod: { str += "";		break; }
+		case Dod: { str  = "";		break; }
 		case Ind: { str += "H";		break; }
 		case Res: { str += "Ohm";	break; }
-		case SwO: { /*str += "";*/	break; }
+		case SwO: { str  = "";		break; }
 		case Vol: { str += "V";		break; }
-		case SwC: { /*str += "";*/	break; }
+		case SwC: { str  = "";		break; }
 		default:  { str += "[No Unit: Component not in library]"; break; }
 		}
 

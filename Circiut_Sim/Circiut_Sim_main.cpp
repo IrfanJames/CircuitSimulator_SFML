@@ -24,9 +24,10 @@ sf::Vector2f cursorInSim();
 bool Click(int Sensitivity);
 float trim(float num, int wrt);
 
+bool cursorOnComp(const Entity& Comp);
 bool occupiedAt(int Index, sf::Vector2f At);
-bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin);
-void getBounds(Entity Comp, int arr[4]);
+bool compIn(const Entity& Comp, sf::Vector2f Ini, sf::Vector2f Fin);
+void getBounds(const Entity& Comp, int arr[4]);
 
 void printScreen();
 
@@ -34,13 +35,14 @@ void updateAllEnds();
 
 //RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
 sf::RenderWindow app;
-float mouseHoldX = Mouse::getPosition(app).x, mouseHoldY = Mouse::getPosition(app).y;
-
 sf::View view(sf::Vector2f(W / 2, H / 2), sf::Vector2f(W, H));
-std::vector<Entity> comp;
-std::vector<sf::Vector2f> allEnds;
 
 bool Occupied = 0;
+float mouseHoldX = Mouse::getPosition(app).x, mouseHoldY = Mouse::getPosition(app).y;
+time_t click = clock(); // Time passed since Click
+
+std::vector<Entity> comp;
+std::vector<sf::Vector2f> allEnds;
 
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
 int main() {
@@ -58,6 +60,8 @@ int main() {
 
 	//ImGui::SFML::Init(app);//
 	//sf::Clock deltaClock;//
+
+	bool RELEASE_DEBUG = 1;
 
 	time_t frame = clock();
 	bool End = 0, debugBool = 0;
@@ -166,26 +170,31 @@ int main() {
 
 	/*Sel Sqr*/
 	sf::RectangleShape selSqr; {
-		selSqr.setFillColor(sf::Color(0, 0, 0, 0));
-		selSqr.setOutlineThickness(1.0f);
 		selSqr.setFillColor(sf::Color(66, 135, 245, 60));
+		selSqr.setOutlineThickness(1.0f);
 		selSqr.setOutlineColor(sf::Color(66, 135, 245)); }
 
 
 	/*Circuit*/
 
-	comp.reserve(3);
-	allEnds.reserve(10);
+	comp.reserve(9);
+	allEnds.reserve(9);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
 
 	////////////////////////////////////////////// Solve
 	//Graph circuit;
 
-	sf::CircleShape nodePic(4, 15);
-	nodePic.setOrigin(4, 4);
-	nodePic.setFillColor(normalCompColor);
-	std::vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(5);
+	sf::CircleShape nodePic(4, 15); {
+		nodePic.setOrigin(4, 4);
+		nodePic.setFillColor(normalCompColor); }
+	std::vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(17);
+
+	sf::RectangleShape boarderPic; {
+		boarderPic.setFillColor(sf::Color(0, 0, 100, 0));
+		boarderPic.setOutlineThickness(1.0f);
+		boarderPic.setOutlineColor(sf::Color(0, 204, 102)); }
+	std::vector<sf::RectangleShape> allBoarders; allBoarders.reserve(9);
 
 	//////////////////////////////////////////////
 
@@ -234,7 +243,7 @@ int main() {
 			if (evnt.type == evnt.MouseButtonReleased) { releaseBool = 1; }
 
 			if (evnt.type == evnt.KeyPressed) {
-				if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; continue; /*goto END;*/ }
+				if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; continue; }
 				//if (evnt.key.code == Keyboard::R) { cout << "\n------------------   Reset   -----------------\n"; goto END; }
 				if (evnt.key.code == Keyboard::P) { printScreenBool = 1; }
 				if (evnt.key.code == Keyboard::S) { save = 1; }
@@ -264,16 +273,19 @@ int main() {
 			verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 			horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
 		}*/
-		if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { rotComp = 1; stimuliDisplay = 1; }
 		if ((Keyboard::isKeyPressed(Keyboard::S)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { saveNew = 1; }
 
-		if ((Keyboard::isKeyPressed(Keyboard::C)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { copy = 1; }
+		if ((Keyboard::isKeyPressed(Keyboard::R)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { rotComp = 1; stimuliDisplay = 1; }
 		else {
-			copy = 0;
-			if ((Keyboard::isKeyPressed(Keyboard::V)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { paste = 1; stimuliDisplay = 1; }
+			rotComp = 0;
+			if ((Keyboard::isKeyPressed(Keyboard::C)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { copy = 1; }
 			else {
-				paste = 0;
-				onceOptComp = 1;
+				copy = 0;
+				if ((Keyboard::isKeyPressed(Keyboard::V)) && (Keyboard::isKeyPressed(Keyboard::RControl) || Keyboard::isKeyPressed(Keyboard::LControl))) { paste = 1; stimuliDisplay = 1; }
+				else {
+					paste = 0;
+					onceOptComp = 1;
+				}
 			}
 		}
 
@@ -282,6 +294,7 @@ int main() {
 
 
 
+		
 
 		// ----------------------------------------	Options
 		{
@@ -289,6 +302,7 @@ int main() {
 			if (Mouse::isButtonPressed(Mouse::Left)) {
 				if (releaseBool) {
 					releaseBool = 0;
+					click = clock();
 					mouseHoldX = (float)Mouse::getPosition(app).x; mouseHoldY = (float)Mouse::getPosition(app).y;
 
 					//wires[0].newEdge();
@@ -323,27 +337,21 @@ int main() {
 						/*Check every component for Mouse*/
 						for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
 
-							/*Dealing with Origin*/
-							int compBoundArr[4];
-							getBounds(comp[c], compBoundArr);
+							if (cursorOnComp(comp[c])) {
 
-							if ((compBoundArr[0] < cursorInSim().x) && (cursorInSim().x < compBoundArr[1])) {
-								if ((compBoundArr[2] < cursorInSim().y) && (cursorInSim().y < compBoundArr[3])) {
+								mouseOnCompsBool = 1; Drag = 0;
 
-									mouseOnCompsBool = 1; Drag = 0;
+								virSerial.emplace_back(c);
 
-									virSerial.emplace_back(c);
-
-									//copied in sel square selection
-									virSprite.emplace_back(comp[virSerial.back()].sprite);
+								//copied in sel square selection
+								virSprite.emplace_back(comp[virSerial.back()].sprite);
+								virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+								virSprite.back().setColor(tempDimColor);/*
+								for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
+									virSprite.emplace_back(comp[virSerial[v]].sprite);
 									virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-									virSprite.back().setColor(tempDimColor);/*
-									for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
-										virSprite.emplace_back(comp[virSerial[v]].sprite);
-										virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-										virSprite.back().setColor(tempDimColor);
-									}*/
-								}
+									virSprite.back().setColor(tempDimColor);
+								}*/
 
 							}
 						}
@@ -365,7 +373,7 @@ int main() {
 				if (virSerial.size() > 0) mouseOnCompsBool = 1;
 
 				/*Once while hold*/
-				if (mouseOnCompsBool && rotComp) {
+				/*if (mouseOnCompsBool && rotComp) {
 					if (onceOptMounsePressed) {
 						for (int v = 0; v < virSerial.size(); v++) {
 							comp[virSerial[v]].angle += 90;
@@ -396,26 +404,38 @@ int main() {
 					mouseOnCompsBool = 0;
 					onceOptMounsePressed = 0;
 				}
-				else onceOptMounsePressed = 1;
+				else onceOptMounsePressed = 1;*/
 			}
 			else {
-			/*Wheel*//*Drag = 0;*/ mouseOnCompsBool = 0; selectSquare = 0;
+				/*Wheel*//*Drag = 0;*/ mouseOnCompsBool = 0; selectSquare = 0;
+
 				/*Click*/
 
 				if (Click(gap)) {
 					stimuliDisplay = 1;
+
 					for (int v = 0; v < virSerial.size(); v++) {
-						int tempCompClick = comp[virSerial[v]].serial;
-						comp[virSerial[v]].serial = (tempCompClick == 5) * 7 + (tempCompClick == 7) * 5 + (tempCompClick != 5 && tempCompClick != 7) * (tempCompClick);
-						comp[virSerial[v]].sprite.setTexture(compTex[comp[virSerial[v]].serial]);
+						if (cursorOnComp(comp[virSerial[v]])) {
+
+							if (comp[virSerial[v]].serial == 5)comp[virSerial[v]].serial = 7;
+							else if (comp[virSerial[v]].serial == 7) comp[virSerial[v]].serial = 5;
+
+							comp[virSerial[v]].sprite.setTexture(compTex[comp[virSerial[v]].serial]);
+
+							virSerial.erase(virSerial.begin() + v);
+							virSprite.erase(virSprite.begin() + v);
+
+							break;
+						}
+
 					}
 
 				}
 
-				//if (Click(gap)) {
-				virSprite.clear();  ///// 
-				virSerial.clear();  ///// 
-				//}
+				if (Click(3)) {
+					virSprite.clear();  ///// 
+					virSerial.clear();  ///// 
+				}
 
 				/* //ZZzzzz Recolor back to normal    & clear serials
 				if (virSerial.size() != 0) {
@@ -492,7 +512,7 @@ int main() {
 					int v = 0;
 					for (; v < virSerial.size(); v++) {
 						if (c == virSerial[v]) { compFound = 1; break; }
-					};
+					}
 
 					if (compIn(comp[c], selSqr.getPosition(), cursorInSim())) {
 						if (!compFound) {
@@ -511,10 +531,39 @@ int main() {
 						}
 					}
 				}
+
+			}
+
+			if (rotComp) {
+				if (onceOptComp) {
+					rotComp = 0;
+					for (int v = 0; v < virSerial.size(); v++) {
+						comp[virSerial[v]].angle += 90;
+						comp[virSerial[v]].angle -= (int)(comp[virSerial[v]].angle / 360) * 360;
+					}
+
+					stimuliDisplay = 1;	stimuliEndNodes = 1;
+				}
+				onceOptComp = 0;
+			}
+
+			if (delComp) {
+				delComp = 0;
+				while (0 < virSerial.size()) {
+					if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
+					if (virSprite.size() > 0) virSprite.erase(virSprite.begin());
+
+					for (int c = 1; c < virSerial.size(); c++) {
+						if (virSerial[c] > virSerial[0]) virSerial[c]--;
+					}
+
+					virSerial.erase(virSerial.begin());
+				}
+
+				stimuliDisplay = 1;	stimuliEndNodes = 1;
 			}
 
 			//if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
-
 
 
 			if (printScreenBool) {
@@ -754,11 +803,32 @@ int main() {
 				}
 			}
 
+			if (RELEASE_DEBUG/* && stimuliEndNodes*/) {
+
+				while (virSerial.size() < allBoarders.size()) {
+					allBoarders.pop_back();
+				}
+
+				while (allBoarders.size() < virSerial.size()) {
+					allBoarders.emplace_back(boarderPic);
+				}
+
+				for (int v = 0; v < virSerial.size(); v++) {
+					static int bounds[4] = { 0,0,0,0 };
+					getBounds(comp[virSerial[v]], bounds);
+					allBoarders[v].setPosition(bounds[0], bounds[2]);
+					allBoarders[v].setSize(sf::Vector2f(bounds[1] - bounds[0], bounds[3] - bounds[2]));
+					//cout << "\n\nPos: " << allRect[v].getSize().x << ", " << allRect[v].getSize().y;
+				}
+
+				//cout << "\nallBoarders.size() = " << allBoarders.size();
+			}
+
 			//testCircle.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2 + 200);
 
 		}
 
-
+		
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) { // zero causes 100 cpu load
 			app.setView(view);
@@ -779,6 +849,10 @@ int main() {
 
 			/*Nodes*/ {
 				for (int e = 0; e < allEndCircles.size(); e++) { app.draw(allEndCircles[e]); }
+			}
+
+			/*Boarders*/ {
+				for (int b = 0; b < allBoarders.size(); b++) { app.draw(allBoarders[b]); }
 			}
 
 			if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
@@ -805,8 +879,6 @@ int main() {
 			app.display();
 		}
 
-
-		//END:
 
 		app.setTitle("CircuitSIm   " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
 		frame = clock();
@@ -971,7 +1043,19 @@ sf::Vector2f cursorInSim() {
 }
 
 bool Click(int Sensitivity) {
-	return !!(!Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(app).y) <= Sensitivity);
+	return (((float)clock() - (float)click) < 100) && !!(!Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(app).y) <= Sensitivity);
+}
+
+bool cursorOnComp(const Entity& Comp) {
+
+	int bounds[4];
+	getBounds(Comp, bounds);
+
+	sf::Vector2f cursorPos = cursorInSim();
+
+	if (bounds[0] <= cursorPos.x && cursorPos.x <= bounds[1] && bounds[2] <= cursorPos.y && cursorPos.y <=bounds[3]) return 1;
+
+	return 0;
 }
 
 bool occupiedAt(int Index, sf::Vector2f At) {
@@ -1018,7 +1102,7 @@ bool occupiedAt(int Index, sf::Vector2f At) {
 	Occupied = 0; return 0;
 }
 
-bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
+bool compIn(const Entity& Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
 
 	int compBoundArr[4];
 	getBounds(Comp, compBoundArr);
@@ -1030,16 +1114,14 @@ bool compIn(Entity Comp, sf::Vector2f Ini, sf::Vector2f Fin) {
 	if (Ini.y <= Fin.y) { C = Ini.y; D = Fin.y; }
 	else { D = Ini.y; C = Fin.y; }
 
-	if ((A <= compBoundArr[0]) && (compBoundArr[1] <= B)) {
-		if ((C <= compBoundArr[2]) && (compBoundArr[3] <= D)) {
+	if ((A <= compBoundArr[0]) && (compBoundArr[1] <= B) && (C <= compBoundArr[2]) && (compBoundArr[3] <= D)) {
 			return 1;
-		}
 	}
 
 	return 0;
 }
 
-void getBounds(Entity Comp, int arr[4]) {
+void getBounds(const Entity& Comp, int arr[4]) {
 
 	/*Dealing with Origin*/
 	int a = 0, b = 15, d = 75;
