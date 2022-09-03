@@ -23,7 +23,7 @@ public:
 
 	double resistance = 1000;
 	double voltage =	5;
-	double current =	0.0002;
+	double current =	0.002;
 
 public:
 	int serial = 0;

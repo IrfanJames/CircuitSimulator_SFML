@@ -1,28 +1,25 @@
 Source Code: https://github.com/IrfanJames/CircuitSimulator_SFML.git
 
-
 Controls:
 ---------------------------------------------------------
 0. Drag the View by Pressing Scroll Wheel
 1. Hover Cursor to the Left of the window for ToolBar
+2. Hold(one element) or Selection mode(Click + Hold + Drag) (multiple elements)
 
-2. Hold(one element) or Selection mode(N) (multiple elements)
-3. (Hold component) then Del      -> Delete
-4. (Hold component) then Ctrl + R -> Rotate
+3. Ctrl + A -> Select All
+4. Ctrl + R -> Rotate
+5. Del      -> Delete
 
-5. (Hold component) then Ctrl + C -> Copy
-6. (Hold component) then Ctrl + V -> Paste
+6. Ctrl + C -> Copy
+7. Ctrl + V -> Paste
 
-7. P	PrintScreen; Save as Image(PNG)
-8. S	Save Project
-9. O	Open (last saved) Project
+8. Ctrl + S -> Save Project
+9. Ctrl + O -> Open (last saved) Project
+10.PrintScreen Key -> PrintScreen; Save as Image(PNG)
 
-10. Esc   Escape
-
-
+11.Esc   Escape
 
 ---------------------------------------------------------
-
 This is my personal project of Circuit Simulator.
 Would love some suggestions.
 

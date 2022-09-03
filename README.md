@@ -1,4 +1,4 @@
-## [`Click to Download`](https://irfan-james.itch.io/circuit-simulator "Click to Download")
+## [`Click to Download`](https://irfan-james.itch.io/circuit-simulator)
 
 
 > Circuit Simulator from Ground up in C++
@@ -13,15 +13,16 @@
 |  Drag |  `Scroll Wheel` |
 |  Toolbar |  Hover `Cursor` to Left |
 |||
-|  Rotate |  `Select` + `Ctrl` + `R` |
-|  Delete |  `Select` + `Del` |
-|||
-|  Open | `O` |
-|  Save |  `S` |
-|Save as Image| `P` |
-|||
-|  Copy |  `Select` + `Ctrl` + `C` |
+|  Select All |  `Ctrl` + `A` |
+|  Copy |  `Ctrl` + `C` |
 |  Paste |  `Ctrl` + `V` |
+|||
+|  Rotate |  `Ctrl` + `R` |
+|  Delete |  `Del` |
+|||
+|  Open Project | `Ctrl` + `O` |
+|  Save Project |  `Ctrl` + `S` |
+|Save as Image| `Print Screen Key` |
 |||
 |  Close |  `Esc` |
 

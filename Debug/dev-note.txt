@@ -1,4 +1,7 @@
 New------------------------------------
+Ctrl + A -> Select All
+Detecting Ctrl Key by just evnt not by nested if
+PrintScreen Key can now be detected
 Optimization Entity comp -> const Entity& comp
 Click() now also uses time to dectect a Click
 Components stay selected until a Click
