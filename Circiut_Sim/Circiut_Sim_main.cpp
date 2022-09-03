@@ -100,6 +100,7 @@ int main() {
 	std::vector<sf::RectangleShape> vLines;
 	std::vector<sf::RectangleShape> hLines;
 	sf::Color gridColor(100, 105, 110, 20);
+	sf::Color backColor(23, 24, 25);
 	{
 		vLines.reserve((W + 2 * virtualBoarder) / gap + 2);
 		sf::Vector2f tempVect(2, H + 2 * virtualBoarder);
@@ -269,14 +270,20 @@ int main() {
 					if (evnt.key.code == Keyboard::A) {
 						cout << "\nCtrl + A\n";
 
-						while (comp.size() < virSerial.size())
+						while (comp.size() < virSerial.size()) {
 							virSerial.pop_back();
+							virSprite.pop_back();
+						}
 
-						for (int v = 0; v < virSerial.size(); v++)
+						for (int v = 0; v < virSerial.size(); v++) {
 							virSerial[v] = v;
+							virSprite[v] = comp[virSerial[v]].sprite;
+						}
 
-						for (int c = virSerial.size(); c < comp.size(); c++)
+						for (int c = virSerial.size(); c < comp.size(); c++) {
 							virSerial.emplace_back(c);
+							virSprite.emplace_back(comp[virSerial.back()].sprite);
+						}
 
 					}
 					if (evnt.key.code == Keyboard::R) {
@@ -727,7 +734,7 @@ int main() {
 			//if (wireBool) { Stimuli = 1; wires[0].makeWire(app); }
 		}
 
-		//cout << "\n" << virSerialShift.size();
+		cout << "\n" << virSerial.size();
 
 		// ----------------------------------------	Update
 
@@ -858,7 +865,7 @@ int main() {
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) { // zero causes 100 cpu load
 			app.setView(view);
-			app.clear(sf::Color(23, 24, 25));
+			app.clear(backColor);
 			//app.draw(Rayn);
 			//app.draw(Rayn2);
 
