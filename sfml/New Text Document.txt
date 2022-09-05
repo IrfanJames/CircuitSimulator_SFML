@@ -1,5 +1,0 @@
-C/C++
-$(SolutionDir)\sfml\include
-
-Linker:
-$(SolutionDir)\sfml\lib

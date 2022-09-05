@@ -15,66 +15,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Circuit_Entity.h">
+    <ClInclude Include="src\Circuit_Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Circuit_Global.h">
+    <ClInclude Include="src\Circuit_Global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imconfig.h">
+    <ClInclude Include="src\Circuit_Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imconfig-SFML.h">
+    <ClInclude Include="src\Circuit_wire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imgui.h">
+    <ClInclude Include="src\clipboardxx.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imgui_internal.h">
+    <ClInclude Include="..\dependencies\imgui\imconfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imgui-SFML.h">
+    <ClInclude Include="..\dependencies\imgui\imconfig-SFML.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imgui-SFML_export.h">
+    <ClInclude Include="..\dependencies\imgui\imgui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imstb_rectpack.h">
+    <ClInclude Include="..\dependencies\imgui\imgui_internal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imstb_textedit.h">
+    <ClInclude Include="..\dependencies\imgui\imgui-SFML.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\imgui\imstb_truetype.h">
+    <ClInclude Include="..\dependencies\imgui\imgui-SFML_export.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Circuit_Graph.h">
+    <ClInclude Include="..\dependencies\imgui\imstb_rectpack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Circuit_wire.h">
+    <ClInclude Include="..\dependencies\imgui\imstb_textedit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="clipboardxx.hpp">
+    <ClInclude Include="..\dependencies\imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\imgui\imgui.cpp">
+    <ClCompile Include="src\Circiut_Sim_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\imgui\imgui_draw.cpp">
+    <ClCompile Include="..\dependencies\imgui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\imgui\imgui_tables.cpp">
+    <ClCompile Include="..\dependencies\imgui\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\imgui\imgui_widgets.cpp">
+    <ClCompile Include="..\dependencies\imgui\imgui_tables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\imgui\imgui-SFML.cpp">
+    <ClCompile Include="..\dependencies\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Circiut_Sim_main.cpp">
+    <ClCompile Include="..\dependencies\imgui\imgui-SFML.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
