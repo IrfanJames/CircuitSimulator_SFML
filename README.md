@@ -9,7 +9,7 @@
 
 | Controls  | Keys  |
 | ------------ | ------------ |
-|  Drag |  Press `Scroll Wheel` |
+|  Drag |  `Scroll Wheel` |
 |  Toolbar |  Hover `Cursor` to Left |
 |  Select All |  `Ctrl` + `A` |
 |  Copy |  `Ctrl` + `C` |
