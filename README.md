@@ -7,26 +7,21 @@
 
 ![](https://github.com/IrfanJames/CircuitSimulator_SFML/blob/main/Debug/Snapshot.png)
 
-------------
 | Controls  | Keys  |
 | ------------ | ------------ |
-|  Drag |  `Scroll Wheel` |
+|  Drag |  Press `Scroll Wheel` |
 |  Toolbar |  Hover `Cursor` to Left |
-|||
 |  Select All |  `Ctrl` + `A` |
 |  Copy |  `Ctrl` + `C` |
 |  Paste |  `Ctrl` + `V` |
-|||
+|  Cut |  `Ctrl` + `X` |
 |  Rotate |  `Ctrl` + `R` |
 |  Delete |  `Del` |
-|||
 |  Open Project | `Ctrl` + `O` |
 |  Save Project |  `Ctrl` + `S` |
 |Save as Image| `Print Screen Key` |
-|||
 |  Close |  `Esc` |
-
-
+#
 > Enjoy,
 >
 > Fell Free to give Advice
