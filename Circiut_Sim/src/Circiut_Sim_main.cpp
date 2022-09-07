@@ -73,7 +73,7 @@ int main() {
 
 	bool stimuliDisplay = 1, stimuliEndNodes = 1;
 
-	bool releaseBool = 1;
+	bool releaseBool = 1, wheelReleaseBool = 1;;
 	bool ShiftPressed=0;
 
 	bool Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
@@ -243,8 +243,7 @@ int main() {
 			}
 
 			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == Mouse::Left) {
-				cout << "\nPressed";
-
+				
 				bool onNode = 0;
 				static const int sensitivity = 7;
 				sf::Vector2f cursorPos = cursorInSim();
@@ -269,6 +268,7 @@ int main() {
 
 			}
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == Mouse::Left) { releaseBool = 1; }
+			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == Mouse::Middle) { wheelReleaseBool = 1; }
 
 			if (GetAsyncKeyState(VK_SNAPSHOT)) {
 				cout << "\nPrintScreen";
@@ -691,14 +691,14 @@ int main() {
 			/*Wheel*/
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)) {
 				/*Drag Background*/
-				if (releaseBool /*!mouseOnCompsBool && !selectSquare*/) {
+				if (wheelReleaseBool /*!mouseOnCompsBool && !selectSquare*/) {
 					mouseHoldX = (float)Mouse::getPosition(app).x; mouseHoldY = (float)Mouse::getPosition(app).y;
 					Drag = 1; mouseOnCompsBool = 0;
 					viewX = view.getCenter().x, viewY = view.getCenter().y;
 					verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 					horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
 				}
-				releaseBool = 0;
+				wheelReleaseBool = 0;
 			}
 			else { Drag = 0; }
 

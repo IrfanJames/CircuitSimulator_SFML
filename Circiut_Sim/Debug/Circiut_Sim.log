@@ -62,7 +62,7 @@ D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(16
           ]
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(235,78): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(235,61): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(253,14): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(252,14): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(308,25): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(331,25): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(336,40): warning C4018: '<': signed/unsigned mismatch
