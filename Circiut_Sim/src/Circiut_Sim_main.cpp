@@ -9,8 +9,8 @@ taskkill /F /IM Circiut_Sim.exe
 //#include <future>
 //#include <vector>
 
-#include "imgui.h"
-#include "imgui-SFML.h"
+//#include "imgui.h"
+//#include "imgui-SFML.h"
 
 #include "SFML/Graphics.hpp"
 
@@ -18,7 +18,9 @@ taskkill /F /IM Circiut_Sim.exe
 #include "Circuit_wire.h"
 //#include "Circuit_Graph.h"
 
-#include "clipboardxx.hpp"
+#include <windows.h>
+
+//#include "clipboardxx.hpp"
 
 using namespace sf;
 using std::cout;
@@ -201,7 +203,7 @@ int main() {
 
 	///////////////////////////////////////////////
 
-	clipboardxx::clipboard clipboard;
+	//clipboardxx::clipboard clipboard;
 
 	float viewX = view.getCenter().x, viewY = view.getCenter().y;
 	float verX = vLines[0].getPosition().x, verY = vLines[0].getPosition().y;
@@ -267,6 +269,32 @@ int main() {
 
 			}
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == Mouse::Left) { releaseBool = 1; }
+
+			if (GetAsyncKeyState(VK_SNAPSHOT)) {
+				cout << "\nPrintScreen";
+
+				//time_t print = clock();
+
+				/*sf::Texture tex;
+
+				tex.update(app);
+
+				sf::Image screenshot(tex.copyToImage());
+
+				screenshot.saveToFile("screenshot.png");*/
+
+				//screenshot = app.capture();
+				//screenshot.saveToFile("screenshot.png");
+
+				for (int c = 0; c < 1; c++) {
+					//std::thread printScreenTread { printScreen }; printScreenTread.join();
+
+					//std::async(std::launch::async, printScreen);
+
+					printScreen();
+				}
+				//cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
+			}
 
 			if (evnt.type == evnt.KeyPressed) {
 				if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; continue; }
@@ -378,7 +406,8 @@ int main() {
 							tempStr += std::to_string(comp[virSerial[c]].serial) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
 						}
 
-						clipboard << tempStr;
+						//clipboard << tempStr;
+						sf::Clipboard::setString(tempStr);
 					}
 					if (evnt.key.code == Keyboard::X) {
 						cout << "\nCtrl + X\n"; stimuliDisplay = 1;	stimuliEndNodes = 1;
@@ -392,7 +421,9 @@ int main() {
 								tempStr += std::to_string(comp[virSerial[v]].serial) + "\t" + std::to_string((int)comp[virSerial[v]].x) + "\t" + std::to_string((int)comp[virSerial[v]].y) + "\t" + std::to_string((int)comp[virSerial[v]].angle) + "\n";
 							}
 
-							clipboard << tempStr;
+							//clipboard << tempStr;
+							sf::Clipboard::setString(tempStr);
+
 						}
 						
 						// Delete
@@ -414,7 +445,9 @@ int main() {
 
 						std::string inString;
 						std::vector<int> integers; integers.reserve(9);
-						clipboard >> inString;
+						//clipboard >> inString;
+						inString = sf::Clipboard::getString();
+
 
 						//cout << inString;
 
@@ -446,31 +479,7 @@ int main() {
 					}
 				}
 			}
-			if (GetAsyncKeyState(VK_SNAPSHOT)) {
-				cout << "\nPrintScreen";
-
-				//time_t print = clock();
-
-				/*sf::Texture tex;
-
-				tex.update(app);
-
-				sf::Image screenshot(tex.copyToImage());
-
-				screenshot.saveToFile("screenshot.png");*/
-
-				//screenshot = app.capture();
-				//screenshot.saveToFile("screenshot.png");
-
-				for (int c = 0; c < 1; c++) {
-					//std::thread printScreenTread { printScreen }; printScreenTread.join();
-
-					//std::async(std::launch::async, printScreen);
-
-					printScreen();
-				}
-				//cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
-			}
+			
 
 			/*int difr = 10;
 				if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
