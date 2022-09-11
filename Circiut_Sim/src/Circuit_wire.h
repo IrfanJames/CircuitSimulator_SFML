@@ -3,8 +3,8 @@
 #include <iostream>
 #include "SFML/Graphics.hpp"
 
-sf::Vector2f cursorInSim();
-bool Click(int Sensitivity = 0);
+sf::Vector2f cursorInSim(const sf::RenderWindow& App);
+bool Click(const sf::RenderWindow& App, int Sensitivity = 0);
 float trim(float num, int wrt);
 
 class Wire {
@@ -40,8 +40,8 @@ public:
 	}
 
 	void makeWire(sf::RenderWindow& App) {
-		if (wire.size() % 2 == 1)      wire.back().setSize(sf::Vector2f(wire.back().getSize().x, trim((int)cursorInSim().y - wire.back().getPosition().y, 15)));
-		else if (wire.size() % 2 == 0) wire.back().setSize(sf::Vector2f(trim((int)cursorInSim().x - wire.back().getPosition().x, 15), wire.back().getSize().y));
+		if (wire.size() % 2 == 1)      wire.back().setSize(sf::Vector2f(wire.back().getSize().x, trim((int)cursorInSim(App).y - wire.back().getPosition().y, 15)));
+		else if (wire.size() % 2 == 0) wire.back().setSize(sf::Vector2f(trim((int)cursorInSim(App).x - wire.back().getPosition().x, 15), wire.back().getSize().y));
 	}
 
 	void draw(sf::RenderWindow& App) {

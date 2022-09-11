@@ -16,10 +16,9 @@ enum componentType {
 	SwC
 };
 class Entity {
-private:
-	sf::Font s_font;
 
 public:
+	static sf::Font s_font;
 
 	double resistance = 1000;
 	double voltage =	5;
@@ -33,7 +32,7 @@ public:
 
 	Entity() {
 		x = W / 2; y = H / 2; angle = 0.0f;
-		s_font.loadFromFile("assets/Fonts/CalibriL_1.ttf"); /*CALIBRI_1*/
+		//s_font.loadFromFile("assets/Fonts/CalibriL_1.ttf"); /*CALIBRI_1*/
 		valueText.setFont(s_font);
 	}
 	Entity(int s, float _x, float _y, float Angle = 0.0f) {
@@ -42,7 +41,7 @@ public:
 		sprite.setTexture(compTex[s]);
 		sprite.setOrigin(compTex[s].getSize().x / 2, 0);
 
-		s_font.loadFromFile("assets/Fonts/CalibriL_1.ttf"); /*CALIBRI_1*/
+		//s_font.loadFromFile("assets/Fonts/CalibriL_1.ttf"); /*CALIBRI_1*/
 		valueText.setFont(s_font);
 		/*valueText.setString(" ");*/ updateValueText();
 		//valueText.setFillColor(normalCompColor);
@@ -138,8 +137,8 @@ public:
 		//y = trim(y, Gap);*/
 		
 		//s_font.loadFromFile("assets/Fonts/CalibriL_1.ttf"); /*CALIBRI_1*/
-		valueText.setFont(s_font);
-		static int offSet[4][2] = {
+		//valueText.setFont(s_font);
+		static int offSet[4][2] = { // badPractice for gap = 15
 			{1  * 15 + 3,2  * 15 + 0},
 			{-4 * 15 + 0,1  * 15 + 0},
 			{1  * 15 + 3,-3 * 15 + 0},
@@ -155,6 +154,11 @@ public:
 
 	virtual void update() {};
 
+	static void setFont(const std::string& dir) {
+		s_font.loadFromFile(dir); /*CALIBRI_1*/
+	}
 	~Entity() { ; }
 
 };
+
+sf::Font Entity::s_font;

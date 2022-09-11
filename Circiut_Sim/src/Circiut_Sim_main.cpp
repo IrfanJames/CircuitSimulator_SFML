@@ -25,25 +25,21 @@ taskkill /F /IM Circiut_Sim.exe
 using namespace sf;
 using std::cout;
 
-sf::Vector2f cursorInSim();
-bool Click(int Sensitivity);
+sf::Vector2f cursorInSim(const sf::RenderWindow& App);
+bool Click(const sf::RenderWindow& App, int Sensitivity);
 float trim(float num, int wrt);
 
-bool cursorOnComp(const Entity& Comp);
+bool cursorOnComp(const Entity& Comp, const sf::RenderWindow& App);
 bool occupiedAt(int Index, const sf::Vector2f& At);
 bool compIn(const Entity& Comp, const sf::Vector2f& Ini, const sf::Vector2f& Fin);
 void getBounds(const Entity& Comp, int arr[4]);
 
 void printScreen();
-
 void updateAllEnds();
 
-//RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
-sf::RenderWindow app;
-sf::View view(sf::Vector2f(W / 2, H / 2), sf::Vector2f(W, H));
 
 bool Occupied = 0;
-float mouseHoldX = Mouse::getPosition(app).x, mouseHoldY = Mouse::getPosition(app).y;
+float mouseHoldX, mouseHoldY;
 time_t click = clock(); // Time passed since Click
 
 std::vector<Entity> comp;
@@ -52,8 +48,13 @@ std::vector<sf::Vector2f> allEnds;
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
 int main() {
 
+	Entity::setFont("assets/Fonts/CalibriL_1.ttf");
+
+//RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
 	sf::ContextSettings settings; settings.antialiasingLevel = 8;
-	app.create(VideoMode(W, H), "CircuitSim",Style::Default, settings);
+	sf::RenderWindow app/*(;
+	app.create*/(VideoMode(W, H), "CircuitSim", Style::Default, settings);
+	sf::View view(sf::Vector2f(W / 2, H / 2), sf::Vector2f(W, H));
 	//app.create(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
 
 	W = app.getSize().x; H = app.getSize().y;
@@ -246,7 +247,7 @@ int main() {
 				
 				bool onNode = 0;
 				static const int sensitivity = 7;
-				sf::Vector2f cursorPos = cursorInSim();
+				sf::Vector2f cursorPos = cursorInSim(app);
 
 				int e = 0;
 				for (; e < allEnds.size(); e++) {
@@ -554,7 +555,7 @@ int main() {
 						/*Check every component for Mouse*/
 						for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
 
-							if (cursorOnComp(comp[c])) {
+							if (cursorOnComp(comp[c], app)) {
 
 								mouseOnCompsBool = 1; Drag = 0;
 
@@ -579,7 +580,7 @@ int main() {
 						}
 
 						//////////// Urgent need of enums , State Machine
-						if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; selSqr.setPosition(cursorInSim()); }
+						if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; selSqr.setPosition(cursorInSim(app)); }
 
 						/*Wheel*/
 						/*Drag Background*/
@@ -653,11 +654,11 @@ int main() {
 				}
 				/*Click*/
 				else {
-					if (Click(gap)) {
+					if (Click(app,gap)) {
 						stimuliDisplay = 1;
 
 						for (int v = 0; v < virSerial.size(); v++) {
-							if (cursorOnComp(comp[virSerial[v]])) {
+							if (cursorOnComp(comp[virSerial[v]],app)) {
 
 								if (comp[virSerial[v]].serial == 5)comp[virSerial[v]].serial = 7;
 								else if (comp[virSerial[v]].serial == 7) comp[virSerial[v]].serial = 5;
@@ -674,7 +675,7 @@ int main() {
 
 					}
 
-					if (Click(3)) {
+					if (Click(app,3)) {
 						virSprite.clear();  ///// 
 						virSerial.clear();  ///// 
 					}
@@ -716,8 +717,8 @@ int main() {
 						};
 						for (int c = 0; c < virSerial.size(); c++) {
 
-							float tempX = (int)cursorInSim().x + gap * offSet[(int)comp[virSerial[c]].angle / 90][0]; ///
-							float tempY = (int)cursorInSim().y + gap * offSet[(int)comp[virSerial[c]].angle / 90][1]; ///
+							float tempX = (int)cursorInSim(app).x + gap * offSet[(int)comp[virSerial[c]].angle / 90][0]; ///
+							float tempY = (int)cursorInSim(app).y + gap * offSet[(int)comp[virSerial[c]].angle / 90][1]; ///
 
 							//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
 							//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
@@ -745,7 +746,7 @@ int main() {
 				stimuliDisplay = 1;
 
 				/*Sel Sqr*/
-				selSqr.setSize(sf::Vector2f(cursorInSim().x - selSqr.getPosition().x, cursorInSim().y - selSqr.getPosition().y));
+				selSqr.setSize(sf::Vector2f(cursorInSim(app).x - selSqr.getPosition().x, cursorInSim(app).y - selSqr.getPosition().y));
 
 				/*Selection*/
 				for (int c = 0; c < comp.size(); c++) {
@@ -758,7 +759,7 @@ int main() {
 
 					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
 
-					if (compIn(comp[c], selSqr.getPosition(), cursorInSim())) {
+					if (compIn(comp[c], selSqr.getPosition(), cursorInSim(app))) {
 						if (!compFound) {
 							virSerial.emplace_back(c);
 
@@ -1132,20 +1133,20 @@ float trim(float num, int wrt) {
 	return num - (int)num % wrt;
 }
 
-sf::Vector2f cursorInSim() {
-	return app.mapPixelToCoords(sf::Mouse::getPosition(app));
+sf::Vector2f cursorInSim(const sf::RenderWindow& App) {
+	return App.mapPixelToCoords(sf::Mouse::getPosition(App));
 }
 
-bool Click(int Sensitivity) {
-	return (((float)clock() - (float)click) < 100) && !!(!Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(app).y) <= Sensitivity);
+bool Click(const sf::RenderWindow& App, int Sensitivity) {
+	return (((float)clock() - (float)click) < 100) && !!(!Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(App).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(App).y) <= Sensitivity);
 }
 
-bool cursorOnComp(const Entity& Comp) {
+bool cursorOnComp(const Entity& Comp, const sf::RenderWindow& App) {
 
 	int bounds[4];
 	getBounds(Comp, bounds);
 
-	sf::Vector2f cursorPos = cursorInSim();
+	sf::Vector2f cursorPos = cursorInSim(App);
 
 	if (bounds[0] <= cursorPos.x && cursorPos.x <= bounds[1] && bounds[2] <= cursorPos.y && cursorPos.y <=bounds[3]) return 1;
 
