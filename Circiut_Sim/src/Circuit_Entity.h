@@ -48,8 +48,21 @@ public:
 		valueText.setCharacterSize(13);
 	}
 
-	sf::Vector2f endNodePos() {
+	sf::Vector2f endNodePos() const {
 		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
+	}
+	sf::FloatRect getBounds() const {
+
+		/*Dealing with Origin*/
+		int a = 0, b = 15, d = 75;
+		int A = 15, B = 15, C = 0, D = 75, i = (int)angle % 360;
+
+		if (i == 0) { A = b; B = b; C = a; D = d; }
+		else if (i == 90) { A = d; B = a; C = b; D = b; }
+		else if (i == 180) { A = b; B = b; C = d; D = a; }
+		else if (i == 270) { A = a; B = d; C = b; D = b; }
+
+		return sf::FloatRect(x - A, y - C, B + A, D + C);
 	}
 	
 	void updateValueText() {

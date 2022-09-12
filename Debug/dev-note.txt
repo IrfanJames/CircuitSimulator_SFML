@@ -1,4 +1,5 @@
 New------------------------------------
+Selection on just Intersection with SelectionSquare
 Ctrl + A -> Select All
 Detecting Ctrl Key by just evnt not by nested if
 PrintScreen Key can now be detected

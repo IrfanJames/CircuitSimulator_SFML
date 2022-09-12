@@ -29,10 +29,7 @@ sf::Vector2f cursorInSim(const sf::RenderWindow& App);
 bool Click(const sf::RenderWindow& App, int Sensitivity);
 float trim(float num, int wrt);
 
-bool cursorOnComp(const Entity& Comp, const sf::RenderWindow& App);
 bool occupiedAt(int Index, const sf::Vector2f& At);
-bool compIn(const Entity& Comp, const sf::Vector2f& Ini, const sf::Vector2f& Fin);
-void getBounds(const Entity& Comp, int arr[4]);
 
 void printScreen();
 void updateAllEnds();
@@ -315,7 +312,6 @@ int main() {
 				}
 				if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
 				//if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
-				//if (evnt.key.code == Keyboard::P) { printScreenBool = 1; }
 				//if (evnt.key.code == Keyboard::S) { save = 1; }
 				//if (evnt.key.code == Keyboard::O) { open = 1; }
 
@@ -554,8 +550,8 @@ int main() {
 
 						/*Check every component for Mouse*/
 						for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
-
-							if (cursorOnComp(comp[c], app)) {
+							
+							if (comp[c].getBounds().contains(cursorInSim(app))) {
 
 								mouseOnCompsBool = 1; Drag = 0;
 
@@ -654,11 +650,12 @@ int main() {
 				}
 				/*Click*/
 				else {
-					if (Click(app,gap)) {
+					if (Click(app, gap)) {
 						stimuliDisplay = 1;
 
 						for (int v = 0; v < virSerial.size(); v++) {
-							if (cursorOnComp(comp[virSerial[v]],app)) {
+							
+							if (comp[virSerial[v]].getBounds().contains(cursorInSim(app))) {
 
 								if (comp[virSerial[v]].serial == 5)comp[virSerial[v]].serial = 7;
 								else if (comp[virSerial[v]].serial == 7) comp[virSerial[v]].serial = 5;
@@ -675,7 +672,7 @@ int main() {
 
 					}
 
-					if (Click(app,3)) {
+					if (Click(app, 3)) {
 						virSprite.clear();  ///// 
 						virSerial.clear();  ///// 
 					}
@@ -759,7 +756,7 @@ int main() {
 
 					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
 
-					if (compIn(comp[c], selSqr.getPosition(), cursorInSim(app))) {
+					if (comp[c].getBounds().intersects(sf::FloatRect(selSqr.getPosition(), cursorInSim(app) - selSqr.getPosition()))) {
 						if (!compFound) {
 							virSerial.emplace_back(c);
 
@@ -911,11 +908,11 @@ int main() {
 					allBoarders.emplace_back(boarderPic);
 				}
 
+				sf::FloatRect bounds;
 				for (int v = 0; v < virSerial.size(); v++) {
-					static int bounds[4] = { 0,0,0,0 };
-					getBounds(comp[virSerial[v]], bounds);
-					allBoarders[v].setPosition(bounds[0], bounds[2]);
-					allBoarders[v].setSize(sf::Vector2f(bounds[1] - bounds[0], bounds[3] - bounds[2]));
+					bounds = comp[virSerial[v]].getBounds();
+					allBoarders[v].setPosition(bounds.left, bounds.top);
+					allBoarders[v].setSize(sf::Vector2f(bounds.width, bounds.height));
 					//cout << "\n\nPos: " << allRect[v].getSize().x << ", " << allRect[v].getSize().y;
 				}
 
@@ -1032,19 +1029,19 @@ void updateAllEnds() {
 
 void printScreen() {
 	sf::Image OutputImage;
-	int compBoundArr[4];
-	int A = 0, B = 0, C = 0, D = 0;
+	sf::FloatRect compBound;
+	sf::FloatRect ABCD;
 
 	if (comp.size() != 0) {
-		getBounds(comp[0], compBoundArr);
-		A = compBoundArr[0], B = compBoundArr[1], C = compBoundArr[2], D = compBoundArr[3]; // Borders
+		compBound = comp[0].getBounds();
+		ABCD = compBound;
 
 		for (int c = 0; c < comp.size(); c++) {
-			getBounds(comp[c], compBoundArr);
-			if (compBoundArr[0] < A) A = compBoundArr[0];
-			if (compBoundArr[1] > B) B = compBoundArr[1];
-			if (compBoundArr[2] < C) C = compBoundArr[2];
-			if (compBoundArr[3] > D) D = compBoundArr[3];
+			compBound = comp[c].getBounds();
+			if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
+			if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
+			if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
+			if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
 		}
 		/*for (int c = 0; c < comp.size(); c++) {
 			sf::Vector2f tempEndNode = endNodePos(comp[c]);
@@ -1053,7 +1050,7 @@ void printScreen() {
 			if (tempEndNode.y < C) C = tempEndNode.y;
 			if (tempEndNode.y > D) D = tempEndNode.y;
 		}*/
-		OutputImage.create(abs(A - B) + 30, abs(C - D) + 30);
+		OutputImage.create(abs(ABCD.width) + 30, abs(ABCD.height) + 30);
 		//cout << "\n" << "S: " << abs(A - B) << ", " << abs(C - D);
 		//cout << "\n" << A << ", " << B << ", " << C << ", " << D;
 	}
@@ -1061,7 +1058,7 @@ void printScreen() {
 
 	for (int c = 0; c < comp.size(); c++) {
 		sf::Vector2f tempEndNode = comp[c].endNodePos();
-		getBounds(comp[c], compBoundArr);
+		compBound = comp[c].getBounds();
 
 		sf::Image tempCompImg;
 		//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
@@ -1100,8 +1097,8 @@ void printScreen() {
 
 		int fakeGap = 15 - (comp[c].serial == 5) * 5;
 
-		float OffX = compBoundArr[0] - A - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-		float OffY = compBoundArr[2] - C - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+		float OffX = compBound.left - ABCD.left - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+		float OffY = compBound.top - ABCD.top - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
 
 		for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
 			for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
@@ -1141,18 +1138,6 @@ bool Click(const sf::RenderWindow& App, int Sensitivity) {
 	return (((float)clock() - (float)click) < 100) && !!(!Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(App).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(App).y) <= Sensitivity);
 }
 
-bool cursorOnComp(const Entity& Comp, const sf::RenderWindow& App) {
-
-	int bounds[4];
-	getBounds(Comp, bounds);
-
-	sf::Vector2f cursorPos = cursorInSim(App);
-
-	if (bounds[0] <= cursorPos.x && cursorPos.x <= bounds[1] && bounds[2] <= cursorPos.y && cursorPos.y <=bounds[3]) return 1;
-
-	return 0;
-}
-
 bool occupiedAt(int Index, const sf::Vector2f& At) {
 
 	int noCount = 0;
@@ -1169,7 +1154,7 @@ bool occupiedAt(int Index, const sf::Vector2f& At) {
 		}
 
 		if (At.x == comp[c].endNodePos().x && At.y == comp[c].endNodePos().y) {
-			if (abs(comp[Index].angle - comp[c].angle) != 180) {
+			if (abs((int)(comp[Index].angle - comp[c].angle)) != 180) {
 				noCount++;
 			}
 			else {
@@ -1178,55 +1163,17 @@ bool occupiedAt(int Index, const sf::Vector2f& At) {
 		}
 
 	}
-	if (noCount == 1) { Occupied = 0; return 0; }
+
+	if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
 
 	for (int c = 0; c < comp.size(); c++) {
 		if (c == Index || abs(comp[c].x - At.x) >= 100 || abs(comp[c].y - At.y) >= 100) continue;
 
-		int compBoundArr[4];
-		getBounds(comp[c], compBoundArr);
-
-		if ((compBoundArr[0] < At.x) && (At.x < compBoundArr[1])) {
-			if ((compBoundArr[2] < At.y) && (At.y < compBoundArr[3])) {
-				Occupied = 1; return 1;
-			}
+		if (comp[c].getBounds().contains(At)) {
+			Occupied = 1; return 1;
 		}
 
 	}
 
 	Occupied = 0; return 0;
-}
-
-bool compIn(const Entity& Comp, const sf::Vector2f& Ini, const sf::Vector2f& Fin) {
-
-	int compBoundArr[4];
-	getBounds(Comp, compBoundArr);
-	float A = 0, B = 0, C = 0, D = 0;
-
-	if (Ini.x <= Fin.x) { A = Ini.x; B = Fin.x; }
-	else { B = Ini.x; A = Fin.x; }
-
-	if (Ini.y <= Fin.y) { C = Ini.y; D = Fin.y; }
-	else { D = Ini.y; C = Fin.y; }
-
-	if ((A <= compBoundArr[0]) && (compBoundArr[1] <= B) && (C <= compBoundArr[2]) && (compBoundArr[3] <= D)) {
-			return 1;
-	}
-
-	return 0;
-}
-
-void getBounds(const Entity& Comp, int arr[4]) {
-
-	/*Dealing with Origin*/
-	int a = 0, b = 15, d = 75;
-	int A = 15, B = 15, C = 0, D = 75, i = (int)Comp.angle % 360;
-
-	if (i == 0) { A = b; B = b; C = a; D = d; }
-	else if (i == 90) { A = d; B = a; C = b; D = b; }
-	else if (i == 180) { A = b; B = b; C = d; D = a; }
-	else if (i == 270) { A = a; B = d; C = b; D = b; }
-
-	arr[0] = Comp.x - A; arr[1] = Comp.x + B; arr[2] = Comp.y - C; arr[3] = Comp.y + D; // Borders
-
 }
