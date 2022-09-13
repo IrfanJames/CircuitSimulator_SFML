@@ -949,7 +949,7 @@ int main() {
 				for (int b = 0; b < allBoarders.size(); b++) { app.draw(allBoarders[b]); }
 			}
 
-			//if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
+			if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
 
 			//if (DrawCircle) app.draw(testCircle);
 
@@ -1002,7 +1002,7 @@ void updateAllEnds() {
 
 			//tempEnd
 			if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
-			if (cc == 1) { /*Rear*/  tempEnd = comp[c].endNodePos(); }
+			if (cc == 1) { /*Rear*/  tempEnd = comp[c].getEndPos(); }
 
 			bool found = 0;
 			for (int e = 0; e < allEnds.size(); e++) {
@@ -1057,7 +1057,7 @@ void printScreen() {
 	else { OutputImage.create(10, 10); }
 
 	for (int c = 0; c < comp.size(); c++) {
-		sf::Vector2f tempEndNode = comp[c].endNodePos();
+		sf::Vector2f tempEndNode = comp[c].getEndPos();
 		compBound = comp[c].getBounds();
 
 		sf::Image tempCompImg;
@@ -1142,7 +1142,7 @@ bool occupiedAt(int Index, const sf::Vector2f& At) {
 
 	int noCount = 0;
 	for (int c = 0; c < comp.size(); c++) {
-		if (c == Index || abs(comp[c].x - At.x) >= 100 || abs(comp[c].y - At.y) >= 100) continue;
+		if (c == Index || abs(comp[c].x - At.x) >= 200 || abs(comp[c].y - At.y) >= 200) continue; // gap-hardcode
 
 		if (At.x == comp[c].x && At.y == comp[c].y) {
 			if (comp[Index].angle != comp[c].angle) {
@@ -1153,7 +1153,7 @@ bool occupiedAt(int Index, const sf::Vector2f& At) {
 			}
 		}
 
-		if (At.x == comp[c].endNodePos().x && At.y == comp[c].endNodePos().y) {
+		if (At.x == comp[c].getEndPos().x && At.y == comp[c].getEndPos().y) {
 			if (abs((int)(comp[Index].angle - comp[c].angle)) != 180) {
 				noCount++;
 			}
@@ -1163,15 +1163,42 @@ bool occupiedAt(int Index, const sf::Vector2f& At) {
 		}
 
 	}
-
 	if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
 
-	for (int c = 0; c < comp.size(); c++) {
-		if (c == Index || abs(comp[c].x - At.x) >= 100 || abs(comp[c].y - At.y) >= 100) continue;
 
-		if (comp[c].getBounds().contains(At)) {
-			Occupied = 1; return 1;
+	Entity indexEntity(comp[Index]);
+	indexEntity.x = At.x; indexEntity.y = At.y;
+	const sf::Vector2f end(indexEntity.getEndPos());
+	for (int c = 0; c < comp.size(); c++) {
+		if (c == Index || abs(comp[c].x - end.x) >= 200 || abs(comp[c].y - end.y) >= 200) continue; // gap-hardcode
+
+		if (end.x == comp[c].x && end.y == comp[c].y) {
+			if (abs((int)(comp[Index].angle - comp[c].angle)) != 180) {
+				noCount++;
+			}
+			else {
+				Occupied = 1; return 1;
+			}
 		}
+
+		if (end.x == comp[c].getEndPos().x && end.y == comp[c].getEndPos().y) {
+			if (comp[Index].angle != comp[c].angle) {
+				noCount++;
+			}
+			else {
+				Occupied = 1; return 1;
+			}
+		}
+
+	}
+	if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
+
+	
+	const sf::FloatRect indexRect(indexEntity.getBounds());
+	for (int c = 0; c < comp.size(); c++) {
+		if (c == Index || abs(comp[c].x - At.x) >= 200 || abs(comp[c].y - At.y) >= 200) continue; // gap-hardcode
+
+		if (comp[c].getBounds().intersects(indexRect)) { Occupied = 1; return 1; }
 
 	}
 
