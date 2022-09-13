@@ -1,4 +1,6 @@
 New------------------------------------
+Toolbar Stablized
+ImGui Status Bar
 Selection on just Intersection with SelectionSquare
 Ctrl + A -> Select All
 Detecting Ctrl Key by just evnt not by nested if
@@ -23,10 +25,7 @@ repeated coad in (last of drag) & (resizing window) of tool column
 
 Issues:--------------------------------
 GL_INVALID_OPERATION The specified operation is not allowed in the current state.
-*sometimes while hold+drag serialSprite comes up (occupied==1)
 **somtimes resizing causes textue to pixelate (becomes normal when hold+drag)
-paste causes pastes in all open windows
-
 
 Unstable:------------------------------
 When win minimized (hangs computer {all nust labs; mine at 3 windows}) [Possible cause Smart Display]

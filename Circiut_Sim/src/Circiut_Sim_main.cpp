@@ -9,8 +9,8 @@ taskkill /F /IM Circiut_Sim.exe
 //#include <future>
 //#include <vector>
 
-//#include "imgui.h"
-//#include "imgui-SFML.h"
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 #include "SFML/Graphics.hpp"
 
@@ -61,8 +61,9 @@ int main() {
 
 	app.setPosition(sf::Vector2i(450, 100));
 
-	//ImGui::SFML::Init(app);//
-	//sf::Clock deltaClock;//
+	/*ImGui*/
+	ImGui::SFML::Init(app);//
+	sf::Clock deltaClock;//
 
 	bool RELEASE_DEBUG = 1;
 
@@ -85,13 +86,14 @@ int main() {
 
 	/*Rayn*/ //Texture t; t.loadFromFile("Images/0 Rayn.png"); Sprite Rayn(t), Rayn2(t); Rayn.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn2.setOrigin(t.getSize().x / 2, t.getSize().y / 2); Rayn.setPosition(app.getSize().x / 2, app.getSize().y / 2); Rayn2.setPosition(app.getSize().x + 10, app.getSize().y + 10);
 
-	/*bool DrawCircle = 1;
+	//*
+	bool DrawCircle = 1;
 	float t_radius = 60, t_Colors[3] = { (float)204 / 255, (float)77 / 255, (float)5 / 255 };
 	int t_vertices = 34;
 	sf::CircleShape testCircle(t_radius, t_vertices);
 	testCircle.setOrigin(t_radius, t_radius);
 	testCircle.setPosition(W / 2, H / 2);
-	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
+	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/
 
 	/*Grid*/
 	int gap = 15, virtualBoarder = 80;
@@ -224,7 +226,7 @@ int main() {
 		Event evnt;
 		while (app.pollEvent(evnt)) {
 			stimuliDisplay = 1;
-			//ImGui::SFML::ProcessEvent(evnt);
+			ImGui::SFML::ProcessEvent(evnt);
 
 			if (evnt.type == evnt.Closed) { app.close(); End = 1; }
 			if (evnt.type == evnt.Resized) {
@@ -241,7 +243,7 @@ int main() {
 			}
 
 			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == Mouse::Left) {
-				
+
 				bool onNode = 0;
 				static const int sensitivity = 7;
 				sf::Vector2f cursorPos = cursorInSim(app);
@@ -260,8 +262,8 @@ int main() {
 				}
 				else {
 
-					if(wireBool) wires.back().newEdge();
-					
+					if (wireBool) wires.back().newEdge();
+
 				}
 
 			}
@@ -311,9 +313,8 @@ int main() {
 					}
 				}
 				if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
-				//if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
-				//if (evnt.key.code == Keyboard::S) { save = 1; }
-				//if (evnt.key.code == Keyboard::O) { open = 1; }
+				if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
+				if (evnt.key.code == Keyboard::P) { ShellExecute(NULL, NULL, L"Saved-Images", NULL, NULL, SW_SHOWNORMAL); printScreen(); }
 
 				/*Ctrl*/
 				if (evnt.key.control) {
@@ -371,6 +372,8 @@ int main() {
 					if (evnt.key.code == Keyboard::S) {
 						cout << "\nCtrl + S\n";
 
+						ShellExecute(NULL, NULL, L"Saved-Projects", NULL, NULL, SW_SHOWNORMAL);
+
 						std::ofstream output;
 
 						int fileNo = 0;
@@ -422,7 +425,7 @@ int main() {
 							sf::Clipboard::setString(tempStr);
 
 						}
-						
+
 						// Delete
 						{
 							while (0 < virSerial.size()) {
@@ -476,7 +479,7 @@ int main() {
 					}
 				}
 			}
-			
+
 
 			/*int difr = 10;
 				if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
@@ -506,7 +509,27 @@ int main() {
 
 
 
+		/*if (debugBool) {
+			debugBool = 0;
 
+			//LPCWSTR pszPathToOpen = L"C:\\Windows";
+			//PIDLIST_ABSOLUTE pidl;
+			//if (SUCCEEDED(SHParseDisplayName(pszPathToOpen, 0, &pidl, 0, 0)))
+			//{
+			//	// we don't want to actually select anything in the folder, so we pass an empty
+			//	// PIDL in the array. if you want to select one or more items in the opened
+			//	// folder you'd need to build the PIDL array appropriately
+			//	ITEMIDLIST idNull = { 0 };
+			//	LPCITEMIDLIST pidlNull[1] = { &idNull };
+			//	SHOpenFolderAndSelectItems(pidl, 1, pidlNull, 0);
+			//	ILFree(pidl);
+			//}
+
+			ShellExecute(NULL, NULL, L"E:\\Programming\\C++\\CircuitSimulator_SFML\\Circiut_Sim\\Saved-Images", NULL, NULL, SW_SHOWNORMAL);
+
+			//system("start explorer c:\\php");
+
+		}*/
 
 
 
@@ -802,8 +825,8 @@ int main() {
 		if (MInTool) { stimuliDisplay = 1; }
 		{
 			/*ImGui*/
-			/*
-			ImGui::SFML::Update(app, deltaClock.restart());
+			//*
+			/*ImGui::SFML::Update(app, deltaClock.restart());
 			ImGui::Begin("Frist ImGui Win");
 			ImGui::Text("My Project will be on Steroids");
 			ImGui::Checkbox("Draw Circle", &DrawCircle);
@@ -812,13 +835,27 @@ int main() {
 			ImGui::ColorEdit3("Color", t_Colors);
 			ImGui::End();
 
-
-
 			testCircle.setRadius(t_radius);
 			testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
 			testCircle.setPointCount(t_vertices);
-			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));
-			//*/
+			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
+
+			//*
+			ImGui::SFML::Update(app, deltaClock.restart());
+			if (ImGui::BeginMainMenuBar()) {
+
+				if (ImGui::BeginMenu("File")) {
+
+					if (ImGui::MenuItem("Open")) { std::cout << "\nOpen"; }
+					if (ImGui::MenuItem("Save")) { std::cout << "\nSave"; }
+					if (ImGui::MenuItem("Save as Image")) { std::cout << "\nOhh Yeah"; printScreen(); }
+					if (ImGui::MenuItem("Exit")) { std::cout << "\nExit"; }
+
+					ImGui::EndMenu();
+				}
+
+				ImGui::EndMainMenuBar();
+			}//*/
 
 			if (Drag) {
 				stimuliDisplay = 1;
@@ -868,13 +905,16 @@ int main() {
 				for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
 
 			}
+			testCircle.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2 + 200);
 
 			//Tool Win
-			toolCol.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolBoxWinRestingPosY);
+			if (!Drag) toolCol.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolBoxWinRestingPosY);
+			if (Drag)  toolCol.setPosition(ToolBoxWinRestingPosX, ToolBoxWinRestingPosY);
 
 			//Tool Sqr
 			t_TollWx = ToolBoxLittleBox.getPosition().x;
-			ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, c_toolColWidth));
+			if (!Drag) ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, c_toolColWidth));
+			if (Drag)  ToolBoxLittleBox.setPosition(ToolBoxWinRestingPosX, ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, c_toolColWidth));
 			if (MIntool) serialToolMouse = (int)(Mouse::getPosition(app).y / c_toolColWidth); else serialToolMouse = 0;
 
 			/*endNodes*/ {
@@ -919,7 +959,6 @@ int main() {
 				//cout << "\nallBoarders.size() = " << allBoarders.size();
 			}
 
-			//testCircle.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2 + 200);
 		}
 
 		
@@ -939,7 +978,9 @@ int main() {
 				for (int c = 0; c < comp.size(); c++) { comp[c].draw(app); }
 			}
 
-			/*Wires*/ for (int c = 0; c < wires.size(); c++) wires[c].draw(app);
+			/*Wires*/ {
+				for (int c = 0; c < wires.size(); c++) wires[c].draw(app);
+			}
 
 			/*Nodes*/ {
 				for (int e = 0; e < allEndCircles.size(); e++) { app.draw(allEndCircles[e]); }
@@ -949,9 +990,9 @@ int main() {
 				for (int b = 0; b < allBoarders.size(); b++) { app.draw(allBoarders[b]); }
 			}
 
-			if (Occupied) for (int v = 0; v < virSprite.size(); v++) { app.draw(virSprite[v]); }
-
-			//if (DrawCircle) app.draw(testCircle);
+			if (Occupied) {
+				for (int v = 0; v < virSprite.size(); v++) app.draw(virSprite[v]);
+			}
 
 			if (selectSquare && !releaseBool) app.draw(selSqr);
 
@@ -967,8 +1008,9 @@ int main() {
 			}
 
 
+			if (DrawCircle) app.draw(testCircle);
 			/*ImGui*/
-			//ImGui::SFML::Render(app);//Last Thing to render
+			ImGui::SFML::Render(app);//Last Thing to render
 
 			app.display();
 		}
@@ -984,8 +1026,8 @@ int main() {
 	stimuliDisplay = 1; stimuliEndNodes = 1;
 	
 	/*ImGui*/
-	//ImGui::SFML::Shutdown();
-	system("pause");
+	ImGui::SFML::Shutdown();
+	std::cin.get();
 	return 0;
 }
 
