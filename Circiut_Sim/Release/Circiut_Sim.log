@@ -169,16 +169,10 @@ E:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(11
 E:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(1234,20): warning C4018: '<': signed/unsigned mismatch
 E:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(1262,20): warning C4018: '<': signed/unsigned mismatch
 E:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(1288,20): warning C4018: '<': signed/unsigned mismatch
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\xutility(224,72): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\xmemory(682,68): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
           with
           [
               _Ty=int
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\xutility(223): message : see reference to function template instantiation '_Ty *std::construct_at<_Objty,int,float,float,int,void>(_Ty *const ,int &&,float &&,float &&,int &&) noexcept(<expr>)' being compiled
-          with
-          [
-              _Ty=Entity,
-              _Objty=Entity
           ]
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\vector(829): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int,float,float,int>(_Alloc &,_Objty *const ,int &&,float &&,float &&,int &&)' being compiled
           with
@@ -214,41 +208,10 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.3162
           [
               _Ty=Entity
           ]
-E:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(375): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::emplace_back<int,float,float,int>(int &&,float &&,float &&,int &&)' being compiled
-          with
-          [
-              _Ty=Entity
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\xmemory(682,68): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
-          with
-          [
-              _Ty=int
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\xutility(225,85): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
-          with
-          [
-              _Ty=int
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\xmemory(675): message : see reference to function template instantiation '_Ty *std::construct_at<_Objty,int,float,float,int,void>(_Ty *const ,int &&,float &&,float &&,int &&) noexcept(false)' being compiled
-          with
-          [
-              _Ty=Entity,
-              _Objty=Entity
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\vector(829): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int,float,float,int>(_Alloc &,_Objty *const ,int &&,float &&,float &&,int &&)' being compiled
-          with
-          [
-              _Alloc=std::allocator<Entity>,
-              _Ty=Entity,
-              _Objty=Entity
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\vector(840): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int,float,float,int>(_Alloc &,_Objty *const ,int &&,float &&,float &&,int &&)' being compiled
-          with
-          [
-              _Alloc=std::allocator<Entity>,
-              _Ty=Entity,
-              _Objty=Entity
-          ]
+E:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circiut_Sim_main.cpp(375): message : see reference to function template instantiation 'void std::vector<Entity,std::allocator<Entity>>::emplace_back<int,float,float,int>(int &&,float &&,float &&,int &&)' being compiled
+  Generating code
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
 E:\Programming\C++\CircuitSimulator_SFML\Circiut_Sim\src\Circuit_Entity.h(71): warning C4715: 'Entity::getBounds': not all control paths return a value
-  LINK : program database E:\Programming\C++\CircuitSimulator_SFML\Debug\Circiut_Sim.pdb missing; performing full link
-  Circiut_Sim.vcxproj -> E:\Programming\C++\CircuitSimulator_SFML\Debug\Circiut_Sim.exe
+  All 2262 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Circiut_Sim.vcxproj -> E:\Programming\C++\CircuitSimulator_SFML\Release\Circiut_Sim.exe

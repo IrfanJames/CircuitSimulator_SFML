@@ -1,7 +1,7 @@
 ## [`Click to Download`](https://irfan-james.itch.io/circuit-simulator)
 
 
-> Circuit Simulator from Ground up in C++
+> Circuit Simulator from Ground up in C++ (SFML and ImGui for GUI)
 
 
 

@@ -10,8 +10,8 @@ taskkill /F /IM Circiut_Sim.exe
 //#include <vector>
 
 /*ImGui*/
-//#include "imgui.h"
-//#include "imgui-SFML.h"
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 #include "SFML/Graphics.hpp"
 
@@ -69,7 +69,7 @@ int main() {
 	//app.setPosition(sf::Vector2i(0, 0));
 
 	/*ImGui*/
-	//ImGui::SFML::Init(app);//
+	ImGui::SFML::Init(app);//
 	sf::Clock deltaClock;//
 
 	bool RELEASE_DEBUG = 1;
@@ -234,7 +234,7 @@ int main() {
 		while (app.pollEvent(evnt)) {
 			stimuliDisplay = 1;
 			/*ImGui*/
-			//ImGui::SFML::ProcessEvent(evnt);
+			ImGui::SFML::ProcessEvent(evnt);
 
 			if (evnt.type == evnt.Closed) { app.close(); End = 1; }
 			if (evnt.type == evnt.Resized) {
@@ -849,7 +849,7 @@ int main() {
 			testCircle.setPointCount(t_vertices);
 			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/
 
-			/*
+			//*
 			ImGui::SFML::Update(app, deltaClock.restart());
 			if (ImGui::BeginMainMenuBar()) {
 
@@ -1056,7 +1056,7 @@ int main() {
 
 			if (DrawCircle) app.draw(testCircle);
 			/*ImGui*/
-			//ImGui::SFML::Render(app);//Last Thing to render
+			ImGui::SFML::Render(app);//Last Thing to render
 
 			app.display();
 		}
@@ -1072,7 +1072,7 @@ int main() {
 	stimuliDisplay = 1; stimuliEndNodes = 1;
 	
 	/*ImGui*/
-	//ImGui::SFML::Shutdown();
+	ImGui::SFML::Shutdown();
 	std::cin.get();
 	return 0;
 }
