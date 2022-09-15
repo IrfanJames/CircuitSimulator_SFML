@@ -52,7 +52,7 @@ public:
 		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
 	}
 	sf::FloatRect getBounds() const {
-
+		/*mutable sf::FloatRect*/
 		/*Dealing with Origin*/
 		int a = 0, b = 15, d = 75, i = (int)angle % 360;
 		//int A = 15, B = 15, C = 0, D = 75;

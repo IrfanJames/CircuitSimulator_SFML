@@ -9,8 +9,9 @@ taskkill /F /IM Circiut_Sim.exe
 //#include <future>
 //#include <vector>
 
-#include "imgui.h"
-#include "imgui-SFML.h"
+/*ImGui*/
+//#include "imgui.h"
+//#include "imgui-SFML.h"
 
 #include "SFML/Graphics.hpp"
 
@@ -47,11 +48,15 @@ int main() {
 
 	Entity::setFont("assets/Fonts/CalibriL_1.ttf");
 
+	W = sf::VideoMode::getDesktopMode().width * 0.74;
+	H = sf::VideoMode::getDesktopMode().height * 0.7;
+
 //RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
 	sf::ContextSettings settings; settings.antialiasingLevel = 8;
 	sf::RenderWindow app/*(;
 	app.create*/(VideoMode(W, H), "CircuitSim", Style::Default, settings);
-	sf::View view(sf::Vector2f(W / 2, H / 2), sf::Vector2f(W, H));
+	sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), (sf::Vector2f)app.getSize());
+	//sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), sf::Vector2f(app.getSize().x * 2, app.getSize().y * 2));
 	//app.create(VideoMode(W, H), "CircuitSim", Style::Default, ContextSettings(0));
 
 	W = app.getSize().x; H = app.getSize().y;
@@ -59,10 +64,12 @@ int main() {
 	app.setFramerateLimit(60);
 	srand(time(NULL));
 
+	//std::cout << "my lcd: " << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height;
 	app.setPosition(sf::Vector2i(450, 100));
+	//app.setPosition(sf::Vector2i(0, 0));
 
 	/*ImGui*/
-	ImGui::SFML::Init(app);//
+	//ImGui::SFML::Init(app);//
 	sf::Clock deltaClock;//
 
 	bool RELEASE_DEBUG = 1;
@@ -70,9 +77,9 @@ int main() {
 	time_t frame = clock();
 	bool End = 0, debugBool = 0;
 
-	bool stimuliDisplay = 1, stimuliEndNodes = 1;
+	bool stimuliDisplay = 1, stimuliEndNodes = 0;
 
-	bool releaseBool = 1, wheelReleaseBool = 1;;
+	bool releaseBool = 1, wheelReleaseBool = 1;
 	bool ShiftPressed=0;
 
 	bool Drag = 0, selectSquare = 0, mouseOnCompsBool = 0;
@@ -226,13 +233,14 @@ int main() {
 		Event evnt;
 		while (app.pollEvent(evnt)) {
 			stimuliDisplay = 1;
-			ImGui::SFML::ProcessEvent(evnt);
+			/*ImGui*/
+			//ImGui::SFML::ProcessEvent(evnt);
 
 			if (evnt.type == evnt.Closed) { app.close(); End = 1; }
 			if (evnt.type == evnt.Resized) {
 
 				//view = sf::View(sf::FloatRect(view.getCenter().x - ((float)evnt.size.width) / 2, view.getCenter().y - ((float)evnt.size.height) / 2, evnt.size.width, evnt.size.height));
-				view.setCenter(view.getCenter()); view.setSize(evnt.size.width, evnt.size.height);
+				view.setCenter(view.getCenter()); view.setSize((float)evnt.size.width, (float)evnt.size.height);
 
 				/*Resting Pos of Tool Bar   (Repeated at the at of Drag{}) */ {
 					toolCol.setSize(sf::Vector2f(toolCol.getSize().x, view.getSize().y));
@@ -243,7 +251,6 @@ int main() {
 			}
 
 			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == Mouse::Left) {
-
 				bool onNode = 0;
 				static const int sensitivity = 7;
 				sf::Vector2f cursorPos = cursorInSim(app);
@@ -532,6 +539,8 @@ int main() {
 		}*/
 
 
+		/*cout << "\n\n" << app.getSize().x << ", " << app.getSize().y;
+		cout << "\n" << view.getSize().x << ", " << view.getSize().y;*/
 
 
 		// ----------------------------------------	Options
@@ -729,7 +738,7 @@ int main() {
 				/*Follow Mouse*/
 				if (mouseOnCompsBool) {
 					if (!selectSquare /*&& releaseBool*/) {
-						int offSet[4][2] = {
+						static int offSet[4][2] = {
 							{0, -2},
 							{2, 0},
 							{0, 2},
@@ -825,8 +834,8 @@ int main() {
 		if (MInTool) { stimuliDisplay = 1; }
 		{
 			/*ImGui*/
-			//*
-			/*ImGui::SFML::Update(app, deltaClock.restart());
+			/*
+			ImGui::SFML::Update(app, deltaClock.restart());
 			ImGui::Begin("Frist ImGui Win");
 			ImGui::Text("My Project will be on Steroids");
 			ImGui::Checkbox("Draw Circle", &DrawCircle);
@@ -838,21 +847,60 @@ int main() {
 			testCircle.setRadius(t_radius);
 			testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
 			testCircle.setPointCount(t_vertices);
-			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));*/
+			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/
 
-			//*
+			/*
 			ImGui::SFML::Update(app, deltaClock.restart());
 			if (ImGui::BeginMainMenuBar()) {
 
 				if (ImGui::BeginMenu("File")) {
 
-					if (ImGui::MenuItem("Open")) { std::cout << "\nOpen"; }
-					if (ImGui::MenuItem("Save")) { std::cout << "\nSave"; }
-					if (ImGui::MenuItem("Save as Image")) { std::cout << "\nOhh Yeah"; printScreen(); }
-					if (ImGui::MenuItem("Exit")) { std::cout << "\nExit"; }
+					if (ImGui::MenuItem("Open", "Ctrl + O")) { cout << "\nOpen"; }
+					if (ImGui::MenuItem("Save", "Ctrl + S")) { cout << "\nSave"; }
+					if (ImGui::MenuItem("Save as Image")) { cout << "\nOhh Yeah"; printScreen(); }
+					ImGui::Separator();
+					if (ImGui::MenuItem("Exit", "Esc")) { cout << "\nExit"; }
 
 					ImGui::EndMenu();
 				}
+				if (ImGui::BeginMenu("Options")) {
+
+					if (ImGui::MenuItem("Handdrawn Icons")) { cout << "\nWobbly"; }
+					if (ImGui::BeginMenu("Switch Themes")) {
+
+						if (ImGui::MenuItem("Dark")) { cout << "\nDark"; }
+						if (ImGui::MenuItem("Light")) { cout << "\nLight"; }
+
+						ImGui::EndMenu();
+					}
+
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("Help")) {
+
+					if (ImGui::MenuItem("Controls")) { cout << "\nKeys"; }
+					ImGui::Separator();
+
+					if (ImGui::BeginMenu("Options"))
+					{
+						static bool enabled = true;
+						ImGui::MenuItem("Enabled", "", &enabled);
+						ImGui::BeginChild("child", ImVec2(0, 60), true);
+						for (int i = 0; i < 10; i++)
+							ImGui::Text("Scrolling Text %d", i);
+						ImGui::EndChild();
+						static float f = 0.5f;
+						static int n = 0;
+						ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
+						ImGui::InputFloat("Input", &f, 0.1f);
+						ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
+						ImGui::EndMenu();
+					}
+
+
+					ImGui::EndMenu();
+				}
+
 
 				ImGui::EndMainMenuBar();
 			}//*/
@@ -953,10 +1001,8 @@ int main() {
 					bounds = comp[virSerial[v]].getBounds();
 					allBoarders[v].setPosition(bounds.left, bounds.top);
 					allBoarders[v].setSize(sf::Vector2f(bounds.width, bounds.height));
-					//cout << "\n\nPos: " << allRect[v].getSize().x << ", " << allRect[v].getSize().y;
 				}
 
-				//cout << "\nallBoarders.size() = " << allBoarders.size();
 			}
 
 		}
@@ -1010,7 +1056,7 @@ int main() {
 
 			if (DrawCircle) app.draw(testCircle);
 			/*ImGui*/
-			ImGui::SFML::Render(app);//Last Thing to render
+			//ImGui::SFML::Render(app);//Last Thing to render
 
 			app.display();
 		}
@@ -1026,7 +1072,7 @@ int main() {
 	stimuliDisplay = 1; stimuliEndNodes = 1;
 	
 	/*ImGui*/
-	ImGui::SFML::Shutdown();
+	//ImGui::SFML::Shutdown();
 	std::cin.get();
 	return 0;
 }
@@ -1179,6 +1225,8 @@ sf::Vector2f cursorInSim(const sf::RenderWindow& App) {
 bool Click(const sf::RenderWindow& App, int Sensitivity) {
 	return (((float)clock() - (float)click) < 100) && !!(!Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(App).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(App).y) <= Sensitivity);
 }
+
+
 
 bool occupiedAt(int Index, const sf::Vector2f& At) {
 
