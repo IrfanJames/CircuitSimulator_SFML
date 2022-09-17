@@ -162,7 +162,7 @@ int main() {
 
 	sf::Sprite ToolSpr[7]; //noOfComps-1
 	sf::Vector2f ToolSprPOS[7]; //noOfComps-1
-	for (int c = 0; c < (noOfComps - 1); c++) {
+	for (int c = 0; c < (Entity::noOfComps - 1); c++) {
 		ToolSpr[c].setTexture(compTex[c]);
 		ToolSpr[c].setOrigin(compTex[c].getSize().x / 2, 0);
 		//compSpr[c].setRotation(45);
@@ -227,7 +227,7 @@ int main() {
 
 		float t_TollWx = toolCol.getPosition().x;
 		bool MInTool = !!(0 <= Mouse::getPosition(app).x && Mouse::getPosition(app).x <= c_toolColWidth);
-		bool MIntool = !!(MInTool && Mouse::getPosition(app).y < (noOfComps - 1)* c_toolColWidth);
+		bool MIntool = !!(MInTool && Mouse::getPosition(app).y < (Entity::noOfComps - 1)* c_toolColWidth);
 		Occupied = 0;
 
 		Event evnt;
@@ -246,7 +246,7 @@ int main() {
 					toolCol.setSize(sf::Vector2f(toolCol.getSize().x, view.getSize().y));
 					ToolBoxWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolBoxWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
 					ToolLilWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolLilWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
-					for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
+					for (int c = 0; c < (Entity::noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
 				}
 			}
 
@@ -372,7 +372,7 @@ int main() {
 						input >> no;
 						for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
 							input >> S >> X >> Y >> A;
-							comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+							comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
 						}
 						input.close();
 					}
@@ -481,7 +481,7 @@ int main() {
 							X = integers[++c];
 							Y = integers[++c];
 							A = integers[++c];
-							comp.emplace_back(S % (noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+							comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
 						}
 					}
 				}
@@ -950,18 +950,18 @@ int main() {
 				/*Resting Pos of Tool Bar   (Repeated at the at of Resize window) */
 				ToolBoxWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolBoxWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
 				ToolLilWinRestingPosX = view.getCenter().x - view.getSize().x / 2; ToolLilWinRestingPosY = view.getCenter().y - view.getSize().y / 2;
-				for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
+				for (int c = 0; c < (Entity::noOfComps - 1); c++) ToolSpr[c].setPosition(view.getCenter().x - view.getSize().x / 2 + ToolSprPOS[c].x, view.getCenter().y - view.getSize().y / 2 + ToolSprPOS[c].y);
 
 			}
 			testCircle.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2 + 200);
 
 			//Tool Win
-			if (!Drag) toolCol.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolBoxWinRestingPosY);
+			if (!Drag) toolCol.setPosition((MInTool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (Entity::noOfComps - 1)) + (!MInTool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (Entity::noOfComps - 1)), ToolBoxWinRestingPosY);
 			if (Drag)  toolCol.setPosition(ToolBoxWinRestingPosX, ToolBoxWinRestingPosY);
 
 			//Tool Sqr
 			t_TollWx = ToolBoxLittleBox.getPosition().x;
-			if (!Drag) ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (noOfComps - 1)) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (noOfComps - 1)), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, c_toolColWidth));
+			if (!Drag) ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (ToolBoxWinRestingPosX + 0 - t_TollWx) / (Entity::noOfComps - 1)) + (!MIntool) * (t_TollWx + (ToolBoxWinRestingPosX - c_toolColWidth - t_TollWx) / (Entity::noOfComps - 1)), ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, c_toolColWidth));
 			if (Drag)  ToolBoxLittleBox.setPosition(ToolBoxWinRestingPosX, ToolLilWinRestingPosY + trim(Mouse::getPosition(app).y, c_toolColWidth));
 			if (MIntool) serialToolMouse = (int)(Mouse::getPosition(app).y / c_toolColWidth); else serialToolMouse = 0;
 
@@ -1045,10 +1045,10 @@ int main() {
 			/*Tool Win*/ {
 				if (MInTool) {
 					app.draw(toolCol);
-					for (int c = 0; c < (noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
-					for (int c = 0; c < (noOfComps - 1); c++) { app.draw(ToolSpr[c]); }
+					for (int c = 0; c < (Entity::noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
+					for (int c = 0; c < (Entity::noOfComps - 1); c++) { app.draw(ToolSpr[c]); }
 				}
-				else { for (int c = 0; c < (noOfComps - 1); c++) ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); }
+				else { for (int c = 0; c < (Entity::noOfComps - 1); c++) ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); }
 
 				if (MIntool) app.draw(ToolBoxLittleBox);
 			}
@@ -1225,8 +1225,6 @@ sf::Vector2f cursorInSim(const sf::RenderWindow& App) {
 bool Click(const sf::RenderWindow& App, int Sensitivity) {
 	return (((float)clock() - (float)click) < 100) && !!(!Mouse::isButtonPressed(Mouse::Left) && abs(mouseHoldX - (float)Mouse::getPosition(App).x) <= Sensitivity && abs(mouseHoldY - (float)Mouse::getPosition(App).y) <= Sensitivity);
 }
-
-
 
 bool occupiedAt(int Index, const sf::Vector2f& At) {
 

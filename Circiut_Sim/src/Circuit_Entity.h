@@ -18,6 +18,7 @@ enum componentType {
 class Entity {
 
 public:
+	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
 	static sf::Font s_font;
 
 	double resistance = 1000;
@@ -29,6 +30,7 @@ public:
 	float x, y, angle;
 	sf::Sprite sprite;
 	sf::Text valueText;
+	mutable sf::FloatRect bounds;
 
 	Entity() {
 		x = W / 2; y = H / 2; angle = 0.0f;
@@ -52,7 +54,6 @@ public:
 		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
 	}
 	sf::FloatRect getBounds() const {
-		/*mutable sf::FloatRect*/
 		/*Dealing with Origin*/
 		int a = 0, b = 15, d = 75, i = (int)angle % 360;
 		//int A = 15, B = 15, C = 0, D = 75;
@@ -62,12 +63,12 @@ public:
 		//else if (i == 180) { A = b; B = b; C = d; D = a; }
 		//else if (i == 270) { A = a; B = d; C = b; D = b; }
 
+		if (i == 0)			{ bounds.left = x - b; bounds.top = y - a; bounds.width = b + b; bounds.height = d + a; }
+		else if (i == 90)	{ bounds.left = x - d; bounds.top = y - b; bounds.width = a + d; bounds.height = b + b; }
+		else if (i == 180)	{ bounds.left = x - b; bounds.top = y - d; bounds.width = b + b; bounds.height = a + d; }
+		else if (i == 270)	{ bounds.left = x - a; bounds.top = y - b; bounds.width = d + a; bounds.height = b + b; }
 
-		if (i == 0)        return sf::FloatRect(x - b, y - a, b + b, d + a);
-		else if (i == 90)  return sf::FloatRect(x - d, y - b, a + d, b + b);
-		else if (i == 180) return sf::FloatRect(x - b, y - d, b + b, a + d);
-		else if (i == 270) return sf::FloatRect(x - a, y - b, d + a, b + b);
-		
+		return bounds;
 	}
 	
 	void updateValueText() {
