@@ -16,63 +16,26 @@ enum componentType {
 	SwC
 };
 class Entity {
-
 public:
 	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
 	static sf::Font s_font;
 
+public:
 	double resistance = 1000;
 	double voltage =	5;
 	double current =	0.002;
+
 
 public:
 	int serial = 0;
 	float x, y, angle;
 	sf::Sprite sprite;
 	sf::Text valueText;
-	mutable sf::FloatRect bounds;
+	sf::RectangleShape boarder;
 
-	Entity() {
-		x = W / 2; y = H / 2; angle = 0.0f;
-		//s_font.loadFromFile("assets/Fonts/CalibriL_1.ttf"); /*CALIBRI_1*/
-		valueText.setFont(s_font);
-	}
-	Entity(int s, float _x, float _y, float Angle = 0.0f) {
-		x = _x; y = _y; angle = Angle;
-		serial = s;
-		sprite.setTexture(compTex[s]);
-		sprite.setOrigin(compTex[s].getSize().x / 2, 0);
-
-		//s_font.loadFromFile("assets/Fonts/CalibriL_1.ttf"); /*CALIBRI_1*/
-		valueText.setFont(s_font);
-		/*valueText.setString(" ");*/ updateValueText();
-		//valueText.setFillColor(normalCompColor);
-		valueText.setCharacterSize(13);
-	}
-
-	sf::Vector2f getEndPos() const {
-		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
-	}
-	sf::FloatRect getBounds() const {
-		/*Dealing with Origin*/
-		int a = 0, b = 15, d = 75, i = (int)angle % 360;
-		//int A = 15, B = 15, C = 0, D = 75;
-
-		//if (i == 0) { A = b; B = b; C = a; D = d; }
-		//else if (i == 90) { A = d; B = a; C = b; D = b; }
-		//else if (i == 180) { A = b; B = b; C = d; D = a; }
-		//else if (i == 270) { A = a; B = d; C = b; D = b; }
-
-		if (i == 0)			{ bounds.left = x - b; bounds.top = y - a; bounds.width = b + b; bounds.height = d + a; }
-		else if (i == 90)	{ bounds.left = x - d; bounds.top = y - b; bounds.width = a + d; bounds.height = b + b; }
-		else if (i == 180)	{ bounds.left = x - b; bounds.top = y - d; bounds.width = b + b; bounds.height = a + d; }
-		else if (i == 270)	{ bounds.left = x - a; bounds.top = y - b; bounds.width = d + a; bounds.height = b + b; }
-
-		return bounds;
-	}
-	
+private:
 	void updateValueText() {
-		
+
 		std::string str;
 		double value = 0;
 		const static std::string preScalers = "nµmkMG";
@@ -87,7 +50,7 @@ public:
 		case SwO: {						break; }
 		case Vol: {	value = voltage;	break; }
 		case SwC: {						break; }
-		default:  { value = 0; break; }
+		default: { value = 0; break; }
 		}
 
 		/*Value -> prescaler */ {
@@ -134,50 +97,94 @@ public:
 		switch (serial) {
 		case Cap: { str += "F";		break; }
 		case Cur: { str += "A";		break; }
-		case Dod: { str  = "";		break; }
+		case Dod: { str = "";		break; }
 		case Ind: { str += "H";		break; }
 		case Res: { str += "Ohm";	break; }
-		case SwO: { str  = "";		break; }
+		case SwO: { str = "";		break; }
 		case Vol: { str += "V";		break; }
-		case SwC: { str  = "";		break; }
-		default:  { str += "[No Unit: Component not in library]"; break; }
+		case SwC: { str = "";		break; }
+		default: { str += "[No Unit: Component not in library]"; break; }
 		}
 
+
 		valueText.setString(str);
-		//valueText.setString("ABC");
+	}
+public:
+	Entity() {
+		serial = 0; x = W / 2; y = H / 2; angle = 0.0f;
+
+		int A = 0, B = 15, C = 75; //Hard Code
+		boarder.setSize(sf::Vector2f(30, 75));
+		boarder.setOrigin(15, 0);
+		boarder.setFillColor(sf::Color(0, 0, 100, 0));
+		boarder.setOutlineThickness(1.0f);
+		boarder.setOutlineColor(sf::Color(0, 204, 102));
+
+		valueText.setFont(s_font);
+		valueText.setCharacterSize(13);
+		//valueText.setFillColor(normalCompColor);
+		updateValueText();
+		stimuli();
+	}
+	Entity(int s, float _x, float _y, float Angle = 0.0f) {
+		x = _x; y = _y; angle = Angle;
+		serial = s;
+		sprite.setTexture(compTex[s]);
+		sprite.setOrigin(compTex[s].getSize().x / 2, 0);
+
+		int A = 0, B = 15, C = 75; //Hard Code
+		boarder.setSize(sf::Vector2f(30, 75));
+		boarder.setOrigin(15, 0);
+		boarder.setFillColor(sf::Color(0, 0, 100, 0));
+		boarder.setOutlineThickness(1.0f);
+		boarder.setOutlineColor(sf::Color(0, 204, 102));
+
+
+		valueText.setFont(s_font);
+		valueText.setCharacterSize(13);
+		//valueText.setFillColor(normalCompColor);
+		updateValueText();
+		stimuli();
+	}
+
+	sf::Vector2f getEndPos() const {
+		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
 	}
 	
-
-
-	void draw(sf::RenderWindow& app) {
-
-		/*Just On Sqr
-		//x = trim(x, Gap);
-		//y = trim(y, Gap);*/
-		
-		//s_font.loadFromFile("assets/Fonts/CalibriL_1.ttf"); /*CALIBRI_1*/
-		//valueText.setFont(s_font);
-		static int offSet[4][2] = { // badPractice for gap = 15
-			{1  * 15 + 3,2  * 15 + 0},
-			{-4 * 15 + 0,1  * 15 + 0},
-			{1  * 15 + 3,-3 * 15 + 0},
-			{1  * 15 + 0,-2 * 15 - 3}
-		};
-		valueText.setPosition(x + offSet[(int)(angle / 90)][0], y + offSet[(int)(angle / 90)][1]); // badPractice for gap = 15
-		app.draw(valueText);
+	void stimuli() {
 
 		sprite.setPosition(x, y);
 		sprite.setRotation(angle);
+
+
+		boarder.setPosition(x, y);
+		boarder.setRotation(angle);
+
+
+		//updateValueText();
+		static int offSet[4][2] = { // badPractice for gap = 15
+	{1 * 15 + 3,2 * 15 + 0},
+	{-4 * 15 + 0,1 * 15 + 0},
+	{1 * 15 + 3,-3 * 15 + 0},
+	{1 * 15 + 0,-2 * 15 - 3}
+		};
+		valueText.setPosition(x + offSet[(int)(angle / 90)][0], y + offSet[(int)(angle / 90)][1]); // badPractice for gap = 15
+	}
+	void draw(sf::RenderWindow& app) {		
+		
+		app.draw(valueText);
+
 		app.draw(sprite);
 	}
 
-	virtual void update() {};
 
 	static void setFont(const std::string& dir) {
 		s_font.loadFromFile(dir); /*CALIBRI_1*/
 	}
 	~Entity() { ; }
 
+
+	virtual void update() {};
 };
 
 sf::Font Entity::s_font;

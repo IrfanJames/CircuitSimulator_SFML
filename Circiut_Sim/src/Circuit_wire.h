@@ -44,23 +44,23 @@ public:
 		else if (wire.size() % 2 == 0) wire.back().setSize(sf::Vector2f(trim((int)cursorInSim(App).x - wire.back().getPosition().x, 15), wire.back().getSize().y));
 	}
 
-	void draw(sf::RenderWindow& App) {
+	void draw(sf::RenderWindow& App) const {
 		for (int c = 0; c < wire.size(); c++) App.draw(wire[c]);
 	}
 
 public:
 
-	sf::Vector2f initial() {
+	sf::Vector2f initial() const {
 		return wire.front().getPosition();
 	}
 
-	sf::Vector2f end() {
+	sf::Vector2f end() const {
 		sf::Vector2f temp = wire.back().getPosition() + wire.back().getSize();
 
 		temp.x = trim(temp.x, 15);
 		temp.y = trim(temp.y, 15);
 
-		std::cout << "\n" << temp.x << ", " << temp.y;
+		//std::cout << "\n" << temp.x << ", " << temp.y;
 		
 		return temp;
 	}

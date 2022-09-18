@@ -2,10 +2,11 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "Circuit_Global.h"
 
 class Graph {
-	const float RadToDeg = 57.295779f;
 	const float DegToRad = 0.01745329f;
+	const float RadToDeg = 57.295779f;
 	static struct Corner {
 		int item = 0;
 		std::vector<Corner*> neighbors;

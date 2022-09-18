@@ -32,9 +32,14 @@ float trim(float num, int wrt);
 
 bool occupiedAt(int Index, const sf::Vector2f& At);
 
-void printScreen();
 void updateAllEnds();
-
+void printScreen();
+void savef();
+void openf(int Gap);
+void copyf(const std::vector<int>& vir);
+void pastef(int Gap);
+void rotatef(const std::vector<int>& vir);
+void deletef(std::vector<int>& vir, std::vector<sf::Sprite>& virSpr);
 
 bool Occupied = 0;
 float mouseHoldX, mouseHoldY;
@@ -103,7 +108,7 @@ int main() {
 	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/
 
 	/*Grid*/
-	int gap = 15, virtualBoarder = 80;
+	const int gap = 15, virtualBoarder = 80;
 	std::vector<sf::RectangleShape> vLines;
 	std::vector<sf::RectangleShape> hLines;
 	sf::Color gridColor(100, 105, 110, 20);
@@ -185,12 +190,6 @@ int main() {
 		nodePic.setOrigin(4, 4);
 		nodePic.setFillColor(normalCompColor); }
 	std::vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(17);
-
-	sf::RectangleShape boarderPic; {
-		boarderPic.setFillColor(sf::Color(0, 0, 100, 0));
-		boarderPic.setOutlineThickness(1.0f);
-		boarderPic.setOutlineColor(sf::Color(0, 204, 102)); }
-	std::vector<sf::RectangleShape> allBoarders; allBoarders.reserve(9);
 
 	/*Circuit*/
 	comp.reserve(9);
@@ -308,16 +307,7 @@ int main() {
 				if (evnt.key.code == Keyboard::Delete) {
 					stimuliDisplay = 1;	stimuliEndNodes = 1;
 
-					while (0 < virSerial.size()) {
-						if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
-						if (virSprite.size() > 0) virSprite.erase(virSprite.begin());
-
-						for (int c = 1; c < virSerial.size(); c++) {
-							if (virSerial[c] > virSerial[0]) virSerial[c]--;
-						}
-
-						virSerial.erase(virSerial.begin());
-					}
+					deletef(virSerial, virSprite);
 				}
 				if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
 				if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
@@ -347,142 +337,47 @@ int main() {
 					if (evnt.key.code == Keyboard::R) {
 						cout << "\nCtrl + R\n"; stimuliDisplay = 1;	stimuliEndNodes = 1;
 
-						for (int v = 0; v < virSerial.size(); v++) {
-							comp[virSerial[v]].angle += 90;
-							comp[virSerial[v]].angle -= (int)(comp[virSerial[v]].angle / 360) * 360;
-						}
+						rotatef(virSerial);
+						
 					}
 					if (evnt.key.code == Keyboard::O) {
 						cout << "\nCtrl + O\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
 
-						int fileNo = 0;
-						std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-						std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
-
-						while (input.good()) {
-							input.close();
-							input.open(fileDir + std::to_string(++fileNo) + fileType);
-						}
-						input.open(fileDir + std::to_string(fileNo - 1) + fileType);
-
-						comp.clear();
-						virSprite.clear();
 						virSerial.clear();
-						int no = 0;
-						input >> no;
-						for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
-							input >> S >> X >> Y >> A;
-							comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
-						}
-						input.close();
+						virSprite.clear();
+						virSerialShift.clear();
+						openf(gap);
+
 					}
 					if (evnt.key.code == Keyboard::S) {
-						cout << "\nCtrl + S\n";
+						
+						savef();
 
-						ShellExecute(NULL, NULL, L"Saved-Projects", NULL, NULL, SW_SHOWNORMAL);
-
-						std::ofstream output;
-
-						int fileNo = 0;
-						std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-						std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
-
-						while (test.good()) {
-							test.close();
-							test.open(fileDir + std::to_string(++fileNo) + fileType);
-						}
-						output.open(fileDir + std::to_string(fileNo) + fileType);
-
-						std::string tempStr;
-						tempStr = std::to_string((int)comp.size()) + "\n";
-						int size = (int)comp.size();
-						for (int c = 0; c < size; c++) {
-							tempStr += std::to_string(comp[c].serial) + "\t" + std::to_string((int)comp[c].x) + "\t" + std::to_string((int)comp[c].y) + "\t" + std::to_string((int)comp[c].angle) + "\n";
-						}
-						output << tempStr;
-						output.close();
 					}
 					if (evnt.key.code == Keyboard::C) {
 						cout << "\nCtrl + C\n";
 
-						std::ofstream output;
-						std::string tempStr(std::to_string((int)virSerial.size()) + "\n");
+						copyf(virSerial);
 
-						int size = (int)virSerial.size();
-						for (int c = 0; c < size; c++) {
-							tempStr += std::to_string(comp[virSerial[c]].serial) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
-						}
-
-						//clipboard << tempStr;
-						sf::Clipboard::setString(tempStr);
 					}
 					if (evnt.key.code == Keyboard::X) {
 						cout << "\nCtrl + X\n"; stimuliDisplay = 1;	stimuliEndNodes = 1;
 
 						// Copy
 						{
-							std::ofstream output;
-							std::string tempStr(std::to_string((int)virSerial.size()) + "\n");
-
-							for (int v = 0; v < virSerial.size(); v++) {
-								tempStr += std::to_string(comp[virSerial[v]].serial) + "\t" + std::to_string((int)comp[virSerial[v]].x) + "\t" + std::to_string((int)comp[virSerial[v]].y) + "\t" + std::to_string((int)comp[virSerial[v]].angle) + "\n";
-							}
-
-							//clipboard << tempStr;
-							sf::Clipboard::setString(tempStr);
-
+							copyf(virSerial);
 						}
 
 						// Delete
 						{
-							while (0 < virSerial.size()) {
-								if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
-								if (virSprite.size() > 0) virSprite.erase(virSprite.begin());
-
-								for (int v = 1; v < virSerial.size(); v++) {
-									if (virSerial[v] > virSerial[0]) virSerial[v]--;
-								}
-
-								virSerial.erase(virSerial.begin());
-							}
+							deletef(virSerial, virSprite);
 						}
 					}
 					if (evnt.key.code == Keyboard::V) {
 						cout << "\nCtrl + V\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
 
-						std::string inString;
-						std::vector<int> integers; integers.reserve(9);
-						//clipboard >> inString;
-						inString = sf::Clipboard::getString();
+						pastef(gap);
 
-
-						//cout << inString;
-
-						bool negative = 0;
-						for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
-							temp = (int)inString[c];
-
-							if (48 <= temp && temp <= 57) {
-								x = x * 10 + temp - 48;
-							}
-							else if (temp == 45) negative = 1;
-							else if (temp == 10 || temp == 9) { // else if (temp == (int)('\n') || temp == (int)('\t')) {
-								if (negative) x *= -1;
-								integers.emplace_back(x);
-								negative = 0;
-								x = 0;
-							}
-						}
-
-						//cout << "\n"; for (int c = 0; c < integers.size(); c++) cout << integers[c] << " ";
-
-						for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
-							S = integers[++c];
-							X = integers[++c];
-							Y = integers[++c];
-							A = integers[++c];
-							comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
-						}
 					}
 				}
 			}
@@ -512,35 +407,10 @@ int main() {
 		///////////////////////////////////////////////
 
 
-		
 
 
 
-		/*if (debugBool) {
-			debugBool = 0;
 
-			//LPCWSTR pszPathToOpen = L"C:\\Windows";
-			//PIDLIST_ABSOLUTE pidl;
-			//if (SUCCEEDED(SHParseDisplayName(pszPathToOpen, 0, &pidl, 0, 0)))
-			//{
-			//	// we don't want to actually select anything in the folder, so we pass an empty
-			//	// PIDL in the array. if you want to select one or more items in the opened
-			//	// folder you'd need to build the PIDL array appropriately
-			//	ITEMIDLIST idNull = { 0 };
-			//	LPCITEMIDLIST pidlNull[1] = { &idNull };
-			//	SHOpenFolderAndSelectItems(pidl, 1, pidlNull, 0);
-			//	ILFree(pidl);
-			//}
-
-			ShellExecute(NULL, NULL, L"E:\\Programming\\C++\\CircuitSimulator_SFML\\Circiut_Sim\\Saved-Images", NULL, NULL, SW_SHOWNORMAL);
-
-			//system("start explorer c:\\php");
-
-		}*/
-
-
-		/*cout << "\n\n" << app.getSize().x << ", " << app.getSize().y;
-		cout << "\n" << view.getSize().x << ", " << view.getSize().y;*/
 
 
 		// ----------------------------------------	Options
@@ -560,6 +430,7 @@ int main() {
 						tempNewCompY = trim(tempNewCompY, gap);
 
 						comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
+						comp.back().stimuli();
 
 						/*Collisions*/
 						tempNewCompX = trim(tempNewCompX, gap);
@@ -573,6 +444,7 @@ int main() {
 						}
 
 						comp.back().x = tempNewCompX; comp.back().y = tempNewCompY;
+						comp.back().stimuli();
 
 						stimuliEndNodes = 1;
 
@@ -582,8 +454,8 @@ int main() {
 
 						/*Check every component for Mouse*/
 						for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
-							
-							if (comp[c].getBounds().contains(cursorInSim(app))) {
+
+							if (comp[c].boarder.getGlobalBounds().contains(cursorInSim(app))) {
 
 								mouseOnCompsBool = 1; Drag = 0;
 
@@ -686,8 +558,8 @@ int main() {
 						stimuliDisplay = 1;
 
 						for (int v = 0; v < virSerial.size(); v++) {
-							
-							if (comp[virSerial[v]].getBounds().contains(cursorInSim(app))) {
+
+							if (comp[virSerial[v]].boarder.getGlobalBounds().contains(cursorInSim(app))) {
 
 								if (comp[virSerial[v]].serial == 5)comp[virSerial[v]].serial = 7;
 								else if (comp[virSerial[v]].serial == 7) comp[virSerial[v]].serial = 5;
@@ -761,6 +633,7 @@ int main() {
 							if (!occupiedAt(virSerial[c], sf::Vector2f(tempX, tempY))) {
 								comp[virSerial[c]].x = (int)tempX; // += (were "=" before)
 								comp[virSerial[c]].y = (int)tempY; // += (were "=" before)
+								comp[virSerial[c]].stimuli();
 							}
 						}
 					}
@@ -788,7 +661,7 @@ int main() {
 
 					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
 
-					if (comp[c].getBounds().intersects(sf::FloatRect(selSqr.getPosition(), cursorInSim(app) - selSqr.getPosition()))) {
+					if (comp[c].boarder.getGlobalBounds().intersects(sf::FloatRect(selSqr.getPosition(), cursorInSim(app) - selSqr.getPosition()))) {
 						if (!compFound) {
 							virSerial.emplace_back(c);
 
@@ -826,13 +699,12 @@ int main() {
 			if (wireBool) { stimuliDisplay = 1; wires.back().makeWire(app); }
 		}
 
-		//cout << "\n" << virSerialShift.size();
-
+		;
 		// ----------------------------------------	Update
-
-		//circuit.updateWin();
-		if (MInTool) { stimuliDisplay = 1; }
 		{
+			/*circuit.updateWin(); */
+
+			if (MInTool) { stimuliDisplay = 1; }
 			/*ImGui*/
 			/*
 			ImGui::SFML::Update(app, deltaClock.restart());
@@ -986,28 +858,24 @@ int main() {
 				}
 			}
 
-			if (RELEASE_DEBUG/* && stimuliEndNodes*/) {
-
-				while (virSerial.size() < allBoarders.size()) {
-					allBoarders.pop_back();
-				}
-
-				while (allBoarders.size() < virSerial.size()) {
-					allBoarders.emplace_back(boarderPic);
-				}
-
-				sf::FloatRect bounds;
-				for (int v = 0; v < virSerial.size(); v++) {
-					bounds = comp[virSerial[v]].getBounds();
-					allBoarders[v].setPosition(bounds.left, bounds.top);
-					allBoarders[v].setSize(sf::Vector2f(bounds.width, bounds.height));
-				}
-
-			}
+			//if (RELEASE_DEBUG/* && stimuliEndNodes*/) {
+			//	while (virSerial.size() < allBoarders.size()) {
+			//		allBoarders.pop_back();
+			//	}
+			//	while (allBoarders.size() < virSerial.size()) {
+			//		allBoarders.emplace_back(boarderPic);
+			//	}
+			//	sf::FloatRect bounds;
+			//	for (int v = 0; v < virSerial.size(); v++) {
+			//		bounds = comp[virSerial[v]].getBounds();
+			//		allBoarders[v].setPosition(bounds.left, bounds.top);
+			//		allBoarders[v].setSize(sf::Vector2f(bounds.width, bounds.height));
+			//	}
+			//}
 
 		}
 
-		
+
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) { // zero causes 100 cpu load
 			app.setView(view);
@@ -1033,14 +901,16 @@ int main() {
 			}
 
 			/*Boarders*/ {
-				for (int b = 0; b < allBoarders.size(); b++) { app.draw(allBoarders[b]); }
+				for (int v = 0; v < virSerial.size(); v++) { app.draw(comp[virSerial[v]].boarder); }
 			}
 
-			if (Occupied) {
-				for (int v = 0; v < virSprite.size(); v++) app.draw(virSprite[v]);
+			/*Virtual Sprites*/ {
+				if (Occupied) for (int v = 0; v < virSprite.size(); v++) app.draw(virSprite[v]);
 			}
 
-			if (selectSquare && !releaseBool) app.draw(selSqr);
+			/*Selection Sqraure*/ {
+				if (selectSquare && !releaseBool) app.draw(selSqr);
+			}
 
 			/*Tool Win*/ {
 				if (MInTool) {
@@ -1053,15 +923,16 @@ int main() {
 				if (MIntool) app.draw(ToolBoxLittleBox);
 			}
 
-
-			if (DrawCircle) app.draw(testCircle);
-			/*ImGui*/
-			ImGui::SFML::Render(app);//Last Thing to render
+			/*ImGui*/ {
+				if (DrawCircle) app.draw(testCircle);
+				ImGui::SFML::Render(app);//Last Thing to render
+			}
 
 			app.display();
 		}
 
-		app.setTitle("CircuitSIm   " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
+
+		app.setTitle("CircuitSim   " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
 		frame = clock();
 
 		stimuliDisplay = 0; stimuliEndNodes = 0;
@@ -1121,11 +992,11 @@ void printScreen() {
 	sf::FloatRect ABCD;
 
 	if (comp.size() != 0) {
-		compBound = comp[0].getBounds();
+		compBound = comp[0].boarder.getGlobalBounds();
 		ABCD = compBound;
 
 		for (int c = 0; c < comp.size(); c++) {
-			compBound = comp[c].getBounds();
+			compBound = comp[c].boarder.getGlobalBounds();
 			if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
 			if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
 			if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
@@ -1146,7 +1017,7 @@ void printScreen() {
 
 	for (int c = 0; c < comp.size(); c++) {
 		sf::Vector2f tempEndNode = comp[c].getEndPos();
-		compBound = comp[c].getBounds();
+		compBound = comp[c].boarder.getGlobalBounds();
 
 		sf::Image tempCompImg;
 		//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
@@ -1211,7 +1082,133 @@ void printScreen() {
 	OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
 }
 
+void savef() {
 
+	cout << "\nCtrl + S\n";
+
+	ShellExecute(NULL, NULL, L"Saved-Projects", NULL, NULL, SW_SHOWNORMAL);
+
+	std::ofstream output;
+
+	int fileNo = 0;
+	std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+	std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
+
+	while (test.good()) {
+		test.close();
+		test.open(fileDir + std::to_string(++fileNo) + fileType);
+	}
+	output.open(fileDir + std::to_string(fileNo) + fileType);
+
+	std::string tempStr;
+	tempStr = std::to_string((int)comp.size()) + "\n";
+	int size = (int)comp.size();
+	for (int c = 0; c < size; c++) {
+		tempStr += std::to_string(comp[c].serial) + "\t" + std::to_string((int)comp[c].x) + "\t" + std::to_string((int)comp[c].y) + "\t" + std::to_string((int)comp[c].angle) + "\n";
+	}
+	output << tempStr;
+	output.close();
+}
+
+void openf(int Gap) {
+
+	int fileNo = 0;
+	std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+	std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
+
+	while (input.good()) {
+		input.close();
+		input.open(fileDir + std::to_string(++fileNo) + fileType);
+	}
+	input.open(fileDir + std::to_string(fileNo - 1) + fileType);
+
+	comp.clear();
+
+	int no = 0;
+	input >> no;
+	for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
+		input >> S >> X >> Y >> A;
+		comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, Gap), trim(Y, Gap), ((A % 360) / 90) * 90);
+	}
+	input.close();
+
+}
+
+void copyf(const std::vector<int>& vir) {
+
+	std::ofstream output;
+	std::string tempStr(std::to_string((int)vir.size()) + "\n");
+
+	int size = (int)vir.size();
+	for (int c = 0; c < size; c++) {
+		tempStr += std::to_string(comp[vir[c]].serial) + "\t" + std::to_string((int)comp[vir[c]].x) + "\t" + std::to_string((int)comp[vir[c]].y) + "\t" + std::to_string((int)comp[vir[c]].angle) + "\n";
+	}
+
+	//clipboard << tempStr;
+	sf::Clipboard::setString(tempStr);
+
+}
+
+void pastef(int Gap) {
+
+	std::string inString;
+	std::vector<int> integers; integers.reserve(9);
+	//clipboard >> inString;
+	inString = sf::Clipboard::getString();
+
+
+	//cout << inString;
+
+	bool negative = 0;
+	for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
+		temp = (int)inString[c];
+
+		if (48 <= temp && temp <= 57) {
+			x = x * 10 + temp - 48;
+		}
+		else if (temp == 45) negative = 1;
+		else if (temp == 10 || temp == 9) { // else if (temp == (int)('\n') || temp == (int)('\t')) {
+			if (negative) x *= -1;
+			integers.emplace_back(x);
+			negative = 0;
+			x = 0;
+		}
+	}
+
+	//cout << "\n"; for (int c = 0; c < integers.size(); c++) cout << integers[c] << " ";
+
+	for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
+		S = integers[++c];
+		X = integers[++c];
+		Y = integers[++c];
+		A = integers[++c];
+		comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, Gap), trim(Y, Gap), ((A % 360) / 90) * 90);
+	}
+
+}
+
+void rotatef(const std::vector<int>& vir) {
+
+	for (int v = 0; v < vir.size(); v++) {
+		comp[vir[v]].angle += 90;
+		comp[vir[v]].angle -= (int)(comp[vir[v]].angle / 360) * 360;
+		comp[vir[v]].stimuli();
+	}
+
+}
+
+void deletef(std::vector<int>& vir, std::vector<sf::Sprite>& virSpr) {
+	while (0 < vir.size()) {
+		if (comp.size() > 0) comp.erase(comp.begin() + vir[0]);
+		if (virSpr.size() > 0) virSpr.erase(virSpr.begin());
+
+		for (int c = 1; c < vir.size(); c++) {
+			if (vir[c] > vir[0]) vir[c]--;
+		}
+
+		vir.erase(vir.begin());
+	}
+}
 
 
 float trim(float num, int wrt) {
@@ -1256,6 +1253,7 @@ bool occupiedAt(int Index, const sf::Vector2f& At) {
 
 	Entity indexEntity(comp[Index]);
 	indexEntity.x = At.x; indexEntity.y = At.y;
+	indexEntity.stimuli();
 	const sf::Vector2f end(indexEntity.getEndPos());
 	for (int c = 0; c < comp.size(); c++) {
 		if (c == Index || abs(comp[c].x - end.x) >= 200 || abs(comp[c].y - end.y) >= 200) continue; // gap-hardcode
@@ -1281,14 +1279,33 @@ bool occupiedAt(int Index, const sf::Vector2f& At) {
 	}
 	if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
 
-	
-	const sf::FloatRect indexRect(indexEntity.getBounds());
 	for (int c = 0; c < comp.size(); c++) {
 		if (c == Index || abs(comp[c].x - At.x) >= 200 || abs(comp[c].y - At.y) >= 200) continue; // gap-hardcode
-
-		if (comp[c].getBounds().intersects(indexRect)) { Occupied = 1; return 1; }
+		if (indexEntity.boarder.getGlobalBounds().intersects(comp[c].boarder.getGlobalBounds())) { Occupied = 1; return 1; }
 
 	}
 
 	Occupied = 0; return 0;
 }
+
+/*if (debugBool) {
+			debugBool = 0;
+
+			//LPCWSTR pszPathToOpen = L"C:\\Windows";
+			//PIDLIST_ABSOLUTE pidl;
+			//if (SUCCEEDED(SHParseDisplayName(pszPathToOpen, 0, &pidl, 0, 0)))
+			//{
+			//	// we don't want to actually select anything in the folder, so we pass an empty
+			//	// PIDL in the array. if you want to select one or more items in the opened
+			//	// folder you'd need to build the PIDL array appropriately
+			//	ITEMIDLIST idNull = { 0 };
+			//	LPCITEMIDLIST pidlNull[1] = { &idNull };
+			//	SHOpenFolderAndSelectItems(pidl, 1, pidlNull, 0);
+			//	ILFree(pidl);
+			//}
+
+			ShellExecute(NULL, NULL, L"E:\\Programming\\C++\\CircuitSimulator_SFML\\Circiut_Sim\\Saved-Images", NULL, NULL, SW_SHOWNORMAL);
+
+			//system("start explorer c:\\php");
+
+		}*/
