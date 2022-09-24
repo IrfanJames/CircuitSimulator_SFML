@@ -3,6 +3,8 @@
 taskkill /F /IM Circiut_Sim.exe
 */
 
+
+
 #include <iostream>
 #include <fstream>
 //#include <thread>
@@ -19,7 +21,10 @@ taskkill /F /IM Circiut_Sim.exe
 #include "Circuit_wire.h"
 //#include "Circuit_Graph.h"
 
+
 #include <windows.h>
+
+
 
 //#include "clipboardxx.hpp"
 
@@ -33,13 +38,13 @@ float trim(float num, int wrt);
 bool occupiedAt(int Index, const sf::Vector2f& At);
 
 void updateAllEnds();
-void printScreen();
-void savef();
-void openf(int Gap);
+void printScreen(const std::string& filepath);
+void savef(const std::string& file);
+void openf(int Gap, const std::string& filepath, std::vector<int>& vir, std::vector<int>& virShft, std::vector<sf::Sprite>& virSpr);
 void copyf(const std::vector<int>& vir);
 void pastef(int Gap);
 void rotatef(const std::vector<int>& vir);
-void deletef(std::vector<int>& vir, std::vector<sf::Sprite>& virSpr);
+void deletef(std::vector<int>& vir, std::vector<int>& virShft, std::vector<sf::Sprite>& virSpr);
 
 bool Occupied = 0;
 float mouseHoldX, mouseHoldY;
@@ -48,8 +53,62 @@ time_t click = clock(); // Time passed since Click
 std::vector<Entity> comp;
 std::vector<sf::Vector2f> allEnds;
 
+
+
+std::string OpenFile(const char* filter)
+{
+	OPENFILENAMEA ofn;
+	CHAR szFile[260] = { 0 };
+	CHAR currentDir[256] = { 0 };
+	ZeroMemory(&ofn, sizeof(OPENFILENAME));
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
+	ofn.lpstrFile = szFile;
+	ofn.nMaxFile = sizeof(szFile);
+	if (GetCurrentDirectoryA(256, currentDir))
+		ofn.lpstrInitialDir = currentDir;
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+	if (GetOpenFileNameA(&ofn) == TRUE)
+		return ofn.lpstrFile;
+
+	return std::string();
+
+}
+
+std::string SaveFile(const char* filter)
+{
+	OPENFILENAMEA ofn;
+	CHAR szFile[260] = { 0 };
+	CHAR currentDir[256] = { 0 };
+	ZeroMemory(&ofn, sizeof(OPENFILENAME));
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
+	ofn.lpstrFile = szFile;
+	ofn.nMaxFile = sizeof(szFile);
+	if (GetCurrentDirectoryA(256, currentDir))
+		ofn.lpstrInitialDir = currentDir;
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+
+	// Sets the default extension by extracting it from the filter
+	ofn.lpstrDefExt = strchr(filter, '\0') + 1;
+
+	if (GetSaveFileNameA(&ofn) == TRUE)
+		return ofn.lpstrFile;
+
+	return std::string();
+}
+
+
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
 int main() {
+
+
+
 
 	Entity::setFont("assets/Fonts/CalibriL_1.ttf");
 
@@ -138,14 +197,14 @@ int main() {
 	}
 
 	/*Tool Textures*/ {
-		compTex[Cap].loadFromFile("assets/Images/Cap.png");
-		compTex[Cur].loadFromFile("assets/Images/Cur.png");
-		compTex[Dod].loadFromFile("assets/Images/Dod.png");
-		compTex[Ind].loadFromFile("assets/Images/Ind.png");
-		compTex[Res].loadFromFile("assets/Images/Res.png");
-		compTex[SwO].loadFromFile("assets/Images/SwO.png");
-		compTex[Vol].loadFromFile("assets/Images/Vol.png");
-		compTex[SwC].loadFromFile("assets/Images/SwC.png");
+		compTex[Entity::Cap].loadFromFile("assets/Images/Cap.png");
+		compTex[Entity::Cur].loadFromFile("assets/Images/Cur.png");
+		compTex[Entity::Dod].loadFromFile("assets/Images/Dod.png");
+		compTex[Entity::Ind].loadFromFile("assets/Images/Ind.png");
+		compTex[Entity::Res].loadFromFile("assets/Images/Res.png");
+		compTex[Entity::SwO].loadFromFile("assets/Images/SwO.png");
+		compTex[Entity::Vol].loadFromFile("assets/Images/Vol.png");
+		compTex[Entity::SwC].loadFromFile("assets/Images/SwC.png");
 	}
 
 	/*Fonts*/
@@ -192,8 +251,8 @@ int main() {
 	std::vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(17);
 
 	/*Circuit*/
-	comp.reserve(9);
-	allEnds.reserve(9);
+	comp.reserve(3);
+	allEnds.reserve(3);
 	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
 	/*Wires*/
@@ -276,42 +335,43 @@ int main() {
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == Mouse::Left) { releaseBool = 1; }
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == Mouse::Middle) { wheelReleaseBool = 1; }
 
-			if (GetAsyncKeyState(VK_SNAPSHOT)) {
-				cout << "\nPrintScreen";
-
-				//time_t print = clock();
-
-				/*sf::Texture tex;
-
-				tex.update(app);
-
-				sf::Image screenshot(tex.copyToImage());
-
-				screenshot.saveToFile("screenshot.png");*/
-
-				//screenshot = app.capture();
-				//screenshot.saveToFile("screenshot.png");
-
-				for (int c = 0; c < 1; c++) {
-					//std::thread printScreenTread { printScreen }; printScreenTread.join();
-
-					//std::async(std::launch::async, printScreen);
-
-					printScreen();
-				}
-				//cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
-			}
-
 			if (evnt.type == evnt.KeyPressed) {
 				if (evnt.key.code == Keyboard::Escape) { app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; continue; }
 				if (evnt.key.code == Keyboard::Delete) {
 					stimuliDisplay = 1;	stimuliEndNodes = 1;
-
-					deletef(virSerial, virSprite);
+					deletef(virSerial, virSerialShift, virSprite);
 				}
 				if (evnt.key.code == Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
 				if (evnt.key.code == Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
-				if (evnt.key.code == Keyboard::P) { ShellExecute(NULL, NULL, L"Saved-Images", NULL, NULL, SW_SHOWNORMAL); printScreen(); }
+				if (evnt.key.code == Keyboard::P) {
+					cout << "\nPrintScreen";
+
+					//time_t print = clock();
+
+					/*sf::Texture tex;
+
+					tex.update(app);
+
+					sf::Image screenshot(tex.copyToImage());
+
+					screenshot.saveToFile("screenshot.png");*/
+
+					std::string filepath = SaveFile("PNG (*.png)\0*.png\0");
+
+
+
+					//screenshot = app.capture();
+					//screenshot.saveToFile("screenshot.png");
+
+					for (int c = 0; c < 1; c++) {
+						//std::thread printScreenTread { printScreen }; printScreenTread.join();
+
+						//std::async(std::launch::async, printScreen);
+						if (!filepath.empty())
+							printScreen(filepath);
+					}
+					//cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
+				}
 
 				/*Ctrl*/
 				if (evnt.key.control) {
@@ -343,15 +403,25 @@ int main() {
 					if (evnt.key.code == Keyboard::O) {
 						cout << "\nCtrl + O\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
 
-						virSerial.clear();
-						virSprite.clear();
-						virSerialShift.clear();
-						openf(gap);
+						std::string filepath = OpenFile("text file (*.txt)\0*.txt\0");
+
+						if (!filepath.empty())
+							openf(gap, filepath, virSerial, virSerialShift, virSprite);
 
 					}
-					if (evnt.key.code == Keyboard::S) {
-						
-						savef();
+					if (evnt.key.code == Keyboard::S && evnt.key.shift) {
+
+						std::string filepath = SaveFile("Project file (*.txt)\0*.txt\0PNG (*.png)\0*.png\0");
+
+						if (!filepath.empty()) {
+
+							if (filepath.back() == 't')
+								savef(filepath);
+
+							if (filepath.back() == 'g')
+								printScreen(filepath);
+
+						}
 
 					}
 					if (evnt.key.code == Keyboard::C) {
@@ -370,7 +440,7 @@ int main() {
 
 						// Delete
 						{
-							deletef(virSerial, virSprite);
+							deletef(virSerial,virSerialShift, virSprite);
 						}
 					}
 					if (evnt.key.code == Keyboard::V) {
@@ -405,12 +475,6 @@ int main() {
 		ShiftPressed = (Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift));
 
 		///////////////////////////////////////////////
-
-
-
-
-
-
 
 
 		// ----------------------------------------	Options
@@ -455,7 +519,7 @@ int main() {
 						/*Check every component for Mouse*/
 						for (int c = 0; !mouseOnCompsBool && c < comp.size(); c++) {
 
-							if (comp[c].boarder.getGlobalBounds().contains(cursorInSim(app))) {
+							if (comp[c].bounds.contains(cursorInSim(app))) {
 
 								mouseOnCompsBool = 1; Drag = 0;
 
@@ -559,7 +623,7 @@ int main() {
 
 						for (int v = 0; v < virSerial.size(); v++) {
 
-							if (comp[virSerial[v]].boarder.getGlobalBounds().contains(cursorInSim(app))) {
+							if (comp[virSerial[v]].bounds.contains(cursorInSim(app))) {
 
 								if (comp[virSerial[v]].serial == 5)comp[virSerial[v]].serial = 7;
 								else if (comp[virSerial[v]].serial == 7) comp[virSerial[v]].serial = 5;
@@ -661,7 +725,7 @@ int main() {
 
 					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
 
-					if (comp[c].boarder.getGlobalBounds().intersects(sf::FloatRect(selSqr.getPosition(), cursorInSim(app) - selSqr.getPosition()))) {
+					if (comp[c].bounds.intersects(sf::FloatRect(selSqr.getPosition(), cursorInSim(app) - selSqr.getPosition()))) {
 						if (!compFound) {
 							virSerial.emplace_back(c);
 
@@ -727,16 +791,41 @@ int main() {
 
 				if (ImGui::BeginMenu("File")) {
 
-					if (ImGui::MenuItem("Open", "Ctrl + O")) { cout << "\nOpen"; }
+					if (ImGui::MenuItem("Open...", "Ctrl + O")) {
+						cout << "\nOpen";
+
+						cout << "\nCtrl + O\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
+
+						std::string filepath = OpenFile("text file (*.txt)\0*.txt\0");
+
+						if (!filepath.empty())
+							openf(gap, filepath, virSerial, virSerialShift, virSprite);
+
+					}
 					if (ImGui::MenuItem("Save", "Ctrl + S")) { cout << "\nSave"; }
-					if (ImGui::MenuItem("Save as Image")) { cout << "\nOhh Yeah"; printScreen(); }
+					if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S")) {
+						cout << "\nShift Save";
+
+						std::string filepath = SaveFile("Project file (*.txt)\0*.txt\0PNG (*.png)\0*.png\0");
+
+						if (!filepath.empty()) {
+
+							if (filepath.back() == 't')
+								savef(filepath);
+
+							if (filepath.back() == 'g')
+								printScreen(filepath);
+
+						}
+
+					}
 					ImGui::Separator();
-					if (ImGui::MenuItem("Exit", "Esc")) { cout << "\nExit"; }
+					if (ImGui::MenuItem("Exit", "Esc")) { app.close(); End = 1; cout << "\nEsc\n"; continue; }
 
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Options")) {
-
+					
 					if (ImGui::MenuItem("Handdrawn Icons")) { cout << "\nWobbly"; }
 					if (ImGui::BeginMenu("Switch Themes")) {
 
@@ -773,9 +862,36 @@ int main() {
 					ImGui::EndMenu();
 				}
 
-
 				ImGui::EndMainMenuBar();
 			}//*/
+
+			//ImGui::Begin("Right-Click");
+			//if (ImGui::BeginPopupContextItem()) {
+			//	if (ImGui::Selectable("Apple")) cout<<"Apple";
+			//	if (ImGui::Selectable("Banana")) cout << "Banana";
+			//	ImGui::EndPopup();
+			//}
+			//ImGui::End;
+
+			/*
+			if (debugBool) {
+				//if (ImGui::BeginMenu("Hello")) {
+				if (ImGui::OpenPopupOnItemClick) {
+
+					if (ImGui::Selectable("Apple")) cout << "Apple";
+					if (ImGui::Selectable("Banana")) cout << "Banana";
+
+					if (ImGui::MenuItem("One", "Ctrl + O")) { cout << "\nOpen"; }
+					if (ImGui::MenuItem("Two", "Ctrl + S")) { cout << "\nSave"; }
+					if (ImGui::MenuItem("Save as Image")) { cout << "\nOhh Yeah"; printScreen(); }
+					ImGui::Separator();
+					if (ImGui::MenuItem("Exit", "Esc")) { cout << "\nExit"; }
+
+					//ImGui::EndMenu();
+					//ImGui::EndPopup();
+				}
+			}
+			//*/
 
 			if (Drag) {
 				stimuliDisplay = 1;
@@ -986,17 +1102,38 @@ void updateAllEnds() {
 
 }
 
-void printScreen() {
+void printScreen(const std::string& filepath) {
+
+	//try
+	//{
+	//	cout << filepath;
+	//	int len;
+	//	int slength = (int)filepath.length() + 1;
+	//	len = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, 0, 0);
+	//	wchar_t* buf = new wchar_t[len];
+	//	MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, buf, len);
+	//	std::wstring r(buf);
+	//	delete[] buf;
+	//	const wchar_t* widecstr = r.c_str();
+
+	//	//ShellExecute(NULL, NULL, L"Saved-Images", NULL, NULL, SW_SHOWNORMAL);
+	//	ShellExecute(NULL, NULL, widecstr, NULL, NULL, SW_SHOWNORMAL);
+	//}
+	//catch (const std::exception&)
+	//{
+	//	cout << "Shell connot open floder  \"Saved - Images\"";
+	//}
+
 	sf::Image OutputImage;
 	sf::FloatRect compBound;
 	sf::FloatRect ABCD;
 
 	if (comp.size() != 0) {
-		compBound = comp[0].boarder.getGlobalBounds();
+		compBound = comp[0].bounds;
 		ABCD = compBound;
 
 		for (int c = 0; c < comp.size(); c++) {
-			compBound = comp[c].boarder.getGlobalBounds();
+			compBound = comp[c].bounds;
 			if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
 			if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
 			if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
@@ -1017,7 +1154,7 @@ void printScreen() {
 
 	for (int c = 0; c < comp.size(); c++) {
 		sf::Vector2f tempEndNode = comp[c].getEndPos();
-		compBound = comp[c].boarder.getGlobalBounds();
+		compBound = comp[c].bounds;
 
 		sf::Image tempCompImg;
 		//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
@@ -1070,35 +1207,41 @@ void printScreen() {
 
 	}
 
-	int picNo = 0;
-	std::string picDir = "Saved-Images/Untitled-", picType = ".png";
-	sf::Image test;
+	//int picNo = 0;
+	//std::string picDir = "Saved-Images/Untitled-", picType = ".png";
+	//sf::Image test;
+	//while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
+	//	;
+	//	//cout << "\n" << picNo;
+	//}
+	//OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
 
-	while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
-		;
-		//cout << "\n" << picNo;
-	}
+	OutputImage.saveToFile(filepath);
 
-	OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
 }
 
-void savef() {
+void savef(const std::string& file) {
 
 	cout << "\nCtrl + S\n";
 
-	ShellExecute(NULL, NULL, L"Saved-Projects", NULL, NULL, SW_SHOWNORMAL);
+	//ShellExecute(NULL, NULL, L"Saved-Projects", NULL, NULL, SW_SHOWNORMAL);
 
 	std::ofstream output;
 
-	int fileNo = 0;
-	std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-	std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
+	//int fileNo = 0;
+	//std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+	//std::ifstream test(fileDir + std::to_string(fileNo) + fileType);
+	//while (test.good()) {
+	//	test.close();
+	//	test.open(fileDir + std::to_string(++fileNo) + fileType);
+	//}
+	//output.open(fileDir + std::to_string(fileNo) + fileType);
 
-	while (test.good()) {
-		test.close();
-		test.open(fileDir + std::to_string(++fileNo) + fileType);
-	}
-	output.open(fileDir + std::to_string(fileNo) + fileType);
+	//output.open(SaveFile("text file (*.txt)\0*.txt\0"));
+	
+	//if (file.empty()) return;
+	
+	output.open(file);
 
 	std::string tempStr;
 	tempStr = std::to_string((int)comp.size()) + "\n";
@@ -1110,17 +1253,24 @@ void savef() {
 	output.close();
 }
 
-void openf(int Gap) {
+void openf(int Gap, const std::string& filepath, std::vector<int>& vir, std::vector<int>& virShft, std::vector<sf::Sprite>& virSpr) {
 
-	int fileNo = 0;
+	vir.clear();
+	virSpr.clear();
+	virShft.clear();
+
+
+	//std::ifstream input(OpenFile("text file (*.txt)\0*.txt\0"));
+	std::ifstream input(filepath);
+
+	/*int fileNo = 0;
 	std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
 	std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
-
 	while (input.good()) {
 		input.close();
 		input.open(fileDir + std::to_string(++fileNo) + fileType);
 	}
-	input.open(fileDir + std::to_string(fileNo - 1) + fileType);
+	input.open(fileDir + std::to_string(fileNo - 1) + fileType);*/
 
 	comp.clear();
 
@@ -1197,7 +1347,8 @@ void rotatef(const std::vector<int>& vir) {
 
 }
 
-void deletef(std::vector<int>& vir, std::vector<sf::Sprite>& virSpr) {
+void deletef(std::vector<int>& vir, std::vector<int>& virShft, std::vector<sf::Sprite>& virSpr) {
+	virShft.clear();
 	while (0 < vir.size()) {
 		if (comp.size() > 0) comp.erase(comp.begin() + vir[0]);
 		if (virSpr.size() > 0) virSpr.erase(virSpr.begin());
@@ -1281,7 +1432,7 @@ bool occupiedAt(int Index, const sf::Vector2f& At) {
 
 	for (int c = 0; c < comp.size(); c++) {
 		if (c == Index || abs(comp[c].x - At.x) >= 200 || abs(comp[c].y - At.y) >= 200) continue; // gap-hardcode
-		if (indexEntity.boarder.getGlobalBounds().intersects(comp[c].boarder.getGlobalBounds())) { Occupied = 1; return 1; }
+		if (indexEntity.bounds.intersects(comp[c].bounds)) { Occupied = 1; return 1; }
 
 	}
 

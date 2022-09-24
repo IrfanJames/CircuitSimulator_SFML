@@ -5,16 +5,7 @@
 #include "SFML/Graphics.hpp";
 
 sf::Texture compTex[8];
-enum componentType {
-	Cap,
-	Cur,
-	Dod,
-	Ind,
-	Res,
-	SwO,
-	Vol,
-	SwC
-};
+
 class Entity {
 public:
 	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
@@ -25,6 +16,16 @@ public:
 	double voltage =	5;
 	double current =	0.002;
 
+	enum {
+		Cap,
+		Cur,
+		Dod,
+		Ind,
+		Res,
+		SwO,
+		Vol,
+		SwC
+	};
 
 public:
 	int serial = 0;
@@ -32,6 +33,7 @@ public:
 	sf::Sprite sprite;
 	sf::Text valueText;
 	sf::RectangleShape boarder;
+	sf::FloatRect bounds;
 
 private:
 	void updateValueText() {
@@ -109,16 +111,22 @@ private:
 
 		valueText.setString(str);
 	}
+
 public:
 	Entity() {
 		serial = 0; x = W / 2; y = H / 2; angle = 0.0f;
 
-		int A = 0, B = 15, C = 75; //Hard Code
-		boarder.setSize(sf::Vector2f(30, 75));
-		boarder.setOrigin(15, 0);
+		static const int A = 0, B = 15, C = 75; //Hard Code
+		boarder.setSize(sf::Vector2f(2*B, C));
+		boarder.setOrigin(B, A);
 		boarder.setFillColor(sf::Color(0, 0, 100, 0));
 		boarder.setOutlineThickness(1.0f);
 		boarder.setOutlineColor(sf::Color(0, 204, 102));
+
+		bounds.left = x - B;
+		bounds.top = y - A;
+		bounds.width = B + B;
+		bounds.height = C + A;
 
 		valueText.setFont(s_font);
 		valueText.setCharacterSize(13);
@@ -132,13 +140,17 @@ public:
 		sprite.setTexture(compTex[s]);
 		sprite.setOrigin(compTex[s].getSize().x / 2, 0);
 
-		int A = 0, B = 15, C = 75; //Hard Code
-		boarder.setSize(sf::Vector2f(30, 75));
-		boarder.setOrigin(15, 0);
+		static const int A = 0, B = 15, C = 75; //Hard Code
+		boarder.setSize(sf::Vector2f(2 * B, C));
+		boarder.setOrigin(B, A);
 		boarder.setFillColor(sf::Color(0, 0, 100, 0));
 		boarder.setOutlineThickness(1.0f);
 		boarder.setOutlineColor(sf::Color(0, 204, 102));
 
+		bounds.left = x - B;
+		bounds.top = y - A;
+		bounds.width = B + B;
+		bounds.height = C + A;
 
 		valueText.setFont(s_font);
 		valueText.setCharacterSize(13);
@@ -159,6 +171,13 @@ public:
 
 		boarder.setPosition(x, y);
 		boarder.setRotation(angle);
+
+
+		int A = 0, B = 15, C = 75, i = (int)angle % 360;
+		if (i == 0)        { bounds.left = x - B; bounds.top = y - A; bounds.width = B + B; bounds.height = C + A;}
+		else if (i == 90)  { bounds.left = x - C; bounds.top = y - B; bounds.width = A + C; bounds.height = B + B;}
+		else if (i == 180) { bounds.left = x - B; bounds.top = y - C; bounds.width = B + B; bounds.height = A + C;}
+		else if (i == 270) { bounds.left = x - A; bounds.top = y - B; bounds.width = C + A; bounds.height = B + B; }
 
 
 		//updateValueText();
