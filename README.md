@@ -19,7 +19,7 @@
 |  Delete |  `Del` |
 |  Open Project | `Ctrl` + `O` |
 |  Save Project |  `Ctrl` + `S` |
-|Save as Image| `Print Screen Key` |
+|Save as Image/Project| `Ctrl` + `Shift` + `S`|
 |  Close |  `Esc` |
 #
 > Enjoy,

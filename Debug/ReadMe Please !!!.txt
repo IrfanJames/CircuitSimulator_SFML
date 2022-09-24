@@ -14,8 +14,8 @@ Controls:
 7. Ctrl + V -> Paste
 
 8. Ctrl + S -> Save Project
-9. Ctrl + O -> Open (last saved) Project
-10.PrintScreen Key -> PrintScreen; Save as Image(PNG)
+9. Ctrl + Shift + S -> Project or PNG Image
+10. Ctrl + O -> Open any Project
 
 11.Esc   Escape
 
