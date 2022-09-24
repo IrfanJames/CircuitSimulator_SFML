@@ -719,49 +719,59 @@ int main() {
 
 					bool compFound = 0;
 					int v = 0;
-					for (; v < virSerial.size(); v++) {
+					for (; v < virSerial.size();) {
 						if (c == virSerial[v]) { compFound = 1; break; }
+						else
+							if (c < virSerial[v]) { break; }
+
+						v++;
 					}
 
 					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
 
 					if (comp[c].bounds.intersects(sf::FloatRect(selSqr.getPosition(), cursorInSim(app) - selSqr.getPosition()))) {
 						if (!compFound) {
-							virSerial.emplace_back(c);
+							//virSerial.emplace_back(c);
+							virSerial.insert(virSerial.begin() + v, c);
 
-							virSprite.emplace_back(comp[virSerial.back()].sprite);
+							//virSprite.emplace_back(comp[virSerial.back()].sprite);
+							virSprite.insert(virSprite.begin() + v, comp[c].sprite);
 							/*virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
 							virSprite.back().setColor(tempDimColor);*/
 						}
 					}
-					else {
-						if (compFound) {
-							virSerial.erase(virSerial.begin() + v);
-							virSprite.erase(virSprite.begin() + v);
-						}
+					else if (compFound) {
+						virSerial.erase(virSerial.begin() + v);
+						virSprite.erase(virSprite.begin() + v);
 					}
+
 				}
-				if (0 && ShiftPressed) {
-					for (int vs = 0; vs < virSerialShift.size(); vs++) {
-						static bool found = 0;
-						for (int v = 0; v < virSerial.size(); v++) {
-							if (virSerial[v] == virSerialShift[vs]) {
-								found = 1;
-								break;
-							}
-						}
-						if (!found) {
-							virSerial.emplace_back(virSerialShift[vs]);
-							virSprite.emplace_back(comp[virSerial.back()].sprite);
-						}
-					}
-				}
+				//if (0 && ShiftPressed) {
+				//	for (int vs = 0; vs < virSerialShift.size(); vs++) {
+				//		static bool found = 0;
+				//		for (int v = 0; v < virSerial.size(); v++) {
+				//			if (virSerial[v] == virSerialShift[vs]) {
+				//				found = 1;
+				//				break;
+				//			}
+				//		}
+				//		if (!found) {
+				//			virSerial.emplace_back(virSerialShift[vs]);
+				//			virSprite.emplace_back(comp[virSerial.back()].sprite);
+				//		}
+				//	}
+				//}
 
 			}
 
 			/*Wire*/
 			if (wireBool) { stimuliDisplay = 1; wires.back().makeWire(app); }
 		}
+
+		/*cout << "\n";
+		for (int v = 0; v < virSerial.size(); v++)
+			cout << virSerial[v] << " ";*/
+		//cout << virSerial[v] << "(" << v << "), ";
 
 		;
 		// ----------------------------------------	Update
@@ -1220,6 +1230,37 @@ void printScreen(const std::string& filepath) {
 
 }
 
+void openf(int Gap, const std::string& filepath, std::vector<int>& vir, std::vector<int>& virShft, std::vector<sf::Sprite>& virSpr) {
+
+	vir.clear();
+	virSpr.clear();
+	virShft.clear();
+
+
+	//std::ifstream input(OpenFile("text file (*.txt)\0*.txt\0"));
+	std::ifstream input(filepath);
+
+	/*int fileNo = 0;
+	std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
+	std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
+	while (input.good()) {
+		input.close();
+		input.open(fileDir + std::to_string(++fileNo) + fileType);
+	}
+	input.open(fileDir + std::to_string(fileNo - 1) + fileType);*/
+
+	comp.clear();
+
+	int no = 0;
+	input >> no;
+	for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
+		input >> S >> X >> Y >> A;
+		comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, Gap), trim(Y, Gap), ((A % 360) / 90) * 90);
+	}
+	input.close();
+
+}
+
 void savef(const std::string& file) {
 
 	cout << "\nCtrl + S\n";
@@ -1251,37 +1292,6 @@ void savef(const std::string& file) {
 	}
 	output << tempStr;
 	output.close();
-}
-
-void openf(int Gap, const std::string& filepath, std::vector<int>& vir, std::vector<int>& virShft, std::vector<sf::Sprite>& virSpr) {
-
-	vir.clear();
-	virSpr.clear();
-	virShft.clear();
-
-
-	//std::ifstream input(OpenFile("text file (*.txt)\0*.txt\0"));
-	std::ifstream input(filepath);
-
-	/*int fileNo = 0;
-	std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
-	std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
-	while (input.good()) {
-		input.close();
-		input.open(fileDir + std::to_string(++fileNo) + fileType);
-	}
-	input.open(fileDir + std::to_string(fileNo - 1) + fileType);*/
-
-	comp.clear();
-
-	int no = 0;
-	input >> no;
-	for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
-		input >> S >> X >> Y >> A;
-		comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, Gap), trim(Y, Gap), ((A % 360) / 90) * 90);
-	}
-	input.close();
-
 }
 
 void copyf(const std::vector<int>& vir) {
@@ -1348,8 +1358,17 @@ void rotatef(const std::vector<int>& vir) {
 }
 
 void deletef(std::vector<int>& vir, std::vector<int>& virShft, std::vector<sf::Sprite>& virSpr) {
+
+	int diff = 0;
+
+	for (int v = 0; v < vir.size(); v++)
+		comp.erase(comp.begin() + (vir[v] - diff++)); //assuming vir or virSerial is sorted(ascendingly)
+
+	vir.clear();
 	virShft.clear();
-	while (0 < vir.size()) {
+	virSpr.clear();
+
+	/*while (0 < vir.size()) {
 		if (comp.size() > 0) comp.erase(comp.begin() + vir[0]);
 		if (virSpr.size() > 0) virSpr.erase(virSpr.begin());
 
@@ -1358,7 +1377,7 @@ void deletef(std::vector<int>& vir, std::vector<int>& virShft, std::vector<sf::S
 		}
 
 		vir.erase(vir.begin());
-	}
+	}*/
 }
 
 
