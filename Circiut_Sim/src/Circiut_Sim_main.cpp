@@ -55,7 +55,7 @@ std::vector<sf::Vector2f> allEnds;
 
 
 
-std::string OpenFile(const char* filter)
+std::string OpenFileDialog(const char* filter)
 {
 	OPENFILENAMEA ofn;
 	CHAR szFile[260] = { 0 };
@@ -78,7 +78,7 @@ std::string OpenFile(const char* filter)
 
 }
 
-std::string SaveFile(const char* filter)
+std::string SaveFileDialog(const char* filter)
 {
 	OPENFILENAMEA ofn;
 	CHAR szFile[260] = { 0 };
@@ -105,9 +105,11 @@ std::string SaveFile(const char* filter)
 
 
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
-int main() {
+int main(int argc, char* argv[]) {
 
-
+	// argv[0] is not interesting, since it's just your program's path.
+	//for (int i = 1; i < argc; ++i)
+	//	cout << "argv[" << i << "] is " << argv[i] << "\n";
 
 
 	Entity::setFont("assets/Fonts/CalibriL_1.ttf");
@@ -151,7 +153,7 @@ int main() {
 
 	int serialCompMouse = 0, serialToolMouse = 0;
 
-	sf::Color normalCompColor(255, 255, 255), tempDimColor(150, 150, 150);
+	sf::Color normalCompColor(230, 230, 230), tempDimColor(150, 150, 150);
 
 	///////////////////////////////////////////////
 
@@ -278,6 +280,15 @@ int main() {
 
 	std::vector<int> virSerialShift; virSerialShift.reserve(9);
 
+	//for (int i = 1; i < argc; ++i)
+	//	cout << "argv[" << i << "] is " << argv[i] << "\n";
+
+	if (1 < argc) {
+		std::string temp(argv[1]);
+		if (!temp.empty())
+			openf(gap, temp, virSerial, virSerialShift, virSprite);
+	}
+
 	/*Ravi*/ app.setKeyRepeatEnabled(false);
 	while (app.isOpen() && !End) {
 
@@ -356,7 +367,7 @@ int main() {
 
 					screenshot.saveToFile("screenshot.png");*/
 
-					std::string filepath = SaveFile("PNG (*.png)\0*.png\0");
+					std::string filepath = SaveFileDialog("PNG (*.PNG)\0*.PNG\0");//JPEG (*.JPG)\0*.JPG\0
 
 
 
@@ -403,7 +414,7 @@ int main() {
 					if (evnt.key.code == Keyboard::O) {
 						cout << "\nCtrl + O\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
 
-						std::string filepath = OpenFile("text file (*.txt)\0*.txt\0");
+						std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
 						if (!filepath.empty())
 							openf(gap, filepath, virSerial, virSerialShift, virSprite);
@@ -411,14 +422,14 @@ int main() {
 					}
 					if (evnt.key.code == Keyboard::S && evnt.key.shift) {
 
-						std::string filepath = SaveFile("Project file (*.txt)\0*.txt\0PNG (*.png)\0*.png\0");
+						std::string filepath = SaveFileDialog("Project file (*.TXT)\0*.TXT\0PNG (*.PNG)\0*.PNG\0");//JPEG (*.JPG)\0*.JPG\0
 
 						if (!filepath.empty()) {
 
-							if (filepath.back() == 't')
+							if (filepath.back() == 'T')
 								savef(filepath);
 
-							if (filepath.back() == 'g')
+							if (filepath.back() == 'G')
 								printScreen(filepath);
 
 						}
@@ -806,7 +817,7 @@ int main() {
 
 						cout << "\nCtrl + O\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
 
-						std::string filepath = OpenFile("text file (*.txt)\0*.txt\0");
+						std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
 						if (!filepath.empty())
 							openf(gap, filepath, virSerial, virSerialShift, virSprite);
@@ -816,14 +827,14 @@ int main() {
 					if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S")) {
 						cout << "\nShift Save";
 
-						std::string filepath = SaveFile("Project file (*.txt)\0*.txt\0PNG (*.png)\0*.png\0");
+						std::string filepath = SaveFileDialog("Project file (*.TXT)\0*.TXT\0PNG (*.PNG)\0*.PNG\0");//JPEG (*.JPG)\0*.JPG\0
 
 						if (!filepath.empty()) {
 
-							if (filepath.back() == 't')
+							if (filepath.back() == 'T')
 								savef(filepath);
 
-							if (filepath.back() == 'g')
+							if (filepath.back() == 'G')
 								printScreen(filepath);
 
 						}
@@ -839,8 +850,21 @@ int main() {
 					if (ImGui::MenuItem("Handdrawn Icons")) { cout << "\nWobbly"; }
 					if (ImGui::BeginMenu("Switch Themes")) {
 
-						if (ImGui::MenuItem("Dark")) { cout << "\nDark"; }
-						if (ImGui::MenuItem("Light")) { cout << "\nLight"; }
+						if (ImGui::MenuItem("Dark")) {
+							cout << "\nDark";
+
+							gridColor.r = 100; gridColor.g = 105; gridColor.b = 110; gridColor.a = 20;
+							backColor.r = 23; backColor.g = 24; backColor.b = 25;
+							Drag = 1; //Drag colors all the glid lines
+						}
+						if (ImGui::MenuItem("Light")) {
+							cout << "\nLight";
+
+							gridColor.r = 212; gridColor.g = 232; gridColor.b = 247; gridColor.a = 50;
+							backColor.r = 36; backColor.g = 133; backColor.b = 202;
+							Drag = 1; //Drag colors all the glid lines
+
+						}
 
 						ImGui::EndMenu();
 					}
@@ -1041,10 +1065,11 @@ int main() {
 			/*Tool Win*/ {
 				if (MInTool) {
 					app.draw(toolCol);
+					
 					for (int c = 0; c < (Entity::noOfComps - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
 					for (int c = 0; c < (Entity::noOfComps - 1); c++) { app.draw(ToolSpr[c]); }
 				}
-				else { for (int c = 0; c < (Entity::noOfComps - 1); c++) ToolSpr[c].setColor(sf::Color(255, 255, 255, 0)); }
+				else { for (int c = 0; c < (Entity::noOfComps - 1); c++) ToolSpr[c].setColor(sf::Color::Transparent); }
 
 				if (MIntool) app.draw(ToolBoxLittleBox);
 			}

@@ -13,8 +13,8 @@ public:
 
 public:
 	double resistance = 1000;
-	double voltage =	5;
-	double current =	0.002;
+	double voltage =	-5;
+	double current =	-0.002;
 
 	enum {
 		Cap,
@@ -56,43 +56,44 @@ private:
 		}
 
 		/*Value -> prescaler */ {
+			
+			if (value < 0) { str = "-"; value = std::abs(value); }
 
 			if (value == 0) { str = "0 "; }
 			else if (1 <= value) {
-				double temp = value;
-				int c = 0;
-				for (; c < 3; c++) {
-					temp /= 1000;
-					if (temp < 1) break;
-					value = temp;
-				}
+			double temp = value;
+			int c = 0;
+			for (; c < 3; c++) {
+				temp /= 1000;
+				if (temp < 1) break;
+				value = temp;
+			}
 
-				str = std::to_string(value);
+			str += std::to_string(value);
 
-				while (str.back() == '0') str.pop_back();
-				if (str.back() == '.') str.pop_back();
-				str += " ";
+			while (str.back() == '0') str.pop_back();
+			if (str.back() == '.') str.pop_back();
+			str += " ";
 
-				if (c != 0) str += preScalers[2 + c];
+			if (c != 0) str += preScalers[2 + c];
 
 			}
 			else if (value < 1) {
-				int c = 0;
-				for (; c < 3; c++) {
-					value *= 1000;
-					if (value >= 1) break;
-				}
-
-				str = std::to_string(value);
-
-				while (str.back() == '0') str.pop_back();
-				if (str.back() == '.') str.pop_back();
-				str += " ";
-
-				str += preScalers[2 - c];
-
+			int c = 0;
+			for (; c < 3; c++) {
+				value *= 1000;
+				if (value >= 1) break;
 			}
 
+			str += std::to_string(value);
+
+			while (str.back() == '0') str.pop_back();
+			if (str.back() == '.') str.pop_back();
+			str += " ";
+
+			str += preScalers[2 - c];
+
+			}
 		}
 
 		/*Unit*/
@@ -165,6 +166,10 @@ public:
 	
 	void stimuli() {
 
+		//x = trim(x, gap);
+		//y = trim(y, gap);
+		//angle = 90 * (int)((int)angle % 360) / 90;
+
 		sprite.setPosition(x, y);
 		sprite.setRotation(angle);
 
@@ -174,18 +179,18 @@ public:
 
 
 		int A = 0, B = 15, C = 75, i = (int)angle % 360;
-		if (i == 0)        { bounds.left = x - B; bounds.top = y - A; bounds.width = B + B; bounds.height = C + A;}
-		else if (i == 90)  { bounds.left = x - C; bounds.top = y - B; bounds.width = A + C; bounds.height = B + B;}
-		else if (i == 180) { bounds.left = x - B; bounds.top = y - C; bounds.width = B + B; bounds.height = A + C;}
+		if (i == 0)        { bounds.left = x - B; bounds.top = y - A; bounds.width = B + B; bounds.height = C + A; }
+		else if (i == 90)  { bounds.left = x - C; bounds.top = y - B; bounds.width = A + C; bounds.height = B + B; }
+		else if (i == 180) { bounds.left = x - B; bounds.top = y - C; bounds.width = B + B; bounds.height = A + C; }
 		else if (i == 270) { bounds.left = x - A; bounds.top = y - B; bounds.width = C + A; bounds.height = B + B; }
 
 
 		//updateValueText();
-		static int offSet[4][2] = { // badPractice for gap = 15
-	{1 * 15 + 3,2 * 15 + 0},
-	{-4 * 15 + 0,1 * 15 + 0},
-	{1 * 15 + 3,-3 * 15 + 0},
-	{1 * 15 + 0,-2 * 15 - 3}
+		static const int offSet[4][2] = { // badPractice for gap = 15
+			{1 * 15 + 3,2 * 15 + 0},
+			{-4 * 15 + 0,1 * 15 + 0},
+			{1 * 15 + 3,-3 * 15 + 0},
+			{1 * 15 + 0,-2 * 15 - 3}
 		};
 		valueText.setPosition(x + offSet[(int)(angle / 90)][0], y + offSet[(int)(angle / 90)][1]); // badPractice for gap = 15
 	}
