@@ -4,8 +4,6 @@
 #include <iostream>
 #include "SFML/Graphics.hpp";
 
-sf::Texture compTex[8];
-
 class Entity {
 public:
 	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
@@ -13,8 +11,8 @@ public:
 
 public:
 	double resistance = 1000;
-	double voltage =	-5;
-	double current =	-0.002;
+	double voltage = -5;
+	double current = -0.002;
 
 	enum {
 		Cap,
@@ -56,42 +54,42 @@ private:
 		}
 
 		/*Value -> prescaler */ {
-			
+
 			if (value < 0) { str = "-"; value = std::abs(value); }
 
 			if (value == 0) { str = "0 "; }
 			else if (1 <= value) {
-			double temp = value;
-			int c = 0;
-			for (; c < 3; c++) {
-				temp /= 1000;
-				if (temp < 1) break;
-				value = temp;
-			}
+				double temp = value;
+				int c = 0;
+				for (; c < 3; c++) {
+					temp /= 1000;
+					if (temp < 1) break;
+					value = temp;
+				}
 
-			str += std::to_string(value);
+				str += std::to_string(value);
 
-			while (str.back() == '0') str.pop_back();
-			if (str.back() == '.') str.pop_back();
-			str += " ";
+				while (str.back() == '0') str.pop_back();
+				if (str.back() == '.') str.pop_back();
+				str += " ";
 
-			if (c != 0) str += preScalers[2 + c];
+				if (c != 0) str += preScalers[2 + c];
 
 			}
 			else if (value < 1) {
-			int c = 0;
-			for (; c < 3; c++) {
-				value *= 1000;
-				if (value >= 1) break;
-			}
+				int c = 0;
+				for (; c < 3; c++) {
+					value *= 1000;
+					if (value >= 1) break;
+				}
 
-			str += std::to_string(value);
+				str += std::to_string(value);
 
-			while (str.back() == '0') str.pop_back();
-			if (str.back() == '.') str.pop_back();
-			str += " ";
+				while (str.back() == '0') str.pop_back();
+				if (str.back() == '.') str.pop_back();
+				str += " ";
 
-			str += preScalers[2 - c];
+				str += preScalers[2 - c];
 
 			}
 		}
@@ -118,7 +116,7 @@ public:
 		serial = 0; x = W / 2; y = H / 2; angle = 0.0f;
 
 		static const int A = 0, B = 15, C = 75; //Hard Code
-		boarder.setSize(sf::Vector2f(2*B, C));
+		boarder.setSize(sf::Vector2f(2 * B, C));
 		boarder.setOrigin(B, A);
 		boarder.setFillColor(sf::Color(0, 0, 100, 0));
 		boarder.setOutlineThickness(1.0f);
@@ -163,7 +161,7 @@ public:
 	sf::Vector2f getEndPos() const {
 		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
 	}
-	
+
 	void stimuli() {
 
 		//x = trim(x, gap);
@@ -179,8 +177,8 @@ public:
 
 
 		int A = 0, B = 15, C = 75, i = (int)angle % 360;
-		if (i == 0)        { bounds.left = x - B; bounds.top = y - A; bounds.width = B + B; bounds.height = C + A; }
-		else if (i == 90)  { bounds.left = x - C; bounds.top = y - B; bounds.width = A + C; bounds.height = B + B; }
+		if (i == 0) { bounds.left = x - B; bounds.top = y - A; bounds.width = B + B; bounds.height = C + A; }
+		else if (i == 90) { bounds.left = x - C; bounds.top = y - B; bounds.width = A + C; bounds.height = B + B; }
 		else if (i == 180) { bounds.left = x - B; bounds.top = y - C; bounds.width = B + B; bounds.height = A + C; }
 		else if (i == 270) { bounds.left = x - A; bounds.top = y - B; bounds.width = C + A; bounds.height = B + B; }
 
@@ -194,8 +192,8 @@ public:
 		};
 		valueText.setPosition(x + offSet[(int)(angle / 90)][0], y + offSet[(int)(angle / 90)][1]); // badPractice for gap = 15
 	}
-	void draw(sf::RenderWindow& app) {		
-		
+	void draw(sf::RenderWindow& app) {
+
 		app.draw(valueText);
 
 		app.draw(sprite);

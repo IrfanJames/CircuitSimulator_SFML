@@ -5,8 +5,7 @@
 #include "Circuit_Global.h"
 
 class Graph {
-	const float DegToRad = 0.01745329f;
-	const float RadToDeg = 57.295779f;
+private:
 	static struct Corner {
 		int item = 0;
 		std::vector<Corner*> neighbors;
@@ -16,11 +15,12 @@ class Graph {
 			neighbors.reserve(8);
 		}
 	};
+	sf::RenderWindow win;
 	std::vector<sf::CircleShape> allCircles;
 	std::vector<sf::RectangleShape> allVertices;
-	sf::RenderWindow win;
 	std::vector<Corner> Vector;
 
+private:
 	void setGraph() {
 		win.setVisible(1);
 
@@ -62,6 +62,7 @@ class Graph {
 
 		win.display();
 	}
+
 public:
 
 	Graph() {
