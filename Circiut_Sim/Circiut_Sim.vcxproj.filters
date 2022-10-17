@@ -54,7 +54,7 @@
     <ClInclude Include="..\dependencies\imgui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Circuit_GUI.h">
+    <ClInclude Include="src\Circuit_GUI.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

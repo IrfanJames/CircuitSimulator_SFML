@@ -29,6 +29,7 @@ Issues:--------------------------------
 GL_INVALID_OPERATION The specified operation is not allowed in the current state.
 **somtimes resizing causes textue to pixelate (becomes normal when hold+drag)
 
+
 Unstable:------------------------------
 When win minimized (hangs computer {all nust labs; mine at 3 windows}) [Possible cause Smart Display]
 |__-> appearently solved by disabling stimuli display (x=1)
@@ -56,3 +57,4 @@ No:-------------------------------------
 Project in ImGui window
 Threads
 enum (State Machine for hold)
+uint32_t for window size

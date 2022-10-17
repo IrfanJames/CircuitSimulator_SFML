@@ -161,7 +161,7 @@
     <ClInclude Include="..\dependencies\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\dependencies\imgui\imstb_textedit.h" />
     <ClInclude Include="..\dependencies\imgui\imstb_truetype.h" />
-    <ClInclude Include="src\Circuit_GUI.h" />
+    <ClInclude Include="src\Circuit_GUI.hpp" />
     <ClInclude Include="src\Circuit_wire.h" />
     <ClInclude Include="src\Circuit_Entity.h" />
     <ClInclude Include="src\Circuit_Global.h" />

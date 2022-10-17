@@ -3,7 +3,7 @@
 #include <iostream>
 #include "SFML/Graphics.hpp"
 
-#include "Circuit_GUI.h"
+#include "Circuit_GUI.hpp"
 
 class Wire {
 private:

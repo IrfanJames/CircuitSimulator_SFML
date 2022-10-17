@@ -17,71 +17,19 @@ taskkill /F /IM Circiut_Sim.exe
 #include "SFML/Graphics.hpp"
 #include "Circuit_Entity.h"
 #include "Circuit_wire.h"
+#include "Circuit_GUI.hpp"
 
-#include "Circuit_GUI.h"
 
 //#include "clipboardxx.hpp"
 #include <windows.h>
 
-std::string OpenFileDialog(const char* filter)
-{
-	OPENFILENAMEA ofn;
-	CHAR szFile[260] = { 0 };
-	CHAR currentDir[256] = { 0 };
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	if (GetCurrentDirectoryA(256, currentDir))
-		ofn.lpstrInitialDir = currentDir;
-	ofn.lpstrFilter = filter;
-	ofn.nFilterIndex = 1;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
-	if (GetOpenFileNameA(&ofn) == TRUE)
-		return ofn.lpstrFile;
-
-	return std::string();
-
-}
-
-std::string SaveFileDialog(const char* filter)
-{
-	OPENFILENAMEA ofn;
-	CHAR szFile[260] = { 0 };
-	CHAR currentDir[256] = { 0 };
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	if (GetCurrentDirectoryA(256, currentDir))
-		ofn.lpstrInitialDir = currentDir;
-	ofn.lpstrFilter = filter;
-	ofn.nFilterIndex = 1;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
-
-	// Sets the default extension by extracting it from the filter
-	ofn.lpstrDefExt = strchr(filter, '\0') + 1;
-
-	if (GetSaveFileNameA(&ofn) == TRUE)
-		return ofn.lpstrFile;
-
-	return std::string();
-}
-
+std::string OpenFileDialog(const char* filter, int tempNumber = 0);
+std::string SaveFileDialog(const char* filter, int tempNumber = 1000);
 using std::cout;
+using namespace CircuitGUI;
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
 int main(int argc, char* argv[]) {
-
-	Entity::setFont("assets/Fonts/CalibriL_1.ttf");
-
-	W = sf::VideoMode::getDesktopMode().width * 0.74;
-	H = sf::VideoMode::getDesktopMode().height * 0.7;
-
-	CircuitGUI::renderWinInit();
-	CircuitGUI::viewInit();
+	CircuitGUI::init();
 
 	/*ImGui*/
 	ImGui::SFML::Init(CircuitGUI::app);
@@ -92,65 +40,33 @@ int main(int argc, char* argv[]) {
 	bool Drag = 0, stimuliDisplay = 1, stimuliEndNodes = 0;
 	bool releaseBool = 1, wheelReleaseBool = 1, ShiftPressed=0;
 	bool selectSquare = 0, mouseOnCompsBool = 0, wireBool = 0;
+	bool PlayMode = 0, PlayRot = 0;
+
 	int serialCompMouse = 0, serialToolMouse = 0, cursorInWin = 0;
 
-	CircuitGUI::initializeGrid();
-	CircuitGUI::loadTextures();
-
+	//std::thread printScreenTread;
+	//clipboardxx::clipboard clipboard;
+	//* //Test Circle
+	bool DrawCircle = 1; int t_vertices = 34; float t_radius = 50, t_Colors[3] = { (float)204 / 255, (float)77 / 255, (float)5 / 255 }; sf::CircleShape testCircle(t_radius, t_vertices); {
+		testCircle.setOrigin(t_radius, t_radius);
+		testCircle.setPosition(W / 2, H / 2);
+		testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255))); }//*/
 	
-	/*ToolBox*/
-	CircuitGUI::toolCol.setFillColor(sf::Color(0, 0, 0, 120));
-	CircuitGUI::ToolBoxLittleBox.setFillColor(sf::Color(160, 160, 160, 120));
-	CircuitGUI::toolSprInit();
-
-
-	/*Vectors*/
-	CircuitGUI::comp.reserve(3);
-	CircuitGUI::allEnds.reserve(3);
-	CircuitGUI::virSerial.reserve(3);
-	CircuitGUI::virSprite.reserve(3);
-	CircuitGUI::virSerialShift.reserve(3);
-	//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 
 	/*Wires*/
 	std::vector<Wire> wires; wires.reserve(3);
 
-	/*Sel Sqr*/
-	sf::RectangleShape selSqr; {
-		selSqr.setFillColor(sf::Color(66, 135, 245, 60));
-		selSqr.setOutlineThickness(1.0f);
-		selSqr.setOutlineColor(sf::Color(66, 135, 245)); }
-
-	/*circleNode*/
-	sf::CircleShape nodePic(4, 15); {
-		nodePic.setOrigin(4, 4);
-		nodePic.setFillColor(CircuitGUI::normalCompColor); }
-	std::vector<sf::CircleShape> allEndCircles; allEndCircles.reserve(17);
-
 
 	////////////////////////////////////////////// Solve
+	
 	//Graph circuit;
-	//std::thread printScreenTread;
 
 	///////////////////////////////////////////////
-	
-	//clipboardxx::clipboard clipboard;
-
-	
-	//*
-	bool DrawCircle = 1;
-	float t_radius = 50, t_Colors[3] = { (float)204 / 255, (float)77 / 255, (float)5 / 255 };
-	int t_vertices = 34;
-	sf::CircleShape testCircle(t_radius, t_vertices); {
-		testCircle.setOrigin(t_radius, t_radius);
-		testCircle.setPosition(W / 2, H / 2);
-		testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255))); }//*/
-
 
 	if (1 < argc) {
 		std::string temp(argv[1]);
 		if (!temp.empty())
-			CircuitOptions::openf(temp);
+			CircuitGUI::Options::openf(temp);
 	}
 
 	time_t frame = clock();
@@ -170,31 +86,62 @@ int main(int argc, char* argv[]) {
 
 				//view = sf::View(sf::FloatRect(view.getCenter().x - ((float)evnt.size.width) / 2, view.getCenter().y - ((float)evnt.size.height) / 2, evnt.size.width, evnt.size.height));
 				CircuitGUI::view.setCenter(CircuitGUI::view.getCenter()); CircuitGUI::view.setSize((float)evnt.size.width, (float)evnt.size.height);
-				
+
 				CircuitGUI::toolCol.setSize(sf::Vector2f(CircuitGUI::toolCol.getSize().x, CircuitGUI::view.getSize().y));
 				CircuitGUI::updatePosToolBox();
 			}
 
 			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
 				bool onNode = 0;
-				static const int sensitivity = 7;
+				static int sensitivity = 7;
 				sf::Vector2f cursorPos = CircuitGUI::cursorInSim();
 
+				sf::Vector2f start(165, 180), stop(1245, 660);
+
 				int e = 0;
-				for (; e < CircuitGUI::allEnds.size(); e++) {
-					if (abs(cursorPos.x - CircuitGUI::allEnds[e].x) < sensitivity && abs(cursorPos.y - CircuitGUI::allEnds[e].y) < sensitivity) { onNode = 1; break; }
+				if (PlayMode) {
+					sensitivity = 30;
+					if (abs(cursorPos.x - start.x) < sensitivity && abs(cursorPos.y - start.y) < sensitivity) { onNode = 1; e = 1; }
+					else if (abs(cursorPos.x - stop.x) < sensitivity && abs(cursorPos.y - stop.y) < sensitivity) { onNode = 1; e = 2; }
+				}
+				else {
+					for (; e < CircuitGUI::allEnds.size(); e++) {
+						if (abs(cursorPos.x - CircuitGUI::allEnds[e].x) < sensitivity && abs(cursorPos.y - CircuitGUI::allEnds[e].y) < sensitivity) { onNode = 1; break; }
+					}
 				}
 
 				if (onNode) {
-					cout << ", On Node";
 
-					if (!wireBool)wires.emplace_back(CircuitGUI::allEnds[e]);
+					if (PlayMode)
+					{
+						if (!wireBool) {
+							if (e == 1) {
+								PlayRot = 1; wires.emplace_back(start); wireBool = 1;
+							}
+						}
+						else if (e == 2) { PlayRot = 0; PlayMode = 0; wireBool = 0; }
 
-					wireBool = !wireBool;
+					}
+					else
+					{
+						cout << ", On Node";
+
+						if (!wireBool) {
+							if (PlayMode) PlayRot = 1;
+							wires.emplace_back(CircuitGUI::allEnds[e]);
+						}
+
+						wireBool = !wireBool;
+
+					}
+
+
 				}
 				else {
 
-					if (wireBool) wires.back().newEdge();
+					if (wireBool) {
+						wires.back().newEdge();
+					}
 
 				}
 
@@ -203,15 +150,14 @@ int main(int argc, char* argv[]) {
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Middle) { wheelReleaseBool = 1; }
 
 			if (evnt.type == evnt.KeyPressed) {
-				if (evnt.key.code == sf::Keyboard::Escape) { CircuitGUI::app.close(); End = 1; cout << "\n------------------ESC Pressed-----------------\n"; continue; }
+				if (evnt.key.code == sf::Keyboard::Escape) { CircuitGUI::app.close(); End = 1; continue; }
 				if (evnt.key.code == sf::Keyboard::Delete) {
 					stimuliDisplay = 1;	stimuliEndNodes = 1;
-					CircuitOptions::deletef();
+					CircuitGUI::Options::deletef();
 				}
-				if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; /*cout << "\ndebug\n";*/ }
-				if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool; /*cout << "\ndebug\n";*/ }
+				if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool;}
+				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
 				if (evnt.key.code == sf::Keyboard::P) {
-					cout << "\nPrintScreen";
 
 					//time_t print = clock();
 
@@ -225,8 +171,6 @@ int main(int argc, char* argv[]) {
 
 					std::string filepath = SaveFileDialog("PNG (*.PNG)\0*.PNG\0");//JPEG (*.JPG)\0*.JPG\0
 
-
-
 					//screenshot = app.capture();
 					//screenshot.saveToFile("screenshot.png");
 
@@ -235,15 +179,15 @@ int main(int argc, char* argv[]) {
 
 						//std::async(std::launch::async, printScreen);
 						if (!filepath.empty())
-							CircuitOptions::printScreen(filepath);
+							CircuitGUI::Options::printScreen(filepath);
 					}
 					//cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
 				}
+				//if (evnt.key.code == sf::Keyboard::G) { PlayMode = !PlayMode; }
 
 				/*Ctrl*/
 				if (evnt.key.control) {
 					if (evnt.key.code == sf::Keyboard::A) {
-						cout << "\nCtrl + A\n";
 
 						while (CircuitGUI::comp.size() < CircuitGUI::virSerial.size()) {
 							CircuitGUI::virSerial.pop_back();
@@ -262,18 +206,18 @@ int main(int argc, char* argv[]) {
 
 					}
 					if (evnt.key.code == sf::Keyboard::R) {
-						cout << "\nCtrl + R\n"; stimuliDisplay = 1;	stimuliEndNodes = 1;
+						stimuliDisplay = 1;	stimuliEndNodes = 1;
 
-						CircuitOptions::rotatef();
-						
+						CircuitGUI::Options::rotatef();
+
 					}
 					if (evnt.key.code == sf::Keyboard::O) {
-						cout << "\nCtrl + O\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
+						stimuliDisplay = 1; stimuliEndNodes = 1;
 
 						std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
 						if (!filepath.empty())
-							CircuitOptions::openf(filepath);
+							CircuitGUI::Options::openf(filepath);
 
 					}
 					if (evnt.key.code == sf::Keyboard::S && evnt.key.shift) {
@@ -283,37 +227,36 @@ int main(int argc, char* argv[]) {
 						if (!filepath.empty()) {
 
 							if (filepath.back() == 'T')
-								CircuitOptions::savef(filepath);
+								CircuitGUI::Options::savef(filepath);
 
 							if (filepath.back() == 'G')
-								CircuitOptions::printScreen(filepath);
+								CircuitGUI::Options::printScreen(filepath);
 
 						}
 
 					}
 					if (evnt.key.code == sf::Keyboard::C) {
-						cout << "\nCtrl + C\n";
 
-						CircuitOptions::copyf();
+						CircuitGUI::Options::copyf();
 
 					}
 					if (evnt.key.code == sf::Keyboard::X) {
-						cout << "\nCtrl + X\n"; stimuliDisplay = 1;	stimuliEndNodes = 1;
+						stimuliDisplay = 1;	stimuliEndNodes = 1;
 
 						// Copy
 						{
-							CircuitOptions::copyf();
+							CircuitGUI::Options::copyf();
 						}
 
 						// Delete
 						{
-							CircuitOptions::deletef();
+							CircuitGUI::Options::deletef();
 						}
 					}
 					if (evnt.key.code == sf::Keyboard::V) {
-						cout << "\nCtrl + V\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
+						stimuliDisplay = 1; stimuliEndNodes = 1;
 
-						CircuitOptions::pastef();
+						CircuitGUI::Options::pastef();
 
 					}
 				}
@@ -321,10 +264,11 @@ int main(int argc, char* argv[]) {
 
 
 			/*int difr = 10;
-				if (evnt.key.code == Keyboard::Up) { view.setCenter(view.getCenter().x, view.getCenter().y - difr); }
-				if (evnt.key.code == Keyboard::Down) { view.setCenter(view.getCenter().x, view.getCenter().y + difr); }
-				if (evnt.key.code == Keyboard::Right) { view.setCenter(view.getCenter().x + difr, view.getCenter().y); }
-				if (evnt.key.code == Keyboard::Left) { view.setCenter(view.getCenter().x - difr, view.getCenter().y); }*/
+			if (evnt.key.code == sf::Keyboard::Up)		{ CircuitGUI::view.move(0, -difr); }
+			if (evnt.key.code == sf::Keyboard::Down)	{ CircuitGUI::view.move(0, difr); }
+			if (evnt.key.code == sf::Keyboard::Right)	{ CircuitGUI::view.move(difr, 0); }
+			if (evnt.key.code == sf::Keyboard::Left)	{ CircuitGUI::view.move(-difr, 0); }*/
+
 		}
 		ShiftPressed = (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift));
 		W = CircuitGUI::app.getSize().x; H = CircuitGUI::app.getSize().y;
@@ -335,10 +279,17 @@ int main(int argc, char* argv[]) {
 
 
 
+		
+		if (PlayRot) { CircuitGUI::view.rotate(0.9); }
+		else CircuitGUI::view.setRotation(0);
 
 
 
+		if (debugBool) {
 
+
+
+		}
 
 
 
@@ -410,7 +361,7 @@ int main(int argc, char* argv[]) {
 						}
 
 						//////////// Urgent need of enums , State Machine
-						if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; selSqr.setPosition(CircuitGUI::cursorInSim()); }
+						if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; CircuitGUI::selSqr.setPosition(CircuitGUI::cursorInSim()); }
 
 						/*Wheel*/
 						/*Drag Background*/
@@ -484,7 +435,7 @@ int main(int argc, char* argv[]) {
 				}
 				/*Click*/
 				else {
-					if (CircuitGUI::Click(CircuitGUI::gap)) {
+					if (!PlayMode && CircuitGUI::Click(CircuitGUI::gap)) {
 						stimuliDisplay = 1;
 
 						for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
@@ -533,7 +484,7 @@ int main(int argc, char* argv[]) {
 			else { Drag = 0; }
 
 			/*Continoue while hold*/
-			if (CircuitGUI::mouseHoldX != (float)sf::Mouse::getPosition(CircuitGUI::app).x || CircuitGUI::mouseHoldY != (float)sf::Mouse::getPosition(CircuitGUI::app).y) {
+			if (!PlayMode && (CircuitGUI::mouseHoldX != (float)sf::Mouse::getPosition(CircuitGUI::app).x || CircuitGUI::mouseHoldY != (float)sf::Mouse::getPosition(CircuitGUI::app).y)) {
 
 				/*Follow Mouse*/
 				if (mouseOnCompsBool) {
@@ -572,11 +523,11 @@ int main(int argc, char* argv[]) {
 			}
 
 			/*Select Sqr*/
-			if (selectSquare && !releaseBool) {
+			if (selectSquare && !PlayMode && !releaseBool) {
 				stimuliDisplay = 1;
 
 				/*Sel Sqr*/
-				selSqr.setSize(sf::Vector2f(CircuitGUI::cursorInSim().x - selSqr.getPosition().x, CircuitGUI::cursorInSim().y - selSqr.getPosition().y));
+				CircuitGUI::selSqr.setSize(CircuitGUI::cursorInSim() - CircuitGUI::selSqr.getPosition());
 
 				/*Selection*/
 				for (int c = 0; c < CircuitGUI::comp.size(); c++) {
@@ -585,15 +536,14 @@ int main(int argc, char* argv[]) {
 					int v = 0;
 					for (; v < CircuitGUI::virSerial.size();) {
 						if (c == CircuitGUI::virSerial[v]) { compFound = 1; break; }
-						else
-							if (c < CircuitGUI::virSerial[v]) { break; }
+						else if (c < CircuitGUI::virSerial[v]) { break; } // Ensures the virSerial is Sorted by breaking at the right time
 
 						v++;
 					}
 
 					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
-
-					if (CircuitGUI::comp[c].bounds.intersects(sf::FloatRect(selSqr.getPosition(), CircuitGUI::cursorInSim() - selSqr.getPosition()))) {
+					
+					if (CircuitGUI::comp[c].bounds.intersects(CircuitGUI::selSqr.getGlobalBounds())) {
 						if (!compFound) {
 							//virSerial.emplace_back(c);
 							CircuitGUI::virSerial.insert(CircuitGUI::virSerial.begin() + v, c);
@@ -627,6 +577,8 @@ int main(int argc, char* argv[]) {
 				//}
 
 			}
+			else { static sf::Vector2f zero(0, 0); CircuitGUI::selSqr.setSize(zero); }
+
 
 			/*Wire*/
 			if (wireBool) { stimuliDisplay = 1; wires.back().makeWire(); }
@@ -635,12 +587,12 @@ int main(int argc, char* argv[]) {
 		;
 		// ----------------------------------------	Update
 		{
-			/*circuit.updateWin(); */
-
 			if (MInTool) { stimuliDisplay = 1; }
+			//circuit.updateWin();
+
 			/*ImGui*/
+			ImGui::SFML::Update(CircuitGUI::app, deltaClock.restart());
 			/*
-			ImGui::SFML::Update(app, deltaClock.restart());
 			ImGui::Begin("Frist ImGui Win");
 			ImGui::Text("My Project will be on Steroids");
 			ImGui::Checkbox("Draw Circle", &DrawCircle);
@@ -655,58 +607,54 @@ int main(int argc, char* argv[]) {
 			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/
 
 			//*
-			ImGui::SFML::Update(CircuitGUI::app, deltaClock.restart());
 			if (ImGui::BeginMainMenuBar()) {
 
 				if (ImGui::BeginMenu("File")) {
 
 					if (ImGui::MenuItem("Open...", "Ctrl + O")) {
-						cout << "\nOpen";
-
-						cout << "\nCtrl + O\n"; stimuliDisplay = 1; stimuliEndNodes = 1;
+						stimuliDisplay = 1; stimuliEndNodes = 1;
 
 						std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
 						if (!filepath.empty())
-							CircuitOptions::openf(filepath);
+							CircuitGUI::Options::openf(filepath);
 
 					}
-					if (ImGui::MenuItem("Save", "Ctrl + S")) { cout << "\nSave"; }
+					if (ImGui::MenuItem("Save", "Ctrl + S")) { ; }
 					if (ImGui::MenuItem("Save As...", "Ctrl + Shift + S")) {
-						cout << "\nShift Save";
 
 						std::string filepath = SaveFileDialog("Project file (*.TXT)\0*.TXT\0PNG (*.PNG)\0*.PNG\0");//JPEG (*.JPG)\0*.JPG\0
 
 						if (!filepath.empty()) {
 
 							if (filepath.back() == 'T')
-								CircuitOptions::savef(filepath);
+								CircuitGUI::Options::savef(filepath);
 
 							if (filepath.back() == 'G')
-								CircuitOptions::printScreen(filepath);
+								CircuitGUI::Options::printScreen(filepath);
 
 						}
 
 					}
 					ImGui::Separator();
-					if (ImGui::MenuItem("Exit", "Esc")) { CircuitGUI::app.close(); End = 1; cout << "\nEsc\n"; continue; }
+					if (ImGui::MenuItem("Exit", "Esc")) { CircuitGUI::app.close(); End = 1; continue; }
 
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Options")) {
-					
-					if (ImGui::MenuItem("Handdrawn Icons")) { cout << "\nWobbly"; }
+
+					if (ImGui::MenuItem("Handdrawn Icons")) { /*cout << "\nWobbly";*/ }
 					if (ImGui::BeginMenu("Switch Themes")) {
 
 						if (ImGui::MenuItem("Dark")) {
-							cout << "\nDark"; stimuliDisplay = 1;
+							stimuliDisplay = 1;
 
 							CircuitGUI::gridColor.r = 100; CircuitGUI::gridColor.g = 105; CircuitGUI::gridColor.b = 110; CircuitGUI::gridColor.a = 20;
 							CircuitGUI::backColor.r = 23;  CircuitGUI::backColor.g = 24;  CircuitGUI::backColor.b = 25;
 							CircuitGUI::colorGrid();
 						}
 						if (ImGui::MenuItem("Light")) {
-							cout << "\nLight"; stimuliDisplay = 1;
+							stimuliDisplay = 1;
 
 							CircuitGUI::gridColor.r = 212; CircuitGUI::gridColor.g = 232; CircuitGUI::gridColor.b = 247; CircuitGUI::gridColor.a = 50;
 							CircuitGUI::backColor.r = 36;  CircuitGUI::backColor.g = 133; CircuitGUI::backColor.b = 202;
@@ -715,12 +663,31 @@ int main(int argc, char* argv[]) {
 
 						ImGui::EndMenu();
 					}
+					ImGui::Separator();
+					if (ImGui::MenuItem("Game")) {
+						PlayMode = !PlayMode;
+
+						CircuitGUI::comp.clear();
+						CircuitGUI::virSerial.clear();
+						CircuitGUI::virSprite.clear();
+						CircuitGUI::virSerialShift.clear();
+
+						wires.clear();
+
+						if (PlayMode) {
+							CircuitGUI::Options::openf("Saved-Projects\\Maze.TXT");
+							ShellExecute(0, 0, L"https://www.youtube.com/watch?v=6cRctjPRv6M", 0, 0, SW_SHOW);
+						}
+						else { wireBool = 0; PlayRot = 0; }
+
+						stimuliDisplay = 1; stimuliEndNodes = 1;
+					}
 
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Help")) {
 
-					if (ImGui::MenuItem("Controls")) { cout << "\nKeys"; }
+					if (ImGui::MenuItem("Controls")) { /*cout << "\nKeys";*/ }
 					ImGui::Separator();
 
 					if (ImGui::BeginMenu("Options"))
@@ -783,7 +750,7 @@ int main(int argc, char* argv[]) {
 				CircuitGUI::updatePosToolBox();
 				
 			}
-			testCircle.setPosition(CircuitGUI::onScreen(0, 200));
+			testCircle.setPosition(CircuitGUI::onScreen(300, 300));
 
 			//Tool Win
 			if (!Drag) CircuitGUI::toolCol.setPosition((MInTool) * (t_TollWx + (CircuitGUI::toolWinRestPos.x + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (CircuitGUI::toolWinRestPos.x - CircuitGUI::c_toolColWidth - t_TollWx) / 7), CircuitGUI::toolWinRestPos.y);
@@ -795,25 +762,10 @@ int main(int argc, char* argv[]) {
 			if (Drag)  CircuitGUI::ToolBoxLittleBox.setPosition(CircuitGUI::onScreen(0, 0 + CircuitGUI::trim(sf::Mouse::getPosition(CircuitGUI::app).y, CircuitGUI::c_toolColWidth)));
 			if (MIntool) serialToolMouse = (int)(sf::Mouse::getPosition(CircuitGUI::app).y / CircuitGUI::c_toolColWidth); else serialToolMouse = 0;
 
-			/*endNodes*/ {
-				if (stimuliEndNodes) {
-
-					CircuitGUI::updateAllEnds();
-
-					while (CircuitGUI::allEnds.size() < allEndCircles.size()) {
-						allEndCircles.pop_back();
-					}
-
-					while (allEndCircles.size() < CircuitGUI::allEnds.size()) {
-						allEndCircles.emplace_back(nodePic);
-					}
-
-					for (int e = 0; e < allEndCircles.size(); e++) {
-						allEndCircles[e].setPosition(CircuitGUI::allEnds[e]);
-					}
-
-					//cout << "\n" << allEnds.size();
-				}
+			/*endNodes*/
+			if (stimuliEndNodes) {
+				CircuitGUI::updateAllEnds();
+				CircuitGUI::updateEndCircles();
 			}
 
 		}
@@ -824,49 +776,26 @@ int main(int argc, char* argv[]) {
 			CircuitGUI::app.setView(CircuitGUI::view);
 			CircuitGUI::app.clear(CircuitGUI::backColor);
 
-			/*grid*/ {
-				for (int c = 0; c < CircuitGUI::vLines.size(); c++) { CircuitGUI::app.draw(CircuitGUI::vLines[c]); }
-				for (int c = 0; c < CircuitGUI::hLines.size(); c++) { CircuitGUI::app.draw(CircuitGUI::hLines[c]); }
-			}
+			drawGrid();
 
-			/*comp*/ {
-				for (int c = 0; c < CircuitGUI::comp.size(); c++) { CircuitGUI::comp[c].draw(CircuitGUI::app); }
-			}
+			drawComp();
 
 			/*Wires*/ {
 				for (int c = 0; c < wires.size(); c++) wires[c].draw(CircuitGUI::app);
 			}
 
-			/*Nodes*/ {
-				for (int e = 0; e < allEndCircles.size(); e++) { CircuitGUI::app.draw(allEndCircles[e]); }
-			}
+			drawNodes();
 
-			/*Boarders*/ {
-				for (int v = 0; v < CircuitGUI::virSerial.size(); v++) { CircuitGUI::app.draw(CircuitGUI::comp[CircuitGUI::virSerial[v]].boarder); }
-			}
+			if (!PlayMode) drawBoarders();
 
-			/*Virtual Sprites*/ {
-				if (CircuitGUI::Occupied) for (int v = 0; v < CircuitGUI::virSprite.size(); v++) CircuitGUI::app.draw(CircuitGUI::virSprite[v]);
-			}
-
-			/*Selection Sqraure*/ {
-				if (selectSquare && !releaseBool) CircuitGUI::app.draw(selSqr);
-			}
-
-			/*Tool Win*/ {
-				if (MInTool) {
-					CircuitGUI::app.draw(CircuitGUI::toolCol);
-					
-					for (int c = 0; c < (Entity::noOfComps - 1); c++) { CircuitGUI::ToolSpr[c].setColor(sf::Color(255, 255, 255, CircuitGUI::ToolSpr[c].getColor().a + (255 - CircuitGUI::ToolSpr[c].getColor().a) / 15)); }
-					for (int c = 0; c < (Entity::noOfComps - 1); c++) { CircuitGUI::app.draw(CircuitGUI::ToolSpr[c]); }
-				}
-				else { for (int c = 0; c < (Entity::noOfComps - 1); c++) CircuitGUI::ToolSpr[c].setColor(sf::Color::Transparent); }
-
-				if (MIntool) CircuitGUI::app.draw(CircuitGUI::ToolBoxLittleBox);
-			}
+			if (CircuitGUI::Occupied) drawVirSprites();
+			
+			drawSelSqr();
+			
+			drawToolColumn(MInTool, MIntool);
 
 			/*ImGui*/ {
-				if (DrawCircle) CircuitGUI::app.draw(testCircle);
+				//if (DrawCircle) CircuitGUI::app.draw(testCircle);
 				ImGui::SFML::Render(CircuitGUI::app);//Last Thing to render
 			}
 
@@ -888,6 +817,75 @@ int main(int argc, char* argv[]) {
 	std::cin.get();
 	return 0;
 }
+
+std::string OpenFileDialog(const char* filter, int tempNumber)
+{
+	OPENFILENAMEA ofn;
+	CHAR szFile[260] = { 0 };
+
+	//---------------
+	std::string tn = "Project-" + std::to_string(tempNumber);
+	for (int c = 0; c < tn.size(); c++)
+		szFile[c] = (int)tn[c];	
+	//---------------
+
+
+	CHAR currentDir[256] = { 0 };
+	ZeroMemory(&ofn, sizeof(OPENFILENAME));
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
+	//ofn.hwndOwner = CircuitGUI::app.getSystemHandle();
+	ofn.lpstrFile = szFile;
+	ofn.nMaxFile = sizeof(szFile);
+	if (GetCurrentDirectoryA(256, currentDir))
+		ofn.lpstrInitialDir = currentDir;
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+	if (GetOpenFileNameA(&ofn) == TRUE)
+		return ofn.lpstrFile;
+
+	return std::string();
+
+}
+
+std::string SaveFileDialog(const char* filter, int tempNumber)
+{
+	OPENFILENAMEA ofn;
+	CHAR szFile[260] = { 0 };
+
+	//---------------
+	std::string tn = "Untitled-" + std::to_string(tempNumber);
+	for (int c = 0; c < tn.size(); c++)
+		szFile[c] = (int)tn[c];
+	//---------------
+
+	CHAR currentDir[256] = { 0 };
+	ZeroMemory(&ofn, sizeof(OPENFILENAME));
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
+	ofn.lpstrFile = szFile;
+	ofn.nMaxFile = sizeof(szFile);
+	if (GetCurrentDirectoryA(256, currentDir))
+		ofn.lpstrInitialDir = currentDir;
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+
+	// Sets the default extension by extracting it from the filter
+	ofn.lpstrDefExt = strchr(filter, '\0') + 1;
+
+	if (GetSaveFileNameA(&ofn) == TRUE) {
+		/*LPCWSTR temp = (wchar_t*)ofn.lpstrFile;
+		ShellExecute(NULL, NULL, temp, NULL, NULL, SW_SHOWNORMAL);*/
+		return ofn.lpstrFile;
+	}
+
+	return std::string();
+}
+
+
 
 /*else if (evnt.key.code == Keyboard::R) {
 			view.setCenter(W / 2, H / 2);

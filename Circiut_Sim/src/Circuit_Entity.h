@@ -4,6 +4,8 @@
 #include <iostream>
 #include "SFML/Graphics.hpp";
 
+sf::Texture compTex[8];
+
 class Entity {
 public:
 	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
