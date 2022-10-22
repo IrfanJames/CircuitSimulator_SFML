@@ -29,7 +29,7 @@ using std::cout;
 using namespace CircuitGUI;
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
 int main(int argc, char* argv[]) {
-	CircuitGUI::init();
+	CircuitGUI::initialize();
 
 	/*ImGui*/
 	ImGui::SFML::Init(CircuitGUI::app);
@@ -204,6 +204,7 @@ int main(int argc, char* argv[]) {
 							CircuitGUI::virSprite.emplace_back(CircuitGUI::comp[CircuitGUI::virSerial.back()].sprite);
 						}
 
+						CircuitGUI::updateAllSqr();
 					}
 					if (evnt.key.code == sf::Keyboard::R) {
 						stimuliDisplay = 1;	stimuliEndNodes = 1;
@@ -285,19 +286,12 @@ int main(int argc, char* argv[]) {
 
 
 
-		if (debugBool) {
-
-
-
-		}
-
-
 
 
 		// ----------------------------------------	Options
 		{
 			/*sf::Mouse Hold*/
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) { //////////// Urgent need of enums , State Machine
 				if (releaseBool) {
 					releaseBool = 0;
 					CircuitGUI::click = clock();
@@ -307,8 +301,8 @@ int main(int argc, char* argv[]) {
 					if (MIntool) {
 						MIntool = 0;
 						float tempNewCompX = 150 + CircuitGUI::view.getCenter().x - W / 2, tempNewCompY = 150 + CircuitGUI::view.getCenter().y - H / 2;
-						tempNewCompX = CircuitGUI::trim(tempNewCompX, CircuitGUI::gap);
-						tempNewCompY = CircuitGUI::trim(tempNewCompY, CircuitGUI::gap);
+						tempNewCompX = CircuitGUI::trim(tempNewCompX);
+						tempNewCompY = CircuitGUI::trim(tempNewCompY);
 
 						CircuitGUI::comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
 						CircuitGUI::comp.back().stimuli();
@@ -316,15 +310,15 @@ int main(int argc, char* argv[]) {
 						/*Collisions*/
 						tempNewCompX = CircuitGUI::trim(tempNewCompX, CircuitGUI::gap);
 						while (CircuitGUI::occupiedAt(CircuitGUI::comp.size() - 1, sf::Vector2f(tempNewCompX, tempNewCompY))) {
-							tempNewCompX = CircuitGUI::trim(tempNewCompX + 6 * CircuitGUI::gap, CircuitGUI::gap);
+							tempNewCompX = CircuitGUI::trim(tempNewCompX + 6 * CircuitGUI::gap);
 
 							if (tempNewCompX + 7 * CircuitGUI::gap - 150 - CircuitGUI::view.getCenter().x + W / 2 + 91 >= W) {
 								tempNewCompX = 150 + CircuitGUI::view.getCenter().x - W / 2;
-								tempNewCompY = CircuitGUI::trim(tempNewCompY + 6 * CircuitGUI::gap, CircuitGUI::gap);
+								tempNewCompY = CircuitGUI::trim(tempNewCompY + 6 * CircuitGUI::gap);
 							}
 						}
 
-						CircuitGUI::comp.back().x = tempNewCompX; CircuitGUI::comp.back().y = tempNewCompY;
+						CircuitGUI::comp.back().x = trim(tempNewCompX); CircuitGUI::comp.back().y = trim(tempNewCompY);
 						CircuitGUI::comp.back().stimuli();
 
 						stimuliEndNodes = 1;
@@ -333,35 +327,41 @@ int main(int argc, char* argv[]) {
 					else {
 						mouseOnCompsBool = 0;
 
-						/*Check every component for Mouse*/
-						for (int c = 0; !mouseOnCompsBool && c < CircuitGUI::comp.size(); c++) {
+						if (CircuitGUI::virSerial.size() > 0 && CircuitGUI::allSqr.getGlobalBounds().contains(CircuitGUI::cursorInSim())) mouseOnCompsBool = 1;
+						else {
 
-							if (CircuitGUI::comp[c].bounds.contains(CircuitGUI::cursorInSim())) {
+							/*Check every component for Mouse*/
+							for (int c = 0; /*!mouseOnCompsBool &&*/ c < CircuitGUI::comp.size(); c++) {
 
-								mouseOnCompsBool = 1; Drag = 0;
+								if (CircuitGUI::comp[c].bounds.contains(CircuitGUI::cursorInSim())) {
 
-								if (!ShiftPressed) {
-									CircuitGUI::virSerial.clear();
-									CircuitGUI::virSprite.clear();
+									mouseOnCompsBool = 1; Drag = 0;
+
+									if (!ShiftPressed) {
+										CircuitGUI::virSerial.clear();
+										CircuitGUI::virSprite.clear();
+										CircuitGUI::virSerialShift.clear();
+									}
+									CircuitGUI::virSerial.emplace_back(c);
+
+									//copied in sel square selection
+									CircuitGUI::virSprite.emplace_back(CircuitGUI::comp[CircuitGUI::virSerial.back()].sprite);
+									CircuitGUI::virSprite.back().setOrigin(CircuitGUI::virSprite.back().getTexture()->getSize().x / 2, CircuitGUI::virSprite.back().getTexture()->getSize().y / 2);
+									CircuitGUI::virSprite.back().setColor(CircuitGUI::tempDimColor);/*
+									for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
+										virSprite.emplace_back(comp[virSerial[v]].sprite);
+										virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+										virSprite.back().setColor(tempDimColor);
+									}*/
+
+									break;
 								}
-
-								CircuitGUI::virSerial.emplace_back(c);
-
-								//copied in sel square selection
-								CircuitGUI::virSprite.emplace_back(CircuitGUI::comp[CircuitGUI::virSerial.back()].sprite);
-								CircuitGUI::virSprite.back().setOrigin(CircuitGUI::virSprite.back().getTexture()->getSize().x / 2, CircuitGUI::virSprite.back().getTexture()->getSize().y / 2);
-								CircuitGUI::virSprite.back().setColor(CircuitGUI::tempDimColor);/*
-								for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
-									virSprite.emplace_back(comp[virSerial[v]].sprite);
-									virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-									virSprite.back().setColor(tempDimColor);
-								}*/
-
 							}
-						}
+							CircuitGUI::updateAllSqr();
 
-						//////////// Urgent need of enums , State Machine
-						if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; CircuitGUI::selSqr.setPosition(CircuitGUI::cursorInSim()); }
+							/*SelSqr*/
+							if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; CircuitGUI::selSqr.setPosition(CircuitGUI::cursorInSim()); }
+						}
 
 						/*Wheel*/
 						/*Drag Background*/
@@ -374,7 +374,6 @@ int main(int argc, char* argv[]) {
 					}
 				}
 
-				if (CircuitGUI::virSerial.size() > 0) mouseOnCompsBool = 1;
 
 				/*Once while hold*/
 				/*if (mouseOnCompsBool && rotComp) {
@@ -484,46 +483,51 @@ int main(int argc, char* argv[]) {
 			else { Drag = 0; }
 
 			/*Continoue while hold*/
-			if (!PlayMode && (CircuitGUI::mouseHoldX != (float)sf::Mouse::getPosition(CircuitGUI::app).x || CircuitGUI::mouseHoldY != (float)sf::Mouse::getPosition(CircuitGUI::app).y)) {
+			if (!selectSquare && mouseOnCompsBool && !PlayMode && !Click(0) /*&& releaseBool*/) {
 
-				/*Follow Mouse*/
-				if (mouseOnCompsBool) {
-					if (!selectSquare /*&& releaseBool*/) {
-						static int offSet[4][2] = {
-							{0, -2},
-							{2, 0},
-							{0, 2},
-							{-2, 0}
-						};
-						for (int c = 0; c < CircuitGUI::virSerial.size(); c++) {
+				static const sf::Vector2f offsetHold[4] = {
+					{0, -2},
+					{2, 0},
+					{0, 2},
+					{-2, 0}
+				};
 
-							float tempX = (int)CircuitGUI::cursorInSim().x + CircuitGUI::gap * offSet[(int)CircuitGUI::comp[CircuitGUI::virSerial[c]].angle / 90][0]; ///
-							float tempY = (int)CircuitGUI::cursorInSim().y + CircuitGUI::gap * offSet[(int)CircuitGUI::comp[CircuitGUI::virSerial[c]].angle / 90][1]; ///
+				static sf::Vector2f offsetPos;
+				offsetPos.x = (int)CircuitGUI::cursorInSim().x - (int)CircuitGUI::comp[CircuitGUI::virSerial.front()].x; ///
+				offsetPos.y = (int)CircuitGUI::cursorInSim().y - (int)CircuitGUI::comp[CircuitGUI::virSerial.front()].y; ///
+				//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
+				//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
 
-							//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
-							//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
+				//CircuitGUI::gap * offSet[(int)CircuitGUI::comp[CircuitGUI::virSerial.front()].angle / 90][0];
+				//CircuitGUI::gap * offSet[(int)CircuitGUI::comp[CircuitGUI::virSerial.front()].angle / 90][1];
+				for (int v = 0; v < CircuitGUI::virSprite.size(); v++)
+					CircuitGUI::virSprite[v].setPosition(CircuitGUI::cursorInSim() - sf::Vector2f(comp[0].x - comp[virSerial[v]].x, comp[0].y - comp[virSerial[v]].y));
 
-							//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
-							for (int v = 0; v < CircuitGUI::virSprite.size(); v++) { CircuitGUI::virSprite[0].setPosition(tempX, tempY); }
+				//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
 
-							tempX = CircuitGUI::trim(tempX, CircuitGUI::gap);
-							tempY = CircuitGUI::trim(tempY, CircuitGUI::gap);
+				offsetPos = CircuitGUI::trim(offsetPos);
 
-							if (!CircuitGUI::occupiedAt(CircuitGUI::virSerial[c], sf::Vector2f(tempX, tempY))) {
-								CircuitGUI::comp[CircuitGUI::virSerial[c]].x = (int)tempX; // += (were "=" before)
-								CircuitGUI::comp[CircuitGUI::virSerial[c]].y = (int)tempY; // += (were "=" before)
-								CircuitGUI::comp[CircuitGUI::virSerial[c]].stimuli();
-							}
-						}
+				bool moveAll = 1;
+				sf::Vector2f temp;
+				for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
+					temp.x = offsetPos.x + CircuitGUI::comp[CircuitGUI::virSerial[v]].x;
+					temp.y = offsetPos.y + CircuitGUI::comp[CircuitGUI::virSerial[v]].y;
+
+					if (CircuitGUI::occupiedAt(CircuitGUI::virSerial[v], temp, true)) { moveAll = 0; break; }
+				}
+				if (moveAll) {
+					for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
+						CircuitGUI::comp[CircuitGUI::virSerial[v]].x += (int)offsetPos.x; // += (were "=" before)
+						CircuitGUI::comp[CircuitGUI::virSerial[v]].y += (int)offsetPos.y; // += (were "=" before)
+						CircuitGUI::comp[CircuitGUI::virSerial[v]].stimuli();
 					}
-
-					stimuliEndNodes = 1; stimuliDisplay = 1;
 				}
 
+				stimuliEndNodes = 1; stimuliDisplay = 1;
 			}
 
 			/*Select Sqr*/
-			if (selectSquare && !PlayMode && !releaseBool) {
+			if (selectSquare && !releaseBool && !PlayMode) {
 				stimuliDisplay = 1;
 
 				/*Sel Sqr*/
@@ -576,9 +580,9 @@ int main(int argc, char* argv[]) {
 				//	}
 				//}
 
+				CircuitGUI::updateAllSqr();
 			}
 			else { static sf::Vector2f zero(0, 0); CircuitGUI::selSqr.setSize(zero); }
-
 
 			/*Wire*/
 			if (wireBool) { stimuliDisplay = 1; wires.back().makeWire(); }
@@ -766,6 +770,8 @@ int main(int argc, char* argv[]) {
 			if (stimuliEndNodes) {
 				CircuitGUI::updateAllEnds();
 				CircuitGUI::updateEndCircles();
+
+				CircuitGUI::updateAllSqr();
 			}
 
 		}
@@ -777,6 +783,8 @@ int main(int argc, char* argv[]) {
 			CircuitGUI::app.clear(CircuitGUI::backColor);
 
 			drawGrid();
+
+			if (virSerial.size() > 1) drawAllSqr();
 
 			drawComp();
 

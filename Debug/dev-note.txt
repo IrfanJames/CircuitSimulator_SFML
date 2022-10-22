@@ -1,4 +1,5 @@
 New------------------------------------
+Drag Multiple components at once
 Most of GUI in CircuitGUI namespace
 Open/Save As Dialog Box
 Toolbar Stablized

@@ -11,49 +11,27 @@ namespace CircuitGUI {
 	const sf::Color normalCompColor(230, 230, 230), tempDimColor(150, 150, 150);
 
 	/*Textures*/
-	void loadTextures() {
-		Entity::Cap;
-		compTex[Entity::Cap].loadFromFile("assets/Images/Cap.png");
-		compTex[Entity::Cur].loadFromFile("assets/Images/Cur.png");
-		compTex[Entity::Dod].loadFromFile("assets/Images/Dod.png");
-		compTex[Entity::Ind].loadFromFile("assets/Images/Ind.png");
-		compTex[Entity::Res].loadFromFile("assets/Images/Res.png");
-		compTex[Entity::SwO].loadFromFile("assets/Images/SwO.png");
-		compTex[Entity::Vol].loadFromFile("assets/Images/Vol.png");
-		compTex[Entity::SwC].loadFromFile("assets/Images/SwC.png");
-	}
+	//void loadTextures()
 
 
 	sf::RenderWindow app;
-	void renderWinInit() {
-		W = sf::VideoMode::getDesktopMode().width * 0.74;
-		H = sf::VideoMode::getDesktopMode().height * 0.7;
-
-		//RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
-		/*sf::RenderWindow app*/// *(;
-		app.create(sf::VideoMode((unsigned int)W, (unsigned int)H), "CircuitSim", sf::Style::Default, sf::ContextSettings(0, 0, 8));
-
-		W = app.getSize().x; H = app.getSize().y;
-		app.setVerticalSyncEnabled(1);
-		app.setFramerateLimit(60);
-		srand(time(NULL));
-
-		//std::cout << "my lcd: " << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height;
-		app.setPosition(sf::Vector2i(250, 100));
-	}
+	//renderWinInit();
 	sf::View view;
-	void viewInit() {
-		view.setCenter(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2));
-		view.setSize((sf::Vector2f)app.getSize());
-		//sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), sf::Vector2f(app.getSize().x * 2, app.getSize().y * 2));
-		//sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), (sf::Vector2f)app.getSize());
-	}
+	//viewInit();
+
+	/*Grid*/
+	const int gap = 15, virtualBoarder = 80;
+	std::vector<sf::RectangleShape> vLines;
+	std::vector<sf::RectangleShape> hLines;
+	sf::Color gridColor(100, 105, 110, 20);
+	sf::Color backColor(23, 24, 25);
+	//void initializeGrid()
 
 
 	/*Cursor*/
 	float mouseHoldX, mouseHoldY;
 	time_t click = clock(); // Time passed since Click
-	bool Click(int Sensitivity) {
+	bool Click(int Sensitivity = 3) {
 		return (((float)clock() - (float)click) < 100) && !!(!sf::Mouse::isButtonPressed(sf::Mouse::Left) && abs(mouseHoldX - (float)sf::Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)sf::Mouse::getPosition(app).y) <= Sensitivity);
 	}
 	/*Extra*/
@@ -64,8 +42,14 @@ namespace CircuitGUI {
 		return sf::Vector2f(view.getCenter().x - view.getSize().x / 2 + X, view.getCenter().y - view.getSize().y / 2 + Y);
 		//return app.mapPixelToCoords(sf::Vector2i((int)X, (int)Y));
 	}
-	float trim(float num, int wrt) {
+	float trim(float num, int wrt = gap) {
 		return num - (int)num % wrt;
+	}
+	sf::Vector2f trim(sf::Vector2f vec, int wrt = gap) {
+		vec.x -= (int)vec.x % wrt;
+		vec.y -= (int)vec.y % wrt;
+
+		return vec;
 	}
 
 
@@ -73,16 +57,13 @@ namespace CircuitGUI {
 	void drawComp() {
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) { CircuitGUI::comp[c].draw(CircuitGUI::app); }
 	}
-
 	std::vector<int> virSerial;
 	std::vector<sf::Sprite> virSprite;
 	void drawVirSprites() {
 		for (int v = 0; v < CircuitGUI::virSprite.size(); v++)
 			CircuitGUI::app.draw(CircuitGUI::virSprite[v]);
 	}
-
 	std::vector<int> virSerialShift;
-
 	std::vector<sf::Vector2f> allEnds;
 	std::vector<sf::CircleShape> allEndCircles;
 	void drawNodes() {
@@ -92,7 +73,6 @@ namespace CircuitGUI {
 		for (int v = 0; v < CircuitGUI::virSerial.size(); v++)
 			CircuitGUI::app.draw(CircuitGUI::comp[CircuitGUI::virSerial[v]].boarder);
 	}
-
 	void updateAllEnds() {
 
 		allEnds.clear();
@@ -130,11 +110,12 @@ namespace CircuitGUI {
 
 	}
 	bool Occupied = 0;
-	bool occupiedAt(int Index, const sf::Vector2f& At) {
+	bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = 0) {
 
 		int noCount = 0;
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
+			if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
 
 			if (At.x == CircuitGUI::comp[c].x && At.y == CircuitGUI::comp[c].y) {
 				if (CircuitGUI::comp[Index].angle != CircuitGUI::comp[c].angle) {
@@ -167,6 +148,8 @@ namespace CircuitGUI {
 
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 			if (c == Index || abs(CircuitGUI::comp[c].x - end.x) >= 200 || abs(CircuitGUI::comp[c].y - end.y) >= 200) continue; // gap-hardcode
+			if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
+
 
 			if (end.x == CircuitGUI::comp[c].x && end.y == CircuitGUI::comp[c].y) {
 				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
@@ -191,6 +174,8 @@ namespace CircuitGUI {
 
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
+			if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
+
 			if (indexEntity.bounds.intersects(CircuitGUI::comp[c].bounds)) { Occupied = 1; return 1; }
 
 		}
@@ -199,52 +184,50 @@ namespace CircuitGUI {
 	}
 
 
-	/*Grid*/
-	const int gap = 15, virtualBoarder = 80;
-	std::vector<sf::RectangleShape> vLines;
-	std::vector<sf::RectangleShape> hLines;
-	sf::Color gridColor(100, 105, 110, 20);
-	sf::Color backColor(23, 24, 25);
-	void initializeGrid() {
-		vLines.reserve((W + 2 * virtualBoarder) / gap + 2);
-		sf::Vector2f tempVect(2, H + 2 * virtualBoarder);
-		for (int c = 0; c <= (W + 2 * virtualBoarder) / gap; c++) {
-			vLines.emplace_back(tempVect);
-		}
-		for (int c = 0; c < vLines.size(); c++) {
-			vLines[c].setPosition(-virtualBoarder - (int)(-virtualBoarder) % gap + c * gap, -virtualBoarder);
-			gridColor.a = 20 + (c % 5 == 0) * 15;
-			vLines[c].setFillColor(gridColor);
-		}
-
-		hLines.reserve((H + 2 * virtualBoarder) / gap + 2);
-		tempVect.x = W + 2 * virtualBoarder; tempVect.y = 2;
-		for (int c = 0; c <= (H + 2 * virtualBoarder) / gap; c++) {
-			hLines.emplace_back(tempVect);
-		}
-		for (int c = 0; c < hLines.size(); c++) {
-			hLines[c].setPosition(-virtualBoarder, -virtualBoarder - (int)(-virtualBoarder) % gap + c * gap);
-			gridColor.a = 20 + (c % 5 == 0) * 15;
-			hLines[c].setFillColor(gridColor);
-		}
-	}
-
-
 	sf::CircleShape nodePic(4, 15);
-	void nodePicDesign() {
-		nodePic.setOrigin(4, 4);
-		nodePic.setFillColor(CircuitGUI::normalCompColor);
+	//void nodePicDesign()
+	sf::RectangleShape allSqr;
+	//void allSqrDesign()
+	void drawAllSqr() {
+		CircuitGUI::app.draw(CircuitGUI::allSqr);
 	}
+	void updateAllSqr() {
+		sf::FloatRect compBound;
+		sf::FloatRect ABCD;
 
-	sf::RectangleShape selSqr;
-	void selSqrDesign() {
-		selSqr.setFillColor(sf::Color(66, 135, 245, 60));
-		selSqr.setOutlineThickness(1.0f);
-		selSqr.setOutlineColor(sf::Color(66, 135, 245));
+		if (!!virSerial.size()) {
+			compBound = comp[virSerial.front()].bounds;
+			ABCD = compBound;
+
+			for (int v = 0; v < virSerial.size(); v++) {
+				compBound = comp[virSerial[v]].bounds;
+				if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
+				if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
+				if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
+				if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
+			}
+			/*for (int c = 0; c < comp.size(); c++) {
+				sf::Vector2f tempEndNode = endNodePos(comp[c]);
+				if (tempEndNode.x < A) A = tempEndNode.x;
+				if (tempEndNode.x > B) B = tempEndNode.x;
+				if (tempEndNode.y < C) C = tempEndNode.y;
+				if (tempEndNode.y > D) D = tempEndNode.y;
+			}*/
+
+			allSqr.setSize(sf::Vector2f(ABCD.width, ABCD.height));
+			allSqr.setPosition(sf::Vector2f(ABCD.left, ABCD.top));
+
+			//cout << "\n" << "S: " << abs(A - B) << ", " << abs(C - D);
+			//cout << "\n" << A << ", " << B << ", " << C << ", " << D;
+		}
+
 	}
+	sf::RectangleShape selSqr;
+	//void selSqrDesign()
 	void drawSelSqr() {
 		CircuitGUI::app.draw(CircuitGUI::selSqr);
 	}
+
 
 	/*Drag*/
 	bool dragBool = 0;
@@ -266,11 +249,11 @@ namespace CircuitGUI {
 
 		float verBrightX = vLines[verBrightCount].getPosition().x;
 		for (int c = 0; c < vLines.size(); c++) {
-			vLines[c].setPosition(trim(newHorX, gap) + c * gap, newVerY);
+			vLines[c].setPosition(trim(newHorX) + c * gap, newVerY);
 		}
 		float horBrightY = hLines[horBrightCount].getPosition().y;
 		for (int c = 0; c < hLines.size(); c++) {
-			hLines[c].setPosition(newHorX, trim(newVerY, gap) + c * gap);
+			hLines[c].setPosition(newHorX, trim(newVerY) + c * gap);
 		}
 
 		verBrightX -= vLines[verBrightCount].getPosition().x;
@@ -314,22 +297,7 @@ namespace CircuitGUI {
 	sf::RectangleShape ToolBoxLittleBox(sf::Vector2f(c_toolColWidth, c_toolColWidth));
 	sf::Sprite ToolSpr[7]; //noOfComps-1
 	sf::Vector2f ToolSprPOS[7]; //noOfComps-1
-	void toolBoxInit()
-	{
-		/*Color*/
-		CircuitGUI::toolCol.setFillColor(sf::Color(0, 0, 0, 120));
-		CircuitGUI::ToolBoxLittleBox.setFillColor(sf::Color(160, 160, 160, 120));
-
-		/*Sprites*/
-		for (int c = 0; c < (Entity::noOfComps - 1); c++) {
-			ToolSpr[c].setTexture(compTex[c]);
-			ToolSpr[c].setOrigin(compTex[c].getSize().x / 2, 0);
-			//compSpr[c].setRotation(45);
-			ToolSprPOS[c].x = CircuitGUI::c_toolColWidth / 2;
-			ToolSprPOS[c].y = c * CircuitGUI::c_toolColWidth + (int)(CircuitGUI::c_toolColWidth - compTex[c].getSize().y) / 2;
-			ToolSpr[c].setPosition(CircuitGUI::view.getCenter().x - CircuitGUI::view.getSize().x / 2 + ToolSprPOS[c].x, CircuitGUI::view.getCenter().y - CircuitGUI::view.getSize().y / 2 + ToolSprPOS[c].y);
-		}
-	}
+	//void toolBoxInit()
 	void updatePosToolBox()
 	{
 		toolWinRestPos = onScreen(0, 0);
@@ -338,7 +306,7 @@ namespace CircuitGUI {
 	void updateEndCircles()
 	{
 		while (allEnds.size() < allEndCircles.size())
-			allEndCircles.pop_back();
+			allEndCircles.erase(allEndCircles.begin() + allEnds.size(), allEndCircles.end());
 
 
 		while (allEndCircles.size() < allEnds.size())
@@ -363,18 +331,112 @@ namespace CircuitGUI {
 	}
 
 
-	void init()
+	void initialize()
 	{
 		Entity::setFont("assets/Fonts/CalibriL_1.ttf");
 
-		renderWinInit();
-		viewInit();
-		loadTextures();
+		//renderWinInit();
+		{
+			W = sf::VideoMode::getDesktopMode().width * 0.74;
+			H = sf::VideoMode::getDesktopMode().height * 0.7;
 
-		initializeGrid();
-		toolBoxInit();
-		nodePicDesign();
-		selSqrDesign();
+			//RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
+			/*sf::RenderWindow app*/// *(;
+			app.create(sf::VideoMode((unsigned int)W, (unsigned int)H), "CircuitSim", sf::Style::Default, sf::ContextSettings(0, 0, 8));
+
+			W = app.getSize().x; H = app.getSize().y;
+			app.setVerticalSyncEnabled(1);
+			app.setFramerateLimit(60);
+			srand(time(NULL));
+
+			//std::cout << "my lcd: " << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height;
+			app.setPosition(sf::Vector2i(250, 100));
+		}
+		
+		//viewInit();
+		{
+			view.setCenter(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2));
+			view.setSize((sf::Vector2f)app.getSize());
+			//sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), sf::Vector2f(app.getSize().x * 2, app.getSize().y * 2));
+			//sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), (sf::Vector2f)app.getSize());
+		}
+		
+		//loadTextures();
+		{
+			compTex[Entity::Cap].loadFromFile("assets/Images/Cap.png");
+			compTex[Entity::Cur].loadFromFile("assets/Images/Cur.png");
+			compTex[Entity::Dod].loadFromFile("assets/Images/Dod.png");
+			compTex[Entity::Ind].loadFromFile("assets/Images/Ind.png");
+			compTex[Entity::Res].loadFromFile("assets/Images/Res.png");
+			compTex[Entity::SwO].loadFromFile("assets/Images/SwO.png");
+			compTex[Entity::Vol].loadFromFile("assets/Images/Vol.png");
+			compTex[Entity::SwC].loadFromFile("assets/Images/SwC.png");
+		}
+
+		//initializeGrid();
+		{
+			vLines.reserve((W + 2 * virtualBoarder) / gap + 2);
+			sf::Vector2f tempVect(2, H + 2 * virtualBoarder);
+			for (int c = 0; c <= (W + 2 * virtualBoarder) / gap; c++) {
+				vLines.emplace_back(tempVect);
+			}
+			for (int c = 0; c < vLines.size(); c++) {
+				vLines[c].setPosition(-virtualBoarder - (int)(-virtualBoarder) % gap + c * gap, -virtualBoarder);
+				gridColor.a = 20 + (c % 5 == 0) * 15;
+				vLines[c].setFillColor(gridColor);
+			}
+
+			hLines.reserve((H + 2 * virtualBoarder) / gap + 2);
+			tempVect.x = W + 2 * virtualBoarder; tempVect.y = 2;
+			for (int c = 0; c <= (H + 2 * virtualBoarder) / gap; c++) {
+				hLines.emplace_back(tempVect);
+			}
+			for (int c = 0; c < hLines.size(); c++) {
+				hLines[c].setPosition(-virtualBoarder, -virtualBoarder - (int)(-virtualBoarder) % gap + c * gap);
+				gridColor.a = 20 + (c % 5 == 0) * 15;
+				hLines[c].setFillColor(gridColor);
+			}
+		}
+		
+		//toolBoxInit();
+		{
+			/*Color*/
+			CircuitGUI::toolCol.setFillColor(sf::Color(0, 0, 0, 120));
+			CircuitGUI::ToolBoxLittleBox.setFillColor(sf::Color(160, 160, 160, 120));
+
+			/*Sprites*/
+			for (int c = 0; c < (Entity::noOfComps - 1); c++) {
+				ToolSpr[c].setTexture(compTex[c]);
+				ToolSpr[c].setOrigin(compTex[c].getSize().x / 2, 0);
+				//compSpr[c].setRotation(45);
+				ToolSprPOS[c].x = CircuitGUI::c_toolColWidth / 2;
+				ToolSprPOS[c].y = c * CircuitGUI::c_toolColWidth + (int)(CircuitGUI::c_toolColWidth - compTex[c].getSize().y) / 2;
+				ToolSpr[c].setPosition(CircuitGUI::view.getCenter().x - CircuitGUI::view.getSize().x / 2 + ToolSprPOS[c].x, CircuitGUI::view.getCenter().y - CircuitGUI::view.getSize().y / 2 + ToolSprPOS[c].y);
+			}
+		}
+		
+		//nodePicDesign();
+		{
+			nodePic.setOrigin(4, 4);
+			nodePic.setFillColor(CircuitGUI::normalCompColor);
+		}
+		
+		//selSqrDesign();
+		{
+			selSqr.setFillColor(sf::Color(66, 135, 245, 60));
+			selSqr.setOutlineThickness(1.0f);
+			selSqr.setOutlineColor(sf::Color(66, 135, 245));
+		}
+
+		//void allSqrDesign();
+		{
+			allSqr.setFillColor(sf::Color::Transparent);
+			allSqr.setOutlineThickness(1.0f);
+			allSqr.setOutlineColor(sf::Color(249, 140, 31));
+
+			allSqr.move(sf::Vector2f(315, 195));
+		}
+
 
 		/*Vectors*/
 		comp.reserve(3);
@@ -530,7 +592,7 @@ namespace CircuitGUI {
 			comp.reserve(no + 10); // 10 extra
 			for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
 				input >> S >> X >> Y >> A;
-				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
 			input.close();
 
@@ -618,7 +680,7 @@ namespace CircuitGUI {
 				X = integers[++c];
 				Y = integers[++c];
 				A = integers[++c];
-				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X, gap), trim(Y, gap), ((A % 360) / 90) * 90);
+				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
 
 		}
