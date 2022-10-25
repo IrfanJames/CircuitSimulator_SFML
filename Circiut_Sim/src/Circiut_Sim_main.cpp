@@ -485,17 +485,19 @@ int main(int argc, char* argv[]) {
 
 			/*Continoue while hold*/
 			if (!selectSquare && mouseOnCompsBool && !PlayMode && !Click(0) /*&& releaseBool*/) {
+				sf::FloatRect virArea = allSqr.getGlobalBounds();
+				sf::Vector2f offsetPos((int)CircuitGUI::cursorInSim().x - (virArea.left + (int)(virArea.width / 2)), (int)CircuitGUI::cursorInSim().y - (virArea.top + (int)(virArea.height / 2)));
 
-				static const sf::Vector2f offsetHold[4] = {
+				/*static const sf::Vector2f offsetHold[4] = {
 					{0, -2},
 					{2, 0},
 					{0, 2},
 					{-2, 0}
-				};
+				};*/
 
-				static sf::Vector2f offsetPos;
-				offsetPos.x = (int)CircuitGUI::cursorInSim().x - (int)CircuitGUI::comp[CircuitGUI::virSerial.front()].x; ///
-				offsetPos.y = (int)CircuitGUI::cursorInSim().y - (int)CircuitGUI::comp[CircuitGUI::virSerial.front()].y; ///
+				//static sf::Vector2f offsetPos;
+				//offsetPos.x = (int)CircuitGUI::cursorInSim().x - (int)CircuitGUI::comp[CircuitGUI::virSerial.front()].x; ///
+				//offsetPos.y = (int)CircuitGUI::cursorInSim().y - (int)CircuitGUI::comp[CircuitGUI::virSerial.front()].y; ///
 				//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
 				//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
 
@@ -583,7 +585,6 @@ int main(int argc, char* argv[]) {
 				CircuitGUI::updateAllSqr();
 			}
 			else { static sf::Vector2f zero(0, 0); CircuitGUI::selSqr.setSize(zero); }
-
 
 			/*Wire*/
 			if (wireBool) { stimuliDisplay = 1; wires.back().makeWire(); }
