@@ -29,7 +29,7 @@ using std::cout;
 using namespace CircuitGUI;
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
 int main(int argc, char* argv[]) {
-	CircuitGUI::initialize();
+	CircuitGUI::initializeGUI();
 
 	/*ImGui*/
 	ImGui::SFML::Init(CircuitGUI::app);
@@ -84,8 +84,9 @@ int main(int argc, char* argv[]) {
 			if (evnt.type == evnt.MouseEntered) { cursorInWin = 1; }
 			if (evnt.type == evnt.Resized) {
 
-				//view = sf::View(sf::FloatRect(view.getCenter().x - ((float)evnt.size.width) / 2, view.getCenter().y - ((float)evnt.size.height) / 2, evnt.size.width, evnt.size.height));
-				CircuitGUI::view.setCenter(CircuitGUI::view.getCenter()); CircuitGUI::view.setSize((float)evnt.size.width, (float)evnt.size.height);
+				view = sf::View(sf::FloatRect((int)view.getCenter().x - (int)(evnt.size.width / 2), (int)view.getCenter().y - (int)(evnt.size.height/ 2), (int)evnt.size.width, (int)evnt.size.height));
+				//CircuitGUI::view.setSize((int)evnt.size.width, (int)evnt.size.height);
+				//CircuitGUI::view.setCenter((int)CircuitGUI::view.getCenter().x, (int)CircuitGUI::view.getCenter().y);
 
 				CircuitGUI::toolCol.setSize(sf::Vector2f(CircuitGUI::toolCol.getSize().x, CircuitGUI::view.getSize().y));
 				CircuitGUI::updatePosToolBox();
@@ -318,7 +319,7 @@ int main(int argc, char* argv[]) {
 							}
 						}
 
-						CircuitGUI::comp.back().x = trim(tempNewCompX); CircuitGUI::comp.back().y = trim(tempNewCompY);
+						CircuitGUI::comp.back().x = (int)trim(tempNewCompX); CircuitGUI::comp.back().y = (int)trim(tempNewCompY);
 						CircuitGUI::comp.back().stimuli();
 
 						stimuliEndNodes = 1;
@@ -535,30 +536,29 @@ int main(int argc, char* argv[]) {
 
 				/*Selection*/
 				for (int c = 0; c < CircuitGUI::comp.size(); c++) {
+					//cout << std::count(virSerial.begin(), virSerial.end(), c);
+					//bool bi = std::binary_search(virSerial.begin(), virSerial.end(), c);
+					//auto mk = std::find(virSerial.begin(), virSerial.end(), c);
 
 					bool compFound = 0;
 					int v = 0;
-					for (; v < CircuitGUI::virSerial.size();) {
+					for (; v < CircuitGUI::virSerial.size() && c >= CircuitGUI::virSerial[v]; v++) { // if(CircuitGUI::virSerial[v]) break; // Ensures the virSerial is Sorted by breaking at the right time
 						if (c == CircuitGUI::virSerial[v]) { compFound = 1; break; }
-						else if (c < CircuitGUI::virSerial[v]) { break; } // Ensures the virSerial is Sorted by breaking at the right time
-
-						v++;
 					}
-
 					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
 					
 					if (CircuitGUI::comp[c].bounds.intersects(CircuitGUI::selSqr.getGlobalBounds())) {
-						if (!compFound) {
-							//virSerial.emplace_back(c);
+						if (!compFound)
+						{
 							CircuitGUI::virSerial.insert(CircuitGUI::virSerial.begin() + v, c);
-
-							//virSprite.emplace_back(comp[virSerial.back()].sprite);
 							CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
+							
 							/*virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
 							virSprite.back().setColor(tempDimColor);*/
 						}
 					}
-					else if (compFound) {
+					else if (compFound)
+					{
 						CircuitGUI::virSerial.erase(CircuitGUI::virSerial.begin() + v);
 						CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
 					}
@@ -579,18 +579,19 @@ int main(int argc, char* argv[]) {
 				//		}
 				//	}
 				//}
-
+				
 				CircuitGUI::updateAllSqr();
 			}
 			else { static sf::Vector2f zero(0, 0); CircuitGUI::selSqr.setSize(zero); }
+
 
 			/*Wire*/
 			if (wireBool) { stimuliDisplay = 1; wires.back().makeWire(); }
 		}
 
-		;
+
 		// ----------------------------------------	Update
-		{
+		;{
 			if (MInTool) { stimuliDisplay = 1; }
 			//circuit.updateWin();
 

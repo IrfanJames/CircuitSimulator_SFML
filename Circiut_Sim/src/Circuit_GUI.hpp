@@ -110,12 +110,12 @@ namespace CircuitGUI {
 
 	}
 	bool Occupied = 0;
-	bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = 0) {
-
+	bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = false) {
+		//if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
 		int noCount = 0;
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
+			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
 
 			if (At.x == CircuitGUI::comp[c].x && At.y == CircuitGUI::comp[c].y) {
 				if (CircuitGUI::comp[Index].angle != CircuitGUI::comp[c].angle) {
@@ -148,8 +148,7 @@ namespace CircuitGUI {
 
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 			if (c == Index || abs(CircuitGUI::comp[c].x - end.x) >= 200 || abs(CircuitGUI::comp[c].y - end.y) >= 200) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
-
+			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
 
 			if (end.x == CircuitGUI::comp[c].x && end.y == CircuitGUI::comp[c].y) {
 				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
@@ -174,7 +173,7 @@ namespace CircuitGUI {
 
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
+			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
 
 			if (indexEntity.bounds.intersects(CircuitGUI::comp[c].bounds)) { Occupied = 1; return 1; }
 
@@ -182,7 +181,39 @@ namespace CircuitGUI {
 
 		Occupied = 0; return 0;
 	}
+	sf::FloatRect areaofCollection(bool collectionIsAllComp = false) {
+		sf::FloatRect compBound;
+		sf::FloatRect ABCD;
 
+		if (collectionIsAllComp) {
+			if (comp.size()) {
+				compBound = comp.front().bounds;
+				ABCD = compBound;
+			}
+			for (int c = 0; c < comp.size(); c++) {
+				compBound = comp[c].bounds;
+				if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
+				if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
+				if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
+				if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
+			}
+		}
+		else {
+			if (virSerial.size()) {
+				compBound = comp[virSerial.front()].bounds;
+				ABCD = compBound;
+			}
+			for (int v = 0; v < virSerial.size(); v++) {
+				compBound = comp[virSerial[v]].bounds;
+				if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
+				if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
+				if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
+				if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
+			}
+		}
+
+		return ABCD;
+	}
 
 	sf::CircleShape nodePic(4, 15);
 	//void nodePicDesign()
@@ -192,34 +223,11 @@ namespace CircuitGUI {
 		CircuitGUI::app.draw(CircuitGUI::allSqr);
 	}
 	void updateAllSqr() {
-		sf::FloatRect compBound;
-		sf::FloatRect ABCD;
 
-		if (!!virSerial.size()) {
-			compBound = comp[virSerial.front()].bounds;
-			ABCD = compBound;
+		sf::FloatRect virArea(areaofCollection(false));
 
-			for (int v = 0; v < virSerial.size(); v++) {
-				compBound = comp[virSerial[v]].bounds;
-				if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
-				if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
-				if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
-				if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
-			}
-			/*for (int c = 0; c < comp.size(); c++) {
-				sf::Vector2f tempEndNode = endNodePos(comp[c]);
-				if (tempEndNode.x < A) A = tempEndNode.x;
-				if (tempEndNode.x > B) B = tempEndNode.x;
-				if (tempEndNode.y < C) C = tempEndNode.y;
-				if (tempEndNode.y > D) D = tempEndNode.y;
-			}*/
-
-			allSqr.setSize(sf::Vector2f(ABCD.width, ABCD.height));
-			allSqr.setPosition(sf::Vector2f(ABCD.left, ABCD.top));
-
-			//cout << "\n" << "S: " << abs(A - B) << ", " << abs(C - D);
-			//cout << "\n" << A << ", " << B << ", " << C << ", " << D;
-		}
+		allSqr.setSize(sf::Vector2f(virArea.width, virArea.height));
+		allSqr.setPosition(sf::Vector2f(virArea.left, virArea.top));
 
 	}
 	sf::RectangleShape selSqr;
@@ -331,7 +339,7 @@ namespace CircuitGUI {
 	}
 
 
-	void initialize()
+	void initializeGUI()
 	{
 		Entity::setFont("assets/Fonts/CalibriL_1.ttf");
 
@@ -470,33 +478,16 @@ namespace CircuitGUI {
 			//catch (const std::exception&)
 			//{
 			//	cout << "Shell connot open floder  \"Saved - Images\"";
-			//}
+			//}m
 
 			sf::Image OutputImage;
 			sf::FloatRect compBound;
 			sf::FloatRect ABCD;
 
-			if (comp.size() != 0) {
-				compBound = comp[0].bounds;
-				ABCD = compBound;
-
-				for (int c = 0; c < comp.size(); c++) {
-					compBound = comp[c].bounds;
-					if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
-					if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
-					if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
-					if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
-				}
-				/*for (int c = 0; c < comp.size(); c++) {
-					sf::Vector2f tempEndNode = endNodePos(comp[c]);
-					if (tempEndNode.x < A) A = tempEndNode.x;
-					if (tempEndNode.x > B) B = tempEndNode.x;
-					if (tempEndNode.y < C) C = tempEndNode.y;
-					if (tempEndNode.y > D) D = tempEndNode.y;
-				}*/
+			if (comp.size() != 0)
+			{
+				ABCD = areaofCollection(true);
 				OutputImage.create(abs(ABCD.width) + 30, abs(ABCD.height) + 30);
-				//cout << "\n" << "S: " << abs(A - B) << ", " << abs(C - D);
-				//cout << "\n" << A << ", " << B << ", " << C << ", " << D;
 			}
 			else { OutputImage.create(10, 10); }
 
@@ -596,6 +587,29 @@ namespace CircuitGUI {
 			}
 			input.close();
 
+
+			// Centering and Selecting
+			virSerial.clear();
+			virSprite.clear();
+			virSerialShift.clear();
+			virSerial.reserve(comp.size());
+			virSprite.reserve(comp.size());
+			for (int vv = 0; vv < comp.size(); vv++) {
+				virSerial.emplace_back(vv);
+				virSprite.emplace_back(comp[virSerial.back()].sprite);
+			}
+
+			sf::FloatRect virArea = areaofCollection(true);
+			sf::Vector2f offSet(view.getCenter().x - (virArea.left + (int)(virArea.width / 2)), view.getCenter().y - (virArea.top + (int)(virArea.height / 2)));
+
+			for (int c = 0; c < comp.size(); c++)
+			{
+				comp[c].x = trim(comp[c].x + offSet.x);
+				comp[c].y = trim(comp[c].y + offSet.y);
+				comp[c].stimuli();
+			}
+
+
 		}
 
 		void savef(const std::string& file) {
@@ -647,7 +661,7 @@ namespace CircuitGUI {
 		}
 
 		void pastef() {
-
+			
 			std::string inString;
 			//clipboard >> inString;
 			inString = sf::Clipboard::getString();
@@ -674,6 +688,7 @@ namespace CircuitGUI {
 
 			//cout << "\n"; for (int c = 0; c < integers.size(); c++) cout << integers[c] << " ";
 
+			int compSizeBefore = comp.size();
 			comp.reserve(abs(integers[0]) + 10); // 10 extra
 			for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
 				S = integers[++c];
@@ -681,6 +696,28 @@ namespace CircuitGUI {
 				Y = integers[++c];
 				A = integers[++c];
 				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X), trim(Y), ((A % 360) / 90) * 90);
+			}
+
+
+
+			virSerial.clear();
+			virSprite.clear();
+			virSerialShift.clear();
+			virSerial.reserve(comp.size() - compSizeBefore);
+			virSprite.reserve(comp.size() - compSizeBefore);
+			for (int vv = 0; vv < (comp.size() - compSizeBefore); vv++) {
+				virSerial.emplace_back(vv + compSizeBefore);
+				virSprite.emplace_back(comp[virSerial.back()].sprite);
+			}
+
+			sf::FloatRect virArea = areaofCollection(false);
+			sf::Vector2f offSet(view.getCenter().x - (virArea.left + (int)(virArea.width / 2)), view.getCenter().y - (virArea.top + (int)(virArea.height / 2)));
+
+			for (int v = 0; v < virSerial.size(); v++)
+			{
+				comp[virSerial[v]].x = trim(comp[virSerial[v]].x + offSet.x);
+				comp[virSerial[v]].y = trim(comp[virSerial[v]].y + offSet.y);
+				comp[virSerial[v]].stimuli();
 			}
 
 		}

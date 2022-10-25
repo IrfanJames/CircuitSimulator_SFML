@@ -1,4 +1,6 @@
 New------------------------------------
+FINALLY!!! Textures don't pixcelate when window resize
+When Opening/Pasting, components appeare in Center,Selected(virSerial)
 Drag Multiple components at once
 Most of GUI in CircuitGUI namespace
 Open/Save As Dialog Box
@@ -27,9 +29,8 @@ repeated coad in (last of drag) & (resizing window) of tool column
 
 
 Issues:--------------------------------
+Wires
 GL_INVALID_OPERATION The specified operation is not allowed in the current state.
-**somtimes resizing causes textue to pixelate (becomes normal when hold+drag)
-
 
 Unstable:------------------------------
 When win minimized (hangs computer {all nust labs; mine at 3 windows}) [Possible cause Smart Display]
