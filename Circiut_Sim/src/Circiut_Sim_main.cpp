@@ -67,6 +67,8 @@ int main(int argc, char* argv[]) {
 		std::string temp(argv[1]);
 		if (!temp.empty())
 			CircuitGUI::Options::openf(temp);
+
+		stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
 	}
 
 	time_t frame = clock();

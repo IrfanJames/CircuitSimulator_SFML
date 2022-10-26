@@ -1,4 +1,5 @@
 New------------------------------------
+File is opened after saving(proj(TXT), img(PNG)) by Shell
 FINALLY!!! Textures don't pixcelate when window resize
 When Opening/Pasting, components appeare in Center,Selected(virSerial)
 Drag Multiple components at once

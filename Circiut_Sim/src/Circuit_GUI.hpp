@@ -1,6 +1,10 @@
 #pragma once
+
+#include <windows.h>
+
 //#include "Circuit_Global.h"
 #include "SFML/Graphics.hpp"
+
 
 extern sf::Texture compTex[8];
 
@@ -557,6 +561,10 @@ namespace CircuitGUI {
 
 			OutputImage.saveToFile(filepath);
 
+			WCHAR hello[260] = { 0 };
+			for (int i = 0; i < 260 && i < filepath.length(); i++) hello[i] = filepath[i];
+			ShellExecute(NULL, NULL, hello, NULL, NULL, SW_SHOWNORMAL);
+
 		}
 
 		void openf(const std::string& filepath) {
@@ -643,6 +651,10 @@ namespace CircuitGUI {
 			}
 			output << tempStr;
 			output.close();
+
+			WCHAR hello[260] = { 0 };
+			for (int i = 0; i < 260 && i < file.length(); i++) hello[i] = file[i];
+			ShellExecute(NULL, NULL, hello, NULL, NULL, SW_SHOWNORMAL);
 		}
 
 		void copyf() {
