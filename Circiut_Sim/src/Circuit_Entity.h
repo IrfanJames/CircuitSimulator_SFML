@@ -6,6 +6,8 @@
 
 sf::Texture compTex[8];
 
+
+
 class Entity {
 public:
 	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
@@ -115,12 +117,12 @@ private:
 
 public:
 	Entity() {
-		serial = 0; x = W / 2; y = H / 2; angle = 0.0f;
+		serial = 0; x = 0.0f; y = 0.0f; angle = 0.0f;
 
 		static const int A = 0, B = 15, C = 75; //Hard Code
 		boarder.setSize(sf::Vector2f(2 * B, C));
 		boarder.setOrigin(B, A);
-		boarder.setFillColor(sf::Color(0, 0, 100, 0));
+		boarder.setFillColor(sf::Color::Transparent);
 		boarder.setOutlineThickness(1.0f);
 		boarder.setOutlineColor(sf::Color(0, 204, 102));
 
@@ -135,16 +137,16 @@ public:
 		updateValueText();
 		stimuli();
 	}
-	Entity(int s, float _x, float _y, float Angle = 0.0f) {
-		x = _x; y = _y; angle = Angle;
-		serial = s;
-		sprite.setTexture(compTex[s]);
-		sprite.setOrigin(compTex[s].getSize().x / 2, 0);
+	Entity(int s, float X, float Y, float Angle = 0.0f) {
+		serial = s; x = X; y = Y; angle = Angle;
+		
+		sprite.setTexture(compTex[serial]);
+		sprite.setOrigin((int)(compTex[serial].getSize().x / 2), 0);
 
 		static const int A = 0, B = 15, C = 75; //Hard Code
 		boarder.setSize(sf::Vector2f(2 * B, C));
 		boarder.setOrigin(B, A);
-		boarder.setFillColor(sf::Color(0, 0, 100, 0));
+		boarder.setFillColor(sf::Color::Transparent);
 		boarder.setOutlineThickness(1.0f);
 		boarder.setOutlineColor(sf::Color(0, 204, 102));
 
@@ -178,7 +180,7 @@ public:
 		boarder.setRotation(angle);
 
 
-		int A = 0, B = 15, C = 75, i = (int)angle % 360;
+		int A = 0, B = 15, C = 75, i = ((int)angle % 360 / 90) * 90;
 		if (i == 0) { bounds.left = x - B; bounds.top = y - A; bounds.width = B + B; bounds.height = C + A; }
 		else if (i == 90) { bounds.left = x - C; bounds.top = y - B; bounds.width = A + C; bounds.height = B + B; }
 		else if (i == 180) { bounds.left = x - B; bounds.top = y - C; bounds.width = B + B; bounds.height = A + C; }
@@ -186,13 +188,13 @@ public:
 
 
 		//updateValueText();
-		static const int offSet[4][2] = { // badPractice for gap = 15
+		static const sf::Vector2f offSet[4] = { // badPractice for gap = 15
 			{1 * 15 + 3,2 * 15 + 0},
 			{-4 * 15 + 0,1 * 15 + 0},
 			{1 * 15 + 3,-3 * 15 + 0},
 			{1 * 15 + 0,-2 * 15 - 3}
 		};
-		valueText.setPosition(x + offSet[(int)(angle / 90)][0], y + offSet[(int)(angle / 90)][1]); // badPractice for gap = 15
+		valueText.setPosition(x + offSet[(int)(angle / 90)].x, y + offSet[(int)(angle / 90)].y); // badPractice for gap = 15
 	}
 	void draw(sf::RenderWindow& app) {
 

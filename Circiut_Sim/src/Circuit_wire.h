@@ -22,8 +22,9 @@ public:
 
 	void newEdge() {
 		sf::Vector2f nextPos(wire.back().getPosition());
-		if (wire.size() % 2 == 1) { nextPos.y += wire.back().getSize().y; } else
-		if (wire.size() % 2 == 0) { nextPos.x += wire.back().getSize().x; }
+		if (wire.size() % 2 == 1) { nextPos.y += wire.back().getSize().y; }
+		else
+			if (wire.size() % 2 == 0) { nextPos.x += wire.back().getSize().x; }
 
 		nextPos.x = CircuitGUI::trim(nextPos.x, CircuitGUI::gap);
 		nextPos.y = CircuitGUI::trim(nextPos.y, CircuitGUI::gap);
@@ -36,7 +37,7 @@ public:
 	}
 
 	void makeWire() {
-		if		(wire.size() % 2 == 1) wire.back().setSize(sf::Vector2f(wire.back().getSize().x, 0 + CircuitGUI::trim((int)CircuitGUI::cursorInSim().y - wire.back().getPosition().y, CircuitGUI::gap)));
+		if (wire.size() % 2 == 1) wire.back().setSize(sf::Vector2f(wire.back().getSize().x, 0 + CircuitGUI::trim((int)CircuitGUI::cursorInSim().y - wire.back().getPosition().y, CircuitGUI::gap)));
 		else if (wire.size() % 2 == 0) wire.back().setSize(sf::Vector2f(0 + CircuitGUI::trim((int)CircuitGUI::cursorInSim().x - wire.back().getPosition().x, CircuitGUI::gap), wire.back().getSize().y));
 	}
 
@@ -57,7 +58,7 @@ public:
 		temp.y = CircuitGUI::trim(temp.y, CircuitGUI::gap);
 
 		//std::cout << "\n" << temp.x << ", " << temp.y;
-		
+
 		return temp;
 	}
 

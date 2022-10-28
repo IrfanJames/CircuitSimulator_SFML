@@ -19,7 +19,6 @@ taskkill /F /IM Circiut_Sim.exe
 #include "Circuit_wire.h"
 #include "Circuit_GUI.hpp"
 
-
 //#include "clipboardxx.hpp"
 #include <windows.h>
 
@@ -28,6 +27,8 @@ std::string SaveFileDialog(const char* filter, int tempNumber = 1000);
 using std::cout;
 using namespace CircuitGUI;
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
+
+
 int main(int argc, char* argv[]) {
 	CircuitGUI::initializeGUI();
 
@@ -38,7 +39,7 @@ int main(int argc, char* argv[]) {
 	bool RELEASE_DEBUG = 1;
 	bool End = 0, debugBool = 0;
 	bool Drag = 0, stimuliDisplay = 1, stimuliEndNodes = 0;
-	bool releaseBool = 1, wheelReleaseBool = 1, ShiftPressed=0;
+	bool releaseBool = 1, wheelReleaseBool = 1, ShiftPressed = 0;
 	bool selectSquare = 0, mouseOnCompsBool = 0, wireBool = 0;
 	bool PlayMode = 0, PlayRot = 0;
 
@@ -46,22 +47,26 @@ int main(int argc, char* argv[]) {
 
 	//std::thread printScreenTread;
 	//clipboardxx::clipboard clipboard;
-	//* //Test Circle
+	
+	//* Test Circle
 	bool DrawCircle = 1; int t_vertices = 34; float t_radius = 50, t_Colors[3] = { (float)204 / 255, (float)77 / 255, (float)5 / 255 }; sf::CircleShape testCircle(t_radius, t_vertices); {
 		testCircle.setOrigin(t_radius, t_radius);
 		testCircle.setPosition(W / 2, H / 2);
 		testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255))); }//*/
-	
+
 
 	/*Wires*/
 	std::vector<Wire> wires; wires.reserve(3);
 
 
 	////////////////////////////////////////////// Solve
-	
+
 	//Graph circuit;
 
 	///////////////////////////////////////////////
+
+
+
 
 	if (1 < argc) {
 		std::string temp(argv[1]);
@@ -75,6 +80,7 @@ int main(int argc, char* argv[]) {
 	/*Ravi*/ CircuitGUI::app.setKeyRepeatEnabled(false);
 	while (CircuitGUI::app.isOpen() && !End) {
 
+
 		sf::Event evnt;
 		while (CircuitGUI::app.pollEvent(evnt)) {
 			stimuliDisplay = 1;
@@ -86,7 +92,7 @@ int main(int argc, char* argv[]) {
 			if (evnt.type == evnt.MouseEntered) { cursorInWin = 1; }
 			if (evnt.type == evnt.Resized) {
 
-				view = sf::View(sf::FloatRect((int)view.getCenter().x - (int)(evnt.size.width / 2), (int)view.getCenter().y - (int)(evnt.size.height/ 2), (int)evnt.size.width, (int)evnt.size.height));
+				view = sf::View(sf::FloatRect((int)view.getCenter().x - (int)(evnt.size.width / 2), (int)view.getCenter().y - (int)(evnt.size.height / 2), (int)evnt.size.width, (int)evnt.size.height));
 				//CircuitGUI::view.setSize((int)evnt.size.width, (int)evnt.size.height);
 				//CircuitGUI::view.setCenter((int)CircuitGUI::view.getCenter().x, (int)CircuitGUI::view.getCenter().y);
 
@@ -99,7 +105,9 @@ int main(int argc, char* argv[]) {
 				static int sensitivity = 7;
 				sf::Vector2f cursorPos = CircuitGUI::cursorInSim();
 
-				sf::Vector2f start(165, 180), stop(1245, 660);
+				sf::Vector2f start(0, 0), stop(0, 0);
+				if (comp.size() > 2) start = { comp[0].x, comp[0].y }, stop = { comp[1].x, comp[1].y };
+
 
 				int e = 0;
 				if (PlayMode) {
@@ -158,7 +166,7 @@ int main(int argc, char* argv[]) {
 					stimuliDisplay = 1;	stimuliEndNodes = 1;
 					CircuitGUI::Options::deletef();
 				}
-				if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool;}
+				if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
 				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
 				if (evnt.key.code == sf::Keyboard::P) {
 
@@ -277,13 +285,15 @@ int main(int argc, char* argv[]) {
 		ShiftPressed = (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift));
 		W = CircuitGUI::app.getSize().x; H = CircuitGUI::app.getSize().y;
 		bool MInTool = !!(cursorInWin && 0 <= sf::Mouse::getPosition(CircuitGUI::app).x && sf::Mouse::getPosition(CircuitGUI::app).x <= CircuitGUI::c_toolColWidth);
-		bool MIntool = !!(cursorInWin && MInTool && sf::Mouse::getPosition(CircuitGUI::app).y < (Entity::noOfComps - 1) * CircuitGUI::c_toolColWidth);
+		bool MIntool = !!(cursorInWin && MInTool && sf::Mouse::getPosition(CircuitGUI::app).y < (Entity::noOfComps - 1)* CircuitGUI::c_toolColWidth);
 		float t_TollWx = CircuitGUI::toolCol.getPosition().x;
 		//--------------------------------------------------------------------------------//
 
 
 
-		
+
+
+
 		if (PlayRot) { CircuitGUI::view.rotate(0.9); }
 		else CircuitGUI::view.setRotation(0);
 
@@ -487,28 +497,17 @@ int main(int argc, char* argv[]) {
 
 			/*Continoue while hold*/
 			if (!selectSquare && mouseOnCompsBool && !PlayMode && !Click(0) /*&& releaseBool*/) {
-				sf::FloatRect virArea = allSqr.getGlobalBounds();
-				sf::Vector2f offsetPos((int)CircuitGUI::cursorInSim().x - (virArea.left + (int)(virArea.width / 2)), (int)CircuitGUI::cursorInSim().y - (virArea.top + (int)(virArea.height / 2)));
-
 				/*static const sf::Vector2f offsetHold[4] = {
 					{0, -2},
 					{2, 0},
 					{0, 2},
 					{-2, 0}
 				};*/
+				sf::FloatRect virArea = allSqr.getGlobalBounds();
+				sf::Vector2f offsetPos(	(int)CircuitGUI::cursorInSim().x - (virArea.left + (int)(virArea.width / 2)), (int)CircuitGUI::cursorInSim().y - (virArea.top + (int)(virArea.height / 2)));
 
-				//static sf::Vector2f offsetPos;
-				//offsetPos.x = (int)CircuitGUI::cursorInSim().x - (int)CircuitGUI::comp[CircuitGUI::virSerial.front()].x; ///
-				//offsetPos.y = (int)CircuitGUI::cursorInSim().y - (int)CircuitGUI::comp[CircuitGUI::virSerial.front()].y; ///
-				//float tempX = cursorInSim().x - mouseHoldX + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][0]; ///
-				//float tempY = cursorInSim().y - mouseHoldY + gap * tempRotArr[(int)comp[virSerial[c]].angle / 90][1]; ///
-
-				//CircuitGUI::gap * offSet[(int)CircuitGUI::comp[CircuitGUI::virSerial.front()].angle / 90][0];
-				//CircuitGUI::gap * offSet[(int)CircuitGUI::comp[CircuitGUI::virSerial.front()].angle / 90][1];
 				for (int v = 0; v < CircuitGUI::virSprite.size(); v++)
-					CircuitGUI::virSprite[v].setPosition(CircuitGUI::cursorInSim() - sf::Vector2f(comp[0].x - comp[virSerial[v]].x, comp[0].y - comp[virSerial[v]].y));
-
-				//for (int v = 0; v < virSprite.size(); v++) { virSprite[0].setPosition(tempX + v * gap, tempY + v * gap); }
+					CircuitGUI::virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
 
 				offsetPos = CircuitGUI::trim(offsetPos);
 
@@ -538,25 +537,30 @@ int main(int argc, char* argv[]) {
 				/*Sel Sqr*/
 				CircuitGUI::selSqr.setSize(CircuitGUI::cursorInSim() - CircuitGUI::selSqr.getPosition());
 
+
 				/*Selection*/
 				for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 					//cout << std::count(virSerial.begin(), virSerial.end(), c);
 					//bool bi = std::binary_search(virSerial.begin(), virSerial.end(), c);
 					//auto mk = std::find(virSerial.begin(), virSerial.end(), c);
-
+					int v = lower_bound(virSerial.begin(), virSerial.end(), c) - virSerial.begin();
 					bool compFound = 0;
-					int v = 0;
-					for (; v < CircuitGUI::virSerial.size() && c >= CircuitGUI::virSerial[v]; v++) { // if(CircuitGUI::virSerial[v]) break; // Ensures the virSerial is Sorted by breaking at the right time
-						if (c == CircuitGUI::virSerial[v]) { compFound = 1; break; }
-					}
+					if (v < virSerial.size()) compFound = (virSerial[v] == c);
+					//bool compFound = 0;
+					//int v = 0;
+					//for (; v < CircuitGUI::virSerial.size() && c >= CircuitGUI::virSerial[v]; v++) { // if(CircuitGUI::virSerial[v]) break; // Ensures the virSerial is Sorted by breaking at the right time
+					//	if (c == CircuitGUI::virSerial[v]) { compFound = 1; break; }
+					//}
 					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
-					
+
+
 					if (CircuitGUI::comp[c].bounds.intersects(CircuitGUI::selSqr.getGlobalBounds())) {
 						if (!compFound)
 						{
 							CircuitGUI::virSerial.insert(CircuitGUI::virSerial.begin() + v, c);
 							CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
-							
+							CircuitGUI::virSprite[v].setColor(tempDimColor);
+
 							/*virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
 							virSprite.back().setColor(tempDimColor);*/
 						}
@@ -583,7 +587,7 @@ int main(int argc, char* argv[]) {
 				//		}
 				//	}
 				//}
-				
+
 				CircuitGUI::updateAllSqr();
 			}
 			else { static sf::Vector2f zero(0, 0); CircuitGUI::selSqr.setSize(zero); }
@@ -592,9 +596,10 @@ int main(int argc, char* argv[]) {
 			if (wireBool) { stimuliDisplay = 1; wires.back().makeWire(); }
 		}
 
+		
 
 		// ----------------------------------------	Update
-		;{
+		; {
 			if (MInTool) { stimuliDisplay = 1; }
 			//circuit.updateWin();
 
@@ -756,7 +761,7 @@ int main(int argc, char* argv[]) {
 				CircuitGUI::colorGrid();
 
 				CircuitGUI::updatePosToolBox();
-				
+
 			}
 			testCircle.setPosition(CircuitGUI::onScreen(300, 300));
 
@@ -801,9 +806,9 @@ int main(int argc, char* argv[]) {
 			if (!PlayMode) drawBoarders();
 
 			if (CircuitGUI::Occupied) drawVirSprites();
-			
+
 			drawSelSqr();
-			
+
 			drawToolColumn(MInTool, MIntool);
 
 			/*ImGui*/ {
@@ -815,15 +820,15 @@ int main(int argc, char* argv[]) {
 		}
 
 
-		CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
+		CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)(((float)clock() - (float)frame) / (float)CLOCKS_PER_SEC) * 100.0F) + " | " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
 		frame = clock();
 		stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
 	}
-	
+
 
 
 	stimuliDisplay = 1; stimuliEndNodes = 1;
-	
+
 	/*ImGui*/
 	ImGui::SFML::Shutdown();
 	std::cin.get();
@@ -897,7 +902,12 @@ std::string SaveFileDialog(const char* filter, int tempNumber)
 	return std::string();
 }
 
+/*
+#include <direct.h>
 
+cout << _mkdir("Awesomness");
+	system("pause");
+	cout << _rmdir("Awesomness");*/
 
 /*else if (evnt.key.code == Keyboard::R) {
 			view.setCenter(W / 2, H / 2);

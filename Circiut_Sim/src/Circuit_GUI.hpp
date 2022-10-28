@@ -1,13 +1,12 @@
 #pragma once
 
+
 #include <windows.h>
 
 //#include "Circuit_Global.h"
 #include "SFML/Graphics.hpp"
 
-
 extern sf::Texture compTex[8];
-
 
 namespace CircuitGUI {
 
@@ -364,7 +363,7 @@ namespace CircuitGUI {
 			//std::cout << "my lcd: " << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height;
 			app.setPosition(sf::Vector2i(250, 100));
 		}
-		
+
 		//viewInit();
 		{
 			view.setCenter(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2));
@@ -372,7 +371,7 @@ namespace CircuitGUI {
 			//sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), sf::Vector2f(app.getSize().x * 2, app.getSize().y * 2));
 			//sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), (sf::Vector2f)app.getSize());
 		}
-		
+
 		//loadTextures();
 		{
 			compTex[Entity::Cap].loadFromFile("assets/Images/Cap.png");
@@ -388,7 +387,7 @@ namespace CircuitGUI {
 		//initializeGrid();
 		{
 			vLines.reserve((W + 2 * virtualBoarder) / gap + 2);
-			sf::Vector2f tempVect(2, H + 2 * virtualBoarder);
+			sf::Vector2f tempVect(1, H + 2 * virtualBoarder);
 			for (int c = 0; c <= (W + 2 * virtualBoarder) / gap; c++) {
 				vLines.emplace_back(tempVect);
 			}
@@ -399,7 +398,7 @@ namespace CircuitGUI {
 			}
 
 			hLines.reserve((H + 2 * virtualBoarder) / gap + 2);
-			tempVect.x = W + 2 * virtualBoarder; tempVect.y = 2;
+			tempVect.x = W + 2 * virtualBoarder; tempVect.y = 1;
 			for (int c = 0; c <= (H + 2 * virtualBoarder) / gap; c++) {
 				hLines.emplace_back(tempVect);
 			}
@@ -409,7 +408,7 @@ namespace CircuitGUI {
 				hLines[c].setFillColor(gridColor);
 			}
 		}
-		
+
 		//toolBoxInit();
 		{
 			/*Color*/
@@ -426,13 +425,13 @@ namespace CircuitGUI {
 				ToolSpr[c].setPosition(CircuitGUI::view.getCenter().x - CircuitGUI::view.getSize().x / 2 + ToolSprPOS[c].x, CircuitGUI::view.getCenter().y - CircuitGUI::view.getSize().y / 2 + ToolSprPOS[c].y);
 			}
 		}
-		
+
 		//nodePicDesign();
 		{
 			nodePic.setOrigin(4, 4);
 			nodePic.setFillColor(CircuitGUI::normalCompColor);
 		}
-		
+
 		//selSqrDesign();
 		{
 			selSqr.setFillColor(sf::Color(66, 135, 245, 60));
@@ -445,8 +444,6 @@ namespace CircuitGUI {
 			allSqr.setFillColor(sf::Color::Transparent);
 			allSqr.setOutlineThickness(1.0f);
 			allSqr.setOutlineColor(sf::Color(249, 140, 31));
-
-			allSqr.move(sf::Vector2f(315, 195));
 		}
 
 
@@ -673,12 +670,11 @@ namespace CircuitGUI {
 		}
 
 		void pastef() {
-			
+
 			std::string inString;
 			//clipboard >> inString;
 			inString = sf::Clipboard::getString();
 			//cout << inString;
-
 			std::vector<int> integers; integers.reserve(9);
 
 
@@ -697,19 +693,29 @@ namespace CircuitGUI {
 					x = 0;
 				}
 			}
+			//std::cout << "\n"; for (int c = 0; c < integers.size(); c++) std::cout << integers[c] << " ";
 
-			//cout << "\n"; for (int c = 0; c < integers.size(); c++) cout << integers[c] << " ";
+
+			int OffsetX = 0, OffsetY = 0;
+			int temp = 0;
+			for (int i = 1; i < integers.size(); i += 4, temp++)
+			{
+				OffsetX += integers[i + 1];
+				OffsetY += integers[i + 2];
+			}
+			OffsetX /= temp; OffsetX = view.getCenter().x - OffsetX;
+			OffsetY /= temp; OffsetY = view.getCenter().y - OffsetY;
+			
 
 			int compSizeBefore = comp.size();
 			comp.reserve(abs(integers[0]) + 10); // 10 extra
 			for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
 				S = integers[++c];
-				X = integers[++c];
-				Y = integers[++c];
+				X = integers[++c] + OffsetX;
+				Y = integers[++c] + OffsetY;
 				A = integers[++c];
 				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
-
 
 
 			virSerial.clear();
@@ -722,15 +728,16 @@ namespace CircuitGUI {
 				virSprite.emplace_back(comp[virSerial.back()].sprite);
 			}
 
+			/*
 			sf::FloatRect virArea = areaofCollection(false);
 			sf::Vector2f offSet(view.getCenter().x - (virArea.left + (int)(virArea.width / 2)), view.getCenter().y - (virArea.top + (int)(virArea.height / 2)));
-
+			std::cout << "\nBad :" << (virArea.left + (int)(virArea.width / 2)) << ", " << (virArea.top + (int)(virArea.height / 2));
 			for (int v = 0; v < virSerial.size(); v++)
 			{
 				comp[virSerial[v]].x = trim(comp[virSerial[v]].x + offSet.x);
 				comp[virSerial[v]].y = trim(comp[virSerial[v]].y + offSet.y);
 				comp[virSerial[v]].stimuli();
-			}
+			}*/
 
 		}
 
@@ -749,7 +756,7 @@ namespace CircuitGUI {
 			// As complexity of eraseing one element is same as eraseing 100's(more than one) of elements
 			//   | e.g.
 			//   |--> complexity of erase(v.begin() + i) IS EQUAL TO complexity of erase(v.begin() + i, v.begin() + 1000)
-			
+
 			// So we will erase all the elements in a sorted set together
 			//   | e.g.
 			//   |--> in [1,2,3,4,7,8,9,10,11,51], we will get three sets [1,2,3,4], [7,8,9,10,11] and [51]. And each set will be erased at a time.
