@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 	bool End = 0, debugBool = 0;
 	bool Drag = 0, stimuliDisplay = 1, stimuliEndNodes = 0;
 	bool releaseBool = 1, wheelReleaseBool = 1, ShiftPressed = 0;
-	bool selectSquare = 0, mouseOnCompsBool = 0, wireBool = 0;
+	bool selectSquare = 0, Selection = 0, mouseOnCompsBool = 0, wireBool = 0;
 	bool PlayMode = 0, PlayRot = 0;
 
 	int serialCompMouse = 0, serialToolMouse = 0, cursorInWin = 0;
@@ -157,7 +157,39 @@ int main(int argc, char* argv[]) {
 				}
 
 			}
-			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) { releaseBool = 1; }
+			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
+				releaseBool = 1;
+				if (Selection) {
+					Selection = 0;
+
+					//virSprite.clear();
+					virSprite.reserve(virSerial.size());
+					/*for (int v = 0; v < virSerial.size(); v++) {
+						virSprite.emplace_back(comp[virSerial[v]].sprite);
+						virSprite.back().setColor(CircuitGUI::tempDimColor); }*/
+
+
+					for (int v = 0; v < virSerial.size() && v < virSprite.size(); v++) {
+						virSprite[v] = comp[virSerial[v]].sprite;
+						virSprite[v].setColor(CircuitGUI::tempDimColor);
+					}
+
+					if (virSerial.size() < virSprite.size())
+					{
+						virSprite.erase(virSprite.begin() + (int)virSerial.size(), virSprite.end());
+					}
+
+					if (virSerial.size() > virSprite.size())
+					{
+						for (int v = virSprite.size(); v < virSerial.size(); v++) {
+							virSprite.emplace_back(comp[virSerial[v]].sprite);
+							virSprite.back().setColor(CircuitGUI::tempDimColor);
+						}
+
+					}
+
+				}
+			}
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Middle) { wheelReleaseBool = 1; }
 
 			if (evnt.type == evnt.KeyPressed) {
@@ -533,7 +565,7 @@ int main(int argc, char* argv[]) {
 			/*Select Sqr*/
 			if (selectSquare && !releaseBool && !PlayMode) {
 				stimuliDisplay = 1;
-
+				Selection = 1;
 				/*Sel Sqr*/
 				CircuitGUI::selSqr.setSize(CircuitGUI::cursorInSim() - CircuitGUI::selSqr.getPosition());
 
@@ -558,8 +590,8 @@ int main(int argc, char* argv[]) {
 						if (!compFound)
 						{
 							CircuitGUI::virSerial.insert(CircuitGUI::virSerial.begin() + v, c);
-							CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
-							CircuitGUI::virSprite[v].setColor(tempDimColor);
+							//CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
+							//CircuitGUI::virSprite[v].setColor(tempDimColor);
 
 							/*virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
 							virSprite.back().setColor(tempDimColor);*/
@@ -568,7 +600,7 @@ int main(int argc, char* argv[]) {
 					else if (compFound)
 					{
 						CircuitGUI::virSerial.erase(CircuitGUI::virSerial.begin() + v);
-						CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
+						//CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
 					}
 
 				}
@@ -689,7 +721,7 @@ int main(int argc, char* argv[]) {
 
 						if (PlayMode) {
 							CircuitGUI::Options::openf("Saved-Projects\\Maze.TXT");
-							ShellExecute(0, 0, L"https://www.youtube.com/watch?v=6cRctjPRv6M", 0, 0, SW_SHOW);
+							//ShellExecute(0, 0, L"https://www.youtube.com/watch?v=6cRctjPRv6M", 0, 0, SW_SHOW);
 						}
 						else { wireBool = 0; PlayRot = 0; }
 
@@ -784,7 +816,6 @@ int main(int argc, char* argv[]) {
 			}
 
 		}
-
 
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) { // zero causes 100 cpu load
