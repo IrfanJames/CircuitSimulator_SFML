@@ -601,7 +601,10 @@ namespace CircuitGUI {
 			virSprite.reserve(comp.size());
 			for (int vv = 0; vv < comp.size(); vv++) {
 				virSerial.emplace_back(vv);
-				virSprite.emplace_back(comp[virSerial.back()].sprite);
+				//virSprite.emplace_back(comp[virSerial.back()].sprite);
+				virSprite.emplace_back();					// We wouldn't be able to see them anyways
+
+				//virSprite.back().setColor(tempDimColor);	// We wouldn't be able to see them anyways
 			}
 
 			sf::FloatRect virArea = areaofCollection(true);
@@ -675,45 +678,53 @@ namespace CircuitGUI {
 			//clipboard >> inString;
 			inString = sf::Clipboard::getString();
 			//cout << inString;
-			std::vector<int> integers; integers.reserve(9);
+			std::vector<int> integers; integers.reserve(21);
 
 
-			bool negative = 0;
+			bool negative = 0, numStarted = 0;
 			for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
 				temp = (int)inString[c];
 
-				if (48 <= temp && temp <= 57) {
-					x = x * 10 + temp - 48;
+				if ('0' <= temp && temp <= '9') {
+					numStarted = 1;
+					x *= 10;
+					x += temp - (int)'0';
 				}
-				else if (temp == 45) negative = 1;
-				else if (temp == 10 || temp == 9) { // else if (temp == (int)('\n') || temp == (int)('\t')) {
-					if (negative) x *= -1;
-					integers.emplace_back(x);
-					negative = 0;
-					x = 0;
+				else {
+					if (temp == '-') negative = 1;
+					else if (numStarted) {
+						if (negative) x *= -1;
+						integers.emplace_back(x);
+						negative = 0;
+						x = 0;
+						numStarted = 0;
+					}
 				}
 			}
 			//std::cout << "\n"; for (int c = 0; c < integers.size(); c++) std::cout << integers[c] << " ";
 
 
-			int OffsetX = 0, OffsetY = 0;
-			int temp = 0;
-			for (int i = 1; i < integers.size(); i += 4, temp++)
+			int OffsetX = 0, OffsetY = 0, count = 0;
+			for (int i = 1; i + 2 < integers.size(); i += 4, count++)
 			{
 				OffsetX += integers[i + 1];
 				OffsetY += integers[i + 2];
 			}
-			OffsetX /= temp; OffsetX = view.getCenter().x - OffsetX;
-			OffsetY /= temp; OffsetY = view.getCenter().y - OffsetY;
-			
+			if (count) {
+				OffsetX /= count;
+				OffsetY /= count;
+
+				OffsetX = view.getCenter().x - OffsetX;
+				OffsetY = view.getCenter().y - OffsetY;
+			}
 
 			int compSizeBefore = comp.size();
 			comp.reserve(abs(integers[0]) + 10); // 10 extra
 			for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
-				S = integers[++c];
+				S = abs(integers[++c]);
 				X = integers[++c] + OffsetX;
 				Y = integers[++c] + OffsetY;
-				A = integers[++c];
+				A = abs(integers[++c]);
 				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
 
@@ -721,11 +732,14 @@ namespace CircuitGUI {
 			virSerial.clear();
 			virSprite.clear();
 			virSerialShift.clear();
+			
 			virSerial.reserve(comp.size() - compSizeBefore);
 			virSprite.reserve(comp.size() - compSizeBefore);
+			
 			for (int vv = 0; vv < (comp.size() - compSizeBefore); vv++) {
 				virSerial.emplace_back(vv + compSizeBefore);
 				virSprite.emplace_back(comp[virSerial.back()].sprite);
+				virSprite.back().setColor(tempDimColor);
 			}
 
 			/*
