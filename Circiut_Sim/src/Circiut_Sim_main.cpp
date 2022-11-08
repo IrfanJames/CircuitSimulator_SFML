@@ -53,18 +53,16 @@ int main(int argc, char* argv[]) {
 		testCircle.setOrigin(t_radius, t_radius);
 		testCircle.setPosition(W / 2, H / 2);
 		testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255))); }//*/
-
+	
 
 	/*Wires*/
 	std::vector<Wire> wires; wires.reserve(3);
-
 
 	////////////////////////////////////////////// Solve
 
 	//Graph circuit;
 
 	///////////////////////////////////////////////
-
 
 
 
@@ -77,13 +75,13 @@ int main(int argc, char* argv[]) {
 	}
 
 	time_t frame = clock();
-	/*Ravi*/ CircuitGUI::app.setKeyRepeatEnabled(false);
+	CircuitGUI::app.setKeyRepeatEnabled(false);
+	sf::Event evnt;
 	while (CircuitGUI::app.isOpen() && !End) {
 
 
-		sf::Event evnt;
 		while (CircuitGUI::app.pollEvent(evnt)) {
-			stimuliDisplay = 1;
+			stimuliDisplay = 1; /*cout << "1";*/
 			/*ImGui*/
 			ImGui::SFML::ProcessEvent(evnt);
 
@@ -195,11 +193,11 @@ int main(int argc, char* argv[]) {
 			if (evnt.type == evnt.KeyPressed) {
 				if (evnt.key.code == sf::Keyboard::Escape) { CircuitGUI::app.close(); End = 1; continue; }
 				if (evnt.key.code == sf::Keyboard::Delete) {
-					stimuliDisplay = 1;	stimuliEndNodes = 1;
+					stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
 					CircuitGUI::Options::deletef();
 				}
 				if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
-				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
+				if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
 				if (evnt.key.code == sf::Keyboard::P) {
 
 					//time_t print = clock();
@@ -231,6 +229,7 @@ int main(int argc, char* argv[]) {
 				/*Ctrl*/
 				if (evnt.key.control) {
 					if (evnt.key.code == sf::Keyboard::A) {
+						stimuliDisplay = 1; /*cout << "3";*/
 
 						while (CircuitGUI::comp.size() < CircuitGUI::virSerial.size()) {
 							CircuitGUI::virSerial.pop_back();
@@ -250,13 +249,13 @@ int main(int argc, char* argv[]) {
 						CircuitGUI::updateAllSqr();
 					}
 					if (evnt.key.code == sf::Keyboard::R) {
-						stimuliDisplay = 1;	stimuliEndNodes = 1;
+						stimuliDisplay = 1;	/*cout << "4";*/ stimuliEndNodes = 1;
 
 						CircuitGUI::Options::rotatef();
 
 					}
 					if (evnt.key.code == sf::Keyboard::O) {
-						stimuliDisplay = 1; stimuliEndNodes = 1;
+						stimuliDisplay = 1; /*cout << "5";*/ stimuliEndNodes = 1;
 
 						std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
@@ -285,7 +284,7 @@ int main(int argc, char* argv[]) {
 
 					}
 					if (evnt.key.code == sf::Keyboard::X) {
-						stimuliDisplay = 1;	stimuliEndNodes = 1;
+						stimuliDisplay = 1;	/*cout << "6";*/ stimuliEndNodes = 1;
 
 						// Copy
 						{
@@ -298,7 +297,7 @@ int main(int argc, char* argv[]) {
 						}
 					}
 					if (evnt.key.code == sf::Keyboard::V) {
-						stimuliDisplay = 1; stimuliEndNodes = 1;
+						stimuliDisplay = 1; /*cout << "7";*/ stimuliEndNodes = 1;
 
 						CircuitGUI::Options::pastef();
 
@@ -480,7 +479,7 @@ int main(int argc, char* argv[]) {
 				/*Click*/
 				else {
 					if (!PlayMode && CircuitGUI::Click(CircuitGUI::gap)) {
-						stimuliDisplay = 1;
+						stimuliDisplay = 1; /*cout << "8";*/
 
 						for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
 
@@ -559,12 +558,12 @@ int main(int argc, char* argv[]) {
 					}
 				}
 
-				stimuliEndNodes = 1; stimuliDisplay = 1;
+				stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
 			}
 
 			/*Select Sqr*/
 			if (selectSquare && !releaseBool && !PlayMode) {
-				stimuliDisplay = 1;
+				stimuliDisplay = 1; /*cout << "10";*/
 				Selection = 1;
 				/*Sel Sqr*/
 				CircuitGUI::selSqr.setSize(CircuitGUI::cursorInSim() - CircuitGUI::selSqr.getPosition());
@@ -625,14 +624,14 @@ int main(int argc, char* argv[]) {
 			else { static sf::Vector2f zero(0, 0); CircuitGUI::selSqr.setSize(zero); }
 
 			/*Wire*/
-			if (wireBool) { stimuliDisplay = 1; wires.back().makeWire(); }
+			if (wireBool) { stimuliDisplay = 1; /*cout << "11";*/ wires.back().makeWire(); }
 		}
 
 		
 
 		// ----------------------------------------	Update
 		; {
-			if (MInTool) { stimuliDisplay = 1; }
+			if (MInTool) { stimuliDisplay = 1; /*cout << "12";*/ }
 			//circuit.updateWin();
 
 			/*ImGui*/
@@ -653,11 +652,11 @@ int main(int argc, char* argv[]) {
 
 			//*
 			if (ImGui::BeginMainMenuBar()) {
-
+				
 				if (ImGui::BeginMenu("File")) {
-
+					stimuliDisplay = 1; /*cout << "a";*/
 					if (ImGui::MenuItem("Open...", "Ctrl + O")) {
-						stimuliDisplay = 1; stimuliEndNodes = 1;
+						stimuliDisplay = 1; /*cout << "14";*/ stimuliEndNodes = 1;
 
 						std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
@@ -687,19 +686,19 @@ int main(int argc, char* argv[]) {
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Options")) {
-
+					stimuliDisplay = 1; /*cout << "b";*/
 					if (ImGui::MenuItem("Handdrawn Icons")) { /*cout << "\nWobbly";*/ }
 					if (ImGui::BeginMenu("Switch Themes")) {
 
 						if (ImGui::MenuItem("Dark")) {
-							stimuliDisplay = 1;
+							stimuliDisplay = 1; /*cout << "15";*/
 
 							CircuitGUI::gridColor.r = 100; CircuitGUI::gridColor.g = 105; CircuitGUI::gridColor.b = 110; CircuitGUI::gridColor.a = 20;
 							CircuitGUI::backColor.r = 23;  CircuitGUI::backColor.g = 24;  CircuitGUI::backColor.b = 25;
 							CircuitGUI::colorGrid();
 						}
 						if (ImGui::MenuItem("Light")) {
-							stimuliDisplay = 1;
+							stimuliDisplay = 1; /*cout << "16";*/
 
 							CircuitGUI::gridColor.r = 212; CircuitGUI::gridColor.g = 232; CircuitGUI::gridColor.b = 247; CircuitGUI::gridColor.a = 50;
 							CircuitGUI::backColor.r = 36;  CircuitGUI::backColor.g = 133; CircuitGUI::backColor.b = 202;
@@ -710,6 +709,7 @@ int main(int argc, char* argv[]) {
 					}
 					ImGui::Separator();
 					if (ImGui::MenuItem("Game")) {
+						stimuliDisplay = 1; /*cout << "17";*/ stimuliEndNodes = 1;
 						PlayMode = !PlayMode;
 
 						CircuitGUI::comp.clear();
@@ -724,14 +724,12 @@ int main(int argc, char* argv[]) {
 							//ShellExecute(0, 0, L"https://www.youtube.com/watch?v=6cRctjPRv6M", 0, 0, SW_SHOW);
 						}
 						else { wireBool = 0; PlayRot = 0; }
-
-						stimuliDisplay = 1; stimuliEndNodes = 1;
 					}
 
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Help")) {
-
+					stimuliDisplay = 1; /*cout << "c";*/
 					if (ImGui::MenuItem("Controls")) { /*cout << "\nKeys";*/ }
 					ImGui::Separator();
 
@@ -788,7 +786,7 @@ int main(int argc, char* argv[]) {
 
 
 			if (Drag) {
-				stimuliDisplay = 1;
+				stimuliDisplay = 1; /*cout << "18"*/;
 				CircuitGUI::Drag();
 				CircuitGUI::colorGrid();
 
@@ -817,48 +815,50 @@ int main(int argc, char* argv[]) {
 
 		}
 
+
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) { // zero causes 100 cpu load
-			CircuitGUI::app.setView(CircuitGUI::view);
-			CircuitGUI::app.clear(CircuitGUI::backColor);
+				CircuitGUI::app.setView(CircuitGUI::view);
+				CircuitGUI::app.clear(CircuitGUI::backColor);
 
-			drawGrid();
+				drawGrid();
 
-			if (virSerial.size() > 1) drawAllSqr();
+				if (virSerial.size() > 1) drawAllSqr();
 
-			drawComp();
+				drawComp();
 
-			/*Wires*/ {
-				for (int c = 0; c < wires.size(); c++) wires[c].draw(CircuitGUI::app);
+				/*Wires*/ {
+					for (int c = 0; c < wires.size(); c++) wires[c].draw(CircuitGUI::app);
+				}
+
+				drawNodes();
+
+				if (!PlayMode) drawBoarders();
+
+				if (CircuitGUI::Occupied) drawVirSprites();
+
+				drawSelSqr();
+
+				drawToolColumn(MInTool, MIntool);
+
+				/*ImGui*/ {
+					//if (DrawCircle) CircuitGUI::app.draw(testCircle);
+					ImGui::SFML::Render(CircuitGUI::app);//Last Thing to render
+				}
+
 			}
-
-			drawNodes();
-
-			if (!PlayMode) drawBoarders();
-
-			if (CircuitGUI::Occupied) drawVirSprites();
-
-			drawSelSqr();
-
-			drawToolColumn(MInTool, MIntool);
-
-			/*ImGui*/ {
-				//if (DrawCircle) CircuitGUI::app.draw(testCircle);
-				ImGui::SFML::Render(CircuitGUI::app);//Last Thing to render
-			}
-
-			CircuitGUI::app.display();
-		}
+		CircuitGUI::app.display();
 
 
 		CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)(((float)clock() - (float)frame) / (float)CLOCKS_PER_SEC) * 100.0F) + " | " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
 		frame = clock();
 		stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
+		/*cout << "\n";*/
 	}
 
 
 
-	stimuliDisplay = 1; stimuliEndNodes = 1;
+	stimuliDisplay = 1; /*cout << "19";*/ stimuliEndNodes = 1;
 
 	/*ImGui*/
 	ImGui::SFML::Shutdown();
@@ -945,10 +945,10 @@ cout << _mkdir("Awesomness");
 			viewX = view.getCenter().x; viewY = view.getCenter().y;
 			for (int c = 0; c < vLines.size(); c++)
 				vLines[c].setPosition(-virtualBoarder - (int)(-virtualBoarder) % gap + c * gap, -virtualBoarder);
-
+		
 			for (int c = 0; c < hLines.size(); c++)
 				hLines[c].setPosition(-virtualBoarder, -virtualBoarder - (int)(-virtualBoarder) % gap + c * gap);
-
+		
 			verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 			horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
 		}*/
@@ -969,23 +969,32 @@ cout << _mkdir("Awesomness");
 //}
 
 /*if (debugBool) {
-			debugBool = 0;
+	debugBool = 0;
 
-			//LPCWSTR pszPathToOpen = L"C:\\Windows";
-			//PIDLIST_ABSOLUTE pidl;
-			//if (SUCCEEDED(SHParseDisplayName(pszPathToOpen, 0, &pidl, 0, 0)))
-			//{
-			//	// we don't want to actually select anything in the folder, so we pass an empty
-			//	// PIDL in the array. if you want to select one or more items in the opened
-			//	// folder you'd need to build the PIDL array appropriately
-			//	ITEMIDLIST idNull = { 0 };
-			//	LPCITEMIDLIST pidlNull[1] = { &idNull };
-			//	SHOpenFolderAndSelectItems(pidl, 1, pidlNull, 0);
-			//	ILFree(pidl);
-			//}
+	//LPCWSTR pszPathToOpen = L"C:\\Windows";
+	//PIDLIST_ABSOLUTE pidl;
+	//if (SUCCEEDED(SHParseDisplayName(pszPathToOpen, 0, &pidl, 0, 0)))
+	//{
+	//	// we don't want to actually select anything in the folder, so we pass an empty
+	//	// PIDL in the array. if you want to select one or more items in the opened
+	//	// folder you'd need to build the PIDL array appropriately
+	//	ITEMIDLIST idNull = { 0 };
+	//	LPCITEMIDLIST pidlNull[1] = { &idNull };
+	//	SHOpenFolderAndSelectItems(pidl, 1, pidlNull, 0);
+	//	ILFree(pidl);
+	//}
 
-			ShellExecute(NULL, NULL, L"E:\\Programming\\C++\\CircuitSimulator_SFML\\Circiut_Sim\\Saved-Images", NULL, NULL, SW_SHOWNORMAL);
+	ShellExecute(NULL, NULL, L"E:\\Programming\\C++\\CircuitSimulator_SFML\\Circiut_Sim\\Saved-Images", NULL, NULL, SW_SHOWNORMAL);
 
-			//system("start explorer c:\\php");
+	//system("start explorer c:\\php");
 
-		}*/
+}*/
+
+/*sf::Cursor cursor;
+	if (MIntool) {
+		cursor.loadFromSystem(sf::Cursor::Hand);
+		CircuitGUI::app.setMouseCursor(cursor);
+	} else {
+		cursor.loadFromSystem(sf::Cursor::Arrow);
+		CircuitGUI::app.setMouseCursor(cursor);
+	}*/

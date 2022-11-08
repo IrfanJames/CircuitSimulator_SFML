@@ -115,9 +115,20 @@ namespace CircuitGUI {
 	bool Occupied = 0;
 	bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = false) {
 		//if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
+		static Entity indexEntity;
+		static sf::Vector2f end;
+		indexEntity = CircuitGUI::comp[Index];
+		indexEntity.x = At.x; indexEntity.y = At.y;
+		indexEntity.stimuli();
+		end = indexEntity.getEndPos();
+
 		int noCount = 0;
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
+			//if (c == Index || abs(comp[c].x - At.x) >= 200 || abs(comp[c].y - At.y) >= 200) continue; // gap-hardcode
+			if (c == Index
+				|| ((comp[c].x - At.x) >= 200 || (At.x - comp[c].x) >= 200)
+				|| ((comp[c].y - At.y) >= 200 || (At.y - comp[c].y) >= 200)
+				) continue; // gap-hardcode
 			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
 
 			if (At.x == CircuitGUI::comp[c].x && At.y == CircuitGUI::comp[c].y) {
@@ -138,21 +149,6 @@ namespace CircuitGUI {
 				}
 			}
 
-		}
-		if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
-
-
-		static Entity indexEntity;
-		indexEntity = CircuitGUI::comp[Index];
-		indexEntity.x = At.x; indexEntity.y = At.y;
-		indexEntity.stimuli();
-		static sf::Vector2f end;
-		end = indexEntity.getEndPos();
-
-		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-			if (c == Index || abs(CircuitGUI::comp[c].x - end.x) >= 200 || abs(CircuitGUI::comp[c].y - end.y) >= 200) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
-
 			if (end.x == CircuitGUI::comp[c].x && end.y == CircuitGUI::comp[c].y) {
 				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
 					noCount++;
@@ -172,14 +168,21 @@ namespace CircuitGUI {
 			}
 
 		}
-		if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
+		if (!!noCount) { Occupied = 0; return 0; } // Non-Zero (!!bool)
+
+
+
 
 		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
+			//if (c == Index || abs(comp[c].x - At.x) >= 200 || abs(comp[c].y - At.y) >= 200) continue; // gap-hardcode
+			if (c == Index
+				|| ((comp[c].x - At.x) >= 200 || (At.x - comp[c].x) >= 200)
+				|| ((comp[c].y - At.y) >= 200 || (At.y - comp[c].y) >= 200)
+				) continue; // gap-hardcode
 			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
 
-			if (indexEntity.bounds.intersects(CircuitGUI::comp[c].bounds)) { Occupied = 1; return 1; }
 
+			if (indexEntity.bounds.intersects(CircuitGUI::comp[c].bounds)) { Occupied = 1; return 1; }
 		}
 
 		Occupied = 0; return 0;
@@ -223,7 +226,7 @@ namespace CircuitGUI {
 	sf::RectangleShape allSqr;
 	//void allSqrDesign()
 	void drawAllSqr() {
-		CircuitGUI::app.draw(CircuitGUI::allSqr);
+		app.draw(allSqr);
 	}
 	void updateAllSqr() {
 
@@ -807,13 +810,8 @@ namespace CircuitGUI {
 				for (int v = 0; v < virSerial.size(); v++)
 					comp.erase(comp.begin() + (virSerial[v] - v)); //assuming vir or virSerial is sorted(ascendingly)
 			}*/
-		}
-	}
 
-}
-
-/*
-int total = 0;
+			/*int total = 0;
 			while (!!virSerial.size())
 			{
 				int v = 1;
@@ -825,5 +823,86 @@ int total = 0;
 				virSerial.erase(virSerial.begin(), virSerial.begin() + v);
 
 				total += v;
+			}*/
+		}
+	}
+
+}
+
+
+
+/*
+
+bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = false) {
+		//if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
+		int noCount = 0;
+		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
+			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
+			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
+
+			if (At.x == CircuitGUI::comp[c].x && At.y == CircuitGUI::comp[c].y) {
+				if (CircuitGUI::comp[Index].angle != CircuitGUI::comp[c].angle) {
+					noCount++;
+				}
+				else {
+					Occupied = 1; return 1;
+				}
 			}
+
+			if (At.x == CircuitGUI::comp[c].getEndPos().x && At.y == CircuitGUI::comp[c].getEndPos().y) {
+				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
+					noCount++;
+				}
+				else {
+					Occupied = 1; return 1;
+				}
+			}
+
+		}
+		if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
+
+
+		static Entity indexEntity;
+		indexEntity = CircuitGUI::comp[Index];
+		indexEntity.x = At.x; indexEntity.y = At.y;
+		indexEntity.stimuli();
+		static sf::Vector2f end;
+		end = indexEntity.getEndPos();
+
+		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
+			if (c == Index || abs(CircuitGUI::comp[c].x - end.x) >= 200 || abs(CircuitGUI::comp[c].y - end.y) >= 200) continue; // gap-hardcode
+			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
+
+			if (end.x == CircuitGUI::comp[c].x && end.y == CircuitGUI::comp[c].y) {
+				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
+					noCount++;
+				}
+				else {
+					Occupied = 1; return 1;
+				}
+			}
+
+			if (end.x == CircuitGUI::comp[c].getEndPos().x && end.y == CircuitGUI::comp[c].getEndPos().y) {
+				if (CircuitGUI::comp[Index].angle != CircuitGUI::comp[c].angle) {
+					noCount++;
+				}
+				else {
+					Occupied = 1; return 1;
+				}
+			}
+
+		}
+		if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
+
+		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
+			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
+			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
+
+			if (indexEntity.bounds.intersects(CircuitGUI::comp[c].bounds)) { Occupied = 1; return 1; }
+
+		}
+
+		Occupied = 0; return 0;
+	}
+
 */
