@@ -1,4 +1,6 @@
 New------------------------------------
+Different Colors for Light/Dark Theme
+Control Key-mapping added in Help Section in TitleBar
 File is opened after saving(proj(TXT), img(PNG)) by Shell
 FINALLY!!! Textures don't pixcelate when window resize
 When Opening/Pasting, components appeare in Center,Selected(virSerial)
@@ -34,11 +36,7 @@ Wires
 GL_INVALID_OPERATION The specified operation is not allowed in the current state.
 
 Unstable:------------------------------
-When win minimized (hangs computer {all nust labs; mine at 3 windows}) [Possible cause Smart Display]
-|__-> appearently solved by disabling stimuli display (x=1)
-|
-|__-> smart display(using): (normal cpu 25-30),(100)
-|__-> smart display( not ): (normal cpu  6-15)
+Solved by always Displaying and NOT Drawing Stuff.
 
 
 Stable:--------------------------------
@@ -54,10 +52,13 @@ Save Projects (different names)
 Open latest saved project
 EndNodes, endNode-Circles
 Copy/Paste
+Enerything till Themes
 
 
 No:-------------------------------------
-Project in ImGui window
 Threads
 enum (State Machine for hold)
 uint32_t for window size
+
+https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.unknowncheats.me%2Fforum%2Fcounterstrike-global-offensive%2F183111-menu-showcase-thread-139.html&psig=AOvVaw2f4AFhMhaguFNuoc3rhsU8&ust=1668709360769000&source=images&cd=vfe&ved=0CBIQ3YkBahcKEwi4ntWRqbP7AhUAAAAAHQAAAAAQFw
+https://www.unknowncheats.me/forum/c-and-c-/256748-imgui-tab-stick-left.html

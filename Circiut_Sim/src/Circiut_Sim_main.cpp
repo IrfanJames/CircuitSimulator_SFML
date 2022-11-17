@@ -16,7 +16,7 @@ taskkill /F /IM Circiut_Sim.exe
 //#include "Circuit_Graph.h"
 #include "SFML/Graphics.hpp"
 #include "Circuit_Entity.h"
-#include "Circuit_wire.h"
+//asdf#include "Circuit_wire.h"
 #include "Circuit_GUI.hpp"
 
 //#include "clipboardxx.hpp"
@@ -30,18 +30,19 @@ using namespace CircuitGUI;
 
 
 int main(int argc, char* argv[]) {
+
 	CircuitGUI::initializeGUI();
 
 	/*ImGui*/
 	ImGui::SFML::Init(CircuitGUI::app);
 	sf::Clock deltaClock;
 
-	bool RELEASE_DEBUG = 1;
+	bool RELEASE_DEBUG = 0;
 	bool End = 0, debugBool = 0;
 	bool Drag = 0, stimuliDisplay = 1, stimuliEndNodes = 0;
 	bool releaseBool = 1, wheelReleaseBool = 1, ShiftPressed = 0;
 	bool selectSquare = 0, Selection = 0, mouseOnCompsBool = 0, wireBool = 0;
-	bool PlayMode = 0, PlayRot = 0;
+	bool PlayMode = 0/*//asdf, PlayRot = 0*/;
 
 	int serialCompMouse = 0, serialToolMouse = 0, cursorInWin = 0;
 
@@ -56,7 +57,7 @@ int main(int argc, char* argv[]) {
 	
 
 	/*Wires*/
-	std::vector<Wire> wires; wires.reserve(3);
+	//asdfstd::vector<Wire> wires; wires.reserve(3);
 
 	////////////////////////////////////////////// Solve
 
@@ -98,7 +99,8 @@ int main(int argc, char* argv[]) {
 				CircuitGUI::updatePosToolBox();
 			}
 
-			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
+			//asdf
+			/*if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
 				bool onNode = 0;
 				static int sensitivity = 7;
 				sf::Vector2f cursorPos = CircuitGUI::cursorInSim();
@@ -154,7 +156,7 @@ int main(int argc, char* argv[]) {
 
 				}
 
-			}
+			}*/
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
 				releaseBool = 1;
 				if (Selection) {
@@ -325,11 +327,8 @@ int main(int argc, char* argv[]) {
 
 
 
-		if (PlayRot) { CircuitGUI::view.rotate(0.9); }
-		else CircuitGUI::view.setRotation(0);
-
-
-
+		/*if (PlayRot) { CircuitGUI::view.rotate(0.9); }
+		else CircuitGUI::view.setRotation(0);*/
 
 
 		// ----------------------------------------	Options
@@ -478,7 +477,7 @@ int main(int argc, char* argv[]) {
 				}
 				/*Click*/
 				else {
-					if (!PlayMode && CircuitGUI::Click(CircuitGUI::gap)) {
+					if (/*//asdf!PlayMode &&*/ CircuitGUI::Click(CircuitGUI::gap)) {
 						stimuliDisplay = 1; /*cout << "8";*/
 
 						for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
@@ -527,7 +526,7 @@ int main(int argc, char* argv[]) {
 			else { Drag = 0; }
 
 			/*Continoue while hold*/
-			if (!selectSquare && mouseOnCompsBool && !PlayMode && !Click(0) /*&& releaseBool*/) {
+			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !Click(0) /*&& releaseBool*/) {
 				/*static const sf::Vector2f offsetHold[4] = {
 					{0, -2},
 					{2, 0},
@@ -562,7 +561,7 @@ int main(int argc, char* argv[]) {
 			}
 
 			/*Select Sqr*/
-			if (selectSquare && !releaseBool && !PlayMode) {
+			if (selectSquare && !releaseBool /*//asdf&& !PlayMode*/) {
 				stimuliDisplay = 1; /*cout << "10";*/
 				Selection = 1;
 				/*Sel Sqr*/
@@ -624,7 +623,7 @@ int main(int argc, char* argv[]) {
 			else { static sf::Vector2f zero(0, 0); CircuitGUI::selSqr.setSize(zero); }
 
 			/*Wire*/
-			if (wireBool) { stimuliDisplay = 1; /*cout << "11";*/ wires.back().makeWire(); }
+			//asdfif (wireBool) { stimuliDisplay = 1; /*cout << "11";*/ wires.back().makeWire(); }
 		}
 
 		
@@ -652,7 +651,7 @@ int main(int argc, char* argv[]) {
 
 			//*
 			if (ImGui::BeginMainMenuBar()) {
-				
+
 				if (ImGui::BeginMenu("File")) {
 					stimuliDisplay = 1; /*cout << "a";*/
 					if (ImGui::MenuItem("Open...", "Ctrl + O")) {
@@ -687,29 +686,36 @@ int main(int argc, char* argv[]) {
 				}
 				if (ImGui::BeginMenu("Options")) {
 					stimuliDisplay = 1; /*cout << "b";*/
-					if (ImGui::MenuItem("Handdrawn Icons")) { /*cout << "\nWobbly";*/ }
-					if (ImGui::BeginMenu("Switch Themes")) {
+					if (ImGui::BeginMenu("Handdrawn Icons"))
+					{
+						ImGui::Text("Coming Soon...");
+						ImGui::EndMenu();
+					}
+					ImGui::Separator();
+					if (ImGui::BeginMenu("Theme")) {
 
 						if (ImGui::MenuItem("Dark")) {
 							stimuliDisplay = 1; /*cout << "15";*/
 
-							CircuitGUI::gridColor.r = 100; CircuitGUI::gridColor.g = 105; CircuitGUI::gridColor.b = 110; CircuitGUI::gridColor.a = 20;
-							CircuitGUI::backColor.r = 23;  CircuitGUI::backColor.g = 24;  CircuitGUI::backColor.b = 25;
-							CircuitGUI::colorGrid();
+							CircuitGUI::darkLightMode = false;
+
+							updateThemeColors();
 						}
 						if (ImGui::MenuItem("Light")) {
 							stimuliDisplay = 1; /*cout << "16";*/
 
-							CircuitGUI::gridColor.r = 212; CircuitGUI::gridColor.g = 232; CircuitGUI::gridColor.b = 247; CircuitGUI::gridColor.a = 50;
-							CircuitGUI::backColor.r = 36;  CircuitGUI::backColor.g = 133; CircuitGUI::backColor.b = 202;
-							CircuitGUI::colorGrid();
+							CircuitGUI::darkLightMode = true;
+
+							updateThemeColors();
 						}
 
 						ImGui::EndMenu();
 					}
-					ImGui::Separator();
+					
+					//asdf
+					/*ImGui::Separator();
 					if (ImGui::MenuItem("Game")) {
-						stimuliDisplay = 1; /*cout << "17";*/ stimuliEndNodes = 1;
+						stimuliDisplay = 1; stimuliEndNodes = 1; //cout << "17";
 						PlayMode = !PlayMode;
 
 						CircuitGUI::comp.clear();
@@ -717,21 +723,93 @@ int main(int argc, char* argv[]) {
 						CircuitGUI::virSprite.clear();
 						CircuitGUI::virSerialShift.clear();
 
-						wires.clear();
+						//asdfwires.clear();
 
 						if (PlayMode) {
 							CircuitGUI::Options::openf("Saved-Projects\\Maze.TXT");
 							//ShellExecute(0, 0, L"https://www.youtube.com/watch?v=6cRctjPRv6M", 0, 0, SW_SHOW);
 						}
 						else { wireBool = 0; PlayRot = 0; }
-					}
+					}*/
 
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Help")) {
-					stimuliDisplay = 1; /*cout << "c";*/
-					if (ImGui::MenuItem("Controls")) { /*cout << "\nKeys";*/ }
+					stimuliDisplay = 1; //cout << "c";
+					if (ImGui::BeginMenu("Controls"))
+					{
+						if (ImGui::BeginTable("table_context_menu_2", 2))
+						{
+
+							static const std::string opt[11][2] = { //HardCode
+								{ "Drag View", "Press Scroll-Wheel + Drag" },
+								{ "Selection Mode", "Click + Hold + Drag" },
+								{ "Select All",		"Ctrl + A" },
+								{ "Rotate",			"Ctrl + R" },
+								{ "Delete",			"Del" },
+								{ "Copy",			"Ctrl + C" },
+								{ "Paste",			"Ctrl + V" },
+								{ "Open",			"Ctrl + O" },
+								{ "Save As",		"Ctrl + Shift + S" },
+								{ "Escape",			"Esc" },
+								{ "New Components",	"Hover Left" }
+							};
+
+							ImGui::TableSetupColumn("Option");
+							ImGui::TableSetupColumn("Keys");
+
+							ImGui::TableHeadersRow();
+							ImGui::TableNextRow();
+
+							for (int row = 0; row < 11; row++) //HardCode
+							{
+								ImGui::TableSetColumnIndex(0);
+								ImGui::Text(opt[row][0].c_str());
+								ImGui::SameLine();
+
+								ImGui::TableSetColumnIndex(1);
+								//ImGui::Text(opt[row][1].c_str());
+
+								bool sameLine = false;
+								std::string Text = opt[row][1] + " ", temp = "";
+								for (int i = 0; i < Text.length(); i++) {
+
+									if (('0' <= Text[i] && Text[i] <= '9') || ('a' <= Text[i] && Text[i] <= 'z') || ('A' <= Text[i] && Text[i] <= 'Z')) {
+										temp += Text[i];
+									}
+									else if (Text[i] == '+') {
+										if (sameLine) ImGui::SameLine();
+										ImGui::Text("+");
+										sameLine = true;
+									}
+									else {
+										if (temp.size()) {
+											if (sameLine) ImGui::SameLine();
+											ImGui::SmallButton(temp.c_str());
+											temp.clear();
+											sameLine = true;
+										}
+									}
+
+								}
+
+								ImGui::TableNextRow();
+							}
+							ImGui::EndTable();
+						}
+
+						ImGui::EndMenu();
+					}
 					ImGui::Separator();
+					if (ImGui::BeginMenu("Contact"))
+					{
+						ImGui::Text("Source Code: https://github.com/IrfanJames/CircuitSimulator_SFML.git");
+						ImGui::Text("Email: irfanjamespak@gmail.com");
+
+						ImGui::EndMenu();
+					}
+
+					/*ImGui::Separator();
 
 					if (ImGui::BeginMenu("Options"))
 					{
@@ -747,14 +825,163 @@ int main(int argc, char* argv[]) {
 						ImGui::InputFloat("Input", &f, 0.1f);
 						ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
 						ImGui::EndMenu();
-					}
-
+					}*/
 
 					ImGui::EndMenu();
 				}
 
+				/*ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+				if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+				{
+					static ImGuiTabBarFlags tab_items_flags = ImGuiTabBarFlags_Reorderable;
+					static bool a = 1, b = 1, c = 1;
+					std::string fileNameIm = "Untitled-" + std::to_string(10) + ".txt";
+					if (ImGui::BeginTabItem(fileNameIm.c_str(), &a, tab_items_flags))
+					{
+						//ImGui::Text("This is the Avocado tab!");
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Broccoli", &b, tab_items_flags))
+					{
+						//ImGui::Text("This is the Broccoli tab!");
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Cucumber", &c, tab_items_flags))
+					{
+						//ImGui::Text("This is the Cucumber tab!");
+						ImGui::EndTabItem();
+					}
+					ImGui::EndTabBar();
+				}*/
+
 				ImGui::EndMainMenuBar();
 			}//*/
+
+			/*if (ImGui::TreeNode("Advanced & Close Button"))
+			{
+				// Expose a couple of the available flags. In most cases you may just call BeginTabBar() with no flags (0).
+				static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
+				ImGui::CheckboxFlags("ImGuiTabBarFlags_Reorderable", &tab_bar_flags, ImGuiTabBarFlags_Reorderable);
+				ImGui::CheckboxFlags("ImGuiTabBarFlags_AutoSelectNewTabs", &tab_bar_flags, ImGuiTabBarFlags_AutoSelectNewTabs);
+				ImGui::CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton);
+				ImGui::CheckboxFlags("ImGuiTabBarFlags_NoCloseWithMiddleMouseButton", &tab_bar_flags, ImGuiTabBarFlags_NoCloseWithMiddleMouseButton);
+				if ((tab_bar_flags & ImGuiTabBarFlags_FittingPolicyMask_) == 0)
+					tab_bar_flags |= ImGuiTabBarFlags_FittingPolicyDefault_;
+				if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
+					tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyResizeDown);
+				if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyScroll", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyScroll))
+					tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyScroll);
+
+				// Tab Bar
+				const char* names[4] = { "Artichoke", "Beetroot", "Celery", "Daikon" };
+				static bool opened[4] = { true, true, true, true }; // Persistent user state
+				for (int n = 0; n < IM_ARRAYSIZE(opened); n++)
+				{
+					if (n > 0) { ImGui::SameLine(); }
+					ImGui::Checkbox(names[n], &opened[n]);
+				}
+
+				// Passing a bool* to BeginTabItem() is similar to passing one to Begin():
+				// the underlying bool will be set to false when the tab is closed.
+				if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+				{
+					for (int n = 0; n < IM_ARRAYSIZE(opened); n++)
+						if (opened[n] && ImGui::BeginTabItem(names[n], &opened[n], ImGuiTabItemFlags_None))
+						{
+							ImGui::Text("This is the %s tab!", names[n]);
+							if (n & 1)
+								ImGui::Text("I am an odd tab.");
+							ImGui::EndTabItem();
+						}
+					ImGui::EndTabBar();
+				}
+				ImGui::Separator();
+				ImGui::TreePop();
+			}
+			
+			if (ImGui::TreeNode("TabItemButton & Leading/Trailing flags"))
+			{
+				static ImVector<int> active_tabs;
+				static int next_tab_id = 0;
+				if (next_tab_id == 0) // Initialize with some default tabs
+					for (int i = 0; i < 3; i++)
+						active_tabs.push_back(next_tab_id++);
+
+				// TabItemButton() and Leading/Trailing flags are distinct features which we will demo together.
+				// (It is possible to submit regular tabs with Leading/Trailing flags, or TabItemButton tabs without Leading/Trailing flags...
+				// but they tend to make more sense together)
+				static bool show_leading_button = true;
+				static bool show_trailing_button = true;
+				ImGui::Checkbox("Show Leading TabItemButton()", &show_leading_button);
+				ImGui::Checkbox("Show Trailing TabItemButton()", &show_trailing_button);
+
+				// Expose some other flags which are useful to showcase how they interact with Leading/Trailing tabs
+				static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_AutoSelectNewTabs | ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyResizeDown;
+				ImGui::CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton);
+				if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
+					tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyResizeDown);
+				if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyScroll", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyScroll))
+					tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyScroll);
+
+				if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+				{
+					// Demo a Leading TabItemButton(): click the "?" button to open a menu
+					if (show_leading_button)
+						if (ImGui::TabItemButton("?", ImGuiTabItemFlags_Leading | ImGuiTabItemFlags_NoTooltip))
+							ImGui::OpenPopup("MyHelpMenu");
+					if (ImGui::BeginPopup("MyHelpMenu"))
+					{
+						ImGui::Selectable("Hello!");
+						ImGui::EndPopup();
+					}
+
+					// Demo Trailing Tabs: click the "+" button to add a new tab (in your app you may want to use a font icon instead of the "+")
+					// Note that we submit it before the regular tabs, but because of the ImGuiTabItemFlags_Trailing flag it will always appear at the end.
+					if (show_trailing_button)
+						if (ImGui::TabItemButton("+", ImGuiTabItemFlags_Trailing | ImGuiTabItemFlags_NoTooltip))
+							active_tabs.push_back(next_tab_id++); // Add new tab
+
+					// Submit our regular tabs
+					for (int n = 0; n < active_tabs.Size; )
+					{
+						bool open = true;
+						char name[16];
+						snprintf(name, IM_ARRAYSIZE(name), "%04d", active_tabs[n]);
+						if (ImGui::BeginTabItem(name, &open, ImGuiTabItemFlags_None))
+						{
+							ImGui::Text("This is the %s tab!", name);
+							ImGui::EndTabItem();
+						}
+
+						if (!open)
+							active_tabs.erase(active_tabs.Data + n);
+						else
+							n++;
+					}
+
+					ImGui::EndTabBar();
+				}
+				ImGui::Separator();
+				ImGui::TreePop();
+			}*/
+
+			/*ImGui::Dummy(ImVec2(0, 20));
+
+			ImGui::BeginTabBar("#Additional Parameters");
+			float value = 0.0f;
+			if (ImGui::BeginTabItem("Tab Name2")) {
+				ImGui::SliderFloat("Slider", &value, 0, 1.0f);
+			}
+			if (ImGui::BeginTabItem("Tab Name3")) {
+				ImGui::Text("Tab 2");
+			}
+			if (ImGui::BeginTabItem("Tab Name4")) {
+				ImGui::Text("Tab 3");
+			}
+			if (ImGui::BeginTabItem("Tab Name5")) {
+				ImGui::Text("Tab 4");
+			}
+			ImGui::EndTabBar();*/
 
 			//ImGui::Begin("Right-Click");
 			//if (ImGui::BeginPopupContextItem()) {
@@ -788,7 +1015,7 @@ int main(int argc, char* argv[]) {
 			if (Drag) {
 				stimuliDisplay = 1; /*cout << "18"*/;
 				CircuitGUI::Drag();
-				CircuitGUI::colorGrid();
+				CircuitGUI::colorBrightLineGrid();
 
 				CircuitGUI::updatePosToolBox();
 
@@ -811,6 +1038,8 @@ int main(int argc, char* argv[]) {
 				CircuitGUI::updateEndCircles();
 
 				CircuitGUI::updateAllSqr();
+				//CircuitGUI::qtUpdate();
+				//CircuitGUI::qtWrite();
 			}
 
 		}
@@ -825,15 +1054,18 @@ int main(int argc, char* argv[]) {
 
 				if (virSerial.size() > 1) drawAllSqr();
 
+				//qtDraw(CircuitGUI::qt);
+				
 				drawComp();
 
-				/*Wires*/ {
-					for (int c = 0; c < wires.size(); c++) wires[c].draw(CircuitGUI::app);
-				}
+				/*Wires*/ /* {
+					//for (int c = 0; c < wires.size(); c++) wires[c].draw(CircuitGUI::app);
+				}*/
 
 				drawNodes();
 
-				if (!PlayMode) drawBoarders();
+				/*//asdfif (!PlayMode)*/ drawBoarders();
+
 
 				if (CircuitGUI::Occupied) drawVirSprites();
 
@@ -850,7 +1082,7 @@ int main(int argc, char* argv[]) {
 		CircuitGUI::app.display();
 
 
-		CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)(((float)clock() - (float)frame) / (float)CLOCKS_PER_SEC) * 100.0F) + " | " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
+		CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)(((float)clock() - (float)frame) / (float)CLOCKS_PER_SEC) * 1000.0F) + " | " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)frame))));
 		frame = clock();
 		stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
 		/*cout << "\n";*/

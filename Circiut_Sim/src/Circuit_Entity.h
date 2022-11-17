@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Circuit_Global.h"
 #include <iostream>
+#include "Circuit_Global.h"
 #include "SFML/Graphics.hpp";
 
 sf::Texture compTex[8];
@@ -12,11 +12,12 @@ class Entity {
 public:
 	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
 	static sf::Font s_font;
+	static sf::RectangleShape boarderDesign;
 
 public:
 	double resistance = 1000;
 	double voltage = -5;
-	double current = -0.002;
+	double current = 0.0304;
 
 	enum {
 		Cap,
@@ -120,11 +121,9 @@ public:
 		serial = 0; x = 0.0f; y = 0.0f; angle = 0.0f;
 
 		static const int A = 0, B = 15, C = 75; //Hard Code
+		boarder = boarderDesign;
 		boarder.setSize(sf::Vector2f(2 * B, C));
 		boarder.setOrigin(B, A);
-		boarder.setFillColor(sf::Color::Transparent);
-		boarder.setOutlineThickness(1.0f);
-		boarder.setOutlineColor(sf::Color(0, 204, 102));
 
 		bounds.left = x - B;
 		bounds.top = y - A;
@@ -143,12 +142,10 @@ public:
 		sprite.setTexture(compTex[serial]);
 		sprite.setOrigin((int)(compTex[serial].getSize().x / 2), 0);
 
+		boarder = boarderDesign;
 		static const int A = 0, B = 15, C = 75; //Hard Code
 		boarder.setSize(sf::Vector2f(2 * B, C));
 		boarder.setOrigin(B, A);
-		boarder.setFillColor(sf::Color::Transparent);
-		boarder.setOutlineThickness(1.0f);
-		boarder.setOutlineColor(sf::Color(0, 204, 102));
 
 		bounds.left = x - B;
 		bounds.top = y - A;
@@ -196,8 +193,8 @@ public:
 		};
 		valueText.setPosition(x + offSet[(int)(angle / 90)].x, y + offSet[(int)(angle / 90)].y); // badPractice for gap = 15
 	}
-	void draw(sf::RenderWindow& app) {
-
+	void draw(sf::RenderWindow& app)
+	{
 		app.draw(valueText);
 
 		app.draw(sprite);
@@ -207,6 +204,13 @@ public:
 	static void setFont(const std::string& dir) {
 		s_font.loadFromFile(dir); /*CALIBRI_1*/
 	}
+	static void setboarderDesgin(const sf::Color& color/* = sf::Color(0, 255, 85 Or 0, 204, 102)*/)
+	{
+		boarderDesign.setFillColor(sf::Color::Transparent);
+		boarderDesign.setOutlineThickness(1.0f);
+		boarderDesign.setOutlineColor(color);
+	}
+
 	~Entity() { ; }
 
 
@@ -214,3 +218,4 @@ public:
 };
 
 sf::Font Entity::s_font;
+sf::RectangleShape Entity::boarderDesign;
