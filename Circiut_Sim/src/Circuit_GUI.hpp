@@ -53,7 +53,7 @@ namespace CircuitGUI {
 
 
 	/*Grid*/
-	const int virtualBoarder = 80;
+	int virtualBoarder = 80;
 	std::vector<sf::RectangleShape> vLines;
 	std::vector<sf::RectangleShape> hLines;
 	sf::Color gridColor(100, 105, 110, 20);
@@ -571,6 +571,10 @@ namespace CircuitGUI {
 			colorGrid();
 			colorBackground();
 
+			int a = (int)((sf::VideoMode::getDesktopMode().width - W) / 2);
+			int b = (int)((sf::VideoMode::getDesktopMode().height - H) / 2);
+			virtualBoarder = (a >= b) ? a + 5 * gap : b + 5 * gap;
+
 			vLines.reserve((W + 2 * virtualBoarder) / gap + 2);
 			sf::Vector2f tempVect(1, H + 2 * virtualBoarder);
 			for (int c = 0; c <= (W + 2 * virtualBoarder) / gap; c++) {
@@ -595,6 +599,35 @@ namespace CircuitGUI {
 
 			colorBrightLineGrid();
 		}
+
+		/* {
+			colorGrid();
+			colorBackground();
+
+			vLines.reserve((W + 2 * virtualBoarder) / gap + 2);
+			sf::Vector2f tempVect(1, H + 2 * virtualBoarder);
+			for (int c = 0; c <= (W + 2 * virtualBoarder) / gap; c++) {
+				vLines.emplace_back(tempVect);
+			}
+			for (int c = 0; c < vLines.size(); c++) {
+				vLines[c].setPosition(-virtualBoarder - (int)(-virtualBoarder) % gap + c * gap, -virtualBoarder);
+				//gridColor.a = 20 + (c % 5 == 0) * 15;
+				//vLines[c].setFillColor(gridColor);
+			}
+
+			hLines.reserve((H + 2 * virtualBoarder) / gap + 2);
+			tempVect.x = W + 2 * virtualBoarder; tempVect.y = 1;
+			for (int c = 0; c <= (H + 2 * virtualBoarder) / gap; c++) {
+				hLines.emplace_back(tempVect);
+			}
+			for (int c = 0; c < hLines.size(); c++) {
+				hLines[c].setPosition(-virtualBoarder, -virtualBoarder - (int)(-virtualBoarder) % gap + c * gap);
+				//gridColor.a = 20 + (c % 5 == 0) * 15;
+				//hLines[c].setFillColor(gridColor);
+			}
+
+			colorBrightLineGrid();
+		}*/
 
 		//toolBoxInit();
 		{

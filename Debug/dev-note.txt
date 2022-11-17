@@ -1,4 +1,5 @@
 New------------------------------------
+Grid's virBoarder till FullScreen
 Different Colors for Light/Dark Theme
 Control Key-mapping added in Help Section in TitleBar
 File is opened after saving(proj(TXT), img(PNG)) by Shell
