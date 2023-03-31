@@ -57,6 +57,21 @@
     <ClInclude Include="src\Circuit_wire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Circuit_Entity.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Circuit_Global.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Circuit_Graph.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Circuit_Windows_Stuff.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Circuit_wire.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Circiut_Sim_main.cpp">

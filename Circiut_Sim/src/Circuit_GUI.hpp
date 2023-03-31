@@ -1,10 +1,12 @@
+// Colapse all Scopes - it'll be easier
+// Ctrl + M + A in Visual Studio
 #pragma once
 
-
+#include <iostream>
 #include <windows.h> //To Open file(txt/PNG) just after creating(Save as...) it
-
-//#include "Circuit_Global.h"
 #include "SFML/Graphics.hpp"
+#include "Circuit_Entity.hpp"
+//#include "Circuit_Global.h"
 
 extern sf::Texture compTex[8];
 
@@ -396,8 +398,8 @@ namespace CircuitGUI {
 		bool isSubDivided = false;
 		unsigned int size = 0;
 		int arr[5] = { 0,0,0,0,0 };
-		sf::FloatRect area;	// [0 1]
-		sf::RectangleShape rectDraw;
+		sf::FloatRect area;
+		sf::RectangleShape rectDraw;								// [0 1]
 		quadTree* sub[4] = { nullptr,nullptr ,nullptr ,nullptr };	// [2 3]
 	};
 	quadTree qt;
@@ -425,12 +427,9 @@ namespace CircuitGUI {
 		}
 	}
 	void qtAdd(int c, quadTree& box) {
-
 		if (box.area.intersects(comp[c].bounds)) {
-
 			if (box.size < 5) { box.arr[box.size++] = c; } //HardCode
 			else {
-
 				if (!box.isSubDivided) {
 					// Sub-divide
 					box.isSubDivided = 1;
@@ -467,19 +466,18 @@ namespace CircuitGUI {
 		qt.area = areaofCollection(true);
 		if (compSize <= 5) { //HardCode
 			qt.size = compSize;
-			for (int c = 0; c < compSize; c++) qt.arr[c] = c;
+			for (int c = 0; c < compSize; c++)
+				qt.arr[c] = c;
 		}
 		else {
-			for (int c = 0; c < compSize; c++) { //HardCode
+			for (int c = 0; c < compSize; c++) //HardCode
 				qtAdd(c, qt);
-			}
 		}
 	}
 	void qtWrite(quadTree& box = qt, int taaabbss = 0) {
 
 		for (int t = 0; t < taaabbss; t++) std::cout << "\t";
 		std::cout << "(" << box.size << "):" << box.arr[0] << ", " << box.arr[1] << ", " << box.arr[2] << ", " << box.arr[3] << ", " << box.arr[4] << "\n";
-		//std::cout << box.size << "\n";
 
 		if (box.isSubDivided) {
 			qtWrite(*box.sub[0], taaabbss + 1);
@@ -490,13 +488,11 @@ namespace CircuitGUI {
 
 	}
 	void qtDraw(quadTree& box) {
-		//std::cout << "ha ";
+
 		box.rectDraw.setSize(sf::Vector2f(box.area.width, box.area.height));
 		box.rectDraw.setPosition(sf::Vector2f(box.area.left, box.area.top));
 		box.rectDraw.setFillColor(sf::Color(box.rectDraw.getPosition().y, box.rectDraw.getPosition().x, box.rectDraw.getScale().y, 100));
-		//box.rectDraw.setOutlineColor(sf::Color(box.rectDraw.getScale().x, box.rectDraw.getPosition().y, box.rectDraw.getPosition().x, 100));
-		//box.rectDraw.setFillColor(sf::Color(255, 0, 0, 50));
-		//box.rectDraw.setOutlineThickness(1);
+
 		app.draw(box.rectDraw);
 
 		if (box.isSubDivided) {
@@ -777,12 +773,7 @@ namespace CircuitGUI {
 
 		void openf(const std::string& filepath) {
 
-			virSerial.clear();
-			virSprite.clear();
-			virSerialShift.clear();
-
 			std::ifstream input(filepath);
-
 			/*int fileNo = 0;
 			std::string fileDir = "Saved-Projects/Project-", fileType = ".txt";
 			std::ifstream input(fileDir + std::to_string(fileNo) + fileType);
@@ -793,7 +784,13 @@ namespace CircuitGUI {
 			input.open(fileDir + std::to_string(fileNo - 1) + fileType);*/
 
 			comp.clear();
+			virSerial.clear();
+			virSprite.clear();
+			virSerialShift.clear();
+			virSerial.reserve(comp.size());
+			virSprite.reserve(comp.size());
 
+			// Centering
 			int no = 0;
 			input >> no;
 			comp.reserve(no + 10); // 10 extra
@@ -803,21 +800,7 @@ namespace CircuitGUI {
 			}
 			input.close();
 
-
-			// Centering and Selecting
-			virSerial.clear();
-			virSprite.clear();
-			virSerialShift.clear();
-			virSerial.reserve(comp.size());
-			virSprite.reserve(comp.size());
-			for (int vv = 0; vv < comp.size(); vv++) {
-				virSerial.emplace_back(vv);
-				//virSprite.emplace_back(comp[virSerial.back()].sprite);
-				virSprite.emplace_back();					// We wouldn't be able to see them anyways
-
-				//virSprite.back().setColor(tempDimColor);	// We wouldn't be able to see them anyways
-			}
-
+			// Centering
 			sf::FloatRect virArea = areaofCollection(true);
 			sf::Vector2f offSet(view.getCenter().x - (virArea.left + (int)(virArea.width / 2)), view.getCenter().y - (virArea.top + (int)(virArea.height / 2)));
 			offSet = trim(offSet);
@@ -828,8 +811,6 @@ namespace CircuitGUI {
 				comp[c].y = (int)trim(comp[c].y + offSet.y);
 				comp[c].stimuli();
 			}
-
-
 		}
 
 		void savef(const std::string& file) {
@@ -886,12 +867,8 @@ namespace CircuitGUI {
 
 		void pastef() {
 
-			std::string inString;
-			//clipboard >> inString;
-			inString = sf::Clipboard::getString();
-			//cout << inString;
+			std::string inString(sf::Clipboard::getString());
 			std::vector<int> integers; integers.reserve(21);
-
 
 			bool negative = 0, numStarted = 0;
 			for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
@@ -913,8 +890,6 @@ namespace CircuitGUI {
 					}
 				}
 			}
-			//std::cout << "\n"; for (int c = 0; c < integers.size(); c++) std::cout << integers[c] << " ";
-
 
 			int OffsetX = 0, OffsetY = 0, count = 0;
 			for (int i = 1; i + 2 < integers.size(); i += 4, count++)
@@ -930,7 +905,7 @@ namespace CircuitGUI {
 				OffsetY = view.getCenter().y - OffsetY;
 			}
 
-			int compSizeBefore = comp.size();
+			int noOfComponentsBefore = comp.size();
 			comp.reserve(abs(integers[0]) + 10); // 10 extra
 			for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
 				S = abs(integers[++c]);
@@ -940,31 +915,18 @@ namespace CircuitGUI {
 				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
 
-
 			virSerial.clear();
 			virSprite.clear();
 			virSerialShift.clear();
 
-			virSerial.reserve(comp.size() - compSizeBefore);
-			virSprite.reserve(comp.size() - compSizeBefore);
+			virSerial.reserve(comp.size() - noOfComponentsBefore);
+			virSprite.reserve(comp.size() - noOfComponentsBefore);
 
-			for (int vv = 0; vv < (comp.size() - compSizeBefore); vv++) {
-				virSerial.emplace_back(vv + compSizeBefore);
+			for (int vv = 0; vv < (comp.size() - noOfComponentsBefore); vv++) {
+				virSerial.emplace_back(vv + noOfComponentsBefore);
 				virSprite.emplace_back(comp[virSerial.back()].sprite);
 				virSprite.back().setColor(tempDimColor);
 			}
-
-			/*
-			sf::FloatRect virArea = areaofCollection(false);
-			sf::Vector2f offSet(view.getCenter().x - (virArea.left + (int)(virArea.width / 2)), view.getCenter().y - (virArea.top + (int)(virArea.height / 2)));
-			std::cout << "\nBad :" << (virArea.left + (int)(virArea.width / 2)) << ", " << (virArea.top + (int)(virArea.height / 2));
-			for (int v = 0; v < virSerial.size(); v++)
-			{
-				comp[virSerial[v]].x = trim(comp[virSerial[v]].x + offSet.x);
-				comp[virSerial[v]].y = trim(comp[virSerial[v]].y + offSet.y);
-				comp[virSerial[v]].stimuli();
-			}*/
-
 		}
 
 		void rotatef() {
@@ -978,6 +940,18 @@ namespace CircuitGUI {
 		}
 
 		void deletef() {
+
+			//erase - remove idiom
+			auto iter = std::remove_if(comp.begin(), comp.end(), [&](const auto& elem) {
+				return std::binary_search(virSerial.begin(), virSerial.end(), &elem - &comp[0]);
+				});
+			comp.erase(iter, comp.end());
+
+			virSerial.clear();
+			virSprite.clear();
+			virSerialShift.clear();
+
+			/*
 
 			// As complexity of eraseing one element is same as eraseing 100's(more than one) of elements
 			//   | e.g.
@@ -1003,6 +977,7 @@ namespace CircuitGUI {
 			virSerial.clear();
 			virSprite.clear();
 			virSerialShift.clear();
+			*/
 
 			/*while (0 < virSerial.size()) {
 				if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
@@ -1036,9 +1011,46 @@ namespace CircuitGUI {
 		}
 	}
 
+	/*namespace Response {
+		enum State {
+			None				= 0,
+			Mouse_Drag			= 1,
+			Mouse_Left_Down		= 2,
+			Mouse_In_ToolBar	= 4,
+			Mouse_Selection		= 8,
+			Mouse_Hold_Item		= 16,
+			Mouse_In_MenuBar	= 32,
+			Keyboard			= 64
+		};
+	}*/
+
+	/* {
+			using namespace CircuitGUI::Response;
+
+			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left)
+				myWinState |= State::Mouse_Left_Down;
+
+			if (evnt.type == evnt.KeyPressed)
+				myWinState |= State::Keyboard;
+
+			if (cursorInWin && sf::Mouse::getPosition(app).x <= CircuitGUI::c_toolColWidth)
+				myWinState |= State::Mouse_In_ToolBar;
+
+			if (cursorInWin && sf::Mouse::getPosition(app).y <= 17)
+				myWinState |= State::Mouse_In_MenuBar;
+
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) && !(myWinState & State::Mouse_In_ToolBar))
+				myWinState |= State::Mouse_Drag;
+
+			if ((myWinState & State::Mouse_Left_Down) && !(myWinState & State::Mouse_In_ToolBar)) {
+				static int x = 0;
+				cout << "\nYaeh " << x++;
+			}
+			//if ((myWinState & State::Mouse_Left_Down) && !(myWinState & State::Mouse_In_ToolBar)) cout << "\txor "<< myWinState;
+
+
+		}*/
 }
-
-
 
 /*
 

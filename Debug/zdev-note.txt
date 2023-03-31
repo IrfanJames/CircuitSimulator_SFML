@@ -1,0 +1,68 @@
+New------------------------------------
+Grid's virBoarder till FullScreen
+Different Colors for Light/Dark Theme
+Control Key-mapping added in Help Section in TitleBar
+File is opened after saving(proj(TXT), img(PNG)) by Shell
+FINALLY!!! Textures don't pixcelate when window resize
+When Opening/Pasting, components appeare in Center,Selected(virSerial)
+Drag Multiple components at once
+Most of GUI in CircuitGUI namespace
+Open/Save As Dialog Box
+Toolbar Stablized
+ImGui Status Bar
+Selection on just Intersection with SelectionSquare
+Ctrl + A -> Select All
+Detecting Ctrl Key by just evnt not by nested if
+PrintScreen Key can now be detected
+Optimization Entity comp -> const Entity& comp
+Click() now also uses time to dectect a Click
+Components stay selected until a Click
+Rotation an Delete independent of Mouse Pressed
+Switch Open Close only affects the Swith directly beneath the cursor.
+boarders
+Text (1.2 mA)
+drag by pressing scroll wheel
+deleted while(!End) loop
+assets/Images (assets/Fonts)
+cursorInSim smooth*
+win: default
+win resizing: smooth**
+toolColumn resizes with winResize(viewSize)
+smartDisplay temp turned off (causes 100 cpu load)
+repeated coad in (last of drag) & (resizing window) of tool column
+
+
+Issues:--------------------------------
+Wires
+GL_INVALID_OPERATION The specified operation is not allowed in the current state.
+
+Unstable:------------------------------
+Solved by always Displaying and NOT Drawing Stuff.
+
+
+Stable:--------------------------------
+Procedual Background Grid
+Collisions include both nodes
+Rotation, hold, Drag(smooth)
+New Items at different places
+Selection (, delete option, not rotate)
+Delete
+Save as Image(different names)
+Smart Display (only on Stimuli)
+Save Projects (different names)
+Open latest saved project
+EndNodes, endNode-Circles
+Copy/Paste
+Enerything till Themes
+
+
+No:-------------------------------------
+Threads
+enum (State Machine for hold)
+uint32_t for window size
+
+https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.unknowncheats.me%2Fforum%2Fcounterstrike-global-offensive%2F183111-menu-showcase-thread-139.html&psig=AOvVaw2f4AFhMhaguFNuoc3rhsU8&ust=1668709360769000&source=images&cd=vfe&ved=0CBIQ3YkBahcKEwi4ntWRqbP7AhUAAAAAHQAAAAAQFw
+https://www.unknowncheats.me/forum/c-and-c-/256748-imgui-tab-stick-left.html
+
+https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.unknowncheats.me%2Fforum%2Fcounterstrike-global-offensive%2F183111-menu-showcase-thread-139.html&psig=AOvVaw2f4AFhMhaguFNuoc3rhsU8&ust=1668709360769000&source=images&cd=vfe&ved=0CBIQ3YkBahcKEwi4ntWRqbP7AhUAAAAAHQAAAAAQFw
+https://www.unknowncheats.me/forum/c-and-c-/256748-imgui-tab-stick-left.html

@@ -1,33 +1,29 @@
-#pragma once
+// Colapse all Scopes - it'll be easier
+// Ctrl + M + A in Visual Studio
 /*
 taskkill /F /IM Circiut_Sim.exe
 */
+#pragma once
 
 #include <iostream>
 #include <fstream>
 //#include <thread>
 //#include <future>
-//#include <vector>
 
-/*ImGui*/
 #include "imgui.h"
 #include "imgui-SFML.h"
 
-//#include "Circuit_Graph.h"
-#include "SFML/Graphics.hpp"
-#include "Circuit_Entity.h"
-//asdf#include "Circuit_wire.h"
 #include "Circuit_GUI.hpp"
+#include "SFML/Graphics.hpp"
+#include "Circuit_Entity.hpp"
+#include "Circuit_Windows_Stuff.hpp"
+//#include "Circuit_Graph.h"
+//asdf#include "Circuit_wire.h"
 
-//#include "clipboardxx.hpp"
-#include <windows.h>
 
-std::string OpenFileDialog(const char* filter, int tempNumber = 0);
-std::string SaveFileDialog(const char* filter, int tempNumber = 1000);
 using std::cout;
 using namespace CircuitGUI;
 //int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
-
 
 int main(int argc, char* argv[]) {
 
@@ -90,6 +86,7 @@ int main(int argc, char* argv[]) {
 			if (evnt.type == evnt.MouseLeft) { cursorInWin = 0; }
 			if (evnt.type == evnt.MouseEntered) { cursorInWin = 1; }
 			if (evnt.type == evnt.Resized) {
+				W = CircuitGUI::app.getSize().x; H = CircuitGUI::app.getSize().y;
 
 				view = sf::View(sf::FloatRect((int)view.getCenter().x - (int)(evnt.size.width / 2), (int)view.getCenter().y - (int)(evnt.size.height / 2), (int)evnt.size.width, (int)evnt.size.height));
 				//CircuitGUI::view.setSize((int)evnt.size.width, (int)evnt.size.height);
@@ -316,19 +313,15 @@ int main(int argc, char* argv[]) {
 
 		}
 		ShiftPressed = (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift));
-		W = CircuitGUI::app.getSize().x; H = CircuitGUI::app.getSize().y;
-		bool MInTool = !!(cursorInWin && 0 <= sf::Mouse::getPosition(CircuitGUI::app).x && sf::Mouse::getPosition(CircuitGUI::app).x <= CircuitGUI::c_toolColWidth);
+		bool MInTool = !!(cursorInWin && sf::Mouse::getPosition(CircuitGUI::app).x <= CircuitGUI::c_toolColWidth);
 		bool MIntool = !!(cursorInWin && MInTool && sf::Mouse::getPosition(CircuitGUI::app).y < (Entity::noOfComps - 1)* CircuitGUI::c_toolColWidth);
 		float t_TollWx = CircuitGUI::toolCol.getPosition().x;
+		//int myWinState = CircuitGUI::Response::State::None;
+		
 		//--------------------------------------------------------------------------------//
 
+		
 
-
-
-
-
-		/*if (PlayRot) { CircuitGUI::view.rotate(0.9); }
-		else CircuitGUI::view.setRotation(0);*/
 
 
 		// ----------------------------------------	Options
@@ -416,48 +409,12 @@ int main(int argc, char* argv[]) {
 						}*/
 					}
 				}
-
-
-				/*Once while hold*/
-				/*if (mouseOnCompsBool && rotComp) {
-					if (onceOptMounsePressed) {
-						for (int v = 0; v < virSerial.size(); v++) {
-							comp[virSerial[v]].angle += 90;
-							comp[virSerial[v]].angle -= (int)(comp[virSerial[v]].angle / 360) * 360;
-						}
-
-						stimuliDisplay = 1;
-						stimuliEndNodes = 1;
-					}
-					onceOptMounsePressed = 0;
-				}
-				else if (mouseOnCompsBool && delComp) {
-					if (onceOptMounsePressed) {
-						while (0 < virSerial.size()) {
-							if (comp.size() > 0) comp.erase(comp.begin() + virSerial[0]);
-							if (virSprite.size() > 0) virSprite.erase(virSprite.begin());
-
-							for (int c = 1; c < virSerial.size(); c++) {
-								if (virSerial[c] > virSerial[0]) virSerial[c]--;
-							}
-
-							virSerial.erase(virSerial.begin());
-						}
-
-						stimuliDisplay = 1;
-						stimuliEndNodes = 1;
-					}
-					mouseOnCompsBool = 0;
-					onceOptMounsePressed = 0;
-				}
-				else onceOptMounsePressed = 1;*/
 			}
 			else {
 				/*Wheel*//*Drag = 0;*/ mouseOnCompsBool = 0; selectSquare = 0;
 
 				if (0 && ShiftPressed) {
 					CircuitGUI::virSerialShift = CircuitGUI::virSerial;
-
 
 					/*for (int vs = 0; vs < virSerialShift.size(); vs++) {
 						static bool found = 0;
@@ -472,25 +429,29 @@ int main(int argc, char* argv[]) {
 							virSprite.emplace_back(comp[virSerial.back()].sprite);
 						}
 					}*/
-
-
 				}
 				/*Click*/
 				else {
-					if (/*//asdf!PlayMode &&*/ CircuitGUI::Click(CircuitGUI::gap)) {
+					if (/*//asdf!PlayMode &&*/CircuitGUI::Click(CircuitGUI::gap)) {
 						stimuliDisplay = 1; /*cout << "8";*/
 
-						for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
+						// Open/Close the Switch
+						using namespace CircuitGUI;
+						for (int v = 0; v < virSerial.size(); v++) {
+							if (comp[virSerial[v]].bounds.contains(cursorInSim())) {
 
-							if (CircuitGUI::comp[CircuitGUI::virSerial[v]].bounds.contains(CircuitGUI::cursorInSim())) {
+								// Changing Serial
+								if (comp[virSerial[v]].serial == Entity::SwC)
+									comp[virSerial[v]].serial = Entity::SwO;
+								else if (comp[virSerial[v]].serial == Entity::SwO)
+									comp[virSerial[v]].serial = Entity::SwC;
 
-								if (CircuitGUI::comp[CircuitGUI::virSerial[v]].serial == 5)CircuitGUI::comp[CircuitGUI::virSerial[v]].serial = 7;
-								else if (CircuitGUI::comp[CircuitGUI::virSerial[v]].serial == 7) CircuitGUI::comp[CircuitGUI::virSerial[v]].serial = 5;
+								// Changing Texture
+								comp[virSerial[v]].sprite.setTexture(compTex[comp[virSerial[v]].serial]);
 
-								CircuitGUI::comp[CircuitGUI::virSerial[v]].sprite.setTexture(compTex[CircuitGUI::comp[CircuitGUI::virSerial[v]].serial]);
 
-								CircuitGUI::virSerial.erase(CircuitGUI::virSerial.begin() + v);
-								CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
+								virSerial.erase(virSerial.begin() + v);
+								virSprite.erase(virSprite.begin() + v);
 
 								break;
 							}
@@ -504,17 +465,11 @@ int main(int argc, char* argv[]) {
 						CircuitGUI::virSerial.clear();  ///// 
 					}
 				}
-				/* //ZZzzzz Recolor back to normal    & clear serials
-				if (virSerial.size() != 0) {
-					for (int v = 0; v < virSerial.size() && comp.size() != 0; v++) {
-						//cout << "\nChanging" << virSerial[v];
-						comp[virSerial[v]].sprite.setColor(normalCompColor);
-					}
-				}*/
 			}
 
 			/*Wheel*/
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)/*myWinState & CircuitGUI::Response::Mouse_Drag*/) {
+
 				/*Drag Background*/
 				if (wheelReleaseBool /*!mouseOnCompsBool && !selectSquare*/) {
 					Drag = 1;
@@ -1039,46 +994,48 @@ int main(int argc, char* argv[]) {
 
 				CircuitGUI::updateAllSqr();
 				//CircuitGUI::qtUpdate();
-				//CircuitGUI::qtWrite();
+				/*CircuitGUI::qtWrite();*/
 			}
 
+			/*if (PlayRot) { CircuitGUI::view.rotate(0.9); }
+			else CircuitGUI::view.setRotation(0);*/
 		}
 
 
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) { // zero causes 100 cpu load
-				CircuitGUI::app.setView(CircuitGUI::view);
-				CircuitGUI::app.clear(CircuitGUI::backColor);
+			CircuitGUI::app.setView(CircuitGUI::view);
+			CircuitGUI::app.clear(CircuitGUI::backColor);
 
-				drawGrid();
+			drawGrid();
 
-				if (virSerial.size() > 1) drawAllSqr();
+			if (virSerial.size() > 1) drawAllSqr();
 
-				//qtDraw(CircuitGUI::qt);
-				
-				drawComp();
+			//qtDraw(CircuitGUI::qt);
 
-				/*Wires*/ /* {
-					//for (int c = 0; c < wires.size(); c++) wires[c].draw(CircuitGUI::app);
-				}*/
+			drawComp();
 
-				drawNodes();
+			/*Wires*/ /* {
+				//for (int c = 0; c < wires.size(); c++) wires[c].draw(CircuitGUI::app);
+			}*/
 
-				/*//asdfif (!PlayMode)*/ drawBoarders();
+			drawNodes();
+
+			/*//asdfif (!PlayMode)*/ drawBoarders();
 
 
-				if (CircuitGUI::Occupied) drawVirSprites();
+			if (CircuitGUI::Occupied) drawVirSprites();
 
-				drawSelSqr();
+			drawSelSqr();
 
-				drawToolColumn(MInTool, MIntool);
+			drawToolColumn(MInTool, MIntool);
 
-				/*ImGui*/ {
-					//if (DrawCircle) CircuitGUI::app.draw(testCircle);
-					ImGui::SFML::Render(CircuitGUI::app);//Last Thing to render
-				}
-
+			/*ImGui*/ {
+				//if (DrawCircle) CircuitGUI::app.draw(testCircle);
+				ImGui::SFML::Render(CircuitGUI::app);//Last Thing to render
 			}
+
+		}
 		CircuitGUI::app.display();
 
 
@@ -1094,76 +1051,13 @@ int main(int argc, char* argv[]) {
 
 	/*ImGui*/
 	ImGui::SFML::Shutdown();
+#ifdef _DEBUG
 	std::cin.get();
+#endif
 	return 0;
 }
 
-std::string OpenFileDialog(const char* filter, int tempNumber)
-{
-	OPENFILENAMEA ofn;
-	CHAR szFile[260] = { 0 };
 
-	//---------------
-	std::string tn = "Project-" + std::to_string(tempNumber);
-	for (int c = 0; c < tn.size(); c++)
-		szFile[c] = (int)tn[c];	
-	//---------------
-
-
-	CHAR currentDir[256] = { 0 };
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
-	//ofn.hwndOwner = CircuitGUI::app.getSystemHandle();
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	if (GetCurrentDirectoryA(256, currentDir))
-		ofn.lpstrInitialDir = currentDir;
-	ofn.lpstrFilter = filter;
-	ofn.nFilterIndex = 1;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
-	if (GetOpenFileNameA(&ofn) == TRUE)
-		return ofn.lpstrFile;
-
-	return std::string();
-
-}
-
-std::string SaveFileDialog(const char* filter, int tempNumber)
-{
-	OPENFILENAMEA ofn;
-	CHAR szFile[260] = { 0 };
-
-	//---------------
-	std::string tn = "Untitled-" + std::to_string(tempNumber);
-	for (int c = 0; c < tn.size(); c++)
-		szFile[c] = (int)tn[c];
-	//---------------
-
-	CHAR currentDir[256] = { 0 };
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	if (GetCurrentDirectoryA(256, currentDir))
-		ofn.lpstrInitialDir = currentDir;
-	ofn.lpstrFilter = filter;
-	ofn.nFilterIndex = 1;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
-
-	// Sets the default extension by extracting it from the filter
-	ofn.lpstrDefExt = strchr(filter, '\0') + 1;
-
-	if (GetSaveFileNameA(&ofn) == TRUE) {
-		/*LPCWSTR temp = (wchar_t*)ofn.lpstrFile;
-		ShellExecute(NULL, NULL, temp, NULL, NULL, SW_SHOWNORMAL);*/
-		return ofn.lpstrFile;
-	}
-
-	return std::string();
-}
 
 /*
 #include <direct.h>
@@ -1171,19 +1065,6 @@ std::string SaveFileDialog(const char* filter, int tempNumber)
 cout << _mkdir("Awesomness");
 	system("pause");
 	cout << _rmdir("Awesomness");*/
-
-/*else if (evnt.key.code == Keyboard::R) {
-			view.setCenter(W / 2, H / 2);
-			viewX = view.getCenter().x; viewY = view.getCenter().y;
-			for (int c = 0; c < vLines.size(); c++)
-				vLines[c].setPosition(-virtualBoarder - (int)(-virtualBoarder) % gap + c * gap, -virtualBoarder);
-		
-			for (int c = 0; c < hLines.size(); c++)
-				hLines[c].setPosition(-virtualBoarder, -virtualBoarder - (int)(-virtualBoarder) % gap + c * gap);
-		
-			verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
-			horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
-		}*/
 
 //if (RELEASE_DEBUG/* && stimuliEndNodes*/) {
 //	while (virSerial.size() < allBoarders.size()) {

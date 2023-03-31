@@ -1,0 +1,48 @@
+#include <thread>
+
+// ...
+
+int main(int argc, char* argv[]) {
+    // ...
+
+    // Create a new thread to run the rendering loop on
+    std::thread renderThread([]() {
+        // Run the rendering loop
+        while (CircuitGUI::app.isOpen()) {
+            // Update the ImGui interface
+            ImGui::SFML::Update(CircuitGUI::app, deltaClock.restart());
+
+            // Clear the window
+            CircuitGUI::app.clear();
+
+            // Draw the CircuitGUI components
+            CircuitGUI::drawComp();
+            CircuitGUI::drawVirSprites();
+            CircuitGUI::drawNodes();
+            CircuitGUI::drawBoarders();
+            CircuitGUI::drawWires();
+
+            // Draw the ImGui interface
+            ImGui::SFML::Render(CircuitGUI::app);
+
+            // Display the window contents
+            CircuitGUI::app.display();
+        }
+    });
+
+    // ...
+
+    // Wait for the rendering thread to finish
+    renderThread.join();
+
+    return 0;
+}
+This code creates a new thread that runs the rendering loop in a separate thread. The main thread continues to run the rest of the code as usual. The main thread will wait until the rendering thread finishes before returning.
+
+Note that you may need to make some changes to your code to ensure that it is thread-safe, as accessing shared data from multiple threads can lead to race conditions and other issues.
+
+I hope this helps! Let me know if you have any questions or need further assistance.
+
+
+
+
