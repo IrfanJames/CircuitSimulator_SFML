@@ -1,4 +1,5 @@
 New------------------------------------
+Now Static Linking (for just Release YET)
 Optimized Delete Function by using (erase-remove idiom) approach
 Grid's virBoarder till FullScreen
 Different Colors for Light/Dark Theme

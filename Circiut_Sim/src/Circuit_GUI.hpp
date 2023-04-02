@@ -529,17 +529,12 @@ namespace CircuitGUI {
 			H = W * 9 / 16;
 			if (H < c_toolColWidth * 7) H = c_toolColWidth * 7;
 
-			//RenderWindow app(VideoMode(W, H), "CircuitSim", Style::Fullscreen, ContextSettings(0));
-			/*sf::RenderWindow app*/// *(;
 			app.create(sf::VideoMode((unsigned int)W, (unsigned int)H), "CircuitSim", sf::Style::Default, sf::ContextSettings(0, 0, 8));
-
 			W = app.getSize().x; H = app.getSize().y;
+			
+			app.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - W / 2, sf::VideoMode::getDesktopMode().height / 2 - H / 2 - 50));
 			app.setVerticalSyncEnabled(1);
 			app.setFramerateLimit(60);
-			srand(time(NULL));
-
-			//std::cout << "my lcd: " << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height;
-			app.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - W / 2, sf::VideoMode::getDesktopMode().height / 2 - H / 2 - 50));
 		}
 
 		//viewInit();

@@ -33,6 +33,8 @@ int main(int argc, char* argv[]) {
 	ImGui::SFML::Init(CircuitGUI::app);
 	sf::Clock deltaClock;
 
+	srand(time(NULL));
+
 	bool RELEASE_DEBUG = 0;
 	bool End = 0, debugBool = 0;
 	bool Drag = 0, stimuliDisplay = 1, stimuliEndNodes = 0;
@@ -756,10 +758,20 @@ int main(int argc, char* argv[]) {
 						ImGui::EndMenu();
 					}
 					ImGui::Separator();
-					if (ImGui::BeginMenu("Contact"))
+					if (ImGui::BeginMenu("Contacts"))
 					{
-						ImGui::Text("Source Code: https://github.com/IrfanJames/CircuitSimulator_SFML.git");
-						ImGui::Text("Email: irfanjamespak@gmail.com");
+						static std::string links[2][2] = // HardCode
+						{
+							{ "Copy Github", "https://github.com/IrfanJames/CircuitSimulator_SFML" },
+							{ "Copy Email ", "irfanjamespak@gmail.com" }
+						};
+
+						for (int i = 0; i < 2; i++) {
+							if (ImGui::Button(links[i][0].c_str()))
+								sf::Clipboard::setString(links[i][1]);
+							ImGui::SameLine();
+							ImGui::Text(links[i][1].c_str());
+						}
 
 						ImGui::EndMenu();
 					}
@@ -991,10 +1003,23 @@ int main(int argc, char* argv[]) {
 			if (stimuliEndNodes) {
 				CircuitGUI::updateAllEnds();
 				CircuitGUI::updateEndCircles();
-
 				CircuitGUI::updateAllSqr();
-				//CircuitGUI::qtUpdate();
-				/*CircuitGUI::qtWrite();*/
+				
+				
+				//if (comp.size() < 1000)
+				//{
+				//	CircuitGUI::qtUpdate();
+				//	CircuitGUI::qtWrite();
+				//}
+				//else if (comp.size() < 10000)
+				//{
+				//	CircuitGUI::qtUpdate();
+				//	std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would taken\n";
+				//}
+				//else {
+				//	std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take";
+				//	std::cout << "\nNot Making   QuadTree [No. of Elements(" << comp.size() << ") is more that 10000]\n\t* Not Making Quad Tree Because Program Not Fast Enough YET\n";
+				//}
 			}
 
 			/*if (PlayRot) { CircuitGUI::view.rotate(0.9); }
