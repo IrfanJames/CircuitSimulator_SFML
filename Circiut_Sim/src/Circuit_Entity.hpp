@@ -4,9 +4,8 @@
 #include "Circuit_Global.hpp"
 #include "SFML/Graphics.hpp";
 
-sf::Texture compTex[8];
-
-
+//sf::Texture compTex[8];
+std::vector<sf::Texture> compTex;
 
 class Entity {
 public:
@@ -201,9 +200,14 @@ public:
 	}
 
 
-	static void setFont(const std::string& dir) {
-		s_font.loadFromFile(dir); /*CALIBRI_1*/
+	static void setFont(void* data, size_t size_bytes) {
+		s_font.loadFromMemory(data, size_bytes);
 	}
+
+	static void setFont(const std::string &dir) {
+		s_font.loadFromFile(dir);
+	}
+
 	static void setboarderDesgin(const sf::Color& color/* = sf::Color(0, 255, 85 Or 0, 204, 102)*/)
 	{
 		boarderDesign.setFillColor(sf::Color::Transparent);

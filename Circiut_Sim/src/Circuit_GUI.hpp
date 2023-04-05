@@ -6,9 +6,11 @@
 #include <windows.h> //To Open file(txt/PNG) just after creating(Save as...) it
 #include "SFML/Graphics.hpp"
 #include "Circuit_Entity.hpp"
+#include "Resource_Manager.hpp"
 //#include "Circuit_Global.h"
 
-extern sf::Texture compTex[8];
+//extern sf::Texture compTex[8];
+extern std::vector<sf::Texture> compTex;
 
 namespace CircuitGUI {
 
@@ -22,7 +24,8 @@ namespace CircuitGUI {
 
 	/*Textures*/
 	//void loadTextures()
-
+	Resource ResourceID_Fonts;
+	std::vector<Resource> ResourceID_Images;
 
 	sf::RenderWindow app;
 	//renderWinInit();
@@ -520,8 +523,14 @@ namespace CircuitGUI {
 	}
 	void initializeGUI()
 	{
-		Entity::setFont("assets/Fonts/CalibriL_1.ttf");
 		updateThemeColors();
+
+		//setFont
+		{
+			//ResourceID_Fonts.SetAll(IDR_FONT1, "FONT");
+			//Entity::setFont(ResourceID_Fonts.GetResource().ptr, ResourceID_Fonts.GetResource().size_bytes);
+			Entity::setFont("assets/Fonts/CalibriL_1.ttf");
+		}
 
 		//renderWinInit();
 		{
@@ -547,14 +556,26 @@ namespace CircuitGUI {
 
 		//loadTextures();
 		{
-			compTex[Entity::Cap].loadFromFile("assets/Images/Cap.png");
-			compTex[Entity::Cur].loadFromFile("assets/Images/Cur.png");
-			compTex[Entity::Dod].loadFromFile("assets/Images/Dod.png");
-			compTex[Entity::Ind].loadFromFile("assets/Images/Ind.png");
-			compTex[Entity::Res].loadFromFile("assets/Images/Res.png");
-			compTex[Entity::SwO].loadFromFile("assets/Images/SwO.png");
-			compTex[Entity::Vol].loadFromFile("assets/Images/Vol.png");
-			compTex[Entity::SwC].loadFromFile("assets/Images/SwC.png");
+			ResourceID_Images.resize(8);
+
+			ResourceID_Images[Entity::Cap].SetAll(IDR_CAP, "BMP");
+			ResourceID_Images[Entity::Cur].SetAll(IDR_CUR, "BMP");
+			ResourceID_Images[Entity::Dod].SetAll(IDR_DOD, "BMP");
+			ResourceID_Images[Entity::Ind].SetAll(IDR_IND, "BMP");
+			ResourceID_Images[Entity::Res].SetAll(IDR_RES, "BMP");
+			ResourceID_Images[Entity::SwO].SetAll(IDR_SWO, "BMP");
+			ResourceID_Images[Entity::Vol].SetAll(IDR_VOL, "BMP");
+			ResourceID_Images[Entity::SwC].SetAll(IDR_SWC, "BMP");
+
+			compTex.resize(8);
+			compTex[Entity::Cap].loadFromMemory(ResourceID_Images[Entity::Cap].GetResource().ptr, ResourceID_Images[Entity::Cap].GetResource().size_bytes);
+			compTex[Entity::Cur].loadFromMemory(ResourceID_Images[Entity::Cur].GetResource().ptr, ResourceID_Images[Entity::Cur].GetResource().size_bytes);
+			compTex[Entity::Dod].loadFromMemory(ResourceID_Images[Entity::Dod].GetResource().ptr, ResourceID_Images[Entity::Dod].GetResource().size_bytes);
+			compTex[Entity::Ind].loadFromMemory(ResourceID_Images[Entity::Ind].GetResource().ptr, ResourceID_Images[Entity::Ind].GetResource().size_bytes);
+			compTex[Entity::Res].loadFromMemory(ResourceID_Images[Entity::Res].GetResource().ptr, ResourceID_Images[Entity::Res].GetResource().size_bytes);
+			compTex[Entity::SwO].loadFromMemory(ResourceID_Images[Entity::SwO].GetResource().ptr, ResourceID_Images[Entity::SwO].GetResource().size_bytes);
+			compTex[Entity::Vol].loadFromMemory(ResourceID_Images[Entity::Vol].GetResource().ptr, ResourceID_Images[Entity::Vol].GetResource().size_bytes);
+			compTex[Entity::SwC].loadFromMemory(ResourceID_Images[Entity::SwC].GetResource().ptr, ResourceID_Images[Entity::SwC].GetResource().size_bytes);
 		}
 
 		//initializeGrid();

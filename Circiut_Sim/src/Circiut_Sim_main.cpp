@@ -7,6 +7,8 @@ taskkill /F /IM Circiut_Sim.exe
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <string>
 //#include <thread>
 //#include <future>
 
@@ -17,15 +19,39 @@ taskkill /F /IM Circiut_Sim.exe
 #include "SFML/Graphics.hpp"
 #include "Circuit_Entity.hpp"
 #include "Circuit_Windows_Stuff.hpp"
+#include "Resource_Manager.hpp"
 //#include "Circuit_Graph.h"
 //asdf#include "Circuit_wire.h"
 
-
 using std::cout;
 using namespace CircuitGUI;
-//int WINAPI WinMain(HINSTANCE hThisInstance, HINSTANCE hPrevInstance, LPSTR lpszArgument, int nCmdShow) {
 
+//#ifdef NDEBUG
+//#define DEBUG(msg) ((void)0)
+//#else
+//#define DEBUG(msg)
+//do {
+//	std::cout << msg << std::endl;
+//	LOG << msg << std::endl;
+//} while (0)
+//#endif
+//
+//DEBUG("The value of x is " << x);
+
+
+
+#ifdef _DEBUG
 int main(int argc, char* argv[]) {
+#else
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+#endif
+
+
+#ifdef NDEBUG
+	// Release
+	std::remove("log.txt");
+	std::ofstream LOG("log.txt");
+#endif
 
 	CircuitGUI::initializeGUI();
 
@@ -57,14 +83,15 @@ int main(int argc, char* argv[]) {
 	/*Wires*/
 	//asdfstd::vector<Wire> wires; wires.reserve(3);
 
-	////////////////////////////////////////////// Solve
+	/////////////// Solve /////////////////////////
 
 	//Graph circuit;
 
 	///////////////////////////////////////////////
 
 
-
+	/////////////// argv //////////////////////////
+#ifdef _DEBUG
 	if (1 < argc) {
 		std::string temp(argv[1]);
 		if (!temp.empty())
@@ -72,6 +99,32 @@ int main(int argc, char* argv[]) {
 
 		stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
 	}
+#else
+	std::istringstream iss(lpCmdLine);
+	std::string arg;
+	if (std::getline(iss, arg, ' '))
+	{
+		//LOG << "\n" << arg << "\n";
+		if (!arg.empty())
+			CircuitGUI::Options::openf(arg);
+	
+		stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
+	}
+	/* // Multiple Files
+	int argc;
+	LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	for (int i = 0; i < argc; i++) {
+		std::wstring temp(argv[i]);
+		if (!temp.empty())
+		{
+			LOG << "Dropped file: " << std::string(temp.begin(), temp.end()) << "\n";
+			//CircuitGUI::Options::openf(std::string(temp.begin(), temp.end()).c_str());
+		}
+	}
+	LocalFree(argv);*/
+#endif
+	///////////////////////////////////////////////
+
 
 	time_t frame = clock();
 	CircuitGUI::app.setKeyRepeatEnabled(false);
@@ -1076,9 +1129,13 @@ int main(int argc, char* argv[]) {
 
 	/*ImGui*/
 	ImGui::SFML::Shutdown();
+
 #ifdef _DEBUG
 	std::cin.get();
+#else
+	LOG.close();
 #endif
+
 	return 0;
 }
 
