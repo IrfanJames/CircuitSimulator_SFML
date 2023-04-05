@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <windows.h> //To Open file(txt/PNG) just after creating(Save as...) it
+
 #include "SFML/Graphics.hpp"
 #include "Circuit_Entity.hpp"
 #include "Resource_Manager.hpp"
@@ -28,6 +29,7 @@ namespace CircuitGUI {
 	Resource Resource_Font;
 	std::vector<Resource> Resource_Images;
 
+	sf::Event evnt;
 	sf::RenderWindow app;
 	//renderWinInit();
 	sf::View view;
@@ -543,8 +545,9 @@ namespace CircuitGUI {
 			W = app.getSize().x; H = app.getSize().y;
 			
 			app.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - W / 2, sf::VideoMode::getDesktopMode().height / 2 - H / 2 - 50));
-			app.setVerticalSyncEnabled(1);
 			app.setFramerateLimit(60);
+			app.setVerticalSyncEnabled(1);
+			app.setKeyRepeatEnabled(false);
 		}
 
 		//viewInit();
@@ -843,8 +846,7 @@ namespace CircuitGUI {
 
 		void savef(const std::string& file) {
 
-			std::cout << "\nCtrl + S\n";
-
+			//std::cout << "\nCtrl + S\n";
 			//ShellExecute(NULL, NULL, L"Saved-Projects", NULL, NULL, SW_SHOWNORMAL);
 
 			std::ofstream output;
