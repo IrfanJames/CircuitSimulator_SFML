@@ -1,5 +1,7 @@
 New------------------------------------
+Icon added (Embedded with exe)
 Finally ConsoleLess Window!!! for Release Mode (And new log.txt system for debugging in Relase Mode)
+Assets are now Embedded with .exe (For now just Images)
 Now Static Linking (for just Release YET)
 Optimized Delete Function by using (erase-remove idiom) approach
 Grid's virBoarder till FullScreen

@@ -100,28 +100,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
 	}
 #else
+	/*
 	std::istringstream iss(lpCmdLine);
 	std::string arg;
 	if (std::getline(iss, arg, ' '))
 	{
-		//LOG << "\n" << arg << "\n";
+		LOG << "\n" << arg << "\n";
 		if (!arg.empty())
 			CircuitGUI::Options::openf(arg);
 	
 		stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
-	}
-	/* // Multiple Files
+	}//*/
+	
+	//* // Multiple Files
 	int argc;
 	LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-	for (int i = 0; i < argc; i++) {
+	for (int i = 1; i < argc; i++) {
 		std::wstring temp(argv[i]);
 		if (!temp.empty())
 		{
 			LOG << "Dropped file: " << std::string(temp.begin(), temp.end()) << "\n";
-			//CircuitGUI::Options::openf(std::string(temp.begin(), temp.end()).c_str());
+			CircuitGUI::Options::openf(std::string(temp.begin(), temp.end()).c_str());
+			stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
 		}
 	}
-	LocalFree(argv);*/
+	LocalFree(argv);//*/
 #endif
 	///////////////////////////////////////////////
 

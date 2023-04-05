@@ -12,6 +12,7 @@
 #define IDR_SWO                       115
 #define IDR_VOL                       116
 #define IDR_SWC                       117
+#define IDR_LOGO                      120
 
 
 // Next default values for new objects

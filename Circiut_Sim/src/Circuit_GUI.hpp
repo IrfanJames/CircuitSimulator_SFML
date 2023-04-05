@@ -24,8 +24,9 @@ namespace CircuitGUI {
 
 	/*Textures*/
 	//void loadTextures()
-	Resource ResourceID_Fonts;
-	std::vector<Resource> ResourceID_Images;
+	Resource Resource_Logo;
+	Resource Resource_Font;
+	std::vector<Resource> Resource_Images;
 
 	sf::RenderWindow app;
 	//renderWinInit();
@@ -554,28 +555,39 @@ namespace CircuitGUI {
 			//sf::View view(sf::Vector2f(app.getSize().x / 2, app.getSize().y / 2), (sf::Vector2f)app.getSize());
 		}
 
+		//setIcon
+		{
+			Resource_Logo.SetAll(IDR_LOGO, "BMP");
+
+			if (Resource_Logo.GetResource().ptr != nullptr) {
+				sf::Image logo; // No need to keep it alive after setIcon()
+				if (logo.loadFromMemory(Resource_Logo.GetResource().ptr, Resource_Logo.GetResource().size_bytes))
+					app.setIcon(logo.getSize().x, logo.getSize().y, logo.getPixelsPtr());
+			}
+		}
+
 		//loadTextures();
 		{
-			ResourceID_Images.resize(8);
+			Resource_Images.resize(8);
 
-			ResourceID_Images[Entity::Cap].SetAll(IDR_CAP, "BMP");
-			ResourceID_Images[Entity::Cur].SetAll(IDR_CUR, "BMP");
-			ResourceID_Images[Entity::Dod].SetAll(IDR_DOD, "BMP");
-			ResourceID_Images[Entity::Ind].SetAll(IDR_IND, "BMP");
-			ResourceID_Images[Entity::Res].SetAll(IDR_RES, "BMP");
-			ResourceID_Images[Entity::SwO].SetAll(IDR_SWO, "BMP");
-			ResourceID_Images[Entity::Vol].SetAll(IDR_VOL, "BMP");
-			ResourceID_Images[Entity::SwC].SetAll(IDR_SWC, "BMP");
+			Resource_Images[Entity::Cap].SetAll(IDR_CAP, "BMP");
+			Resource_Images[Entity::Cur].SetAll(IDR_CUR, "BMP");
+			Resource_Images[Entity::Dod].SetAll(IDR_DOD, "BMP");
+			Resource_Images[Entity::Ind].SetAll(IDR_IND, "BMP");
+			Resource_Images[Entity::Res].SetAll(IDR_RES, "BMP");
+			Resource_Images[Entity::SwO].SetAll(IDR_SWO, "BMP");
+			Resource_Images[Entity::Vol].SetAll(IDR_VOL, "BMP");
+			Resource_Images[Entity::SwC].SetAll(IDR_SWC, "BMP");
 
 			compTex.resize(8);
-			compTex[Entity::Cap].loadFromMemory(ResourceID_Images[Entity::Cap].GetResource().ptr, ResourceID_Images[Entity::Cap].GetResource().size_bytes);
-			compTex[Entity::Cur].loadFromMemory(ResourceID_Images[Entity::Cur].GetResource().ptr, ResourceID_Images[Entity::Cur].GetResource().size_bytes);
-			compTex[Entity::Dod].loadFromMemory(ResourceID_Images[Entity::Dod].GetResource().ptr, ResourceID_Images[Entity::Dod].GetResource().size_bytes);
-			compTex[Entity::Ind].loadFromMemory(ResourceID_Images[Entity::Ind].GetResource().ptr, ResourceID_Images[Entity::Ind].GetResource().size_bytes);
-			compTex[Entity::Res].loadFromMemory(ResourceID_Images[Entity::Res].GetResource().ptr, ResourceID_Images[Entity::Res].GetResource().size_bytes);
-			compTex[Entity::SwO].loadFromMemory(ResourceID_Images[Entity::SwO].GetResource().ptr, ResourceID_Images[Entity::SwO].GetResource().size_bytes);
-			compTex[Entity::Vol].loadFromMemory(ResourceID_Images[Entity::Vol].GetResource().ptr, ResourceID_Images[Entity::Vol].GetResource().size_bytes);
-			compTex[Entity::SwC].loadFromMemory(ResourceID_Images[Entity::SwC].GetResource().ptr, ResourceID_Images[Entity::SwC].GetResource().size_bytes);
+			compTex[Entity::Cap].loadFromMemory(Resource_Images[Entity::Cap].GetResource().ptr, Resource_Images[Entity::Cap].GetResource().size_bytes);
+			compTex[Entity::Cur].loadFromMemory(Resource_Images[Entity::Cur].GetResource().ptr, Resource_Images[Entity::Cur].GetResource().size_bytes);
+			compTex[Entity::Dod].loadFromMemory(Resource_Images[Entity::Dod].GetResource().ptr, Resource_Images[Entity::Dod].GetResource().size_bytes);
+			compTex[Entity::Ind].loadFromMemory(Resource_Images[Entity::Ind].GetResource().ptr, Resource_Images[Entity::Ind].GetResource().size_bytes);
+			compTex[Entity::Res].loadFromMemory(Resource_Images[Entity::Res].GetResource().ptr, Resource_Images[Entity::Res].GetResource().size_bytes);
+			compTex[Entity::SwO].loadFromMemory(Resource_Images[Entity::SwO].GetResource().ptr, Resource_Images[Entity::SwO].GetResource().size_bytes);
+			compTex[Entity::Vol].loadFromMemory(Resource_Images[Entity::Vol].GetResource().ptr, Resource_Images[Entity::Vol].GetResource().size_bytes);
+			compTex[Entity::SwC].loadFromMemory(Resource_Images[Entity::SwC].GetResource().ptr, Resource_Images[Entity::SwC].GetResource().size_bytes);
 		}
 
 		//initializeGrid();
