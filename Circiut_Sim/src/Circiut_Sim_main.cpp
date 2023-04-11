@@ -1,7 +1,7 @@
 // Colapse all Scopes - it'll be easier
 // Ctrl + M + A in Visual Studio
 /*
-taskkill /F /IM Circiut_Sim.exe
+taskkill /F /IM CirciutGUI.exe
 */
 #pragma once
 
@@ -24,26 +24,39 @@ taskkill /F /IM Circiut_Sim.exe
 //#include "Circuit_Graph.h"
 //asdf#include "Circuit_wire.h"
 
-using std::cout;
+#ifdef _DEBUG
+#define LOG(x) std::cout << x;
+#else
+#define LOG(x) log_file  << x;
+#endif
+
+namespace CircuitCore {
+
+	std::string Print();
+
+}
+
 using namespace CircuitGUI;
 
 #ifdef _DEBUG
 // Debug  Mode
-int main(int argc, char* argv[]) {
+int main(int argc, char** argv) {
 #else
 // Realse Mode
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-#endif
 
-
-#ifdef NDEBUG
-	// Release
+	// For Logging
 	std::remove("log.txt");
-	std::ofstream LOG("log.txt");
-	LOG << lpCmdLine;
+	std::ofstream log_file("log.txt");
+	log_file << lpCmdLine;
+
 #endif
 
+	float asdf = 234.59;
 	CircuitGUI::initializeGUI();
+	LOG("GUI Initialized " << asdf);
+	
+	LOG(CircuitCore::Print());
 
 	/*ImGui*/
 	ImGui::SFML::Init(CircuitGUI::app);
@@ -103,7 +116,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		std::wstring temp(argv[i]);
 		if (!temp.empty())
 		{
-			LOG << "Dropped file: " << std::string(temp.begin(), temp.end()) << "\n";
+			log_file << "Dropped file: " << std::string(temp.begin(), temp.end()) << "\n";
 			CircuitGUI::Options::openf(std::string(temp.begin(), temp.end()).c_str());
 			stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
 		}
@@ -1100,7 +1113,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #ifdef _DEBUG
 	std::cin.get();
 #else
-	LOG.close();
+	log_file.close();
 #endif
 
 	return 0;

@@ -1,2 +1,0 @@
-from "Introduction to Measurements and Instrumentation" write all the formulas from Chapter 7 (Strain Measurements)
-from "Introduction5 to Measureme34nts 7and Instrumentation" 45write all the 76formulas 87from Chapter 7 (Strain Measurements)

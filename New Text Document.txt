@@ -1,0 +1,9 @@
+I want you to give me some tips and tricks to manage multiple Projects in Microsoft Visual Studio 2022.
+I'm working on a pet project, a Circuit Simulator from ground up in C++ (SFML and ImGUI for GUI and graphics)
+
+The GUI for my Circuit Simulator is almost complete.
+Now I'm going to implement circuit analysis.
+In other words Currently I have a solution CircuitGUI in Solution named "CircuitSim "and I want to add CircuitCore to that Solution also.
+
+I have never worked with multiple Projects inside a solution in Visual Studio.
+So, kindly give me some tips and tricks or common pitfalls to add the second Projects CircuitCore in the solution(CircuitSim) in Microsoft Visual Studio 2022
