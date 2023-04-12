@@ -1,0 +1,32 @@
+To write unit tests for the provided code, I would suggest using a unit testing framework such as Google Test or Catch2. These frameworks provide tools and macros to make it easier to write and run unit tests.
+
+Here is an example of how you might write a unit test for the Entity class using Google Test:
+
+Copy code
+#include <gtest/gtest.h>
+#include "Entity.hpp"
+
+TEST(EntityTest, DefaultConstructor) {
+  Entity entity;
+  EXPECT_EQ(entity.serial, 0);
+  EXPECT_EQ(entity.x, 0);
+  EXPECT_EQ(entity.y, 0);
+  EXPECT_EQ(entity.angle, 0);
+  EXPECT_EQ(entity.resistance, 1000);
+  EXPECT_EQ(entity.voltage, -5);
+  EXPECT_EQ(entity.current, 0.0304);
+}
+
+TEST(EntityTest, UpdateValueText) {
+  Entity entity;
+  entity.serial = Entity::Cur;
+  entity.current = 1.234;
+  entity.updateValueText();
+  EXPECT_EQ(entity.valueText.getString(), "1.234 A");
+}
+
+You can write similar tests for the other functions in the Entity class, as well as for the functions in the CircuitGUI namespace.
+
+It's also a good idea to write tests for edge cases, such as trying to delete a component when there are no components on the screen, or saving a file with an invalid file name. This helps ensure that your code is robust and handles unexpected input correctly.
+
+I hope this helps! Let me know if you have any further questions.

@@ -1,4 +1,5 @@
 New------------------------------------
+CircuitCore 2nd Project Added (Statically Links with CircuitGUI)
 Icon added (Embedded with exe)
 Finally ConsoleLess Window!!! for Release Mode (And new log.txt system for debugging in Relase Mode)
 Assets are now Embedded with .exe (For now just Images)
