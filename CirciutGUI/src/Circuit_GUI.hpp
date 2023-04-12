@@ -401,12 +401,17 @@ namespace CircuitGUI {
 
 
 	struct quadTree {
+		static const int limit = 5;
 		bool isSubDivided = false;
 		unsigned int size = 0;
-		int arr[5] = { 0,0,0,0,0 };
+		std::vector<int> arr;
 		sf::FloatRect area;
 		sf::RectangleShape rectDraw;								// [0 1]
-		quadTree* sub[4] = { nullptr,nullptr ,nullptr ,nullptr };	// [2 3]
+		quadTree* sub[4] = { nullptr, nullptr ,nullptr ,nullptr };	// [2 3]
+
+		quadTree() {
+			arr.reserve(quadTree::limit);
+		}
 	};
 	quadTree qt;
 	void qtDelete(quadTree& box) {
@@ -426,19 +431,21 @@ namespace CircuitGUI {
 			box.sub[2] = nullptr;
 			box.sub[3] = nullptr;
 
-			box.size = 0;
-			box.isSubDivided = false;
-			box.area = { 0,0,0,0 };
-			box.rectDraw.setSize(zero);
 		}
+
+		box.size = 0;
+		box.arr.clear();
+		box.isSubDivided = false;
+		box.area = { 0,0,0,0 };
+		box.rectDraw.setSize(zero);
 	}
 	void qtAdd(int c, quadTree& box) {
 		if (box.area.intersects(comp[c].bounds)) {
-			if (box.size < 5) { box.arr[box.size++] = c; } //HardCode
+			if (box.arr.size() < quadTree::limit) { box.arr.emplace_back(c); box.size = box.arr.size(); }
 			else {
-				if (!box.isSubDivided) {
+				if (box.isSubDivided == false) {
 					// Sub-divide
-					box.isSubDivided = 1;
+					box.isSubDivided = true;
 					int qtHalfWidth = (int)(box.area.width / 2), qtHalfHeight = (int)(box.area.height / 2);
 					box.sub[0] = new quadTree; box.sub[0]->area.width = qtHalfWidth; box.sub[0]->area.height = qtHalfHeight; box.sub[0]->area.left = box.area.left;					box.sub[0]->area.top = box.area.top;
 					box.sub[1] = new quadTree; box.sub[1]->area.width = qtHalfWidth; box.sub[1]->area.height = qtHalfHeight; box.sub[1]->area.left = box.area.left + qtHalfWidth;	box.sub[1]->area.top = box.area.top;
@@ -446,19 +453,19 @@ namespace CircuitGUI {
 					box.sub[3] = new quadTree; box.sub[3]->area.width = qtHalfWidth; box.sub[3]->area.height = qtHalfHeight; box.sub[3]->area.left = box.area.left + qtHalfWidth;	box.sub[3]->area.top = box.area.top + qtHalfHeight;
 
 					// Add qtArr in subdivided areas
-					for (int i = 0; i < 5; i++) //HardCode
+					for (int i = 0; i < quadTree::limit; i++)
 					{
-						/*	   if (*/qtAdd(box.arr[i], *box.sub[0])/*)*/;
-						/*else if (*/qtAdd(box.arr[i], *box.sub[1])/*)*/;
-						/*else if (*/qtAdd(box.arr[i], *box.sub[2])/*)*/;
-						/*else if (*/qtAdd(box.arr[i], *box.sub[3])/*)*/;
+						qtAdd(box.arr[i], *box.sub[0]);
+						qtAdd(box.arr[i], *box.sub[1]);
+						qtAdd(box.arr[i], *box.sub[2]);
+						qtAdd(box.arr[i], *box.sub[3]);
 					}
 				}
 
-				/*	   if (*/qtAdd(c, *box.sub[0])/*)*/;
-				/*else if (*/qtAdd(c, *box.sub[1])/*)*/;
-				/*else if (*/qtAdd(c, *box.sub[2])/*)*/;
-				/*else if (*/qtAdd(c, *box.sub[3])/*)*/;
+				qtAdd(c, *box.sub[0]);
+				qtAdd(c, *box.sub[1]);
+				qtAdd(c, *box.sub[2]);
+				qtAdd(c, *box.sub[3]);
 				box.size++;
 			}
 
@@ -467,13 +474,15 @@ namespace CircuitGUI {
 		//else return 0;
 	}
 	void qtUpdate() {
+
 		qtDelete(qt);
-		int compSize = comp.size();
 		qt.area = areaofCollection(true);
-		if (compSize <= 5) { //HardCode
+		
+		int compSize = comp.size();
+		if (compSize <= quadTree::limit) {
 			qt.size = compSize;
 			for (int c = 0; c < compSize; c++)
-				qt.arr[c] = c;
+				qt.arr.emplace_back(c);
 		}
 		else {
 			for (int c = 0; c < compSize; c++) //HardCode
@@ -483,7 +492,10 @@ namespace CircuitGUI {
 	void qtWrite(quadTree& box = qt, int taaabbss = 0) {
 
 		for (int t = 0; t < taaabbss; t++) std::cout << "\t";
-		std::cout << "(" << box.size << "):" << box.arr[0] << ", " << box.arr[1] << ", " << box.arr[2] << ", " << box.arr[3] << ", " << box.arr[4] << "\n";
+		std::cout << "(" << box.size << "): ";
+		for (int i = 0; i < box.arr.size(); i++)
+			std::cout << box.arr[i] << ", ";
+		std::cout << "\b\b \n";
 
 		if (box.isSubDivided) {
 			qtWrite(*box.sub[0], taaabbss + 1);

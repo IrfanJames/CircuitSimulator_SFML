@@ -50,12 +50,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 #endif
 
-	float asdf = 234.59;
-	CircuitGUI::initializeGUI();
-	LOG("GUI Initialized " << asdf);
-	
-	LOG(CircuitCore::Print());
+	Resource my_pic(IDR_CAP, "BMP");
+	Resource my_font(IDR_FONT1, "FONT");
 
+	CircuitGUI::initializeGUI();
+	
 	/*ImGui*/
 	ImGui::SFML::Init(CircuitGUI::app);
 	sf::Clock deltaClock;
@@ -246,6 +245,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					CircuitGUI::Options::deletef();
 				}
 				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
+				/*if (evnt.key.code == sf::Keyboard::K) {
+					LOG("\nCurrent Frame");
+					sf::Texture texture;
+					texture.create(app.getSize().x, app.getSize().y);
+					texture.update(app, -40, -50);
+
+					static int count = 0;
+					sf::Image screenshot = texture.copyToImage();
+					screenshot.saveToFile("screenshot-" + std::to_string(count++) + ".png");
+				}*/
 
 				/*Ctrl*/
 				if (evnt.key.control) {
@@ -1040,20 +1049,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				CircuitGUI::updateAllSqr();
 
 
-				//if (comp.size() < 1000)
-				//{
-				//	CircuitGUI::qtUpdate();
-				//	CircuitGUI::qtWrite();
-				//}
-				//else if (comp.size() < 10000)
-				//{
-				//	CircuitGUI::qtUpdate();
-				//	std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would taken\n";
-				//}
-				//else {
-				//	std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take";
-				//	std::cout << "\nNot Making   QuadTree [No. of Elements(" << comp.size() << ") is more that 10000]\n\t* Not Making Quad Tree Because Program Not Fast Enough YET\n";
-				//}
+				/*if (comp.size() < 1000)
+				{
+					CircuitGUI::qtUpdate();
+					CircuitGUI::qtWrite();
+				}
+				else if (comp.size() < 10000)
+				{
+					CircuitGUI::qtUpdate();
+					std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would taken\n";
+				}
+				else {
+					std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take";
+					std::cout << "\nNot Making   QuadTree [No. of Elements(" << comp.size() << ") is more that 10000]\n\t* Not Making Quad Tree Because Program Not Fast Enough YET\n";
+				}*/
 			}
 
 			/*if (PlayRot) { CircuitGUI::view.rotate(0.9); }
@@ -1063,19 +1072,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) { // zero causes 100 cpu load
-			CircuitGUI::app.setView(CircuitGUI::view);
-			CircuitGUI::app.clear(CircuitGUI::backColor);
+			using namespace CircuitGUI;
+
+			app.setView(view);
+			app.clear(backColor);
 
 			drawGrid();
 
 			if (virSerial.size() > 1) drawAllSqr();
 
-			//qtDraw(CircuitGUI::qt);
+			//qtDraw(qt);
 
 			drawComp();
 
 			/*Wires*/ /* {
-				//for (int c = 0; c < wires.size(); c++) wires[c].draw(CircuitGUI::app);
+				//for (int c = 0; c < wires.size(); c++) wires[c].draw(app);
 			}*/
 
 			drawNodes();
@@ -1083,15 +1094,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			/*//asdfif (!PlayMode)*/ drawBoarders();
 
 
-			if (CircuitGUI::Occupied) drawVirSprites();
+			if (Occupied) drawVirSprites();
 
 			drawSelSqr();
 
 			drawToolColumn(MInTool, MIntool);
 
 			/*ImGui*/ {
-				//if (DrawCircle) CircuitGUI::app.draw(testCircle);
-				ImGui::SFML::Render(CircuitGUI::app);//Last Thing to render
+				//if (DrawCircle) app.draw(testCircle);
+				ImGui::SFML::Render(app);//Last Thing to render
 			}
 
 		}
