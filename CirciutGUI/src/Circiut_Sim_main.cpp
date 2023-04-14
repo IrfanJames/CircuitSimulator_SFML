@@ -362,38 +362,41 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 
+
+
 		// ----------------------------------------	Options
 		{
 			/*sf::Mouse Hold*/
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) { //////////// Urgent need of enums , State Machine
 				if (releaseBool) {
+					using namespace CircuitGUI;
 					releaseBool = 0;
-					CircuitGUI::click = clock();
-					CircuitGUI::mouseHoldX = (float)sf::Mouse::getPosition(CircuitGUI::app).x; CircuitGUI::mouseHoldY = (float)sf::Mouse::getPosition(CircuitGUI::app).y;
+					click = clock();
+					mouseHoldX = (float)sf::Mouse::getPosition(app).x; mouseHoldY = (float)sf::Mouse::getPosition(app).y;
 
 					/*new Comp*/
 					if (MIntool) {
 						MIntool = 0;
-						float tempNewCompX = 150 + CircuitGUI::view.getCenter().x - W / 2, tempNewCompY = 150 + CircuitGUI::view.getCenter().y - H / 2;
-						tempNewCompX = CircuitGUI::trim(tempNewCompX);
-						tempNewCompY = CircuitGUI::trim(tempNewCompY);
+						float tempNewCompX = 150 + view.getCenter().x - W / 2, tempNewCompY = 150 + view.getCenter().y - H / 2;
+						tempNewCompX = trim(tempNewCompX);
+						tempNewCompY = trim(tempNewCompY);
 
-						CircuitGUI::comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
-						CircuitGUI::comp.back().stimuli();
+						comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
+						comp.back().stimuli();
 
 						/*Collisions*/
-						tempNewCompX = CircuitGUI::trim(tempNewCompX, CircuitGUI::gap);
-						while (CircuitGUI::occupiedAt(CircuitGUI::comp.size() - 1, sf::Vector2f(tempNewCompX, tempNewCompY))) {
-							tempNewCompX = CircuitGUI::trim(tempNewCompX + 6 * CircuitGUI::gap);
+						tempNewCompX = trim(tempNewCompX, gap);
+						while (occupiedAt(comp.back(), sf::Vector2f(tempNewCompX, tempNewCompY))) {
+							tempNewCompX = trim(tempNewCompX + 6 * gap);
 
-							if (tempNewCompX + 7 * CircuitGUI::gap - 150 - CircuitGUI::view.getCenter().x + W / 2 + 91 >= W) {
-								tempNewCompX = 150 + CircuitGUI::view.getCenter().x - W / 2;
-								tempNewCompY = CircuitGUI::trim(tempNewCompY + 6 * CircuitGUI::gap);
+							if (tempNewCompX + 7 * gap - 150 - view.getCenter().x + W / 2 + 91 >= W) {
+								tempNewCompX = 150 + view.getCenter().x - W / 2;
+								tempNewCompY = trim(tempNewCompY + 6 * gap);
 							}
 						}
 
-						CircuitGUI::comp.back().x = (int)trim(tempNewCompX); CircuitGUI::comp.back().y = (int)trim(tempNewCompY);
-						CircuitGUI::comp.back().stimuli();
+						comp.back().x = (int)trim(tempNewCompX); comp.back().y = (int)trim(tempNewCompY);
+						comp.back().stimuli();
 
 						stimuliEndNodes = 1;
 
@@ -520,6 +523,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			/*Continoue while hold*/
 			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !Click(0) /*&& releaseBool*/) {
+				using namespace CircuitGUI;
 				/*static const sf::Vector2f offsetHold[4] = {
 					{0, -2},
 					{2, 0},
@@ -527,26 +531,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					{-2, 0}
 				};*/
 				sf::FloatRect virArea = allSqr.getGlobalBounds();
-				sf::Vector2f offsetPos((int)CircuitGUI::cursorInSim().x - (virArea.left + (int)(virArea.width / 2)), (int)CircuitGUI::cursorInSim().y - (virArea.top + (int)(virArea.height / 2)));
+				sf::Vector2f offsetPos((int)cursorInSim().x - (virArea.left + (int)(virArea.width / 2)), (int)cursorInSim().y - (virArea.top + (int)(virArea.height / 2)));
 
-				for (int v = 0; v < CircuitGUI::virSprite.size(); v++)
-					CircuitGUI::virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
+				for (int v = 0; v < virSprite.size(); v++)
+					virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
 
-				offsetPos = CircuitGUI::trim(offsetPos);
+				offsetPos = trim(offsetPos);
 
 				bool moveAll = 1;
 				sf::Vector2f temp;
-				for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
-					temp.x = offsetPos.x + CircuitGUI::comp[CircuitGUI::virSerial[v]].x;
-					temp.y = offsetPos.y + CircuitGUI::comp[CircuitGUI::virSerial[v]].y;
+				for (int v = 0; v < virSerial.size(); v++) {
+					temp.x = offsetPos.x + comp[virSerial[v]].x;
+					temp.y = offsetPos.y + comp[virSerial[v]].y;
 
-					if (CircuitGUI::occupiedAt(CircuitGUI::virSerial[v], temp, true)) { moveAll = 0; break; }
+					if (occupiedAt(comp[virSerial[v]], temp, true)) {
+						moveAll = 0;
+						break;
+					}
 				}
 				if (moveAll) {
-					for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
-						CircuitGUI::comp[CircuitGUI::virSerial[v]].x += (int)offsetPos.x; // += (were "=" before)
-						CircuitGUI::comp[CircuitGUI::virSerial[v]].y += (int)offsetPos.y; // += (were "=" before)
-						CircuitGUI::comp[CircuitGUI::virSerial[v]].stimuli();
+					for (int v = 0; v < virSerial.size(); v++) {
+						comp[virSerial[v]].x += (int)offsetPos.x; // += (were "=" before)
+						comp[virSerial[v]].y += (int)offsetPos.y; // += (were "=" before)
+						comp[virSerial[v]].stimuli();
 					}
 				}
 
@@ -562,7 +569,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 				/*Selection*/
-				for (int c = 0; c < CircuitGUI::comp.size(); c++) {
+				virSerial.clear();
+				qtExtract(selSqr.getGlobalBounds(), virSerial);
+				/*for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 					//cout << std::count(virSerial.begin(), virSerial.end(), c);
 					//bool bi = std::binary_search(virSerial.begin(), virSerial.end(), c);
 					//auto mk = std::find(virSerial.begin(), virSerial.end(), c);
@@ -584,8 +593,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 							//CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
 							//CircuitGUI::virSprite[v].setColor(tempDimColor);
 
-							/*virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-							virSprite.back().setColor(tempDimColor);*/
+							//virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+							//virSprite.back().setColor(tempDimColor);
 						}
 					}
 					else if (compFound)
@@ -594,7 +603,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						//CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
 					}
 
-				}
+				}*/
+
 				//if (0 && ShiftPressed) {
 				//	for (int vs = 0; vs < virSerialShift.size(); vs++) {
 				//		static bool found = 0;
@@ -612,8 +622,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//}
 
 				CircuitGUI::updateAllSqr();
+
 			}
-			else { static sf::Vector2f zero(0, 0); CircuitGUI::selSqr.setSize(zero); }
+			else { CircuitGUI::selSqr.setSize(CircuitGUI::zero); }
 
 			/*Wire*/
 			//asdfif (wireBool) { stimuliDisplay = 1; /*cout << "11";*/ wires.back().makeWire(); }
@@ -1048,26 +1059,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				CircuitGUI::updateEndCircles();
 				CircuitGUI::updateAllSqr();
 
+				if (1 || comp.size() < 20000)
+				{
+					time_t t = clock();
+					CircuitGUI::qtUpdate();
+					LOG("\n" << ((float)(((float)clock() - (float)t) / (float)CLOCKS_PER_SEC) * 1000.0F));
+				}
+				else std::cout << "\nNot Making   QuadTree [No. of Elements(" << comp.size() << ") is more that 20000]\n\t* Not Making Quad Tree Because Program Not Fast Enough YET\n";
+
 
 				/*if (comp.size() < 1000)
-				{
-					CircuitGUI::qtUpdate();
 					CircuitGUI::qtWrite();
-				}
-				else if (comp.size() < 10000)
-				{
-					CircuitGUI::qtUpdate();
-					std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would taken\n";
-				}
-				else {
-					std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take";
-					std::cout << "\nNot Making   QuadTree [No. of Elements(" << comp.size() << ") is more that 10000]\n\t* Not Making Quad Tree Because Program Not Fast Enough YET\n";
-				}*/
+				else std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n";*/
+
 			}
 
 			/*if (PlayRot) { CircuitGUI::view.rotate(0.9); }
 			else CircuitGUI::view.setRotation(0);*/
 		}
+
+		
 
 
 		// ----------------------------------------	Draw
