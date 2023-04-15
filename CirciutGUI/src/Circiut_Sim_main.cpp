@@ -250,6 +250,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				if (evnt.key.code == sf::Keyboard::Delete) {
 					stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
 					CircuitGUI::Options::deletef();
+					CircuitGUI::qtUpdate();
 				}
 				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
 				/*if (evnt.key.code == sf::Keyboard::K) {
@@ -297,12 +298,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						stimuliDisplay = 1;	/*cout << "4";*/ stimuliEndNodes = 1;
 
 						CircuitGUI::Options::rotatef();
-
+						CircuitGUI::qtUpdate();
 					}
 					if (evnt.key.code == sf::Keyboard::C) {
 
 						CircuitGUI::Options::copyf();
-
+						CircuitGUI::qtUpdate();
 					}
 					if (evnt.key.code == sf::Keyboard::X) {
 						stimuliDisplay = 1;	/*cout << "6";*/ stimuliEndNodes = 1;
@@ -316,12 +317,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						{
 							CircuitGUI::Options::deletef();
 						}
+
+						CircuitGUI::qtUpdate();
 					}
 					if (evnt.key.code == sf::Keyboard::V) {
 						stimuliDisplay = 1; /*cout << "7";*/ stimuliEndNodes = 1;
 
 						CircuitGUI::Options::pastef();
-
+						CircuitGUI::qtUpdate();
 					}
 					if (evnt.key.code == sf::Keyboard::O) {
 						stimuliDisplay = 1; /*cout << "5";*/ stimuliEndNodes = 1;
@@ -330,7 +333,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 						if (!filepath.empty())
 							CircuitGUI::Options::openf(filepath);
-
+						CircuitGUI::qtUpdate();
 					}
 					if (evnt.key.code == sf::Keyboard::S) {
 						;
@@ -413,7 +416,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						comp.back().stimuli();
 
 						stimuliEndNodes = 1;
-
+						CircuitGUI::qtUpdate();
 					}
 					else {
 						mouseOnCompsBool = 0;
@@ -569,6 +572,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				}
 
 				stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
+				CircuitGUI::qtUpdate();
 			}
 
 			/*Select Sqr*/
@@ -633,7 +637,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//}
 
 				CircuitGUI::updateAllSqr();
-
 			}
 			else { CircuitGUI::selSqr.setSize(CircuitGUI::zero); }
 
@@ -677,6 +680,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						if (!filepath.empty())
 							CircuitGUI::Options::openf(filepath);
 
+						CircuitGUI::qtUpdate();
 					}
 					if (ImGui::MenuItem("Save", "Ctrl + S")) {
 						;
