@@ -30,7 +30,6 @@ public:
 	};
 
 public:
-	int serial = 0;
 	float x, y, angle;
 	sf::Sprite sprite;
 	sf::Text valueText;
@@ -38,6 +37,7 @@ public:
 	sf::FloatRect bounds;
 
 private:
+	int serial = 0;
 	void updateValueText() {
 
 		std::string str;
@@ -144,11 +144,11 @@ public:
 		updateValueText();
 		stimuli();
 	}
+
 	Entity(int s, float X, float Y, float Angle = 0.0f) {
-		serial = s; x = X; y = Y; angle = Angle;
+		x = X; y = Y; angle = Angle;
 		
-		sprite.setTexture(compTex[serial]);
-		sprite.setOrigin((int)(compTex[serial].getSize().x / 2), 0);
+		setSerial(s);
 
 		boarder = boarderDesign;
 		static const int A = 0, B = 15, C = 75; //Hard Code
@@ -165,6 +165,18 @@ public:
 		//valueText.setFillColor(normalCompColor);
 		updateValueText();
 		stimuli();
+	}
+
+	void setSerial(int s) {
+		serial = s;
+
+		sprite.setTexture(compTex[serial], true);
+		//sprite.setOrigin((int)(compTex[serial].getSize().x / static_cast<float>(2)), 0);
+		sprite.setOrigin((int)(compTex[serial].getSize().x / 2), 0);
+	}
+
+	int getSerial() {
+		return serial;
 	}
 
 	sf::Vector2f getEndPos() const {
@@ -201,6 +213,7 @@ public:
 		};
 		valueText.setPosition(x + offSet[(int)(angle / 90)].x, y + offSet[(int)(angle / 90)].y); // badPractice for gap = 15
 	}
+
 	void draw(sf::RenderWindow& app)
 	{
 		app.draw(valueText);

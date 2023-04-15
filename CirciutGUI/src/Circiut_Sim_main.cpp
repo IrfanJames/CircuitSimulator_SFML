@@ -30,7 +30,7 @@ taskkill /F /IM CirciutGUI.exe
 #ifdef _DEBUG
 #define LOG(x) std::cout << "\n" << x;
 #else
-#define LOG(x) log_file << "\n" << x;
+#define LOG(x) log_file  << "\n" << x;
 #endif
 
 #define LOG_VEC(vec) LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n");
@@ -488,14 +488,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 							if (comp[virSerial[v]].bounds.contains(cursorInSim())) {
 
 								// Changing Serial
-								if (comp[virSerial[v]].serial == Entity::SwC)
-									comp[virSerial[v]].serial = Entity::SwO;
-								else if (comp[virSerial[v]].serial == Entity::SwO)
-									comp[virSerial[v]].serial = Entity::SwC;
-
-								// Changing Texture
-								comp[virSerial[v]].sprite.setTexture(compTex[comp[virSerial[v]].serial]);
-
+								if (comp[virSerial[v]].getSerial() == Entity::SwC)
+									comp[virSerial[v]].setSerial(Entity::SwO);
+								else
+									if (comp[virSerial[v]].getSerial() == Entity::SwO)
+										comp[virSerial[v]].setSerial(Entity::SwC);
 
 								virSerial.erase(virSerial.begin() + v);
 								virSprite.erase(virSprite.begin() + v);
@@ -1104,7 +1101,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//for (int c = 0; c < wires.size(); c++) wires[c].draw(app);
 			}*/
 
-			drawNodes();
+			//drawNodes();
 
 			/*//asdfif (!PlayMode)*/ drawBoarders();
 

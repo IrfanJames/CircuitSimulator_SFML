@@ -3,7 +3,7 @@
 #pragma once
 
 //#include <iostream>
-#include <windows.h> //To Open file(txt/PNG) just after creating(Save as...) it
+//#include <windows.h> //To Open file(txt/PNG) just after creating(Save as...) it
 
 #include "SFML/Graphics.hpp"
 #include "Circuit_Global.hpp"
@@ -821,15 +821,15 @@ namespace CircuitGUI {
 				//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
 
 				if (comp[c].angle == 0) {
-					tempCompImg = compTex[comp[c].serial].copyToImage();
+					tempCompImg = compTex[comp[c].getSerial()].copyToImage();
 				}
 				else if (comp[c].angle == 180) {
-					tempCompImg = compTex[comp[c].serial].copyToImage();
+					tempCompImg = compTex[comp[c].getSerial()].copyToImage();
 					tempCompImg.flipVertically();
 					tempCompImg.flipHorizontally();
 				}
 				else {
-					sf::Image tempTempCompImg(compTex[comp[c].serial].copyToImage());
+					sf::Image tempTempCompImg(compTex[comp[c].getSerial()].copyToImage());
 					tempCompImg.create(tempTempCompImg.getSize().y, tempTempCompImg.getSize().x);
 
 					for (int j = 0; j < tempTempCompImg.getSize().y; j++) {
@@ -852,7 +852,7 @@ namespace CircuitGUI {
 
 				bool rotBool = ((((int)comp[c].angle) / 90) % 2 == 1);
 
-				int fakeGap = 15 - (comp[c].serial == 5) * 5;
+				int fakeGap = 15 - (comp[c].getSerial() == 5) * 5;
 
 				float OffX = compBound.left - ABCD.left - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
 				float OffY = compBound.top - ABCD.top - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
@@ -953,14 +953,17 @@ namespace CircuitGUI {
 			tempStr = std::to_string((int)comp.size()) + "\n";
 			int size = (int)comp.size();
 			for (int c = 0; c < size; c++) {
-				tempStr += std::to_string(comp[c].serial) + "\t" + std::to_string((int)comp[c].x) + "\t" + std::to_string((int)comp[c].y) + "\t" + std::to_string((int)comp[c].angle) + "\n";
+				tempStr += std::to_string(comp[c].getSerial()) + "\t" + std::to_string((int)comp[c].x) + "\t" + std::to_string((int)comp[c].y) + "\t" + std::to_string((int)comp[c].angle) + "\n";
 			}
 			output << tempStr;
 			output.close();
 
 			WCHAR hello[260] = { 0 };
 			for (int i = 0; i < 260 && i < file.length(); i++) hello[i] = file[i];
+			
+#ifdef NDEBUG
 			ShellExecute(NULL, NULL, hello, NULL, NULL, SW_SHOWNORMAL);
+#endif
 		}
 
 		void copyf() {
@@ -970,7 +973,7 @@ namespace CircuitGUI {
 
 			int size = (int)virSerial.size();
 			for (int c = 0; c < size; c++) {
-				tempStr += std::to_string(comp[virSerial[c]].serial) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
+				tempStr += std::to_string(comp[virSerial[c]].getSerial()) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
 			}
 
 			//clipboard << tempStr;

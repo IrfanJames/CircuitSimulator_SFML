@@ -1,4 +1,5 @@
 New------------------------------------
+New Icons for Components (2 Pixcel Wide)
 QuadTree Completed
 CircuitCore 2nd Project Added (Statically Links with CircuitGUI)
 Icon added (Embedded with exe)
@@ -39,6 +40,7 @@ smartDisplay temp turned off (causes 100 cpu load)
 repeated coad in (last of drag) & (resizing window) of tool column
 
 Short-Term Goals:----------------------
+Wires
 LOG Class or Project or Precomplied Header
 Add qtExtract in updateAllEnds()
 
