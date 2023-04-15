@@ -758,7 +758,7 @@ namespace CircuitGUI {
 
 		//void nodePicDesign();
 		{
-			nodePic.setOrigin(4, 4);
+			nodePic.setOrigin(nodePic.getRadius(), nodePic.getRadius());
 			nodePic.setFillColor(CircuitGUI::normalCompColor);
 		}
 
@@ -780,111 +780,6 @@ namespace CircuitGUI {
 
 	namespace Options
 	{
-		void printScreen(const std::string& filepath) {
-
-			//try
-			//{
-			//	cout << filepath;
-			//	int len;
-			//	int slength = (int)filepath.length() + 1;
-			//	len = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, 0, 0);
-			//	wchar_t* buf = new wchar_t[len];
-			//	MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, buf, len);
-			//	std::wstring r(buf);
-			//	delete[] buf;
-			//	const wchar_t* widecstr = r.c_str();
-
-			//	//ShellExecute(NULL, NULL, L"Saved-Images", NULL, NULL, SW_SHOWNORMAL);
-			//	ShellExecute(NULL, NULL, widecstr, NULL, NULL, SW_SHOWNORMAL);
-			//}
-			//catch (const std::exception&)
-			//{
-			//	cout << "Shell connot open floder  \"Saved - Images\"";
-			//}m
-
-			sf::Image OutputImage;
-			sf::FloatRect compBound;
-			sf::FloatRect ABCD;
-
-			if (comp.size() != 0)
-			{
-				ABCD = areaofCollection(true);
-				OutputImage.create(abs(ABCD.width) + 30, abs(ABCD.height) + 30);
-			}
-			else { OutputImage.create(10, 10); }
-
-			for (int c = 0; c < comp.size(); c++) {
-				sf::Vector2f tempEndNode = comp[c].getEndPos();
-				compBound = comp[c].bounds;
-
-				sf::Image tempCompImg;
-				//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
-
-				if (comp[c].angle == 0) {
-					tempCompImg = compTex[comp[c].getSerial()].copyToImage();
-				}
-				else if (comp[c].angle == 180) {
-					tempCompImg = compTex[comp[c].getSerial()].copyToImage();
-					tempCompImg.flipVertically();
-					tempCompImg.flipHorizontally();
-				}
-				else {
-					sf::Image tempTempCompImg(compTex[comp[c].getSerial()].copyToImage());
-					tempCompImg.create(tempTempCompImg.getSize().y, tempTempCompImg.getSize().x);
-
-					for (int j = 0; j < tempTempCompImg.getSize().y; j++) {
-						for (int i = 0; i < tempTempCompImg.getSize().x; i++) {
-							tempCompImg.setPixel(j, i, tempTempCompImg.getPixel(i, j));
-						}
-					}
-					tempCompImg.flipHorizontally();
-
-
-					if (comp[c].angle == 90) {
-						;
-					}
-					else if (comp[c].angle == 270) {
-						tempCompImg.flipVertically();
-						tempCompImg.flipHorizontally();
-
-					}
-				}
-
-				bool rotBool = ((((int)comp[c].angle) / 90) % 2 == 1);
-
-				int fakeGap = 15 - (comp[c].getSerial() == 5) * 5;
-
-				float OffX = compBound.left - ABCD.left - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-				float OffY = compBound.top - ABCD.top - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-
-				for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
-					for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
-						if (tempCompImg.getPixel(i, j).a == 0) continue;
-						//std::async(std::launch::async, &sf::Image::setPixel, &OutputImage, OffX + i, OffY + j, tempCompImg.getPixel(i, j));
-
-						OutputImage.setPixel(OffX + i, OffY + j, tempCompImg.getPixel(i, j));
-					}
-				}
-
-			}
-
-			//int picNo = 0;
-			//std::string picDir = "Saved-Images/Untitled-", picType = ".png";
-			//sf::Image test;
-			//while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
-			//	;
-			//	//cout << "\n" << picNo;
-			//}
-			//OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
-
-			OutputImage.saveToFile(filepath);
-
-			WCHAR hello[260] = { 0 };
-			for (int i = 0; i < 260 && i < filepath.length(); i++) hello[i] = filepath[i];
-			ShellExecute(NULL, NULL, hello, NULL, NULL, SW_SHOWNORMAL);
-
-		}
-
 		void openf(const std::string& filepath) {
 
 			std::ifstream input(filepath);
@@ -961,9 +856,86 @@ namespace CircuitGUI {
 			WCHAR hello[260] = { 0 };
 			for (int i = 0; i < 260 && i < file.length(); i++) hello[i] = file[i];
 			
-#ifdef NDEBUG
 			ShellExecute(NULL, NULL, hello, NULL, NULL, SW_SHOWNORMAL);
-#endif
+		}
+
+		void saveAsImage(const std::string& filepath) {
+			sf::FloatRect Bounds_of_all_Comps = areaofCollection(true);
+			sf::Image image;
+
+
+			if (comp.empty())
+				image.create(10, 10, backColor);
+			else
+				image.create(Bounds_of_all_Comps.width + 2 * gap, Bounds_of_all_Comps.height + 2 * gap , backColor);
+
+			for (int c = 0; c < comp.size(); c++) {
+
+				int x_offset = gap + comp[c].bounds.left - Bounds_of_all_Comps.left;
+				int y_offset = gap + comp[c].bounds.top - Bounds_of_all_Comps.top;
+
+				static sf::Image img;
+
+				switch ((int)comp[c].angle) {
+				case 0:
+				{
+					//std::cout << "\n"<<(int)(comp[c].sprite.getTexture()->getSize().x/2.0f - gap);
+					x_offset -= (int)(comp[c].sprite.getTexture()->getSize().x/2.0f - gap);
+					img = comp[c].sprite.getTexture()->copyToImage();
+					break;
+				}
+				case 180:
+				{
+					x_offset -= (int)(comp[c].sprite.getTexture()->getSize().x / 2.0f - gap);
+					y_offset -= (int)(comp[c].sprite.getTexture()->getSize().y - gap * 5);
+
+					img = (comp[c].sprite.getTexture()->copyToImage());
+					img.flipVertically();
+					img.flipHorizontally();
+					break;
+				}
+				case 90:
+				case 270:
+				{
+					static sf::Image rot_img;
+					rot_img = comp[c].sprite.getTexture()->copyToImage();
+					img.create(rot_img.getSize().y, rot_img.getSize().x);
+
+					for (int j = 0; j < rot_img.getSize().y; j++)
+						for (int i = 0; i < rot_img.getSize().x; i++)
+							img.setPixel(j, i, rot_img.getPixel(i, j));
+					img.flipHorizontally();
+
+					if (comp[c].angle == 90) {
+						x_offset -= (int)(comp[c].sprite.getTexture()->getSize().y - gap * 5);
+						y_offset -= (int)(comp[c].sprite.getTexture()->getSize().x / 2.0f - gap);
+					}
+					else if (comp[c].angle == 270) {
+						y_offset -= (int)(comp[c].sprite.getTexture()->getSize().x / 2.0f - gap);
+
+						img.flipVertically();
+						img.flipHorizontally();
+					}
+
+					break;
+				}
+				default: break;
+				}
+
+
+				for (int y = 0; y < img.getSize().y; y++)
+					for (int x = 0; x < img.getSize().x; x++)
+					{
+						static sf::Color col;
+						col = img.getPixel(x, y);
+						if (col != sf::Color::Transparent)
+							image.setPixel(x + x_offset, y + y_offset, col);
+					}
+			}
+
+
+
+			image.saveToFile(filepath);
 		}
 
 		void copyf() {
@@ -1321,3 +1293,111 @@ bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = false) {
 
 		Occupied = 0; return 0;
 	}*/
+
+// printScreen
+/*
+void printScreen(const std::string& filepath) {
+
+			//try
+			//{
+			//	cout << filepath;
+			//	int len;
+			//	int slength = (int)filepath.length() + 1;
+			//	len = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, 0, 0);
+			//	wchar_t* buf = new wchar_t[len];
+			//	MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, buf, len);
+			//	std::wstring r(buf);
+			//	delete[] buf;
+			//	const wchar_t* widecstr = r.c_str();
+
+			//	//ShellExecute(NULL, NULL, L"Saved-Images", NULL, NULL, SW_SHOWNORMAL);
+			//	ShellExecute(NULL, NULL, widecstr, NULL, NULL, SW_SHOWNORMAL);
+			//}
+			//catch (const std::exception&)
+			//{
+			//	cout << "Shell connot open floder  \"Saved - Images\"";
+			//}m
+
+			sf::Image OutputImage;
+			sf::FloatRect compBound;
+			sf::FloatRect ABCD;
+
+			if (comp.size() != 0)
+			{
+				ABCD = areaofCollection(true);
+				OutputImage.create(abs(ABCD.width) + 30, abs(ABCD.height) + 30);
+			}
+			else { OutputImage.create(10, 10); }
+
+			for (int c = 0; c < comp.size(); c++) {
+				sf::Vector2f tempEndNode = comp[c].getEndPos();
+				compBound = comp[c].bounds;
+
+				sf::Image tempCompImg;
+				//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
+
+				if (comp[c].angle == 0) {
+					tempCompImg = compTex[comp[c].getSerial()].copyToImage();
+				}
+				else if (comp[c].angle == 180) {
+					tempCompImg = compTex[comp[c].getSerial()].copyToImage();
+					tempCompImg.flipVertically();
+					tempCompImg.flipHorizontally();
+				}
+				else {
+					sf::Image tempTempCompImg(compTex[comp[c].getSerial()].copyToImage());
+					tempCompImg.create(tempTempCompImg.getSize().y, tempTempCompImg.getSize().x);
+
+					for (int j = 0; j < tempTempCompImg.getSize().y; j++) {
+						for (int i = 0; i < tempTempCompImg.getSize().x; i++) {
+							tempCompImg.setPixel(j, i, tempTempCompImg.getPixel(i, j));
+						}
+					}
+					tempCompImg.flipHorizontally();
+
+
+					if (comp[c].angle == 90) {
+						;
+					}
+					else if (comp[c].angle == 270) {
+						tempCompImg.flipVertically();
+						tempCompImg.flipHorizontally();
+
+					}
+				}
+
+				bool rotBool = ((((int)comp[c].angle) / 90) % 2 == 1);
+
+				int fakeGap = 15 - (comp[c].getSerial() == 5) * 5;
+
+				float OffX = compBound.left - ABCD.left - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+				float OffY = compBound.top - ABCD.top - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
+
+				for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
+					for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
+						if (tempCompImg.getPixel(i, j).a == 0) continue;
+						//std::async(std::launch::async, &sf::Image::setPixel, &OutputImage, OffX + i, OffY + j, tempCompImg.getPixel(i, j));
+
+						OutputImage.setPixel(OffX + i, OffY + j, tempCompImg.getPixel(i, j));
+					}
+				}
+
+			}
+
+			//int picNo = 0;
+			//std::string picDir = "Saved-Images/Untitled-", picType = ".png";
+			//sf::Image test;
+			//while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
+			//	;
+			//	//cout << "\n" << picNo;
+			//}
+			//OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
+
+			OutputImage.saveToFile(filepath);
+
+			WCHAR hello[260] = { 0 };
+			for (int i = 0; i < 260 && i < filepath.length(); i++) hello[i] = filepath[i];
+			ShellExecute(NULL, NULL, hello, NULL, NULL, SW_SHOWNORMAL);
+
+		}
+*/

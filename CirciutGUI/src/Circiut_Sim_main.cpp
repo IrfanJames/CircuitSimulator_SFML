@@ -262,7 +262,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					sf::Image screenshot = texture.copyToImage();
 					screenshot.saveToFile("screenshot-" + std::to_string(count++) + ".png");
 				}*/
+				/*if (evnt.key.code == sf::Keyboard::K) {
+					LOG("test img");
+					sf::Texture texture;
+					texture.create(75, 100);
+					texture.update(compTex[Entity::Dod], 10, 10);
 
+					sf::Image test = texture.copyToImage();
+					test.saveToFile("test.png");
+				}*/
 				/*Ctrl*/
 				if (evnt.key.control) {
 					if (evnt.key.code == sf::Keyboard::A) {
@@ -341,7 +349,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 								CircuitGUI::Options::savef(filepath);
 
 							if (filepath.back() == 'G')
-								CircuitGUI::Options::printScreen(filepath);
+								CircuitGUI::Options::saveAsImage(filepath);
 
 						}
 
@@ -688,7 +696,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 								CircuitGUI::Options::savef(filepath);
 
 							if (filepath.back() == 'G')
-								CircuitGUI::Options::printScreen(filepath);
+								CircuitGUI::Options::saveAsImage(filepath);
 
 						}
 
@@ -1101,7 +1109,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//for (int c = 0; c < wires.size(); c++) wires[c].draw(app);
 			}*/
 
-			//drawNodes();
+			drawNodes();
 
 			/*//asdfif (!PlayMode)*/ drawBoarders();
 
