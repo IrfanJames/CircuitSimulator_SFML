@@ -28,9 +28,9 @@ taskkill /F /IM CirciutGUI.exe
 
 
 #ifdef _DEBUG
-#define LOG(x) std::cout << x;
+#define LOG(x) std::cout << "\n" << x;
 #else
-#define LOG(x) log_file  << x;
+#define LOG(x) log_file << "\n" << x;
 #endif
 
 #define LOG_VEC(vec) LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n");
@@ -40,7 +40,7 @@ using namespace CircuitGUI;
 
 #ifdef _DEBUG
 // Debug  Mode
-int main(int argc, char** argv) {
+int main(int argc, char** argv) {	
 #else
 // Realse Mode
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -85,6 +85,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//Graph circuit;
 		///////////////////////////////////////////////
 
+#ifdef _DEBUG
+	// For Opening Where Left
+	CircuitGUI::Options::openf("last.txt");
+	stimuliEndNodes = 1;
+#endif
 
 	////////////////// argv ///////////////////////
 #ifdef _DEBUG
@@ -359,7 +364,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//int myWinState = CircuitGUI::Response::State::None;
 
 		//--------------------------------------------------------------------------------//
-
 
 
 
@@ -1070,9 +1074,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				else std::cout << "\nNot Making   QuadTree [No. of Elements(" << comp.size() << ") is more that 20000]\n\t* Not Making Quad Tree Because Program Not Fast Enough YET\n";
 
 
-				if (comp.size() < 1000)
-					CircuitGUI::qtWrite();
-				else std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n";
+				//if (comp.size() < 1000)
+				//	CircuitGUI::qtWrite();
+				//else std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n";
 
 			}
 
@@ -1131,6 +1135,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ImGui::SFML::Shutdown();
 
 #ifdef _DEBUG
+	CircuitGUI::Options::savef("last.txt");
+
 	std::cin.get();
 #else
 	log_file.close();

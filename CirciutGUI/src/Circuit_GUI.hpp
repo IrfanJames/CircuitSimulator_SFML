@@ -434,11 +434,37 @@ namespace CircuitGUI {
 			for (int v = virSerial.size() - 1; v >= 0; v--) {
 				int index = lower_bound(vec.begin(), vec.end(), virSerial[v]) - vec.begin();
 				if (index < vec.size() && (vec[index] == virSerial[v]))
-						vec.erase(vec.begin() + index);
+					vec.erase(vec.begin() + index);
 			}
 
+		int count = 0;
+		for (int i = 0; i < vec.size(); i++) {
+			count = 0;
+
+			if (e.x == comp[vec[i]].x &&
+				e.y == comp[vec[i]].y)
+				count++;
+
+			if (e.x == comp[vec[i]].getEndPos().x &&
+				e.y == comp[vec[i]].getEndPos().y)
+				count++;
+
+			if (e.getEndPos().x == comp[vec[i]].x &&
+				e.getEndPos().y == comp[vec[i]].y)
+				count++;
+
+			if (e.getEndPos().x == comp[vec[i]].getEndPos().x &&
+				e.getEndPos().y == comp[vec[i]].getEndPos().y)
+				count++;
+
+			if (count > 1) { Occupied = true; return 1; }
+		}
+
+		if (count == 1) { Occupied = false; return 0; }
+		
 		Occupied = (!vec.empty());
 		return (!vec.empty());
+
 	}
 	sf::FloatRect areaofCollection(bool collectionIsAllComp) {
 		sf::FloatRect compBound;
