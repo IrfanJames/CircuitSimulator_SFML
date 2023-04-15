@@ -161,8 +161,6 @@ namespace CircuitGUI {
 	}
 	void updateAllEnds() {
 
-		allEnds.clear();
-
 		int nodeCount = 0;
 		for (int c = 0; c < comp.size(); c++) {
 			static sf::Vector2f tempEnd;
@@ -170,11 +168,11 @@ namespace CircuitGUI {
 			for (int cc = 0; cc < 2; cc++) {
 
 				//tempEnd
-				if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = CircuitGUI::comp[c].y; }
+				if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
 				if (cc == 1) { /*Rear*/  tempEnd = comp[c].getEndPos(); }
 
 				bool found = 0;
-				for (int e = 0; e < allEnds.size(); e++) {
+				for (int e = 0; e < nodeCount/*allEnds.size()*/; e++) {
 					if (tempEnd == allEnds[e]) {
 						found = 1;
 						break;
@@ -182,19 +180,62 @@ namespace CircuitGUI {
 				}
 
 				if (!found) {
-					nodeCount++;
 
-					if (nodeCount <= allEnds.size()) allEnds[nodeCount] = tempEnd;
-					else allEnds.emplace_back(tempEnd);
+					if (allEnds.empty())
+					{
+						allEnds.emplace_back(tempEnd);
+						nodeCount++;
+					}
+					else if (nodeCount < allEnds.size())
+						allEnds[nodeCount++] = tempEnd;
+					else
+					{
+						allEnds.emplace_back(tempEnd);
+						nodeCount++;
+					}
 				}
 
 			}
 		}
 
-		while (nodeCount < allEnds.size())
-			allEnds.pop_back();
-
+		allEnds.erase(allEnds.begin() + nodeCount, allEnds.end());
 	}
+	//void updateAllEnds() {
+	//
+	//	allEnds.clear();
+	//
+	//	int nodeCount = 0;
+	//	for (int c = 0; c < comp.size(); c++) {
+	//		static sf::Vector2f tempEnd;
+	//
+	//		for (int cc = 0; cc < 2; cc++) {
+	//
+	//			//tempEnd
+	//			if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
+	//			if (cc == 1) { /*Rear*/  tempEnd = comp[c].getEndPos(); }
+	//
+	//			bool found = 0;
+	//			for (int e = 0; e < allEnds.size(); e++) {
+	//				if (tempEnd == allEnds[e]) {
+	//					found = 1;
+	//					break;
+	//				}
+	//			}
+	//
+	//			if (!found) {
+	//				nodeCount++;
+	//
+	//				if (nodeCount <= allEnds.size()) allEnds[nodeCount] = tempEnd;
+	//				else allEnds.emplace_back(tempEnd);
+	//			}
+	//
+	//		}
+	//	}
+	//
+	//	while (nodeCount < allEnds.size())
+	//		allEnds.pop_back();
+	//
+	//}
 
 
 	struct quadTree {
@@ -252,6 +293,15 @@ namespace CircuitGUI {
 					box.sub[2] = new quadTree; box.sub[2]->area.width = qtHalfWidth; box.sub[2]->area.height = qtHalfHeight; box.sub[2]->area.left = box.area.left;					box.sub[2]->area.top = box.area.top + qtHalfHeight;
 					box.sub[3] = new quadTree; box.sub[3]->area.width = qtHalfWidth; box.sub[3]->area.height = qtHalfHeight; box.sub[3]->area.left = box.area.left + qtHalfWidth;	box.sub[3]->area.top = box.area.top + qtHalfHeight;
 
+					for (int i = 0; i < 4; i++) {
+						box.sub[i]->rectDraw.setSize(sf::Vector2f(box.sub[i]->area.width, box.sub[i]->area.height));
+						box.sub[i]->rectDraw.setPosition(sf::Vector2f(box.sub[i]->area.left, box.sub[i]->area.top));
+						box.sub[i]->rectDraw.setFillColor(sf::Color(box.sub[i]->rectDraw.getPosition().y - box.sub[i]->rectDraw.getPosition().x,
+																	box.sub[i]->rectDraw.getPosition().x + box.sub[i]->rectDraw.getLocalBounds().height,
+																	box.sub[i]->rectDraw.getLocalBounds().width - box.sub[i]->rectDraw.getPosition().x, 100));
+					}
+
+
 					// Add qtArr in subdivided areas
 					for (int i = 0; i < quadTree::limit; i++)
 					{
@@ -278,6 +328,11 @@ namespace CircuitGUI {
 
 		qtDelete(qt);
 		qt.area = areaofCollection(true);
+		qt.rectDraw.setSize(sf::Vector2f(qt.area.width, qt.area.height));
+		qt.rectDraw.setPosition(sf::Vector2f(qt.area.left, qt.area.top));
+		qt.rectDraw.setFillColor(sf::Color(qt.rectDraw.getPosition().y - qt.rectDraw.getPosition().x,
+											qt.rectDraw.getPosition().x + qt.rectDraw.getLocalBounds().height,
+											qt.rectDraw.getLocalBounds().width - qt.rectDraw.getPosition().x, 100));
 
 		int compSize = comp.size();
 		if (compSize <= quadTree::limit) {
@@ -308,10 +363,6 @@ namespace CircuitGUI {
 
 	}
 	void qtDraw(quadTree& box) {
-
-		box.rectDraw.setSize(sf::Vector2f(box.area.width, box.area.height));
-		box.rectDraw.setPosition(sf::Vector2f(box.area.left, box.area.top));
-		box.rectDraw.setFillColor(sf::Color(box.rectDraw.getPosition().y, box.rectDraw.getPosition().x, box.rectDraw.getScale().y, 100));
 
 		app.draw(box.rectDraw);
 
@@ -344,13 +395,21 @@ namespace CircuitGUI {
 				else
 				{
 					for (int i = 0; i < box.arr.size(); i++)
-						if (std::binary_search(output.begin(), output.end(), box.arr[i]) == false)
-							if (searchArea.intersects(comp[box.arr[i]].bounds))
+						if (searchArea.intersects(comp[box.arr[i]].bounds))
+							if (std::binary_search(output.begin(), output.end(), box.arr[i]) == false)
 							{
 								auto insert_pos = std::lower_bound(output.begin(), output.end(), box.arr[i]);
 								output.emplace(insert_pos, box.arr[i]);
 							}
 				}
+				
+				/*
+				{
+					int insert_pos = std::lower_bound(output.begin(), output.end(), box.arr[i]) - output.begin();
+					if (insert_pos < output.size() && output[insert_pos] != box.arr[i])
+						output.insert (output.begin() + insert_pos, box.arr[i]);
+				}
+				*/
 			}
 			else {
 				qtExtract(searchArea, output, *box.sub[0]);

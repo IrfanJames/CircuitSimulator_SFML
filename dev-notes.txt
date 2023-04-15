@@ -1,4 +1,5 @@
 New------------------------------------
+QuadTree Completed
 CircuitCore 2nd Project Added (Statically Links with CircuitGUI)
 Icon added (Embedded with exe)
 Finally ConsoleLess Window!!! for Release Mode (And new log.txt system for debugging in Relase Mode)
@@ -36,6 +37,10 @@ win resizing: smooth**
 toolColumn resizes with winResize(viewSize)
 smartDisplay temp turned off (causes 100 cpu load)
 repeated coad in (last of drag) & (resizing window) of tool column
+
+Short-Term Goals:----------------------
+LOG Class or Project or Precomplied Header
+Add qtExtract in updateAllEnds()
 
 
 Issues:--------------------------------

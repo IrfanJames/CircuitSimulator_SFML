@@ -33,6 +33,8 @@ taskkill /F /IM CirciutGUI.exe
 #define LOG(x) log_file  << x;
 #endif
 
+#define LOG_VEC(vec) LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n");
+
 
 using namespace CircuitGUI;
 
@@ -1063,22 +1065,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				{
 					time_t t = clock();
 					CircuitGUI::qtUpdate();
-					LOG("\n" << ((float)(((float)clock() - (float)t) / (float)CLOCKS_PER_SEC) * 1000.0F));
+					//LOG("\n" << ((float)(((float)clock() - (float)t) / (float)CLOCKS_PER_SEC) * 1000.0F));
 				}
 				else std::cout << "\nNot Making   QuadTree [No. of Elements(" << comp.size() << ") is more that 20000]\n\t* Not Making Quad Tree Because Program Not Fast Enough YET\n";
 
 
-				/*if (comp.size() < 1000)
+				if (comp.size() < 1000)
 					CircuitGUI::qtWrite();
-				else std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n";*/
+				else std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n";
 
 			}
 
 			/*if (PlayRot) { CircuitGUI::view.rotate(0.9); }
 			else CircuitGUI::view.setRotation(0);*/
 		}
-
-		
 
 
 		// ----------------------------------------	Draw
@@ -1092,7 +1092,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			if (virSerial.size() > 1) drawAllSqr();
 
-			//qtDraw(qt);
+			qtDraw(qt);
 
 			drawComp();
 
