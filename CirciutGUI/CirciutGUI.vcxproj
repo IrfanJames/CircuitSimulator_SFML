@@ -167,7 +167,8 @@
     <ClInclude Include="src\Circuit_Graph.hpp" />
     <ClInclude Include="src\Circuit_GUI.hpp" />
     <ClInclude Include="src\Circuit_Windows_Stuff.hpp" />
-    <ClInclude Include="src\Circuit_wire.hpp" />
+    <ClInclude Include="src\Circuit_Wire.hpp" />
+    <ClInclude Include="src\LOG.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\Resource_Manager.hpp" />
   </ItemGroup>
@@ -181,6 +182,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\LOG.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CircuitCore\CircuitCore.vcxproj">

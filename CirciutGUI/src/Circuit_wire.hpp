@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 
 #include "Circuit_GUI.hpp"
+using namespace CircuitGUI;
 
 class Wire {
 private:
@@ -14,10 +15,10 @@ public:
 	Wire(const sf::Vector2f& IniPoint) {
 		wire.reserve(2);
 
-		wire.emplace_back(sf::Vector2f(3, 20));
+		wire.emplace_back(sf::Vector2f(2, 20));
 		wire.back().setOrigin(1, 0);
 		wire.back().setPosition(IniPoint);
-		wire.back().setFillColor(CircuitGUI::normalCompColor);
+		wire.back().setFillColor(normalCompColor);
 	}
 
 	void newEdge() {
@@ -26,23 +27,24 @@ public:
 		else
 			if (wire.size() % 2 == 0) { nextPos.x += wire.back().getSize().x; }
 
-		nextPos.x = CircuitGUI::trim(nextPos.x, CircuitGUI::gap);
-		nextPos.y = CircuitGUI::trim(nextPos.y, CircuitGUI::gap);
+		nextPos.x = trim(nextPos.x, gap);
+		nextPos.y = trim(nextPos.y, gap);
 
 		wire.emplace_back(sf::Vector2f(wire.back().getSize().y, wire.back().getSize().x));
 		wire.back().setOrigin(wire.back().getOrigin().y, wire.back().getOrigin().x);
 		wire.back().setPosition(nextPos);
-		wire.back().setFillColor(CircuitGUI::normalCompColor);
+		wire.back().setFillColor(normalCompColor);
 		//wire.back().setRotation((90 * wire.size()) % 360);
 	}
 
 	void makeWire() {
-		if (wire.size() % 2 == 1) wire.back().setSize(sf::Vector2f(wire.back().getSize().x, 0 + CircuitGUI::trim((int)CircuitGUI::cursorInSim().y - wire.back().getPosition().y, CircuitGUI::gap)));
-		else if (wire.size() % 2 == 0) wire.back().setSize(sf::Vector2f(0 + CircuitGUI::trim((int)CircuitGUI::cursorInSim().x - wire.back().getPosition().x, CircuitGUI::gap), wire.back().getSize().y));
+		if (wire.size() % 2 == 1) wire.back().setSize(sf::Vector2f(wire.back().getSize().x, 0 + trim((int)cursorInSim().y - wire.back().getPosition().y, gap)));
+		else if (wire.size() % 2 == 0) wire.back().setSize(sf::Vector2f(0 + trim((int)cursorInSim().x - wire.back().getPosition().x, gap), wire.back().getSize().y));
 	}
 
 	void draw(sf::RenderWindow& App) const {
-		for (int c = 0; c < wire.size(); c++) App.draw(wire[c]);
+		for (int c = 0; c < wire.size(); c++)
+			App.draw(wire[c]);
 	}
 
 public:
@@ -54,8 +56,8 @@ public:
 	sf::Vector2f end() const {
 		sf::Vector2f temp = wire.back().getPosition() + wire.back().getSize();
 
-		temp.x = CircuitGUI::trim(temp.x, CircuitGUI::gap);
-		temp.y = CircuitGUI::trim(temp.y, CircuitGUI::gap);
+		temp.x = trim(temp.x, gap);
+		temp.y = trim(temp.y, gap);
 
 		//std::cout << "\n" << temp.x << ", " << temp.y;
 

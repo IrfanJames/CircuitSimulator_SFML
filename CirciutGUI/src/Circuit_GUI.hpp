@@ -5,6 +5,7 @@
 //#include <iostream>
 //#include <windows.h> //To Open file(txt/PNG) just after creating(Save as...) it
 
+#include "LOG.hpp"
 #include "SFML/Graphics.hpp"
 #include "Circuit_Global.hpp"
 #include "Circuit_Entity.hpp"
@@ -145,8 +146,12 @@ namespace CircuitGUI {
 	std::vector<int> virSerialShift;
 	std::vector<sf::Vector2f> allEnds;
 	std::vector<sf::CircleShape> allEndCircles;
+	std::vector<int> visibleComps;
 	void drawComp() {
-		for (int c = 0; c < CircuitGUI::comp.size(); c++) { CircuitGUI::comp[c].draw(CircuitGUI::app); }
+		//for (int c = 0; c < CircuitGUI::comp.size(); c++) { CircuitGUI::comp[c].draw(CircuitGUI::app); }
+		for (int i = 0; i < visibleComps.size(); i++) {
+			comp[visibleComps[i]].draw(app);
+		}
 	}
 	void drawVirSprites() {
 		for (int v = 0; v < CircuitGUI::virSprite.size(); v++)
@@ -403,13 +408,13 @@ namespace CircuitGUI {
 							}
 				}
 				
-				/*
-				{
-					int insert_pos = std::lower_bound(output.begin(), output.end(), box.arr[i]) - output.begin();
-					if (insert_pos < output.size() && output[insert_pos] != box.arr[i])
-						output.insert (output.begin() + insert_pos, box.arr[i]);
-				}
-				*/
+				
+				//{
+				//	int insert_pos = std::lower_bound(output.begin(), output.end(), box.arr[i]) - output.begin();
+				//	if (insert_pos < output.size() && output[insert_pos] != box.arr[i])
+				//		output.insert (output.begin() + insert_pos, box.arr[i]);
+				//}
+				
 			}
 			else {
 				qtExtract(searchArea, output, *box.sub[0]);
@@ -498,6 +503,16 @@ namespace CircuitGUI {
 		}
 
 		return ABCD;
+	}
+	void updateVisibleVector()
+	{
+		sf::FloatRect searcharea(sf::Vector2f(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2), view.getSize());
+		visibleComps.clear();
+
+		qtExtract(searcharea, visibleComps);
+#ifdef _DEBUG
+		LOG_VECw(visibleComps);
+#endif
 	}
 
 
@@ -609,6 +624,10 @@ namespace CircuitGUI {
 	}
 	void initializeGUI()
 	{
+
+		LOG::initializeLOG();
+
+		LOG("\ninitializing GUI\t\t------tee he he wee");
 		updateThemeColors();
 
 		//setFont
@@ -652,6 +671,7 @@ namespace CircuitGUI {
 			}
 		}
 
+		LOG("\nLoading Textures\t\t------tee he he wee");
 		//loadTextures();
 		{
 			Resource_Images.resize(8);
@@ -761,19 +781,22 @@ namespace CircuitGUI {
 			nodePic.setOrigin(nodePic.getRadius(), nodePic.getRadius());
 			nodePic.setFillColor(CircuitGUI::normalCompColor);
 		}
+		
+		LOG("\nReserving Vectors\t\t------tee he he wee");
+		/*Vectors*/ {
+			comp.reserve(3);
+			allEnds.reserve(3);
+			virSerial.reserve(3);
+			virSprite.reserve(3);
+			virSerialShift.reserve(3);
+			allEndCircles.reserve(17);
+			visibleComps.reserve(70);
+		}
 
 		selSqrDesign();
 
 		allSqrDesign();
 
-
-		/*Vectors*/
-		comp.reserve(3);
-		allEnds.reserve(3);
-		virSerial.reserve(3);
-		virSprite.reserve(3);
-		virSerialShift.reserve(3);
-		allEndCircles.reserve(17);
 		//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 	}
 
@@ -820,6 +843,9 @@ namespace CircuitGUI {
 				comp[c].y = (int)trim(comp[c].y + offSet.y);
 				comp[c].stimuli();
 			}
+
+			qtUpdate();
+			updateVisibleVector();
 		}
 
 		void savef(const std::string& file) {
@@ -1015,6 +1041,9 @@ namespace CircuitGUI {
 				virSprite.emplace_back(comp[virSerial.back()].sprite);
 				virSprite.back().setColor(tempDimColor);
 			}
+
+			qtUpdate();
+			updateVisibleVector();
 		}
 
 		void rotatef() {
@@ -1025,6 +1054,8 @@ namespace CircuitGUI {
 				comp[virSerial[v]].stimuli();
 			}
 
+			qtUpdate();
+			updateVisibleVector();
 		}
 
 		void deletef() {
@@ -1096,6 +1127,9 @@ namespace CircuitGUI {
 
 				total += v;
 			}*/
+
+			qtUpdate();
+			updateVisibleVector();
 		}
 	}
 
