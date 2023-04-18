@@ -4,11 +4,14 @@
 
 //#include <iostream>
 //#include <windows.h> //To Open file(txt/PNG) just after creating(Save as...) it
+#include <fstream>
 
 #include "LOG.hpp"
 #include "SFML/Graphics.hpp"
+
 #include "Circuit_Global.hpp"
 #include "Circuit_Entity.hpp"
+#include "Circuit_Wire.hpp"
 #include "Resource_Manager.hpp"
 
 //extern sf::Texture compTex[8];
@@ -17,65 +20,65 @@ extern std::vector<sf::Texture> compTex;
 namespace CircuitGUI {
 
 	/*Constants*/
-	const int gap = 15;
-	const sf::Vector2f zero(0, 0);
-	const sf::Color normalCompColor(230, 230, 230);
+	inline const int gap = 15;
+	inline const sf::Vector2f zero(0, 0);
+	inline const sf::Color normalCompColor(230, 230, 230);
 
-	bool darkLightMode = false;
-	sf::Color tempDimColor(60, 60, 60/*150, 150, 150*/);
+	inline bool Occupied = false;
+	inline bool darkLightMode = false;
+	inline sf::Color tempDimColor(60, 60, 60/*150, 150, 150*/);
 
 	/*Textures*/
 	//void loadTextures()
-	Resource Resource_Logo;
-	Resource Resource_Font;
-	std::vector<Resource> Resource_Images;
+	inline Resource Resource_Logo;
+	inline Resource Resource_Font;
+	inline std::vector<Resource> Resource_Images;
 
-	sf::Event evnt;
-	sf::RenderWindow app;
+	inline sf::Event evnt;
+	inline sf::RenderWindow app;
 	//renderWinInit();
-	sf::View view;
+	inline sf::View view;
 	//viewInit();
 
 
 	/*Cursor*/
-	float mouseHoldX, mouseHoldY;
-	time_t click = clock(); // Time passed since Click
-	bool Click(int Sensitivity = 3) {
+	inline float mouseHoldX, mouseHoldY;
+	inline time_t click = clock(); // Time passed since Click
+	inline bool Click(int Sensitivity = 3) {
 		return (((float)clock() - (float)click) < 100) && !!(!sf::Mouse::isButtonPressed(sf::Mouse::Left) && abs(mouseHoldX - (float)sf::Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)sf::Mouse::getPosition(app).y) <= Sensitivity);
 	}
-	sf::Vector2f cursorInSim() {
+	inline sf::Vector2f cursorInSim() {
 		return app.mapPixelToCoords(sf::Mouse::getPosition(app));
 	}
-	sf::Vector2f onScreen(float X, float Y) {
+	inline sf::Vector2f onScreen(float X, float Y) {
 		return sf::Vector2f(view.getCenter().x - view.getSize().x / 2 + X, view.getCenter().y - view.getSize().y / 2 + Y);
 		//return app.mapPixelToCoords(sf::Vector2i((int)X, (int)Y));
 	}
-	float trim(float num, int wrt = gap) {
+	inline float trim(float num, int wrt = gap) {
 		return num - (int)num % wrt;
 	}
-	sf::Vector2f trim(sf::Vector2f vec, int wrt = gap) {
-		vec.x -= (int)vec.x % wrt;
-		vec.y -= (int)vec.y % wrt;
+	inline sf::Vector2f trim(sf::Vector2f vec, int wrt = gap) {
+		vec.y = trim(vec.y, wrt);
+		vec.x = trim(vec.x, wrt);
 
 		return vec;
 	}
 
-
 	/*Grid*/
-	int virtualBoarder = 80;
-	std::vector<sf::RectangleShape> vLines;
-	std::vector<sf::RectangleShape> hLines;
-	sf::Color gridColor(100, 105, 110, 20);
-	sf::Color backColor(23, 24, 25);
-	void colorGrid() {
+	inline int virtualBoarder = 80;
+	inline std::vector<sf::RectangleShape> vLines;
+	inline std::vector<sf::RectangleShape> hLines;
+	inline sf::Color gridColor(100, 105, 110, 20);
+	inline sf::Color backColor(23, 24, 25);
+	inline void colorGrid() {
 		if (darkLightMode)CircuitGUI::gridColor = { 212, 232, 247, 50 };
 		else CircuitGUI::gridColor = { 100, 105, 110, 20 }; //R,G,B,a
 	}
-	void colorBackground() {
+	inline void colorBackground() {
 		if (darkLightMode) CircuitGUI::backColor = { 36, 133, 202 };
 		else CircuitGUI::backColor = { 23, 24, 25 }; //R,G,B
 	}
-	void drawGrid() {
+	inline void drawGrid() {
 		for (int c = 0; c < vLines.size(); c++) { app.draw(vLines[c]); }
 		for (int c = 0; c < hLines.size(); c++) { app.draw(hLines[c]); }
 	}
@@ -83,18 +86,18 @@ namespace CircuitGUI {
 
 
 	/*Drag*/
-	bool dragBool = 0;
-	float viewX = 0, viewY = 0;
-	float verX = 0, verY = 0;
-	float horX = 0, horY = 0;
-	int verBrightCount = 5, horBrightCount = 5;
-	void iniDrag() {
+	inline bool dragBool = 0;
+	inline float viewX = 0, viewY = 0;
+	inline float verX = 0, verY = 0;
+	inline float horX = 0, horY = 0;
+	inline int verBrightCount = 5, horBrightCount = 5;
+	inline void iniDrag() {
 		mouseHoldX = (float)sf::Mouse::getPosition(app).x; mouseHoldY = (float)sf::Mouse::getPosition(app).y;
 		viewX = view.getCenter().x, viewY = view.getCenter().y;
 		verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 		horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
 	}
-	void Drag() {
+	inline void Drag() {
 		view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)sf::Mouse::getPosition(app).x, viewY + mouseHoldY - (float)sf::Mouse::getPosition(app).y));
 		float newVerY = verY + mouseHoldY - (float)sf::Mouse::getPosition(app).y;
 		float newHorX = horX + mouseHoldX - (float)sf::Mouse::getPosition(app).x;
@@ -127,7 +130,7 @@ namespace CircuitGUI {
 		horBrightCount = abs((horBrightCount < 1) * (5 + horBrightCount % 5) + (1 <= horBrightCount) * ((horBrightCount - 1) % 5 + 1)) % 6;
 		//cout << "\n" << horBrightCount << "\n";
 	}
-	void colorBrightLineGrid() {
+	inline void colorBrightLineGrid() {
 		for (int c = 0; c < vLines.size(); c++) {
 			gridColor.a = 20 + ((c + verBrightCount) % 5 == 0) * 15;
 			vLines[c].setFillColor(gridColor);
@@ -140,31 +143,37 @@ namespace CircuitGUI {
 
 
 	/*Vectors*/
-	std::vector<Entity> comp;
-	std::vector<int> virSerial;
-	std::vector<sf::Sprite> virSprite;
-	std::vector<int> virSerialShift;
-	std::vector<sf::Vector2f> allEnds;
-	std::vector<sf::CircleShape> allEndCircles;
-	std::vector<int> visibleComps;
-	void drawComp() {
+	inline std::vector<Entity> comp;
+	inline std::vector<int> virSerial;
+	inline std::vector<sf::Sprite> virSprite;
+	inline std::vector<int> virSerialShift;
+	inline std::vector<Wire> wires;
+	inline std::vector<sf::Vector2f> allEnds;
+	inline std::vector<sf::CircleShape> allEndCircles;
+	inline std::vector<int> visibleComps;
+	inline void drawComp() {
 		//for (int c = 0; c < CircuitGUI::comp.size(); c++) { CircuitGUI::comp[c].draw(CircuitGUI::app); }
 		for (int i = 0; i < visibleComps.size(); i++) {
 			comp[visibleComps[i]].draw(app);
 		}
 	}
-	void drawVirSprites() {
-		for (int v = 0; v < CircuitGUI::virSprite.size(); v++)
-			CircuitGUI::app.draw(CircuitGUI::virSprite[v]);
+	inline void drawVirSprites() {
+		if (Occupied)
+			for (int v = 0; v < CircuitGUI::virSprite.size(); v++)
+				CircuitGUI::app.draw(CircuitGUI::virSprite[v]);
 	}
-	void drawNodes() {
+	inline void drawNodes() {
 		for (int e = 0; e < CircuitGUI::allEndCircles.size(); e++) { CircuitGUI::app.draw(CircuitGUI::allEndCircles[e]); }
 	}
-	void drawBoarders() {
+	inline void drawBoarders() {
 		for (int v = 0; v < CircuitGUI::virSerial.size(); v++)
 			CircuitGUI::app.draw(CircuitGUI::comp[CircuitGUI::virSerial[v]].boarder);
 	}
-	void updateAllEnds() {
+	inline void drawWires() {
+		for (int i = 0; i < wires.size(); i++)
+			wires[i].draw(app);
+	}
+	inline void updateAllEnds() {
 
 		int nodeCount = 0;
 		for (int c = 0; c < comp.size(); c++) {
@@ -256,8 +265,8 @@ namespace CircuitGUI {
 			arr.reserve(quadTree::limit);
 		}
 	};
-	quadTree qt;
-	void qtDelete(quadTree& box) {
+	inline quadTree qt;
+	inline void qtDelete(quadTree& box) {
 		if (box.isSubDivided) {
 			qtDelete(*box.sub[0]);
 			qtDelete(*box.sub[1]);
@@ -282,7 +291,7 @@ namespace CircuitGUI {
 		box.area = { 0,0,0,0 };
 		box.rectDraw.setSize(zero);
 	}
-	void qtAdd(int c, quadTree& box) {
+	inline void qtAdd(int c, quadTree& box) {
 		if (box.area.intersects(comp[c].bounds)) {
 			if ((box.arr.size() < quadTree::limit) || (std::min(box.area.width, box.area.height) < gap * 5)) {
 				box.arr.emplace_back(c);
@@ -328,8 +337,8 @@ namespace CircuitGUI {
 		}
 		//else return 0;
 	}
-	sf::FloatRect areaofCollection(bool collectionIsAllComp = false); // Forward Declerarion
-	void qtUpdate() {
+	inline sf::FloatRect areaofCollection(bool collectionIsAllComp = false); // Forward Declerarion
+	inline void qtUpdate() {
 
 		qtDelete(qt);
 		qt.area = areaofCollection(true);
@@ -350,7 +359,7 @@ namespace CircuitGUI {
 				qtAdd(c, qt);
 		}
 	}
-	void qtWrite(const quadTree& box = qt, int taaabbss = 0) {
+	inline void qtWrite(const quadTree& box = qt, int taaabbss = 0) {
 
 		for (int t = 0; t < taaabbss; t++) std::cout << "\t";
 		if (box.isSubDivided) std::cout << "`";
@@ -367,7 +376,7 @@ namespace CircuitGUI {
 		}
 
 	}
-	void qtDraw(quadTree& box) {
+	inline void qtDraw(quadTree& box) {
 
 		app.draw(box.rectDraw);
 
@@ -379,7 +388,7 @@ namespace CircuitGUI {
 		}
 
 	}
-	void qtExtract(const sf::FloatRect& searchArea, std::vector<int>& output, const quadTree& box = qt) {
+	inline void qtExtract(const sf::FloatRect& searchArea, std::vector<int>& output, const quadTree& box = qt) {
 
 		if (searchArea.intersects(box.area)) {
 
@@ -427,8 +436,7 @@ namespace CircuitGUI {
 	}
 
 
-	bool Occupied = 0;
-	bool occupiedAt(Entity e, const sf::Vector2f& At, bool ignoreAllVir = false) {
+	inline bool occupiedAt(Entity e, const sf::Vector2f& At, bool ignoreAllVir = false) {
 		e.x = At.x; e.y = At.y;
 		e.stimuli();
 
@@ -471,7 +479,7 @@ namespace CircuitGUI {
 		return (!vec.empty());
 
 	}
-	sf::FloatRect areaofCollection(bool collectionIsAllComp) {
+	inline sf::FloatRect areaofCollection(bool collectionIsAllComp) {
 		sf::FloatRect compBound;
 		sf::FloatRect ABCD;
 
@@ -504,19 +512,16 @@ namespace CircuitGUI {
 
 		return ABCD;
 	}
-	void updateVisibleVector()
+	inline void updateVisibleVector()
 	{
 		sf::FloatRect searcharea(sf::Vector2f(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2), view.getSize());
 		visibleComps.clear();
 
 		qtExtract(searcharea, visibleComps);
-#ifdef _DEBUG
-		LOG_VECw(visibleComps);
-#endif
 	}
 
 
-	void colorEntityboarder() {
+	inline void colorEntityboarder() {
 
 		sf::Color temp;
 
@@ -531,10 +536,10 @@ namespace CircuitGUI {
 			comp[c].boarder.setOutlineColor(temp);
 
 	}
-	sf::CircleShape nodePic(4, 15);
+	inline sf::CircleShape nodePic(4, 15);
 	//void nodePicDesign()
-	sf::RectangleShape selSqr;
-	void selSqrDesign() {
+	inline sf::RectangleShape selSqr;
+	inline void selSqrDesign() {
 		selSqr.setOutlineThickness(1.0f);
 		if (darkLightMode) {
 			selSqr.setFillColor(sf::Color(0, 89, 179, 90));//128, 217, 38 | 38, 83, 217
@@ -545,18 +550,18 @@ namespace CircuitGUI {
 			selSqr.setOutlineColor(sf::Color(66, 135, 245));
 		}
 	}
-	void drawSelSqr() {
+	inline void drawSelSqr() {
 		app.draw(selSqr);
 	}
-	sf::RectangleShape allSqr;
-	void allSqrDesign() {
+	inline sf::RectangleShape allSqr;
+	inline void allSqrDesign() {
 		allSqr.setFillColor(sf::Color::Transparent);
 		allSqr.setOutlineThickness(1.0f);
 
 		if (darkLightMode) allSqr.setOutlineColor(sf::Color(0, 0, 0/*0, 51, 102*/));//0, 255, 85
 		else allSqr.setOutlineColor(sf::Color(249, 140, 31));
 	}
-	void updateAllSqr() {
+	inline void updateAllSqr() {
 
 		sf::FloatRect virArea(areaofCollection(false));
 
@@ -564,25 +569,26 @@ namespace CircuitGUI {
 		allSqr.setPosition(sf::Vector2f(virArea.left, virArea.top));
 
 	}
-	void drawAllSqr() {
-		app.draw(allSqr);
+	inline void drawAllSqr() {
+		if (virSerial.size() > 1)
+			app.draw(allSqr);
 	}
 
 
 	/*ToolBox*/
-	const float c_toolColWidth = 100;
-	sf::Vector2f toolWinRestPos(0, 0);
-	sf::RectangleShape toolCol(sf::Vector2f(c_toolColWidth, CircuitGUI::view.getSize().y));
-	sf::RectangleShape ToolBoxLittleBox(sf::Vector2f(c_toolColWidth, c_toolColWidth));
-	sf::Sprite ToolSpr[7]; //noOfComps-1
-	sf::Vector2f ToolSprPOS[7]; //noOfComps-1
+	inline const float c_toolColWidth = 100;
+	inline sf::Vector2f toolWinRestPos(0, 0);
+	inline sf::RectangleShape toolCol(sf::Vector2f(c_toolColWidth, CircuitGUI::view.getSize().y));
+	inline sf::RectangleShape ToolBoxLittleBox(sf::Vector2f(c_toolColWidth, c_toolColWidth));
+	inline sf::Sprite ToolSpr[7]; //noOfComps-1
+	inline sf::Vector2f ToolSprPOS[7]; //noOfComps-1
 	//void toolBoxInit()
-	void updatePosToolBox()
+	inline void updatePosToolBox()
 	{
 		toolWinRestPos = onScreen(0, 0);
 		for (int c = 0; c < (Entity::noOfComps - 1); c++) ToolSpr[c].setPosition(onScreen(ToolSprPOS[c].x, ToolSprPOS[c].y));
 	}
-	void updateEndCircles()
+	inline void updateEndCircles()
 	{
 		while (allEnds.size() < allEndCircles.size())
 			allEndCircles.erase(allEndCircles.begin() + allEnds.size(), allEndCircles.end());
@@ -597,7 +603,7 @@ namespace CircuitGUI {
 
 		//cout << "\n" << allEnds.size();
 	}
-	void drawToolColumn(bool MInTool, bool MIntool) {
+	inline void drawToolColumn(bool MInTool, bool MIntool) {
 		if (MInTool) {
 			CircuitGUI::app.draw(CircuitGUI::toolCol);
 
@@ -610,7 +616,7 @@ namespace CircuitGUI {
 	}
 
 
-	void updateThemeColors()
+	inline void updateThemeColors()
 	{
 		if (darkLightMode) tempDimColor = { 60, 60, 60 };
 		else tempDimColor = { 150, 150, 150 };
@@ -622,12 +628,8 @@ namespace CircuitGUI {
 		allSqrDesign();
 		colorEntityboarder();
 	}
-	void initializeGUI()
+	inline void initializeGUI()
 	{
-
-		LOG::initializeLOG();
-
-		LOG("\ninitializing GUI\t\t------tee he he wee");
 		updateThemeColors();
 
 		//setFont
@@ -671,7 +673,6 @@ namespace CircuitGUI {
 			}
 		}
 
-		LOG("\nLoading Textures\t\t------tee he he wee");
 		//loadTextures();
 		{
 			Resource_Images.resize(8);
@@ -728,9 +729,8 @@ namespace CircuitGUI {
 			}
 
 			colorBrightLineGrid();
-		}
 
-		/* {
+			/*{
 			colorGrid();
 			colorBackground();
 
@@ -758,6 +758,7 @@ namespace CircuitGUI {
 
 			colorBrightLineGrid();
 		}*/
+		}
 
 		//toolBoxInit();
 		{
@@ -779,16 +780,16 @@ namespace CircuitGUI {
 		//void nodePicDesign();
 		{
 			nodePic.setOrigin(nodePic.getRadius(), nodePic.getRadius());
-			nodePic.setFillColor(CircuitGUI::normalCompColor);
+			nodePic.setFillColor(normalCompColor);
 		}
 		
-		LOG("\nReserving Vectors\t\t------tee he he wee");
 		/*Vectors*/ {
 			comp.reserve(3);
 			allEnds.reserve(3);
 			virSerial.reserve(3);
 			virSprite.reserve(3);
 			virSerialShift.reserve(3);
+			wires.reserve(8);
 			allEndCircles.reserve(17);
 			visibleComps.reserve(70);
 		}
@@ -796,14 +797,12 @@ namespace CircuitGUI {
 		selSqrDesign();
 
 		allSqrDesign();
-
-		//for (int c = 0; c < 16; c++) comp.emplace_back(&compTex[c % 8], c * 90 + 200, c * 90 + 100, c * 90);
 	}
 
 
 	namespace Options
 	{
-		void openf(const std::string& filepath) {
+		inline void openf(const std::string& filepath) {
 
 			std::ifstream input(filepath);
 			/*int fileNo = 0;
@@ -822,7 +821,7 @@ namespace CircuitGUI {
 			virSerial.reserve(comp.size());
 			virSprite.reserve(comp.size());
 
-			// Centering
+			// Input from file
 			int no = 0;
 			input >> no;
 			comp.reserve(no + 10); // 10 extra
@@ -848,7 +847,7 @@ namespace CircuitGUI {
 			updateVisibleVector();
 		}
 
-		void savef(const std::string& file) {
+		inline void savef(const std::string& file) {
 
 			//std::cout << "\nCtrl + S\n";
 			//ShellExecute(NULL, NULL, L"Saved-Projects", NULL, NULL, SW_SHOWNORMAL);
@@ -885,7 +884,28 @@ namespace CircuitGUI {
 			ShellExecute(NULL, NULL, hello, NULL, NULL, SW_SHOWNORMAL);
 		}
 
-		void saveAsImage(const std::string& filepath) {
+		inline void saveAsImage(const std::string& filepath) {
+
+			/*try
+			{
+				LOG(filepath);
+				int len;
+				int slength = (int)filepath.length() + 1;
+				len = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, 0, 0);
+				wchar_t* buf = new wchar_t[len];
+				MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, buf, len);
+				std::wstring r(buf);
+				delete[] buf;
+				const wchar_t* widecstr = r.c_str();
+			
+				//ShellExecute(NULL, NULL, L"Saved-Images", NULL, NULL, SW_SHOWNORMAL);
+				ShellExecute(NULL, NULL, widecstr, NULL, NULL, SW_SHOWNORMAL);
+			}
+			catch (const std::exception&)
+			{
+				LOG("Shell connot open floder  \"Saved - Images\"");
+			}*/
+
 			sf::FloatRect Bounds_of_all_Comps = areaofCollection(true);
 			sf::Image image;
 
@@ -893,7 +913,7 @@ namespace CircuitGUI {
 			if (comp.empty())
 				image.create(10, 10, backColor);
 			else
-				image.create(Bounds_of_all_Comps.width + 2 * gap, Bounds_of_all_Comps.height + 2 * gap , backColor);
+				image.create(Bounds_of_all_Comps.width + 2 * gap, Bounds_of_all_Comps.height + 2 * gap, backColor);
 
 			for (int c = 0; c < comp.size(); c++) {
 
@@ -906,7 +926,7 @@ namespace CircuitGUI {
 				case 0:
 				{
 					//std::cout << "\n"<<(int)(comp[c].sprite.getTexture()->getSize().x/2.0f - gap);
-					x_offset -= (int)(comp[c].sprite.getTexture()->getSize().x/2.0f - gap);
+					x_offset -= (int)(comp[c].sprite.getTexture()->getSize().x / 2.0f - gap);
 					img = comp[c].sprite.getTexture()->copyToImage();
 					break;
 				}
@@ -962,9 +982,23 @@ namespace CircuitGUI {
 
 
 			image.saveToFile(filepath);
+
+			//int picNo = 0;
+			//std::string picDir = "Saved-Images/Untitled-", picType = ".png";
+			//sf::Image test;
+			//while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
+			//	;
+			//	LOG( "\n" << picNo);
+			//}
+			//image.saveToFile(picDir + std::to_string(picNo - 1) + picType);
+
+
+			WCHAR Filepath_w[260] = { 0 }; // HardCode (size of arr)
+			for (int i = 0; i < 260 && i < filepath.length(); i++) Filepath_w[i] = filepath[i];
+			ShellExecute(NULL, NULL, Filepath_w, NULL, NULL, SW_SHOWNORMAL);
 		}
 
-		void copyf() {
+		inline void copyf() {
 
 			std::ofstream output;
 			std::string tempStr(std::to_string((int)virSerial.size()) + "\n");
@@ -979,7 +1013,7 @@ namespace CircuitGUI {
 
 		}
 
-		void pastef() {
+		inline void pastef() {
 
 			std::string inString(sf::Clipboard::getString());
 			std::vector<int> integers; integers.reserve(21);
@@ -1046,7 +1080,7 @@ namespace CircuitGUI {
 			updateVisibleVector();
 		}
 
-		void rotatef() {
+		inline void rotatef() {
 
 			for (int v = 0; v < virSerial.size(); v++) {
 				comp[virSerial[v]].angle += 90;
@@ -1058,7 +1092,7 @@ namespace CircuitGUI {
 			updateVisibleVector();
 		}
 
-		void deletef() {
+		inline void deletef() {
 
 			//erase - remove idiom
 			auto iter = std::remove_if(comp.begin(), comp.end(), [&](const auto& elem) {
@@ -1329,6 +1363,7 @@ bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = false) {
 	}*/
 
 // printScreen
+
 /*
 void printScreen(const std::string& filepath) {
 

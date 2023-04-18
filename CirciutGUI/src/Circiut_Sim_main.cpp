@@ -13,37 +13,25 @@ taskkill /F /IM CirciutGUI.exe
 //#include <thread>
 //#include <future>
 
+#include "LOG.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
-
-#include "LOG.hpp"
+#include "SFML/Graphics.hpp"
 
 #include "CircuitCore.hpp"
 
 #include "Circuit_GUI.hpp"
-#include "SFML/Graphics.hpp"
 #include "Circuit_Entity.hpp"
 #include "Circuit_Windows_Stuff.hpp"
 #include "Resource_Manager.hpp"
 //asdf
-//#include "Circuit_Wire.hpp"
-//#include "Circuit_Graph.h"
+#include "Circuit_Wire.hpp"
+//#include "Circuit_Graph.hpp"
 
-
-//abc#ifdef _DEBUG
-//#define LOG(x) std::cout << x;
-//#else
-//#define LOG(x) log_file  << x;
-//#endif
-//
-//#define LOG_VEC(vec) LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n");
-
-
-using namespace CircuitGUI;
 
 #ifdef _DEBUG
 // Debug  Mode
-int main(int argc, char** argv) {	
+int main(int argc, char** argv) {
 #else
 // Realse Mode
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -77,16 +65,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		testCircle.setPosition(W / 2, H / 2);
 		testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255))); }//*/
 
-	/*Wires*/
-	//asdf
-	//std::vector<Wire> wires; wires.reserve(8);
-	//wires.emplace_back(sf::Vector2f(100, 200));
-
-		//std::thread printScreenTread;
+	
+	//std::thread printScreenTread;
 
 	////////////////// Solve //////////////////////
-		//Graph circuit;
-		///////////////////////////////////////////////
+	//Graph circuit;
+	///////////////////////////////////////////////
 
 #ifdef _DEBUG
 	// For Opening Where Left
@@ -131,13 +115,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	LocalFree(argv);//*/
 #endif
 
+
+	CircuitGUI::wires.emplace_back(sf::Vector2f(300, 300));
+
+
+
 	CircuitGUI::updateVisibleVector();
 
 	//////////////// Main Loop ////////////////////
 	while (CircuitGUI::app.isOpen() && !End) {
-
+		
 		while (CircuitGUI::app.pollEvent(CircuitGUI::evnt)) {
-			using CircuitGUI::evnt;
+			using namespace CircuitGUI;
 			stimuliDisplay = 1; /*cout << "1";*/
 			/*ImGui*/
 			ImGui::SFML::ProcessEvent(evnt);
@@ -156,6 +145,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				CircuitGUI::updatePosToolBox();
 
 				updateVisibleVector();
+			}
+
+			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
+				wires.back().newEdge();
 			}
 
 			//asdf
@@ -259,7 +252,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
 					CircuitGUI::Options::deletef();
 				}
-				if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool;}
+				if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
 				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
 				/*if (evnt.key.code == sf::Keyboard::K) {
 					LOG("\nCurrent Frame");
@@ -380,8 +373,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		//--------------------------------------------------------------------------------//
 
-
-
+		if (!CircuitGUI::wires.empty())
+			CircuitGUI::wires.back().makeWire();
 
 
 
@@ -540,7 +533,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			else { Drag = 0; }
 
 			/*Continoue while hold*/
-			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !Click(0) /*&& releaseBool*/) {
+			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !CircuitGUI::Click(0) /*&& releaseBool*/) {
 				using namespace CircuitGUI;
 				/*static const sf::Vector2f offsetHold[4] = {
 					{0, -2},
@@ -581,10 +574,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			/*Select Sqr*/
 			if (selectSquare && !releaseBool /*//asdf&& !PlayMode*/) {
+				using namespace CircuitGUI;
+
 				stimuliDisplay = 1; /*cout << "10";*/
 				Selection = 1;
 				/*Sel Sqr*/
-				CircuitGUI::selSqr.setSize(CircuitGUI::cursorInSim() - CircuitGUI::selSqr.getPosition());
+				selSqr.setSize(cursorInSim() - selSqr.getPosition());
 
 
 				/*Selection*/
@@ -640,7 +635,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				//	}
 				//}
 
-				CircuitGUI::updateAllSqr();
+				updateAllSqr();
 			}
 			else { CircuitGUI::selSqr.setSize(CircuitGUI::zero); }
 
@@ -1096,42 +1091,39 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			else CircuitGUI::view.setRotation(0);*/
 		}
 
-		LOG("\n" << visibleComps.size());
+
 
 		// ----------------------------------------	Draw
-		if (1 || stimuliDisplay) { // zero causes 100 cpu load
+		if (1 || stimuliDisplay) {
 			using namespace CircuitGUI;
 
 			app.setView(view);
+
 			app.clear(backColor);
 
 			drawGrid();
 
-			if (virSerial.size() > 1) drawAllSqr();
+			drawAllSqr();
 
-			qtDraw(qt);
+			//qtDraw(qt);
 
 			drawComp();
 
-			//Wires
-			//for (int c = 0; c < wires.size(); c++) wires[c].draw(app);
+			drawWires();
 
-			//drawNodes();
+			drawNodes();
 
-			/*//asdfif (!PlayMode)*/ drawBoarders();
+			drawBoarders();
 
-
-			if (Occupied) drawVirSprites();
+			drawVirSprites();
 
 			drawSelSqr();
 
 			drawToolColumn(MInTool, MIntool);
 
-			/*ImGui*/ {
-				//if (DrawCircle) app.draw(testCircle);
-				ImGui::SFML::Render(app);//Last Thing to render
-			}
+			//if (DrawCircle) app.draw(testCircle);
 
+			ImGui::SFML::Render(app);//Last Thing to render
 		}
 		CircuitGUI::app.display();
 
@@ -1139,11 +1131,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)(((float)clock() - (float)FrameTime_for_FPS) / (float)CLOCKS_PER_SEC) * 1000.0F) + " | " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)FrameTime_for_FPS))));
 		FrameTime_for_FPS = clock();
 		stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
-		/*cout << "\n";*/
 	}
 	
 	
-	/*ImGui*/
+	//ImGui
 	ImGui::SFML::Shutdown();
 
 #ifdef _DEBUG
@@ -1151,7 +1142,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	std::cin.get();
 #else
-	//abclog_file.close();
+	LOG::log_file.close();
 #endif
 
 	return 0;

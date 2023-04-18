@@ -133,9 +133,9 @@ D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(483,22):
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(496,22): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(530,21): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(595,21): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(642,46): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(644,51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(657,69): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(639,46): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(641,51): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(654,69): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=unsigned int
@@ -144,7 +144,7 @@ D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(657,69):
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(657,48): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(654,48): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=unsigned int
@@ -153,75 +153,76 @@ D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(657,48):
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(709,31): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(706,31): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(713,22): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(714,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(714,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(720,19): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(710,22): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(711,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(711,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(717,19): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(724,22): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(725,91): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(725,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(771,49): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(721,22): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(722,91): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(722,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(768,49): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(831,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(831,66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(840,22): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(842,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(843,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(883,33): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(896,82): warning C4244: 'argument': conversion from 'T' to 'unsigned int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(828,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(828,66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(837,22): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(839,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(840,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(880,33): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(914,82): warning C4244: 'argument': conversion from 'T' to 'unsigned int', possible loss of data
           with
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(896,44): warning C4244: 'argument': conversion from 'T' to 'unsigned int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(914,44): warning C4244: 'argument': conversion from 'T' to 'unsigned int', possible loss of data
           with
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(898,22): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(900,18): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(916,22): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(918,18): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(901,18): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(919,18): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(930,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(931,25): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(952,23): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(953,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(988,39): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1009,26): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1018,34): warning C4244: '=': conversion from 'T' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(948,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(949,25): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(970,23): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(971,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(995,33): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1020,39): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1041,26): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1050,34): warning C4244: '=': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1019,34): warning C4244: '=': conversion from 'T' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1051,34): warning C4244: '=': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1024,58): warning C4018: '<=': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1029,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1029,66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1039,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1051,22): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1056,58): warning C4018: '<=': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1061,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1061,66): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1071,24): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(1083,22): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Windows_Stuff.hpp(17,20): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Windows_Stuff.hpp(49,20): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(64,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
@@ -267,15 +268,15 @@ D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(502
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(554,23): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(561,23): warning C4018: '<': signed/unsigned mismatch
 D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(571,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(806,27): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(1071,242): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(1071,238): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(808,27): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(1073,242): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(1073,238): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=int
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(1072,96): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(1072,92): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(1074,96): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp(1074,92): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=int
@@ -319,13 +320,13 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.3221
           [
               _Ty=Entity
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(831,91): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::emplace_back<int,float,float,int>(int &&,float &&,float &&,int &&)' being compiled
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_GUI.hpp(828,91): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::emplace_back<int,float,float,int>(int &&,float &&,float &&,int &&)' being compiled
           with
           [
               _Ty=Entity
           ]
   Generating code
-  1 of 2521 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  2 of 2521 functions (<0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     20 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

@@ -1,0 +1,4 @@
+
+initializing GUI		------tee he he wee
+Loading Textures		------tee he he wee
+Reserving Vectors		------tee he he wee

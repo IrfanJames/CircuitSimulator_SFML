@@ -1,16 +1,14 @@
 #pragma once
 
-#include <fstream>
+#include <ostream>
 
 namespace LOG {
 
-	// Once in any file
-	void initializeLOG();
-
 #ifdef NDEBUG
 	// Making .txt File For Logging in Release Mode
-	extern std::ofstream log_file;
+	inline std::ofstream log_file("log.txt", std::ios::out, std::ios::trunc);
 #endif
+
 }
 
 // LOG Function

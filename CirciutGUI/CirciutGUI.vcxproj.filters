@@ -92,7 +92,7 @@
     <ClCompile Include="..\dependencies\imgui\imgui-SFML.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\LOG.cpp">
+    <ClCompile Include="src\Circuit_Wire.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

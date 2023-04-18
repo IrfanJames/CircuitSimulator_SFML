@@ -5,13 +5,13 @@
 #include "SFML/Graphics.hpp";
 
 //sf::Texture compTex[8];
-std::vector<sf::Texture> compTex;
+inline std::vector<sf::Texture> compTex;
 
 class Entity {
 public:
 	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
-	static sf::Font s_font;
-	static sf::RectangleShape boarderDesign;
+	inline static sf::Font s_font;
+	inline static sf::RectangleShape boarderDesign;
 
 public:
 	double resistance = 1000;
@@ -172,6 +172,7 @@ public:
 
 		sprite.setTexture(compTex[serial], true);
 		//sprite.setOrigin((int)(compTex[serial].getSize().x / static_cast<float>(2)), 0);
+		//sprite.setOrigin((int)(compTex[serial].getSize().x / 2)-1, 0);//(-1) for wire
 		sprite.setOrigin((int)(compTex[serial].getSize().x / 2), 0);
 	}
 
@@ -190,12 +191,15 @@ public:
 		//angle = 90 * (int)((int)angle % 360) / 90;
 
 		sprite.setPosition(x, y);
-		sprite.setRotation(angle);
-
+		sprite.setRotation(angle); 
 
 		boarder.setPosition(x, y);
 		boarder.setRotation(angle);
 
+		//if (0 <= angle && angle <= 90)
+		//	sprite.setOrigin((int)(compTex[serial].getSize().x / 2) - 1, 0);
+		//else /*if (180 <= angle && angle <= 270)*/
+		//	sprite.setOrigin((int)(compTex[serial].getSize().x / 2) + 1, 0);
 
 		int A = 0, B = 15, C = 75, i = ((int)angle % 360 / 90) * 90;
 		if (i == 0) { bounds.left = x - B; bounds.top = y - A; bounds.width = B + B; bounds.height = C + A; }
@@ -242,6 +246,3 @@ public:
 
 	virtual void update() {};
 };
-
-sf::Font Entity::s_font;
-sf::RectangleShape Entity::boarderDesign;
