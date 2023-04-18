@@ -115,11 +115,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	LocalFree(argv);//*/
 #endif
 
-
-	CircuitGUI::wires.emplace_back(sf::Vector2f(300, 300));
-
-
-
 	CircuitGUI::updateVisibleVector();
 
 	//////////////// Main Loop ////////////////////
@@ -147,11 +142,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				updateVisibleVector();
 			}
 
-			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
-				wires.back().newEdge();
-			}
-
-			//asdf
 			{
 				//if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
 				//	bool onNode = 0;
@@ -211,6 +201,69 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				//}
 			}
+			if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
+				using namespace CircuitGUI;
+
+				static sf::Vector2f cursor_position;
+				cursor_position = cursorInSim();
+
+				static std::vector<int> vec;
+				static sf::FloatRect searchArea; {
+					static const float box_width = gap;
+
+					searchArea.left = cursor_position.x - box_width / 2.0f; // HardCode (3)
+					searchArea.top = cursor_position.y - box_width / 2.0f;
+					searchArea.width = box_width;
+					searchArea.height = box_width;
+				}
+
+				qtExtract(searchArea, vec);
+
+				bool on_Node = false;
+				static int sensitivity = 7; // HardCode
+				static sf::Vector2f node_position;
+
+				for (int v : vec) { // v is vec[i]
+					if (std::abs(comp[v].x - cursor_position.x) < sensitivity &&
+						std::abs(comp[v].y - cursor_position.y) < sensitivity)
+					{
+						//LOG("\nOnNode");
+						on_Node = true;
+						node_position = sf::Vector2f(comp[v].x, comp[v].y);
+						break;
+					}
+					else 
+					{
+						static sf::Vector2f end;
+						end = comp[v].getEndPos();
+
+						if (
+							std::abs(end.x - cursor_position.x) < sensitivity &&
+							std::abs(end.y - cursor_position.y) < sensitivity)
+						{
+							//LOG("\nOnNode");
+							on_Node = true;
+							node_position = end;
+							break;
+						}
+					}
+				}
+
+				if (on_Node)
+				{
+					if (wires.empty())							// No Wires:
+						wires.emplace_back(node_position);		// So, starting a new wire
+					else {
+						if (wires.back().stopped() == false)	// Wire is being build:
+							wires.back().stop();				// So, stopping a current wire
+						else
+							wires.emplace_back(node_position);	// No Wire being build: So, starting a new wire
+					}
+				}
+				else if (wires.empty() == false)
+					wires.back().newEdge();
+
+			}
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
 				releaseBool = 1;
 				if (Selection) {
@@ -252,7 +305,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
 					CircuitGUI::Options::deletef();
 				}
-				if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
+				//if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
 				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
 				/*if (evnt.key.code == sf::Keyboard::K) {
 					LOG("\nCurrent Frame");
@@ -373,14 +426,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		//--------------------------------------------------------------------------------//
 
-		if (!CircuitGUI::wires.empty())
-			CircuitGUI::wires.back().makeWire();
+		
 
 
 
 		// ----------------------------------------	Options
 		{
-			/*sf::Mouse Hold*/
+			//sf::Mouse Hold
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) { //////////// Urgent need of enums , State Machine
 				if (releaseBool) {
 					using namespace CircuitGUI;
@@ -519,129 +571,143 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				}
 			}
 
-			/*Wheel*/
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)/*myWinState & CircuitGUI::Response::Mouse_Drag*/) {
+			
+			//Wheel
+			{
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)/*myWinState & CircuitGUI::Response::Mouse_Drag*/) {
 
-				/*Drag Background*/
-				if (wheelReleaseBool /*!mouseOnCompsBool && !selectSquare*/) {
-					Drag = 1;
-					mouseOnCompsBool = 0;
-					CircuitGUI::iniDrag();
-				}
-				wheelReleaseBool = 0;
-			}
-			else { Drag = 0; }
-
-			/*Continoue while hold*/
-			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !CircuitGUI::Click(0) /*&& releaseBool*/) {
-				using namespace CircuitGUI;
-				/*static const sf::Vector2f offsetHold[4] = {
-					{0, -2},
-					{2, 0},
-					{0, 2},
-					{-2, 0}
-				};*/
-				sf::FloatRect virArea = allSqr.getGlobalBounds();
-				sf::Vector2f offsetPos((int)cursorInSim().x - (virArea.left + (int)(virArea.width / 2)), (int)cursorInSim().y - (virArea.top + (int)(virArea.height / 2)));
-
-				for (int v = 0; v < virSprite.size(); v++)
-					virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
-
-				offsetPos = trim(offsetPos);
-
-				bool moveAll = 1;
-				sf::Vector2f temp;
-				for (int v = 0; v < virSerial.size(); v++) {
-					temp.x = offsetPos.x + comp[virSerial[v]].x;
-					temp.y = offsetPos.y + comp[virSerial[v]].y;
-
-					if (occupiedAt(comp[virSerial[v]], temp, true)) {
-						moveAll = 0;
-						break;
+					/*Drag Background*/
+					if (wheelReleaseBool /*!mouseOnCompsBool && !selectSquare*/) {
+						Drag = 1;
+						mouseOnCompsBool = 0;
+						CircuitGUI::iniDrag();
 					}
+					wheelReleaseBool = 0;
 				}
-				if (moveAll) {
+				else { Drag = 0; }
+			}
+
+			// Continoue while hold
+			{
+				if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !CircuitGUI::Click(0) /*&& releaseBool*/) {
+					using namespace CircuitGUI;
+					/*static const sf::Vector2f offsetHold[4] = {
+						{0, -2},
+						{2, 0},
+						{0, 2},
+						{-2, 0}
+					};*/
+					sf::FloatRect virArea = allSqr.getGlobalBounds();
+					sf::Vector2f offsetPos((int)cursorInSim().x - (virArea.left + (int)(virArea.width / 2)), (int)cursorInSim().y - (virArea.top + (int)(virArea.height / 2)));
+
+					for (int v = 0; v < virSprite.size(); v++)
+						virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
+
+					offsetPos = trim(offsetPos);
+
+					bool moveAll = 1;
+					sf::Vector2f temp;
 					for (int v = 0; v < virSerial.size(); v++) {
-						comp[virSerial[v]].x += (int)offsetPos.x; // += (were "=" before)
-						comp[virSerial[v]].y += (int)offsetPos.y; // += (were "=" before)
-						comp[virSerial[v]].stimuli();
-					}
-				}
+						temp.x = offsetPos.x + comp[virSerial[v]].x;
+						temp.y = offsetPos.y + comp[virSerial[v]].y;
 
-				stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
-				CircuitGUI::qtUpdate();
-			}
-
-			/*Select Sqr*/
-			if (selectSquare && !releaseBool /*//asdf&& !PlayMode*/) {
-				using namespace CircuitGUI;
-
-				stimuliDisplay = 1; /*cout << "10";*/
-				Selection = 1;
-				/*Sel Sqr*/
-				selSqr.setSize(cursorInSim() - selSqr.getPosition());
-
-
-				/*Selection*/
-				virSerial.clear();
-				qtExtract(selSqr.getGlobalBounds(), virSerial);
-				/*for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-					//cout << std::count(virSerial.begin(), virSerial.end(), c);
-					//bool bi = std::binary_search(virSerial.begin(), virSerial.end(), c);
-					//auto mk = std::find(virSerial.begin(), virSerial.end(), c);
-					int v = lower_bound(virSerial.begin(), virSerial.end(), c) - virSerial.begin();
-					bool compFound = 0;
-					if (v < virSerial.size()) compFound = (virSerial[v] == c);
-					//bool compFound = 0;
-					//int v = 0;
-					//for (; v < CircuitGUI::virSerial.size() && c >= CircuitGUI::virSerial[v]; v++) { // if(CircuitGUI::virSerial[v]) break; // Ensures the virSerial is Sorted by breaking at the right time
-					//	if (c == CircuitGUI::virSerial[v]) { compFound = 1; break; }
-					//}
-					//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
-
-
-					if (CircuitGUI::comp[c].bounds.intersects(CircuitGUI::selSqr.getGlobalBounds())) {
-						if (!compFound)
-						{
-							CircuitGUI::virSerial.insert(CircuitGUI::virSerial.begin() + v, c);
-							//CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
-							//CircuitGUI::virSprite[v].setColor(tempDimColor);
-
-							//virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-							//virSprite.back().setColor(tempDimColor);
+						if (occupiedAt(comp[virSerial[v]], temp, true)) {
+							moveAll = 0;
+							break;
 						}
 					}
-					else if (compFound)
-					{
-						CircuitGUI::virSerial.erase(CircuitGUI::virSerial.begin() + v);
-						//CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
+					if (moveAll) {
+						for (int v = 0; v < virSerial.size(); v++) {
+							comp[virSerial[v]].x += (int)offsetPos.x; // += (were "=" before)
+							comp[virSerial[v]].y += (int)offsetPos.y; // += (were "=" before)
+							comp[virSerial[v]].stimuli();
+						}
 					}
 
-				}*/
-
-				//if (0 && ShiftPressed) {
-				//	for (int vs = 0; vs < virSerialShift.size(); vs++) {
-				//		static bool found = 0;
-				//		for (int v = 0; v < virSerial.size(); v++) {
-				//			if (virSerial[v] == virSerialShift[vs]) {
-				//				found = 1;
-				//				break;
-				//			}
-				//		}
-				//		if (!found) {
-				//			virSerial.emplace_back(virSerialShift[vs]);
-				//			virSprite.emplace_back(comp[virSerial.back()].sprite);
-				//		}
-				//	}
-				//}
-
-				updateAllSqr();
+					stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
+					CircuitGUI::qtUpdate();
+				}
 			}
-			else { CircuitGUI::selSqr.setSize(CircuitGUI::zero); }
 
-			/*Wire*/
-			//asdf
-			//if (wireBool) { stimuliDisplay = 1; /*cout << "11";*/ if(!wires.empty())wires.back().makeWire(); }
+			// Select Sqr
+			{
+				if (selectSquare && !releaseBool /*//asdf&& !PlayMode*/) {
+					using namespace CircuitGUI;
+
+					stimuliDisplay = 1; /*cout << "10";*/
+					Selection = 1;
+					/*Sel Sqr*/
+					selSqr.setSize(cursorInSim() - selSqr.getPosition());
+
+
+					/*Selection*/
+					virSerial.clear();
+					qtExtract(selSqr.getGlobalBounds(), virSerial);
+					/*for (int c = 0; c < CircuitGUI::comp.size(); c++) {
+						//cout << std::count(virSerial.begin(), virSerial.end(), c);
+						//bool bi = std::binary_search(virSerial.begin(), virSerial.end(), c);
+						//auto mk = std::find(virSerial.begin(), virSerial.end(), c);
+						int v = lower_bound(virSerial.begin(), virSerial.end(), c) - virSerial.begin();
+						bool compFound = 0;
+						if (v < virSerial.size()) compFound = (virSerial[v] == c);
+						//bool compFound = 0;
+						//int v = 0;
+						//for (; v < CircuitGUI::virSerial.size() && c >= CircuitGUI::virSerial[v]; v++) { // if(CircuitGUI::virSerial[v]) break; // Ensures the virSerial is Sorted by breaking at the right time
+						//	if (c == CircuitGUI::virSerial[v]) { compFound = 1; break; }
+						//}
+						//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
+
+
+						if (CircuitGUI::comp[c].bounds.intersects(CircuitGUI::selSqr.getGlobalBounds())) {
+							if (!compFound)
+							{
+								CircuitGUI::virSerial.insert(CircuitGUI::virSerial.begin() + v, c);
+								//CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
+								//CircuitGUI::virSprite[v].setColor(tempDimColor);
+
+								//virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+								//virSprite.back().setColor(tempDimColor);
+							}
+						}
+						else if (compFound)
+						{
+							CircuitGUI::virSerial.erase(CircuitGUI::virSerial.begin() + v);
+							//CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
+						}
+
+					}*/
+
+					//if (0 && ShiftPressed) {
+					//	for (int vs = 0; vs < virSerialShift.size(); vs++) {
+					//		static bool found = 0;
+					//		for (int v = 0; v < virSerial.size(); v++) {
+					//			if (virSerial[v] == virSerialShift[vs]) {
+					//				found = 1;
+					//				break;
+					//			}
+					//		}
+					//		if (!found) {
+					//			virSerial.emplace_back(virSerialShift[vs]);
+					//			virSprite.emplace_back(comp[virSerial.back()].sprite);
+					//		}
+					//	}
+					//}
+
+					updateAllSqr();
+				}
+				else { CircuitGUI::selSqr.setSize(CircuitGUI::zero); }
+			}
+
+			// Wire
+			{
+				using CircuitGUI::wires;
+
+				if (wires.empty() == false)
+					if (wires.back().stopped() == false) {
+						wires.back().makeWire();
+						//stimuliDisplay = 1;/*LOG("\nmakeWire()");*/
+					}
+			}
 		}
 
 		
@@ -1105,7 +1171,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			drawAllSqr();
 
-			//qtDraw(qt);
+			qtDraw(qt);
 
 			drawComp();
 
@@ -1142,7 +1208,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	std::cin.get();
 #else
-	LOG::log_file.close();
+	//LOG::log_file.close();
 #endif
 
 	return 0;

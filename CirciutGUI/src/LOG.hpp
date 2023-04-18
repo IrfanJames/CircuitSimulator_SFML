@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ostream>
+#include <fstream>
 
 namespace LOG {
 
@@ -15,8 +15,11 @@ namespace LOG {
 #ifdef _DEBUG
 #define LOG(x) std::cout << x;
 #else
-#define LOG(x) LOG::log_file  << x;
+#define LOG(x) LOG::log_file << x;
 #endif
 
 // LOG_VEC Function
 #define LOG_VEC(vec) LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n");
+
+// LOG_VEC Function
+#define LOG_VEC2(vec) LOG("(" << vec.x << ", " << vec.y << "), ");

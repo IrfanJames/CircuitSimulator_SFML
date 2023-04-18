@@ -5,7 +5,7 @@
 class Wire {
 private:
 	static const int m_width = 2;
-	//bool stop = false;
+	bool status_stopped = false;
 	std::vector<sf::RectangleShape> wire;
 	std::vector<sf::Vector2f> edge_points;
 
@@ -15,16 +15,16 @@ public:
 
 	~Wire();
 
-private:
-
 	void makeWire(sf::Vector2f& Pos);
-public:
 
 	void makeWire();
 
 	void newEdge();
 
+	void stop();
+
 public:
+	bool stopped() const;
 
 	sf::Vector2f initial() const;
 

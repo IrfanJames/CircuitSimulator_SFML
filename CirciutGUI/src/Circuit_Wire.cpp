@@ -108,14 +108,16 @@ void Wire::newEdge()
 	}
 }
 
-/*void Wire::stop() {
-		stop = true;
-}*/
+void Wire::stop()
+{
+	status_stopped = true;
+}
 
 
-/*bool stopped() {
-		return stop;
-}*/
+bool Wire::stopped() const
+{
+	return status_stopped;
+}
 
 sf::Vector2f Wire::initial() const
 {

@@ -390,6 +390,9 @@ namespace CircuitGUI {
 	}
 	inline void qtExtract(const sf::FloatRect& searchArea, std::vector<int>& output, const quadTree& box = qt) {
 
+		if (&box == &qt)
+			output.clear();
+
 		if (searchArea.intersects(box.area)) {
 
 			if (box.isSubDivided == false)
@@ -515,7 +518,6 @@ namespace CircuitGUI {
 	inline void updateVisibleVector()
 	{
 		sf::FloatRect searcharea(sf::Vector2f(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2), view.getSize());
-		visibleComps.clear();
 
 		qtExtract(searcharea, visibleComps);
 	}
