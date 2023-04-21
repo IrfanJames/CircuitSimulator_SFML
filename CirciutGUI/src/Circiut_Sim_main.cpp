@@ -24,7 +24,6 @@ taskkill /F /IM CirciutGUI.exe
 #include "Circuit_Entity.hpp"
 #include "Circuit_Windows_Stuff.hpp"
 #include "Resource_Manager.hpp"
-//asdf
 #include "Circuit_Wire.hpp"
 //#include "Circuit_Graph.hpp"
 
@@ -35,13 +34,11 @@ int main(int argc, char** argv) {
 #else
 // Realse Mode
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-
-	LOG(lpCmdLine);
-
 #endif
 
 	Resource my_pic(IDR_CAP, "BMP");
-	Resource my_font(IDR_FONT1, "FONT");
+	Resource my_font(IDR_FONT2, "FONT");
+	//my_font.GetInfo();
 
 	CircuitGUI::initializeGUI();
 	
@@ -65,7 +62,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		testCircle.setPosition(W / 2, H / 2);
 		testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255))); }//*/
 
-	
+
+
 	//std::thread printScreenTread;
 
 	////////////////// Solve //////////////////////
@@ -115,7 +113,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	LocalFree(argv);//*/
 #endif
 
-	CircuitGUI::updateVisibleVector();
+
+	{
+		using CircuitGUI::wires;
+
+		//wires.emplace_back("300\t300\t315\t300\t360\t375\t390\t420\t435");
+		wires.emplace_back("300\t300\t315\t300\t360\t360\t380\t380\t400\t400\t420\t420\t440\t440");
+
+		LOG("\nMade wires: " << wires.size());
+	}
+
+
+
 
 	//////////////// Main Loop ////////////////////
 	while (CircuitGUI::app.isOpen() && !End) {
@@ -232,7 +241,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						node_position = sf::Vector2f(comp[v].x, comp[v].y);
 						break;
 					}
-					else 
+					else
 					{
 						static sf::Vector2f end;
 						end = comp[v].getEndPos();
@@ -254,14 +263,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					if (wires.empty())							// No Wires:
 						wires.emplace_back(node_position);		// So, starting a new wire
 					else {
-						if (wires.back().stopped() == false)	// Wire is being build:
+						if (wires.back().isStopped() == false)	// Wire is being build:
 							wires.back().stop();				// So, stopping a current wire
 						else
 							wires.emplace_back(node_position);	// No Wire being build: So, starting a new wire
 					}
 				}
 				else if (wires.empty() == false)
-					wires.back().newEdge();
+					if (wires.back().isStopped() == false)
+						wires.back().newEdge();
 
 			}
 			if (evnt.type == evnt.MouseButtonReleased && evnt.mouseButton.button == sf::Mouse::Left) {
@@ -304,6 +314,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				if (evnt.key.code == sf::Keyboard::Delete) {
 					stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
 					CircuitGUI::Options::deletef();
+				}
+				if (evnt.key.code == sf::Keyboard::J) {
+					wires.clear();
+				}
+				if (evnt.key.code == sf::Keyboard::K) {
+
+					std::ofstream wire_file("wire_file.txt");
+
+					for (auto& w : wires)
+						wire_file << w.serialize();
+
+				}
+				if (evnt.key.code == sf::Keyboard::L) {
+					
+					std::ifstream wire_file("wire_file.txt");
+
+					std::string line;
+					while (std::getline(wire_file, line)) {
+						wires.emplace_back(line);
+						LOG("\nL: " << line << "\n"); // append the line to str with a newline character
+					}
+
+
 				}
 				//if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
 				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
@@ -420,14 +453,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		ShiftPressed = (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::LShift));
 		bool MInTool = !!(cursorInWin && sf::Mouse::getPosition(CircuitGUI::app).x <= CircuitGUI::c_toolColWidth);
-		bool MIntool = !!(cursorInWin && MInTool && sf::Mouse::getPosition(CircuitGUI::app).y < (Entity::noOfComps - 1) * CircuitGUI::c_toolColWidth);
+		bool MIntool = !!(cursorInWin && MInTool && sf::Mouse::getPosition(CircuitGUI::app).y < (Entity::no_of_Comp - 1) * CircuitGUI::c_toolColWidth);
 		float t_TollWx = CircuitGUI::toolCol.getPosition().x;
 		//int myWinState = CircuitGUI::Response::State::None;
 
 		//--------------------------------------------------------------------------------//
 
-		
 
+
+		/*LOG("\n");
+		LOG_VEC2(CircuitGUI::cursorInSim());*/
 
 
 		// ----------------------------------------	Options
@@ -570,7 +605,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 				}
 			}
-
 			
 			//Wheel
 			{
@@ -703,7 +737,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				using CircuitGUI::wires;
 
 				if (wires.empty() == false)
-					if (wires.back().stopped() == false) {
+					if (wires.back().isStopped() == false) {
 						wires.back().makeWire();
 						//stimuliDisplay = 1;/*LOG("\nmakeWire()");*/
 					}
@@ -716,8 +750,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		; {
 			using namespace CircuitGUI;
 
-			if (MInTool) { stimuliDisplay = 1; /*cout << "12";*/ }
-			//circuit.updateWin();
+			//if (MInTool) { stimuliDisplay = 1; /*cout << "\nMInTool == true;\tIn Update{}";*/ }
 
 			/*ImGui*/
 			ImGui::SFML::Update(app, deltaClock.restart());
@@ -734,8 +767,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
 			testCircle.setPointCount(t_vertices);
 			testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/
-			 
-			//*
+
 			if (ImGui::BeginMainMenuBar()) {
 
 				if (ImGui::BeginMenu("File")) {
@@ -932,7 +964,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					ImGui::EndMenu();
 				}
 
-				/*ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+				/*
+				ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
 				if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
 				{
 					static ImGuiTabBarFlags tab_items_flags = ImGuiTabBarFlags_Reorderable;
@@ -954,10 +987,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						ImGui::EndTabItem();
 					}
 					ImGui::EndTabBar();
-				}*/
+				}//*/
 
 				ImGui::EndMainMenuBar();
-			}//*/
+			}
 
 			/*if (ImGui::TreeNode("Advanced & Close Button"))
 			{
@@ -1112,8 +1145,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				}
 			}
 			//*/
-
-
+			
 			if (Drag) {
 				stimuliDisplay = 1; /*cout << "18"*/;
 				CircuitGUI::Drag();
@@ -1124,8 +1156,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			//testCircle.setPosition(CircuitGUI::onScreen(300, 300));
 
 			//Tool Win
-			if (!Drag) toolCol.setPosition((MInTool) * (t_TollWx + (toolWinRestPos.x + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (toolWinRestPos.x - c_toolColWidth - t_TollWx) / 7), toolWinRestPos.y);
 			if (Drag)  toolCol.setPosition(onScreen(0, 0));
+			else toolCol.setPosition((MInTool) * (t_TollWx + (toolWinRestPos.x + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (toolWinRestPos.x - c_toolColWidth - t_TollWx) / 7), toolWinRestPos.y);
 
 			//Tool Sqr
 			t_TollWx = ToolBoxLittleBox.getPosition().x;
@@ -1147,9 +1179,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				updateVisibleVector();
 
-				//if (comp.size() < 1000)
-				//	CircuitGUI::qtWrite();
-				//else std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n";
+				/*if (comp.size() < 1000)
+					CircuitGUI::qtWrite();
+				else std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n";//*/
 
 			}
 
@@ -1158,7 +1190,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 
-
+		
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) {
 			using namespace CircuitGUI;
@@ -1177,7 +1209,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			drawWires();
 
-			drawNodes();
+			//drawNodes();
 
 			drawBoarders();
 

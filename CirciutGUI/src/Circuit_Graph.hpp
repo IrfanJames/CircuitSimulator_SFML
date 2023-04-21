@@ -22,13 +22,12 @@ private:
 
 private:
 	void setGraph() {
-		win.setVisible(1);
+		//abcwin.setVisible(1);
 
-		allCircles.clear();
-		allVertices.clear();
-		win.clear(sf::Color(0, 0, 0));
+		//abcwin.clear(sf::Color(0, 0, 0));
 
 		/*Edges*/
+		allCircles.clear();
 		allCircles.reserve(Vector.size());
 		for (int c = 0; c < Vector.size(); c++) {
 			allCircles.emplace_back(30, 30);
@@ -40,6 +39,7 @@ private:
 		}
 
 		/*Vertices*/
+		allVertices.clear();
 		allVertices.reserve(5 + Vector.size());
 		for (int c = 0; c < Vector.size(); c++) {
 			for (int cc = 0; cc < Vector[c].neighbors.size(); cc++) {
@@ -57,10 +57,10 @@ private:
 		}
 
 
-		for (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
-		for (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
+		//abcfor (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
+		//abcfor (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
 
-		win.display();
+		//abcwin.display();
 	}
 
 public:
@@ -70,7 +70,7 @@ public:
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 4;
 		win.create(sf::VideoMode(500, 500), "Graph", sf::Style::Close, settings);
-		win.setVisible(0);
+		//abcwin.setVisible(0);
 	}
 	void newItem(int serial) {
 		Vector.emplace_back(serial);
@@ -79,6 +79,7 @@ public:
 	void link(int Index, int Link) {
 		if (Vector.size() > Index && Vector.size() > Link)
 			Vector.at(Index).neighbors.emplace_back(&Vector.at(Link));
+		setGraph();
 	}
 
 	void printCorner(const Corner& corner) {
@@ -99,7 +100,6 @@ public:
 		if (win.isOpen()) {
 			sf::Event evnt;
 			while (win.pollEvent(evnt)) { if (evnt.type == evnt.Closed || evnt.key.code == sf::Keyboard::Escape) { win.close(); break; } }
-
 
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 
@@ -129,18 +129,23 @@ public:
 							}
 						}
 
-						/*Drawing*/
-						win.clear(sf::Color(0, 0, 0));
-						for (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
-						for (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
-						win.display();
-
+						//Drawing
+						//win.clear();
+						//for (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
+						//for (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
+						//win.display();
 						break;
 					}
 				}
 			}
+
+			/*Drawing*/
+			win.clear();
+			for (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
+			for (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
+			win.display();
 		}
-	};
+	}
 
 	~Graph() { ; }
 

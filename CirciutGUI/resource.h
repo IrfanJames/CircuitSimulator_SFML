@@ -3,15 +3,16 @@
 // Used by Circiut_Sim.rc
 #define IDR_TEXT1                       102
 #define IDR_TEXT2                       103
-#define IDR_FONT1                       104
-#define IDR_CAP                       110
-#define IDR_CUR                       111
-#define IDR_DOD                       112
-#define IDR_IND                       113
-#define IDR_RES                       114
-#define IDR_SWO                       115
-#define IDR_VOL                       116
-#define IDR_SWC                       117
+#define IDR_CAP                       111
+#define IDR_CUR                       112
+#define IDR_DOD                       113
+#define IDR_IND                       114
+#define IDR_DEF                       119
+#define IDR_RES                       115
+#define IDR_SWO                       116
+#define IDR_FONT2                       107
+#define IDR_VOL                       117
+#define IDR_SWC                       118
 #define IDR_LOGO                      120
 
 

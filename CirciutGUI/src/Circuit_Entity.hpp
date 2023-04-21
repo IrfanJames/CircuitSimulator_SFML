@@ -8,15 +8,8 @@
 inline std::vector<sf::Texture> compTex;
 
 class Entity {
-public:
-	static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
-	inline static sf::Font s_font;
-	inline static sf::RectangleShape boarderDesign;
 
 public:
-	double resistance = 1000;
-	double voltage = -5.032;
-	double current = 0.030405;
 
 	enum {
 		Cap,
@@ -26,10 +19,22 @@ public:
 		Res,
 		SwO,
 		Vol,
-		SwC
+		SwC,
+		no_of_Comp
 	};
 
+	//static const int noOfComps = 8;//when 10 toolColBox start with a y-offset
+	inline static sf::Font s_font;
+	inline static sf::RectangleShape boarderDesign;
+
 public:
+
+	double resistance = 1000;
+	double voltage = -5.032;
+	double current = 0.030405;
+
+public:
+
 	float x, y, angle;
 	sf::Sprite sprite;
 	sf::Text valueText;
@@ -37,7 +42,9 @@ public:
 	sf::FloatRect bounds;
 
 private:
+
 	int serial = 0;
+
 	void updateValueText() {
 
 		std::string str;
@@ -125,6 +132,7 @@ private:
 	}
 
 public:
+
 	Entity() {
 		serial = 0; x = 0.0f; y = 0.0f; angle = 0.0f;
 
@@ -167,21 +175,20 @@ public:
 		stimuli();
 	}
 
+	~Entity() { ; }
+
 	void setSerial(int s) {
 		serial = s;
 
-		sprite.setTexture(compTex[serial], true);
+		if (serial < Entity::no_of_Comp)
+			sprite.setTexture(compTex[serial], true);
+		else
+			sprite.setTexture(compTex.back(), true);
+
 		//sprite.setOrigin((int)(compTex[serial].getSize().x / static_cast<float>(2)), 0);
 		//sprite.setOrigin((int)(compTex[serial].getSize().x / 2)-1, 0);//(-1) for wire
-		sprite.setOrigin((int)(compTex[serial].getSize().x / 2), 0);
-	}
-
-	int getSerial() {
-		return serial;
-	}
-
-	sf::Vector2f getEndPos() const {
-		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
+		//sprite.setOrigin((int)(compTex[serial].getSize().x / 2), 0);
+		sprite.setOrigin((int)(sprite.getTexture()->getSize().x / 2), 0);
 	}
 
 	void stimuli() {
@@ -225,6 +232,17 @@ public:
 		app.draw(sprite);
 	}
 
+public:
+
+	int getSerial() const {
+		return serial;
+	}
+
+	sf::Vector2f getEndPos() const {
+		return sf::Vector2f(x - 75 * (int)sin(angle * DegToRad), y + 75 * (int)cos(angle * DegToRad));
+	}
+
+public:
 
 	static void setFont(void* data, size_t size_bytes) {
 		s_font.loadFromMemory(data, size_bytes);
@@ -241,8 +259,7 @@ public:
 		boarderDesign.setOutlineColor(color);
 	}
 
-	~Entity() { ; }
-
+public:
 
 	virtual void update() {};
 };

@@ -17,6 +17,7 @@
 //extern sf::Texture compTex[8];
 extern std::vector<sf::Texture> compTex;
 
+
 namespace CircuitGUI {
 
 	/*Constants*/
@@ -54,6 +55,39 @@ namespace CircuitGUI {
 		return sf::Vector2f(view.getCenter().x - view.getSize().x / 2 + X, view.getCenter().y - view.getSize().y / 2 + Y);
 		//return app.mapPixelToCoords(sf::Vector2i((int)X, (int)Y));
 	}
+
+	
+	// Warning: Clears the vec
+	inline void str_to_vecInt(const std::string& str, std::vector<int>& vec)
+	{
+		bool negative = 0, numStarted = 0;
+		vec.clear();
+		vec.reserve(23); // HardCode
+
+		for (int c = 0, x = 0, temp = 0; c < str.size(); c++) {
+			temp = (int)str[c];
+			char chrecter = temp;
+
+			if ('0' <= temp && temp <= '9') {
+				numStarted = 1;
+				x *= 10;
+				x += temp - (int)'0';
+			}
+			else {
+				if (temp == '-') negative = 1;
+				else if (numStarted) {
+					if (negative) x *= -1;
+					vec.emplace_back(x);
+					negative = 0;
+					x = 0;
+					numStarted = 0;
+				}
+			}
+
+			if (numStarted == true && c == str.size() - 1)
+				vec.emplace_back(x);
+		}
+	}
 	inline float trim(float num, int wrt = gap) {
 		return num - (int)num % wrt;
 	}
@@ -63,6 +97,7 @@ namespace CircuitGUI {
 
 		return vec;
 	}
+
 
 	/*Grid*/
 	inline int virtualBoarder = 80;
@@ -214,43 +249,16 @@ namespace CircuitGUI {
 
 		allEnds.erase(allEnds.begin() + nodeCount, allEnds.end());
 	}
-	//void updateAllEnds() {
-	//
-	//	allEnds.clear();
-	//
-	//	int nodeCount = 0;
-	//	for (int c = 0; c < comp.size(); c++) {
-	//		static sf::Vector2f tempEnd;
-	//
-	//		for (int cc = 0; cc < 2; cc++) {
-	//
-	//			//tempEnd
-	//			if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
-	//			if (cc == 1) { /*Rear*/  tempEnd = comp[c].getEndPos(); }
-	//
-	//			bool found = 0;
-	//			for (int e = 0; e < allEnds.size(); e++) {
-	//				if (tempEnd == allEnds[e]) {
-	//					found = 1;
-	//					break;
-	//				}
-	//			}
-	//
-	//			if (!found) {
-	//				nodeCount++;
-	//
-	//				if (nodeCount <= allEnds.size()) allEnds[nodeCount] = tempEnd;
-	//				else allEnds.emplace_back(tempEnd);
-	//			}
-	//
-	//		}
-	//	}
-	//
-	//	while (nodeCount < allEnds.size())
-	//		allEnds.pop_back();
-	//
-	//}
-
+	inline bool makingWire()
+	{
+		if (wires.empty())
+			return false;
+		else if (wires.back().isStopped())
+			return false;
+		else
+			return true;
+	}
+	
 
 	struct quadTree {
 		static const int limit = 5;
@@ -582,13 +590,14 @@ namespace CircuitGUI {
 	inline sf::Vector2f toolWinRestPos(0, 0);
 	inline sf::RectangleShape toolCol(sf::Vector2f(c_toolColWidth, CircuitGUI::view.getSize().y));
 	inline sf::RectangleShape ToolBoxLittleBox(sf::Vector2f(c_toolColWidth, c_toolColWidth));
-	inline sf::Sprite ToolSpr[7]; //noOfComps-1
-	inline sf::Vector2f ToolSprPOS[7]; //noOfComps-1
 	//void toolBoxInit()
+	inline sf::Sprite ToolSpr[Entity::no_of_Comp - 1];
+	inline sf::Vector2f ToolSprPOS[Entity::no_of_Comp - 1];
 	inline void updatePosToolBox()
 	{
 		toolWinRestPos = onScreen(0, 0);
-		for (int c = 0; c < (Entity::noOfComps - 1); c++) ToolSpr[c].setPosition(onScreen(ToolSprPOS[c].x, ToolSprPOS[c].y));
+		for (int c = 0; c < (Entity::no_of_Comp - 1); c++)
+			ToolSpr[c].setPosition(onScreen(ToolSprPOS[c].x, ToolSprPOS[c].y));
 	}
 	inline void updateEndCircles()
 	{
@@ -607,14 +616,17 @@ namespace CircuitGUI {
 	}
 	inline void drawToolColumn(bool MInTool, bool MIntool) {
 		if (MInTool) {
-			CircuitGUI::app.draw(CircuitGUI::toolCol);
+			app.draw(toolCol);
 
-			for (int c = 0; c < (Entity::noOfComps - 1); c++) { CircuitGUI::ToolSpr[c].setColor(sf::Color(255, 255, 255, CircuitGUI::ToolSpr[c].getColor().a + (255 - CircuitGUI::ToolSpr[c].getColor().a) / 15)); }
-			for (int c = 0; c < (Entity::noOfComps - 1); c++) { CircuitGUI::app.draw(CircuitGUI::ToolSpr[c]); }
+			for (int c = 0; c < (Entity::no_of_Comp - 1); c++) { ToolSpr[c].setColor(sf::Color(255, 255, 255, ToolSpr[c].getColor().a + (255 - ToolSpr[c].getColor().a) / 15)); }
+			for (int c = 0; c < (Entity::no_of_Comp - 1); c++) { app.draw(ToolSpr[c]); }
 		}
-		else { for (int c = 0; c < (Entity::noOfComps - 1); c++) CircuitGUI::ToolSpr[c].setColor(sf::Color::Transparent); }
+		else {
+			for (int c = 0; c < (Entity::no_of_Comp - 1); c++)
+				ToolSpr[c].setColor(sf::Color::Transparent);
+		}
 
-		if (MIntool) CircuitGUI::app.draw(CircuitGUI::ToolBoxLittleBox);
+		if (MIntool) app.draw(ToolBoxLittleBox);
 	}
 
 
@@ -677,7 +689,7 @@ namespace CircuitGUI {
 
 		//loadTextures();
 		{
-			Resource_Images.resize(8);
+			Resource_Images.resize(Entity::no_of_Comp + 1);
 
 			Resource_Images[Entity::Cap].SetAll(IDR_CAP, "BMP");
 			Resource_Images[Entity::Cur].SetAll(IDR_CUR, "BMP");
@@ -687,16 +699,15 @@ namespace CircuitGUI {
 			Resource_Images[Entity::SwO].SetAll(IDR_SWO, "BMP");
 			Resource_Images[Entity::Vol].SetAll(IDR_VOL, "BMP");
 			Resource_Images[Entity::SwC].SetAll(IDR_SWC, "BMP");
+			Resource_Images.back().SetAll(IDR_DEF, "BMP");
 
-			compTex.resize(8);
-			compTex[Entity::Cap].loadFromMemory(Resource_Images[Entity::Cap].GetResource().ptr, Resource_Images[Entity::Cap].GetResource().size_bytes);
-			compTex[Entity::Cur].loadFromMemory(Resource_Images[Entity::Cur].GetResource().ptr, Resource_Images[Entity::Cur].GetResource().size_bytes);
-			compTex[Entity::Dod].loadFromMemory(Resource_Images[Entity::Dod].GetResource().ptr, Resource_Images[Entity::Dod].GetResource().size_bytes);
-			compTex[Entity::Ind].loadFromMemory(Resource_Images[Entity::Ind].GetResource().ptr, Resource_Images[Entity::Ind].GetResource().size_bytes);
-			compTex[Entity::Res].loadFromMemory(Resource_Images[Entity::Res].GetResource().ptr, Resource_Images[Entity::Res].GetResource().size_bytes);
-			compTex[Entity::SwO].loadFromMemory(Resource_Images[Entity::SwO].GetResource().ptr, Resource_Images[Entity::SwO].GetResource().size_bytes);
-			compTex[Entity::Vol].loadFromMemory(Resource_Images[Entity::Vol].GetResource().ptr, Resource_Images[Entity::Vol].GetResource().size_bytes);
-			compTex[Entity::SwC].loadFromMemory(Resource_Images[Entity::SwC].GetResource().ptr, Resource_Images[Entity::SwC].GetResource().size_bytes);
+
+			compTex.resize(Entity::no_of_Comp + 1);
+			for (int i = 0; i < compTex.size(); i++)
+				compTex[i].loadFromMemory(Resource_Images[i].GetResource().ptr, Resource_Images[i].GetResource().size_bytes);
+
+			for (auto& tex : compTex)
+				tex.setSmooth(true);
 		}
 
 		//initializeGrid();
@@ -769,7 +780,7 @@ namespace CircuitGUI {
 			CircuitGUI::ToolBoxLittleBox.setFillColor(sf::Color(160, 160, 160, 120));
 
 			/*Sprites*/
-			for (int c = 0; c < (Entity::noOfComps - 1); c++) {
+			for (int c = 0; c < (Entity::no_of_Comp - 1); c++) {
 				ToolSpr[c].setTexture(compTex[c]);
 				ToolSpr[c].setOrigin(compTex[c].getSize().x / 2, 0);
 				//compSpr[c].setRotation(45);
@@ -829,7 +840,7 @@ namespace CircuitGUI {
 			comp.reserve(no + 10); // 10 extra
 			for (int c = 0, S = 0, X = 0, Y = 0, A = 0; c < no; c++) {
 				input >> S >> X >> Y >> A;
-				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X), trim(Y), ((A % 360) / 90) * 90);
+				comp.emplace_back(S, trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
 			input.close();
 
@@ -1020,26 +1031,7 @@ namespace CircuitGUI {
 			std::string inString(sf::Clipboard::getString());
 			std::vector<int> integers; integers.reserve(21);
 
-			bool negative = 0, numStarted = 0;
-			for (int c = 0, x = 0, temp = 0; c < inString.size(); c++) {
-				temp = (int)inString[c];
-
-				if ('0' <= temp && temp <= '9') {
-					numStarted = 1;
-					x *= 10;
-					x += temp - (int)'0';
-				}
-				else {
-					if (temp == '-') negative = 1;
-					else if (numStarted) {
-						if (negative) x *= -1;
-						integers.emplace_back(x);
-						negative = 0;
-						x = 0;
-						numStarted = 0;
-					}
-				}
-			}
+			str_to_vecInt(inString, integers);
 
 			int OffsetX = 0, OffsetY = 0, count = 0;
 			for (int i = 1; i + 2 < integers.size(); i += 4, count++)
@@ -1062,7 +1054,7 @@ namespace CircuitGUI {
 				X = integers[++c] + OffsetX;
 				Y = integers[++c] + OffsetY;
 				A = abs(integers[++c]);
-				comp.emplace_back(S % (Entity::noOfComps + 1), trim(X), trim(Y), ((A % 360) / 90) * 90);
+				comp.emplace_back(S /*% (Entity::no_of_Comp)*/, trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
 
 			virSerial.clear();
@@ -1365,7 +1357,6 @@ bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = false) {
 	}*/
 
 // printScreen
-
 /*
 void printScreen(const std::string& filepath) {
 
@@ -1472,3 +1463,41 @@ void printScreen(const std::string& filepath) {
 
 		}
 */
+
+// updateEndNodes
+//void updateAllEnds() {
+	//
+	//	allEnds.clear();
+	//
+	//	int nodeCount = 0;
+	//	for (int c = 0; c < comp.size(); c++) {
+	//		static sf::Vector2f tempEnd;
+	//
+	//		for (int cc = 0; cc < 2; cc++) {
+	//
+	//			//tempEnd
+	//			if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
+	//			if (cc == 1) { /*Rear*/  tempEnd = comp[c].getEndPos(); }
+	//
+	//			bool found = 0;
+	//			for (int e = 0; e < allEnds.size(); e++) {
+	//				if (tempEnd == allEnds[e]) {
+	//					found = 1;
+	//					break;
+	//				}
+	//			}
+	//
+	//			if (!found) {
+	//				nodeCount++;
+	//
+	//				if (nodeCount <= allEnds.size()) allEnds[nodeCount] = tempEnd;
+	//				else allEnds.emplace_back(tempEnd);
+	//			}
+	//
+	//		}
+	//	}
+	//
+	//	while (nodeCount < allEnds.size())
+	//		allEnds.pop_back();
+	//
+	//}

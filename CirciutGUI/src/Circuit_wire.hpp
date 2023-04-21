@@ -13,9 +13,11 @@ public:
 
 	Wire(const sf::Vector2f& IniPoint);
 
+	Wire(const std::string& serialized_wire);
+
 	~Wire();
 
-	void makeWire(sf::Vector2f& Pos);
+	void makeWire(const sf::Vector2f& Pos);
 
 	void makeWire();
 
@@ -23,12 +25,17 @@ public:
 
 	void stop();
 
+	void deSerialize(const std::string& str);
+
 public:
-	bool stopped() const;
+
+	bool isStopped() const;
 
 	sf::Vector2f initial() const;
 
 	sf::Vector2f end() const;
+
+	std::string serialize() const;
 
 	void draw(sf::RenderWindow& App) const;
 };
