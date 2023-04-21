@@ -13,7 +13,7 @@ public:
 
 	Wire(const sf::Vector2f& IniPoint);
 
-	Wire(const std::string& serialized_wire);
+	Wire(const std::string& Serialized_wire);
 
 	~Wire();
 
@@ -25,7 +25,9 @@ public:
 
 	void stop();
 
-	void deSerialize(const std::string& str);
+	void move(const sf::Vector2f& Pos);
+
+	void deSerialize(const std::string& Serialized_wire);
 
 public:
 
@@ -34,6 +36,10 @@ public:
 	sf::Vector2f initial() const;
 
 	sf::Vector2f end() const;
+
+	bool contains(const sf::Vector2f& Point) const;
+
+	bool intersectes(const sf::FloatRect& Area) const;
 
 	std::string serialize() const;
 

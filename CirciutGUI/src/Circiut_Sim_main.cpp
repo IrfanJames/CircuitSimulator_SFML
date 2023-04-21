@@ -72,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 #ifdef _DEBUG
 	// For Opening Where Left
-	CircuitGUI::Options::openf("last.txt");
+	CircuitGUI::Options::openf("temp_files/last.txt");
 	stimuliEndNodes = 1;
 #endif
 
@@ -118,9 +118,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		using CircuitGUI::wires;
 
 		//wires.emplace_back("300\t300\t315\t300\t360\t375\t390\t420\t435");
-		wires.emplace_back("300\t300\t315\t300\t360\t360\t380\t380\t400\t400\t420\t420\t440\t440");
+		////wires.emplace_back("300\t300\t315\t300\t360\t360\t380\t380\t400\t400\t420\t420\t440\t440");
 
-		LOG("\nMade wires: " << wires.size());
+		//LOG("\nMade wires: " << wires.size());
 	}
 
 
@@ -135,7 +135,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			/*ImGui*/
 			ImGui::SFML::ProcessEvent(evnt);
 
-			if (evnt.type == evnt.Closed) { app.close(); End = 1; }
+			if (evnt.type == evnt.Closed) {
+
+				std::ofstream window_size("temp_files/win_size.txt");
+				window_size << CircuitGUI::app.getSize().x << "\t";
+				window_size << CircuitGUI::app.getSize().y << "\t";
+				window_size << CircuitGUI::app.getPosition().x << "\t";
+				window_size << CircuitGUI::app.getPosition().y << "\t";
+				window_size.close();
+
+				app.close(); End = 1;
+			}
 			if (evnt.type == evnt.MouseLeft) { cursorInWin = 0; }
 			if (evnt.type == evnt.MouseEntered) { cursorInWin = 1; }
 			if (evnt.type == evnt.Resized) {
@@ -147,6 +157,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				CircuitGUI::toolCol.setSize(sf::Vector2f(CircuitGUI::toolCol.getSize().x, CircuitGUI::view.getSize().y));
 				CircuitGUI::updatePosToolBox();
+
+
+				std::ofstream window_size("temp_files/win_size.txt");
+				window_size << CircuitGUI::app.getSize().x << "\t";
+				window_size << CircuitGUI::app.getSize().y << "\t";
+				window_size << CircuitGUI::app.getPosition().x << "\t";
+				window_size << CircuitGUI::app.getPosition().y << "\t";
+				window_size.close();
 
 				updateVisibleVector();
 			}
@@ -263,8 +281,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					if (wires.empty())							// No Wires:
 						wires.emplace_back(node_position);		// So, starting a new wire
 					else {
-						if (wires.back().isStopped() == false)	// Wire is being build:
-							wires.back().stop();				// So, stopping a current wire
+						if (wires.back().isStopped() == false) {// Wire is being build:
+							wires.back().newEdge();			// So, Inserting Last point
+							wires.back().stop();				// and then stopping a current wire
+						}
 						else
 							wires.emplace_back(node_position);	// No Wire being build: So, starting a new wire
 					}
@@ -320,7 +340,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				}
 				if (evnt.key.code == sf::Keyboard::K) {
 
-					std::ofstream wire_file("wire_file.txt");
+					std::ofstream wire_file("temp_files/wire_file.txt");
 
 					for (auto& w : wires)
 						wire_file << w.serialize();
@@ -328,7 +348,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				}
 				if (evnt.key.code == sf::Keyboard::L) {
 					
-					std::ifstream wire_file("wire_file.txt");
+					std::ifstream wire_file("temp_files/wire_file.txt");
 
 					std::string line;
 					while (std::getline(wire_file, line)) {
@@ -460,10 +480,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//--------------------------------------------------------------------------------//
 
 
+		{
+			using namespace CircuitGUI;
 
-		/*LOG("\n");
-		LOG_VEC2(CircuitGUI::cursorInSim());*/
+			static int index = 0;
+			static bool onWire = false;
 
+			if (releaseBool && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				onWire = false;
+				LOG("\n" << wires.size() << " | ");
+				for (int i = 0; i < wires.size(); i++) {
+					LOG((int)wires[i].contains(cursorInSim()) << " | ");
+					//LOG((int)wires[i].intersectes(selSqr.getGlobalBounds()) << " | ");
+
+					if (!onWire && wires[i].contains(cursorInSim())) { onWire = true; index = i; }
+				}
+			}
+
+			if (onWire && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				wires[index].move(cursorInSim());
+
+		}
 
 		// ----------------------------------------	Options
 		{
@@ -505,13 +543,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					else {
 						mouseOnCompsBool = 0;
 
-						if (CircuitGUI::virSerial.size() > 0 && CircuitGUI::allSqr.getGlobalBounds().contains(CircuitGUI::cursorInSim())) mouseOnCompsBool = 1;
+						if (virSerial.size() > 0 && allSqr.getGlobalBounds().contains(cursorInSim())) mouseOnCompsBool = 1;
 						else {
 
 							/*Check every component for Mouse*/
-							for (int c = 0; /*!mouseOnCompsBool &&*/ c < CircuitGUI::comp.size(); c++) {
+							for (int c = 0; /*!mouseOnCompsBool &&*/ c < comp.size(); c++) {
 
-								if (CircuitGUI::comp[c].bounds.contains(CircuitGUI::cursorInSim())) {
+								if (comp[c].bounds.contains(cursorInSim())) {
 
 									mouseOnCompsBool = 1; Drag = 0;
 
@@ -520,12 +558,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 										CircuitGUI::virSprite.clear();
 										CircuitGUI::virSerialShift.clear();
 									}
-									CircuitGUI::virSerial.emplace_back(c);
+									virSerial.emplace_back(c);
 
 									//copied in sel square selection
-									CircuitGUI::virSprite.emplace_back(CircuitGUI::comp[CircuitGUI::virSerial.back()].sprite);
-									CircuitGUI::virSprite.back().setOrigin(CircuitGUI::virSprite.back().getTexture()->getSize().x / 2, CircuitGUI::virSprite.back().getTexture()->getSize().y / 2);
-									CircuitGUI::virSprite.back().setColor(CircuitGUI::tempDimColor);/*
+									virSprite.emplace_back(comp[virSerial.back()].sprite);
+									virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+									virSprite.back().setColor(tempDimColor);/*
 									for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
 										virSprite.emplace_back(comp[virSerial[v]].sprite);
 										virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
@@ -535,10 +573,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 									break;
 								}
 							}
-							CircuitGUI::updateAllSqr();
+							updateAllSqr();
 
 							/*SelSqr*/
-							if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; CircuitGUI::selSqr.setPosition(CircuitGUI::cursorInSim()); }
+							if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; selSqr.setPosition(cursorInSim()); }
 						}
 
 						/*Wheel*/
@@ -1236,7 +1274,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ImGui::SFML::Shutdown();
 
 #ifdef _DEBUG
-	CircuitGUI::Options::savef("last.txt");
+	CircuitGUI::Options::savef("temp_files/last.txt");
 
 	std::cin.get();
 #else

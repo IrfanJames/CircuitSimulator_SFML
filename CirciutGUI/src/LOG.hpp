@@ -6,7 +6,7 @@ namespace LOG {
 
 #ifdef NDEBUG
 	// Making .txt File For Logging in Release Mode
-	inline std::ofstream log_file("log.txt", std::ios::out, std::ios::trunc);
+	inline std::ofstream log_file("temp_files/log.txt", std::ios::out, std::ios::trunc);
 #endif
 
 }

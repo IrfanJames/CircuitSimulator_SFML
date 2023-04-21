@@ -17,37 +17,39 @@ Wire::Wire(const sf::Vector2f& IniPoint)
 	//wire.back().setFillColor(CircuitGUI::normalCompColor);
 }
 
-Wire::Wire(const std::string& serialized_wire)
+Wire::Wire(const std::string& Serialized_wire)
 {
-	deSerialize(serialized_wire);
+	deSerialize(Serialized_wire);
 }
 
 Wire::~Wire() { ; }
 
-
 void Wire::makeWire(const sf::Vector2f& Pos)
 {
 	sf::Vector2f next_point = CircuitGUI::trim(Pos);
-
 	if (edge_points.empty() == false)
 	{
 		sf::Vector2f this_point = edge_points.back();
-
-		int dx = CircuitGUI::trim((int)((int)next_point.x - (int)this_point.x));
-		int dy = CircuitGUI::trim((int)((int)next_point.y - (int)this_point.y));
-
-		if (std::max(std::abs(dx), std::abs(dy)) >= CircuitGUI::gap)
+		if (wire.empty() == false)
 		{
-			if (std::abs(dx) < std::abs(dy)) {
-				wire.emplace_back(sf::Vector2f(m_width, dy /*+ gap * (dy > gap)*/));
-				wire.back().setPosition(this_point.x - 1, this_point.y);
-				wire.back().setFillColor(CircuitGUI::normalCompColor);
+			int dx = CircuitGUI::trim((int)((int)next_point.x - (int)this_point.x)); 
+			int dy = CircuitGUI::trim((int)((int)next_point.y - (int)this_point.y));
+			if (std::max(std::abs(dx), std::abs(dy)) >= CircuitGUI::gap)
+			{
+				if (std::abs(dx) < std::abs(dy)) {
+					wire.back().setPosition(this_point.x - 1, this_point.y);
+					wire.back().setSize(sf::Vector2f(m_width, dy /*+ gap * (dy > gap)*/));
+				}
+				else {
+					wire.back().setPosition(this_point.x, this_point.y - 1);
+					wire.back().setSize(sf::Vector2f(dx /*+ gap * (dx > gap)*/, m_width));
+				}
 			}
-			else {
-				wire.emplace_back(sf::Vector2f(dx /*+ gap * (dx > gap)*/, m_width));
-				wire.back().setPosition(this_point.x, this_point.y - 1);
-				wire.back().setFillColor(CircuitGUI::normalCompColor);
-			}
+		}
+		else {
+			wire.emplace_back();
+			wire.back().setFillColor(CircuitGUI::normalCompColor);
+			LOG("\n[Error]: wire.makeWire(), But vec:wire is empty");
 		}
 	}
 	else {
@@ -113,13 +115,29 @@ void Wire::stop()
 	status_stopped = true;
 }
 
-void Wire::deSerialize(const std::string& str)
+void Wire::move(const sf::Vector2f& Pos)
 {
-	LOG("\nDeserializing: " << str);
+	using namespace CircuitGUI;
+
+	int x_Off = (int)trim(Pos.x - edge_points.front().x);
+	int y_Off = (int)trim(Pos.y - edge_points.front().y);
+
+	for (auto& ep : edge_points) {
+		ep.x += x_Off;
+		ep.y += y_Off;
+	}
+
+	for (auto& w : wire)
+		w.move(x_Off, y_Off);
+}
+
+void Wire::deSerialize(const std::string& Serialized_wire)
+{
+	LOG("\nDeserializing: " << Serialized_wire);
 
 	static std::vector<int> Integers;
 	Integers.clear();
-	CircuitGUI::str_to_vecInt(str, Integers);
+	CircuitGUI::str_to_vecInt(Serialized_wire, Integers);
 
 	for (auto& num : Integers)
 		num = (int)CircuitGUI::trim(num);
@@ -138,7 +156,10 @@ void Wire::deSerialize(const std::string& str)
 			ver0_hor1 = true;
 
 			edge_points.emplace_back(Integers[0], Integers[1]);
+
+			wire.emplace_back();
 			makeWire(sf::Vector2f(Integers[2], Integers[3]));
+
 			edge_points.emplace_back(Integers[2], Integers[3]);
 		}
 		else if (Integers[0] == Integers[2])
@@ -146,7 +167,10 @@ void Wire::deSerialize(const std::string& str)
 			ver0_hor1 = false;
 
 			edge_points.emplace_back(Integers[0], Integers[1]);
+
+			wire.emplace_back();
 			makeWire(sf::Vector2f(Integers[2], Integers[3]));
+
 			edge_points.emplace_back(Integers[2], Integers[3]);
 		}
 		else {
@@ -161,12 +185,16 @@ void Wire::deSerialize(const std::string& str)
 
 			if (ver0_hor1)
 			{
+				wire.emplace_back();
 				makeWire(sf::Vector2f(edge_points[ep].x, Integers[i]));
+
 				edge_points.emplace_back(edge_points[ep].x, Integers[i]);
 			}
 			else
 			{
+				wire.emplace_back();
 				makeWire(sf::Vector2f(Integers[i], edge_points[ep].y));
+
 				edge_points.emplace_back(Integers[i], edge_points[ep].y);
 			}
 
@@ -208,6 +236,24 @@ sf::Vector2f Wire::end() const
 		LOG("\n[Error]: wire.end(), But vec:edge_points is empty");
 		return CircuitGUI::zero;
 	}
+}
+
+bool Wire::contains(const sf::Vector2f& Point) const
+{
+	for (auto& w : wire)
+		if (w.getGlobalBounds().contains(Point))
+			return true;
+
+	return false;
+}
+
+bool Wire::intersectes(const sf::FloatRect& Area) const
+{
+	for (auto& w : wire)
+		if (w.getGlobalBounds().intersects(Area))
+			return true;
+
+	return false;
 }
 
 std::string Wire::serialize() const

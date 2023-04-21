@@ -666,6 +666,20 @@ namespace CircuitGUI {
 			app.setFramerateLimit(60);
 			app.setVerticalSyncEnabled(1);
 			app.setKeyRepeatEnabled(false);
+
+
+#ifdef _DEBUG
+			std::ifstream window_size("temp_files/win_size.txt");
+			if (window_size.good())
+			{
+				int arr[4] = { W, H, app.getPosition().x, app.getPosition().y };
+				window_size >> arr[0] >> arr[1] >> arr[2] >> arr[3];
+				window_size.close();
+
+				app.setSize(sf::Vector2u(arr[0], arr[1]));
+				app.setPosition(sf::Vector2i(arr[2], arr[3]));
+			}
+#endif
 		}
 
 		//viewInit();
@@ -842,6 +856,21 @@ namespace CircuitGUI {
 				input >> S >> X >> Y >> A;
 				comp.emplace_back(S, trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
+
+			// Wires
+			std::string line;
+			bool started_reading_wires = false;
+			while (std::getline(input, line)) {
+				LOG("\n\ngetline(): " << line);
+
+				if (started_reading_wires)
+					wires.emplace_back(line);
+
+				if (line == "#Wires:")
+					started_reading_wires = true;
+			}
+
+
 			input.close();
 
 			// Centering
@@ -889,6 +918,13 @@ namespace CircuitGUI {
 				tempStr += std::to_string(comp[c].getSerial()) + "\t" + std::to_string((int)comp[c].x) + "\t" + std::to_string((int)comp[c].y) + "\t" + std::to_string((int)comp[c].angle) + "\n";
 			}
 			output << tempStr;
+
+			// Wires
+			output << "\n#Wires:\n";
+			for (auto& w : wires)
+				output << w.serialize();
+
+
 			output.close();
 
 			WCHAR hello[260] = { 0 };
