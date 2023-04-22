@@ -37,6 +37,8 @@ public:
 
 	sf::Vector2f end() const;
 
+	size_t size() const;
+
 	bool contains(const sf::Vector2f& Point) const;
 
 	bool intersectes(const sf::FloatRect& Area) const;

@@ -8,8 +8,8 @@ taskkill /F /IM CirciutGUI.exe
 #include <iostream>
 #include <direct.h>
 #include <fstream>
-//#include <string>
 //#include <sstream>
+//#include <string>
 //#include <thread>
 //#include <future>
 
@@ -91,21 +91,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	std::string arg;
 	if (std::getline(iss, arg, ' '))
 	{
-		LOG << "\n" << arg << "\n";
+		LOG("\n" << arg << "\n");
 		if (!arg.empty())
 			CircuitGUI::Options::openf(arg);
 
 		stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
 	}//*/
 
-	/* // Multiple Files
+	//* // Multiple Files
 	int argc;
 	LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 	for (int i = 1; i < argc; i++) {
 		std::wstring temp(argv[i]);
 		if (!temp.empty())
 		{
-			log_file << "Dropped file: " << std::string(temp.begin(), temp.end()) << "\n";
+			LOG("Dropped file: " << std::string(temp.begin(), temp.end()) << "\n");
 			CircuitGUI::Options::openf(std::string(temp.begin(), temp.end()).c_str());
 			stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
 		}
@@ -118,7 +118,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		using CircuitGUI::wires;
 
 		//wires.emplace_back("300\t300\t315\t300\t360\t375\t390\t420\t435");
-		////wires.emplace_back("300\t300\t315\t300\t360\t360\t380\t380\t400\t400\t420\t420\t440\t440");
+		//wires.emplace_back("300\t300\t315\t300\t360\t360\t380\t380\t400\t400\t420\t420\t440\t440");
 
 		//LOG("\nMade wires: " << wires.size());
 	}
@@ -335,28 +335,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
 					CircuitGUI::Options::deletef();
 				}
-				if (evnt.key.code == sf::Keyboard::J) {
-					wires.clear();
-				}
-				if (evnt.key.code == sf::Keyboard::K) {
-
-					std::ofstream wire_file("temp_files/wire_file.txt");
-
-					for (auto& w : wires)
-						wire_file << w.serialize();
-
-				}
 				if (evnt.key.code == sf::Keyboard::L) {
-					
-					std::ifstream wire_file("temp_files/wire_file.txt");
 
-					std::string line;
-					while (std::getline(wire_file, line)) {
-						wires.emplace_back(line);
-						LOG("\nL: " << line << "\n"); // append the line to str with a newline character
-					}
+					LOG("\n\nwires (" << wires.size() << "): ");
+					for (auto& w : wires)
+						LOG(w.size() << " ");
 
+					LOG("\ncursor: "); LOG_VEC2(cursorInSim());
 
+					LOG("\n");
 				}
 				//if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
 				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
@@ -489,12 +476,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (releaseBool && sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				onWire = false;
-				LOG("\n" << wires.size() << " | ");
 				for (int i = 0; i < wires.size(); i++) {
-					LOG((int)wires[i].contains(cursorInSim()) << " | ");
-					//LOG((int)wires[i].intersectes(selSqr.getGlobalBounds()) << " | ");
-
-					if (!onWire && wires[i].contains(cursorInSim())) { onWire = true; index = i; }
+					if (!onWire && wires[i].contains(cursorInSim())) {
+						onWire = true; index = i;
+					}
 				}
 			}
 
@@ -502,6 +487,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				wires[index].move(cursorInSim());
 
 		}
+
 
 		// ----------------------------------------	Options
 		{

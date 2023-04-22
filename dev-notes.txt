@@ -1,5 +1,5 @@
 New------------------------------------
-Wire Serialization
+Wire Serialization (copy, paste, open, save)
 SaveAsImage() can now supports texture of any size
 New Icons for Components (2 Pixcel Wide)
 QuadTree Completed

@@ -117,23 +117,35 @@ void Wire::stop()
 
 void Wire::move(const sf::Vector2f& Pos)
 {
-	using namespace CircuitGUI;
+	if (/*1 ||*/ edge_points.empty() == false) {
+		using namespace CircuitGUI;
 
-	int x_Off = (int)trim(Pos.x - edge_points.front().x);
-	int y_Off = (int)trim(Pos.y - edge_points.front().y);
+		int x_Off = (int)trim(Pos.x - edge_points.front().x);
+		int y_Off = (int)trim(Pos.y - edge_points.front().y);
 
-	for (auto& ep : edge_points) {
-		ep.x += x_Off;
-		ep.y += y_Off;
+		//LOG("\n\n(" << x_Off << ", " << y_Off << ")");
+		//LOG("\nBefore: ");
+		//for (auto& ep : edge_points)
+		//	LOG_VEC2(ep);
+		for (auto& ep : edge_points) {
+			ep.x += x_Off;
+			ep.y += y_Off;
+		}
+		//LOG("\nAfter : ");
+		//for (auto& ep : edge_points)
+		//	LOG_VEC2(ep);
+
+		for (auto& w : wire)
+			w.move(x_Off, y_Off);
 	}
-
-	for (auto& w : wire)
-		w.move(x_Off, y_Off);
+	else {
+		LOG("\n[Error]: Wire::move(), But vec:edge_points is empty");
+	}
 }
 
 void Wire::deSerialize(const std::string& Serialized_wire)
 {
-	LOG("\nDeserializing: " << Serialized_wire);
+	//LOG("\n\nDeserializing: \"" << Serialized_wire << "\"");
 
 	static std::vector<int> Integers;
 	Integers.clear();
@@ -142,9 +154,9 @@ void Wire::deSerialize(const std::string& Serialized_wire)
 	for (auto& num : Integers)
 		num = (int)CircuitGUI::trim(num);
 
-	LOG("\nTrimmed" << Integers.size() << ": ");
-	for (auto& num : Integers)
-		LOG(num << ", ");
+	//LOG("\nTrimmed (" << Integers.size() << "): ");
+	//for (auto& num : Integers)
+	//	LOG(num << "\t");
 
 	bool invalid = false;
 	bool ver0_hor1 = false;
@@ -180,7 +192,7 @@ void Wire::deSerialize(const std::string& Serialized_wire)
 	}
 
 	if (invalid == false) {
-		LOG("\n");
+		//LOG("\n");
 		for (int i = 4, ep = 1; i < Integers.size(); i++, ep++) {
 
 			if (ver0_hor1)
@@ -198,14 +210,14 @@ void Wire::deSerialize(const std::string& Serialized_wire)
 				edge_points.emplace_back(Integers[i], edge_points[ep].y);
 			}
 
-			LOG_VEC2(wire.back().getPosition());
+			//LOG_VEC2(wire.back().getPosition());
 			ver0_hor1 = !ver0_hor1;
 		}
 	}
 
-	LOG("\nWire(" << wire.size() << "): ");
-	for (auto& r : wire)
-		LOG_VEC2(r.getPosition());
+	//LOG("\nWire(" << wire.size() << "): ");
+	//for (auto& r : wire)
+	//	LOG_VEC2(r.getPosition());
 
 	stop();
 }
@@ -238,6 +250,11 @@ sf::Vector2f Wire::end() const
 	}
 }
 
+size_t Wire::size() const
+{
+	return edge_points.size();
+}
+
 bool Wire::contains(const sf::Vector2f& Point) const
 {
 	for (auto& w : wire)
@@ -263,9 +280,9 @@ std::string Wire::serialize() const
 
 	if (edge_points.size() >= 2)
 	{
-		LOG("\nSerializing: ")
-		for (auto& vec : edge_points)
-			LOG_VEC2(vec);
+		//LOG("\nSerializing: ")
+		//for (auto& vec : edge_points)
+		//	LOG_VEC2(vec);
 
 
 		// 1st and 2nd Points

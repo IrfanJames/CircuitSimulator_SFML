@@ -85,7 +85,10 @@ namespace CircuitGUI {
 			}
 
 			if (numStarted == true && c == str.size() - 1)
+			{
+				if (negative) x *= -1;
 				vec.emplace_back(x);
+			}
 		}
 	}
 	inline float trim(float num, int wrt = gap) {
@@ -845,8 +848,7 @@ namespace CircuitGUI {
 			virSerial.clear();
 			virSprite.clear();
 			virSerialShift.clear();
-			virSerial.reserve(comp.size());
-			virSprite.reserve(comp.size());
+			wires.clear();
 
 			// Input from file
 			int no = 0;
@@ -858,10 +860,11 @@ namespace CircuitGUI {
 			}
 
 			// Wires
+			wires.reserve(3);
 			std::string line;
 			bool started_reading_wires = false;
 			while (std::getline(input, line)) {
-				LOG("\n\ngetline(): " << line);
+				//LOG("\n\ngetline(): " << line);
 
 				if (started_reading_wires)
 					wires.emplace_back(line);
@@ -884,6 +887,10 @@ namespace CircuitGUI {
 				comp[c].y = (int)trim(comp[c].y + offSet.y);
 				comp[c].stimuli();
 			}
+
+			for (auto& w : wires)
+				w.move(w.initial() + offSet);
+
 
 			qtUpdate();
 			updateVisibleVector();
@@ -1052,62 +1059,111 @@ namespace CircuitGUI {
 			std::ofstream output;
 			std::string tempStr(std::to_string((int)virSerial.size()) + "\n");
 
-			int size = (int)virSerial.size();
-			for (int c = 0; c < size; c++) {
-				tempStr += std::to_string(comp[virSerial[c]].getSerial()) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
+			// Components
+			{
+				int size = (int)virSerial.size();
+				for (int c = 0; c < size; c++) {
+					tempStr += std::to_string(comp[virSerial[c]].getSerial()) + "\t" + std::to_string((int)comp[virSerial[c]].x) + "\t" + std::to_string((int)comp[virSerial[c]].y) + "\t" + std::to_string((int)comp[virSerial[c]].angle) + "\n";
+				}
 			}
 
-			//clipboard << tempStr;
-			sf::Clipboard::setString(tempStr);
+			// Wires
+			{
+				sf::FloatRect area = selSqr.getGlobalBounds();
+				tempStr += "\n#Wires:\n"; // HardCode
+				for (auto& w : wires)
+					if (w.intersectes(area))
+						tempStr += w.serialize();
+			}
 
+			sf::Clipboard::setString(tempStr);
 		}
 
 		inline void pastef() {
 
-			std::string inString(sf::Clipboard::getString());
 			std::vector<int> integers; integers.reserve(21);
+			std::string inString(sf::Clipboard::getString());
 
-			str_to_vecInt(inString, integers);
+			size_t wire_start = inString.find_first_of('#');
+			
+			std::string comp_str(inString.substr(0, wire_start));
+			std::string wire_str(inString.substr(wire_start + 8, inString.size() - wire_start)); // HardCode (7) length("#Wires:\n")
+			//LOG("\nPasting:\ncomp: " << comp_str << "hello");
+			//LOG("\nPasting:\nwire: " << wire_str << "mello");
+			
+			str_to_vecInt(comp_str, integers);
 
-			int OffsetX = 0, OffsetY = 0, count = 0;
-			for (int i = 1; i + 2 < integers.size(); i += 4, count++)
+			// Offset
+			int OffsetX = 0, OffsetY = 0;
 			{
-				OffsetX += integers[i + 1];
-				OffsetY += integers[i + 2];
-			}
-			if (count) {
-				OffsetX /= count;
-				OffsetY /= count;
+				int count = 0;
+				for (int i = 1; i + 2 < integers.size(); i += 4, count++)
+				{
+					OffsetX += integers[i + 1];
+					OffsetY += integers[i + 2];
+				}
+				if (count) {
+					OffsetX /= count;
+					OffsetY /= count;
 
-				OffsetX = view.getCenter().x - OffsetX;
-				OffsetY = view.getCenter().y - OffsetY;
-			}
-
-			int noOfComponentsBefore = comp.size();
-			comp.reserve(abs(integers[0]) + 10); // 10 extra
-			for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
-				S = abs(integers[++c]);
-				X = integers[++c] + OffsetX;
-				Y = integers[++c] + OffsetY;
-				A = abs(integers[++c]);
-				comp.emplace_back(S /*% (Entity::no_of_Comp)*/, trim(X), trim(Y), ((A % 360) / 90) * 90);
+					OffsetX = (int)trim((int)view.getCenter().x - OffsetX);
+					OffsetY = (int)trim((int)view.getCenter().y - OffsetY);
+				}
 			}
 
-			virSerial.clear();
-			virSprite.clear();
-			virSerialShift.clear();
 
-			virSerial.reserve(comp.size() - noOfComponentsBefore);
-			virSprite.reserve(comp.size() - noOfComponentsBefore);
+			// Comps
+			{
+				int noOfComponentsBefore = comp.size();
+				comp.reserve(abs(integers[0]) + 10); // 10 extra
+				for (int c = 0, S = 0, X = 0, Y = 0, A = 0; 1 + c + 4 <= integers.size();) {
+					S = abs(integers[++c]);
+					X = integers[++c] + OffsetX;
+					Y = integers[++c] + OffsetY;
+					A = abs(integers[++c]);
+					comp.emplace_back(S /*% (Entity::no_of_Comp)*/, trim(X), trim(Y), ((A % 360) / 90) * 90);
+				}
 
-			for (int vv = 0; vv < (comp.size() - noOfComponentsBefore); vv++) {
-				virSerial.emplace_back(vv + noOfComponentsBefore);
-				virSprite.emplace_back(comp[virSerial.back()].sprite);
-				virSprite.back().setColor(tempDimColor);
+				virSerial.clear();
+				virSprite.clear();
+				virSerialShift.clear();
+
+				virSerial.reserve(comp.size() - noOfComponentsBefore);
+				virSprite.reserve(comp.size() - noOfComponentsBefore);
+
+				for (int vv = 0; vv < (comp.size() - noOfComponentsBefore); vv++) {
+					virSerial.emplace_back(vv + noOfComponentsBefore);
+					virSprite.emplace_back(comp[virSerial.back()].sprite);
+					virSprite.back().setColor(tempDimColor);
+				}
 			}
 
 			qtUpdate();
 			updateVisibleVector();
+
+			// Wires
+			{
+				LOG("\nwire paste:\n");
+				sf::Vector2f offSet(OffsetX, OffsetY);
+				size_t wire_stop;
+				std::string sub;
+				for (int count = 0; count < 10000 && wire_str.size() > 1; count++) // HardCode limit(10000)
+				{
+					wire_stop = wire_str.find_first_of('\n');
+					//LOG("\nstop : " << wire_stop << "\n");
+					sub = wire_str.substr(0, wire_stop + 1);
+					//LOG(sub);
+					if (sub.size() > 3) // HardCode (3) --To avoid making wires for string with only \n character
+					{
+						wires.emplace_back(sub);
+						wires.back().move(wires.back().initial() + offSet);
+					}
+					else LOG("\n[Warrning] Wire sub.size() > 3 | sub = \""<< sub <<"\" | Options::Paste()");
+					wire_str.erase(wire_str.begin(), wire_str.begin() + wire_stop + 1);
+				}
+
+			}
+
 		}
 
 		inline void rotatef() {
@@ -1129,6 +1185,15 @@ namespace CircuitGUI {
 				return std::binary_search(virSerial.begin(), virSerial.end(), &elem - &comp[0]);
 				});
 			comp.erase(iter, comp.end());
+
+			// Wires
+			sf::FloatRect area = selSqr.getGlobalBounds();
+			for (int i = 0; i < wires.size(); i++) {
+				if (wires[i].intersectes(area)) {
+					wires.erase(wires.begin() + i);
+					i--;
+				}
+			}
 
 			virSerial.clear();
 			virSprite.clear();
