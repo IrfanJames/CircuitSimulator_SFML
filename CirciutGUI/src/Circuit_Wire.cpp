@@ -110,9 +110,27 @@ void Wire::newEdge()
 	}
 }
 
+void Wire::clean() {
+
+	;
+
+	//for (int i = 0; i < wire.size(); i++) {
+
+	//	int x = wire[i].getSize().x;
+	//	int y = wire[i].getSize().y;
+
+	//	if (abs(x) < 2 || abs(y) < 2) // HardCode
+	//		wire.erase(wire.begin() + i--);
+
+	//}
+
+}
+
 void Wire::stop()
 {
 	status_stopped = true;
+
+	Wire::clean();
 }
 
 void Wire::move(const sf::Vector2f& Pos)
@@ -250,9 +268,101 @@ sf::Vector2f Wire::end() const
 	}
 }
 
-size_t Wire::size() const
+size_t Wire::noOfEdges() const
 {
 	return edge_points.size();
+}
+
+size_t Wire::noOfDrawRects() const {
+
+	size_t count = 0;
+
+	for (auto& rec : wire) {
+
+		int x = rec.getSize().x;
+		int y = rec.getSize().y;
+		if (abs(x) > 1 && abs(y) > 1) // HardCode
+			count++;
+	}
+
+	return count;
+}
+
+sf::FloatRect Wire::bounds(bool* sucess_ptr) const
+{
+	int Left = 0;
+	int Top = 0;
+	int Width = 0;
+	int Height = 0;
+	sf::FloatRect rect { 0,0,0,0 };
+
+
+	if (wire.empty() == false) {
+
+		if (sucess_ptr != nullptr)
+			*sucess_ptr = false;
+
+		for (auto& rec : wire) {
+
+			int x = rec.getSize().x;
+			int y = rec.getSize().y;
+			if (abs(x) > 1 && abs(y) > 1) // HardCode
+			{
+				rect = rec.getGlobalBounds();
+				Left = rect.left;
+				Top = rect.top;
+				Width = rect.width;
+				Height = rect.height;
+
+				if (sucess_ptr != nullptr)
+					*sucess_ptr = true;
+
+				break;
+			}
+		}
+
+		if (sucess_ptr != nullptr)
+			if (*sucess_ptr == false)
+				return rect;
+
+	}
+	else {
+		if (sucess_ptr != nullptr)
+			*sucess_ptr = false;
+		return rect;
+	}
+
+	for (auto& rec : wire) {
+
+		int x = rec.getSize().x;
+		int y = rec.getSize().y;
+
+		if (abs(x) < 1 || abs(y) < 1) // HardCode
+			continue;
+
+
+		//rect = rec.getGlobalBounds();
+		//rect = { rec.getPosition(), rec.getSize()};
+		rect.left = (int)rec.getPosition().x;
+		rect.top  = (int)rec.getPosition().y;
+		rect.width = (int)rec.getSize().x;
+		rect.height = (int)rec.getSize().y;
+
+		if (rect.left < Left) { Width += Left - rect.left; Left = rect.left; }
+		if (rect.top < Top)  { Height += Top - rect.top; Top = rect.top; }
+		if (rect.left + rect.width > Left + Width)	Width = rect.left - Left + rect.width;
+		if (rect.top + rect.height > Top + Height)	Height = rect.top - Top + rect.height;
+	}
+
+	//LOG("\n(" << wire.size() << ")" << Left << "\t" << Top << "\t" << Width << "\t" << Height);
+
+	rect.left = Left;
+	rect.top = Top;
+	rect.width = Width;
+	rect.height = Height;
+	//rect = { Left, Top, Width, Height };
+
+	return rect;
 }
 
 bool Wire::contains(const sf::Vector2f& Point) const
@@ -311,9 +421,13 @@ std::string Wire::serialize() const
 	return out;
 }
 
+const std::vector<sf::RectangleShape>* Wire::getRectVector() const
+{
+	return &wire;
+}
+
 void Wire::draw(sf::RenderWindow& App) const
 {
 	for (int c = 0; c < wire.size(); c++)
 		App.draw(wire[c]);
 }
-

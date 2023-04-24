@@ -348,7 +348,7 @@ namespace CircuitGUI {
 		}
 		//else return 0;
 	}
-	inline sf::FloatRect areaofCollection(bool collectionIsAllComp = false); // Forward Declerarion
+	inline sf::FloatRect areaofCollection(int collection = false, bool* sucess_ptr = nullptr); // Forward Declerarion
 	inline void qtUpdate() {
 
 		qtDelete(qt);
@@ -493,24 +493,11 @@ namespace CircuitGUI {
 		return (!vec.empty());
 
 	}
-	inline sf::FloatRect areaofCollection(bool collectionIsAllComp) {
+	inline sf::FloatRect areaofCollection(int collection, bool* sucess_ptr) {
 		sf::FloatRect compBound;
 		sf::FloatRect ABCD;
-
-		if (collectionIsAllComp) {
-			if (comp.size()) {
-				compBound = comp.front().bounds;
-				ABCD = compBound;
-			}
-			for (int c = 0; c < comp.size(); c++) {
-				compBound = comp[c].bounds;
-				if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
-				if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
-				if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
-				if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
-			}
-		}
-		else {
+		
+		if (collection == 0) {
 			if (virSerial.size()) {
 				compBound = comp[virSerial.front()].bounds;
 				ABCD = compBound;
@@ -523,7 +510,69 @@ namespace CircuitGUI {
 				if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
 			}
 		}
+		else if (collection == 1) {
+			if (comp.size()) {
+				compBound = comp.front().bounds;
+				ABCD = compBound;
+			}
+			for (int c = 0; c < comp.size(); c++) {
+				compBound = comp[c].bounds;
+				if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
+				if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
+				if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
+				if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
+			}
+		}
+		else if (collection == 2) {
 
+			if (wires.empty() == false) {
+				bool sucess = false;
+
+				for (auto& w : wires) {
+					w.clean();
+					compBound = w.bounds(&sucess);
+
+					if (sucess == true)
+						break;
+				}
+
+				if (sucess == false) {
+					if (sucess_ptr != nullptr)
+						*sucess_ptr = false;
+
+					return ABCD;
+				}
+				else {
+					if (sucess_ptr != nullptr)
+						*sucess_ptr = true;
+				}
+
+				ABCD = compBound;
+			}
+			else {
+				if (sucess_ptr != nullptr)
+					*sucess_ptr = false;
+
+				return ABCD;
+			}
+
+			for (int v = 0; v < wires.size(); v++) {
+				wires[v].clean();
+
+				bool sucess = false;
+				compBound = wires[v].bounds(&sucess);
+				if (sucess == false)
+					continue;
+
+				if (compBound.left < ABCD.left) { ABCD.width += ABCD.left - compBound.left; ABCD.left = compBound.left; }
+				if (compBound.top < ABCD.top) { ABCD.height += ABCD.top - compBound.top; ABCD.top = compBound.top; }
+				if (compBound.left + compBound.width > ABCD.left + ABCD.width)	ABCD.width = compBound.left - ABCD.left + compBound.width;
+				if (compBound.top + compBound.height > ABCD.top + ABCD.height)	ABCD.height = compBound.top - ABCD.top + compBound.height;
+			}
+		}
+
+		if (sucess_ptr != nullptr)
+			*sucess_ptr = true;
 		return ABCD;
 	}
 	inline void updateVisibleVector()
@@ -962,19 +1011,34 @@ namespace CircuitGUI {
 				LOG("Shell connot open floder  \"Saved - Images\"");
 			}*/
 
-			sf::FloatRect Bounds_of_all_Comps = areaofCollection(true);
 			sf::Image image;
+			sf::FloatRect Bounds_of_all_Entities = areaofCollection(true);
+			{
+				bool sucess = false;
+				sf::FloatRect boundWire = areaofCollection(2, &sucess); // bound_of_all_Wires
+				if (sucess == true) {
+					if (boundWire.left < Bounds_of_all_Entities.left)
+						{ Bounds_of_all_Entities.width += Bounds_of_all_Entities.left - boundWire.left; Bounds_of_all_Entities.left = boundWire.left; }
+					if (boundWire.top < Bounds_of_all_Entities.top)
+						{ Bounds_of_all_Entities.height += Bounds_of_all_Entities.top - boundWire.top; Bounds_of_all_Entities.top = boundWire.top; }
+					if (boundWire.left + boundWire.width > Bounds_of_all_Entities.left + Bounds_of_all_Entities.width)
+						Bounds_of_all_Entities.width = boundWire.left - Bounds_of_all_Entities.left + boundWire.width;
+					if (boundWire.top + boundWire.height > Bounds_of_all_Entities.top + Bounds_of_all_Entities.height)
+						Bounds_of_all_Entities.height = boundWire.top - Bounds_of_all_Entities.top + boundWire.height;
+				}
+			}
 
 
 			if (comp.empty())
 				image.create(10, 10, backColor);
 			else
-				image.create(Bounds_of_all_Comps.width + 2 * gap, Bounds_of_all_Comps.height + 2 * gap, backColor);
+				image.create(Bounds_of_all_Entities.width + 2 * gap, Bounds_of_all_Entities.height + 2 * gap, backColor);
 
+			// Comps
 			for (int c = 0; c < comp.size(); c++) {
 
-				int x_offset = gap + comp[c].bounds.left - Bounds_of_all_Comps.left;
-				int y_offset = gap + comp[c].bounds.top - Bounds_of_all_Comps.top;
+				int x_offset = gap + comp[c].bounds.left - Bounds_of_all_Entities.left;
+				int y_offset = gap + comp[c].bounds.top - Bounds_of_all_Entities.top;
 
 				static sf::Image img;
 
@@ -1035,6 +1099,35 @@ namespace CircuitGUI {
 					}
 			}
 
+			// Wires
+			for (auto& w : wires) {
+
+				bool sucess = false;
+				sf::FloatRect bound(w.bounds(&sucess));
+
+				if (sucess == false || w.noOfDrawRects() < 1)
+					continue;
+
+				auto& vec = *w.getRectVector();
+
+
+				for (auto& rec : vec) {
+
+					int x_offset = /*gap +*/ rec.getGlobalBounds().left - Bounds_of_all_Entities.left;
+					int y_offset = /*gap +*/ rec.getGlobalBounds().top  - Bounds_of_all_Entities.top;
+
+					int w = std::abs(rec.getSize().x);
+					int h = std::abs(rec.getSize().y);
+
+					if (abs(w) > 1 && abs(h) > 1) // HardCode
+					{
+						for (int y = 0; y < h; y++)
+							for (int x = 0; x < w; x++)
+								image.setPixel(x + x_offset, y + y_offset, normalCompColor);
+					}
+				}
+
+			}
 
 
 			image.saveToFile(filepath);
@@ -1302,303 +1395,3 @@ namespace CircuitGUI {
 
 		}*/
 }
-
-// 1st occupiedAt
-/*
-
-bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = false) {
-		//if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
-		int noCount = 0;
-		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
-
-			if (At.x == CircuitGUI::comp[c].x && At.y == CircuitGUI::comp[c].y) {
-				if (CircuitGUI::comp[Index].angle != CircuitGUI::comp[c].angle) {
-					noCount++;
-				}
-				else {
-					Occupied = 1; return 1;
-				}
-			}
-
-			if (At.x == CircuitGUI::comp[c].getEndPos().x && At.y == CircuitGUI::comp[c].getEndPos().y) {
-				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
-					noCount++;
-				}
-				else {
-					Occupied = 1; return 1;
-				}
-			}
-
-		}
-		if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
-
-
-		static Entity indexEntity;
-		indexEntity = CircuitGUI::comp[Index];
-		indexEntity.x = At.x; indexEntity.y = At.y;
-		indexEntity.stimuli();
-		static sf::Vector2f end;
-		end = indexEntity.getEndPos();
-
-		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-			if (c == Index || abs(CircuitGUI::comp[c].x - end.x) >= 200 || abs(CircuitGUI::comp[c].y - end.y) >= 200) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
-
-			if (end.x == CircuitGUI::comp[c].x && end.y == CircuitGUI::comp[c].y) {
-				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
-					noCount++;
-				}
-				else {
-					Occupied = 1; return 1;
-				}
-			}
-
-			if (end.x == CircuitGUI::comp[c].getEndPos().x && end.y == CircuitGUI::comp[c].getEndPos().y) {
-				if (CircuitGUI::comp[Index].angle != CircuitGUI::comp[c].angle) {
-					noCount++;
-				}
-				else {
-					Occupied = 1; return 1;
-				}
-			}
-
-		}
-		if (!!noCount) { Occupied = 0; return 0; } //if (noCount == 1) { Occupied = 0; return 0; }
-
-		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-			if (c == Index || abs(CircuitGUI::comp[c].x - At.x) >= 200 || abs(CircuitGUI::comp[c].y - At.y) >= 200) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
-
-			if (indexEntity.bounds.intersects(CircuitGUI::comp[c].bounds)) { Occupied = 1; return 1; }
-
-		}
-
-		Occupied = 0; return 0;
-	}
-
-*/
-
-// 2nd occupiedAt
-/*
-bool occupiedAt(int Index, const sf::Vector2f& At, bool ignoreAllVir = false) {
-		//if (ignoreAllVir) if (std::count(virSerial.begin(), virSerial.end(), c)) continue;
-		static Entity indexEntity;
-		static sf::Vector2f end;
-		indexEntity = CircuitGUI::comp[Index];
-		indexEntity.x = At.x; indexEntity.y = At.y;
-		indexEntity.stimuli();
-		end = indexEntity.getEndPos();
-
-		int noCount = 0;
-		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-			//if (c == Index || abs(comp[c].x - At.x) >= 200 || abs(comp[c].y - At.y) >= 200) continue; // gap-hardcode
-			if (c == Index
-				|| ((comp[c].x - At.x) >= 200 || (At.x - comp[c].x) >= 200)
-				|| ((comp[c].y - At.y) >= 200 || (At.y - comp[c].y) >= 200)
-				) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
-
-			if (At.x == CircuitGUI::comp[c].x && At.y == CircuitGUI::comp[c].y) {
-				if (CircuitGUI::comp[Index].angle != CircuitGUI::comp[c].angle) {
-					noCount++;
-				}
-				else {
-					Occupied = 1; return 1;
-				}
-			}
-
-			if (At.x == CircuitGUI::comp[c].getEndPos().x && At.y == CircuitGUI::comp[c].getEndPos().y) {
-				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
-					noCount++;
-				}
-				else {
-					Occupied = 1; return 1;
-				}
-			}
-
-			if (end.x == CircuitGUI::comp[c].x && end.y == CircuitGUI::comp[c].y) {
-				if (abs((int)(CircuitGUI::comp[Index].angle - CircuitGUI::comp[c].angle)) != 180) {
-					noCount++;
-				}
-				else {
-					Occupied = 1; return 1;
-				}
-			}
-
-			if (end.x == CircuitGUI::comp[c].getEndPos().x && end.y == CircuitGUI::comp[c].getEndPos().y) {
-				if (CircuitGUI::comp[Index].angle != CircuitGUI::comp[c].angle) {
-					noCount++;
-				}
-				else {
-					Occupied = 1; return 1;
-				}
-			}
-
-		}
-		if (!!noCount) { Occupied = 0; return 0; } // Non-Zero (!!bool)
-
-
-
-
-		for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-			//if (c == Index || abs(comp[c].x - At.x) >= 200 || abs(comp[c].y - At.y) >= 200) continue; // gap-hardcode
-			if (c == Index
-				|| ((comp[c].x - At.x) >= 200 || (At.x - comp[c].x) >= 200)
-				|| ((comp[c].y - At.y) >= 200 || (At.y - comp[c].y) >= 200)
-				) continue; // gap-hardcode
-			if (ignoreAllVir) if (std::find(virSerial.begin(), virSerial.end(), c) != virSerial.end()) continue;
-
-
-			if (indexEntity.bounds.intersects(CircuitGUI::comp[c].bounds)) { Occupied = 1; return 1; }
-		}
-
-		Occupied = 0; return 0;
-	}*/
-
-// printScreen
-/*
-void printScreen(const std::string& filepath) {
-
-			//try
-			//{
-			//	cout << filepath;
-			//	int len;
-			//	int slength = (int)filepath.length() + 1;
-			//	len = MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, 0, 0);
-			//	wchar_t* buf = new wchar_t[len];
-			//	MultiByteToWideChar(CP_ACP, 0, filepath.c_str(), slength, buf, len);
-			//	std::wstring r(buf);
-			//	delete[] buf;
-			//	const wchar_t* widecstr = r.c_str();
-
-			//	//ShellExecute(NULL, NULL, L"Saved-Images", NULL, NULL, SW_SHOWNORMAL);
-			//	ShellExecute(NULL, NULL, widecstr, NULL, NULL, SW_SHOWNORMAL);
-			//}
-			//catch (const std::exception&)
-			//{
-			//	cout << "Shell connot open floder  \"Saved - Images\"";
-			//}m
-
-			sf::Image OutputImage;
-			sf::FloatRect compBound;
-			sf::FloatRect ABCD;
-
-			if (comp.size() != 0)
-			{
-				ABCD = areaofCollection(true);
-				OutputImage.create(abs(ABCD.width) + 30, abs(ABCD.height) + 30);
-			}
-			else { OutputImage.create(10, 10); }
-
-			for (int c = 0; c < comp.size(); c++) {
-				sf::Vector2f tempEndNode = comp[c].getEndPos();
-				compBound = comp[c].bounds;
-
-				sf::Image tempCompImg;
-				//tempCompImg.createMaskFromColor(sf::Color(23, 24, 25));
-
-				if (comp[c].angle == 0) {
-					tempCompImg = compTex[comp[c].getSerial()].copyToImage();
-				}
-				else if (comp[c].angle == 180) {
-					tempCompImg = compTex[comp[c].getSerial()].copyToImage();
-					tempCompImg.flipVertically();
-					tempCompImg.flipHorizontally();
-				}
-				else {
-					sf::Image tempTempCompImg(compTex[comp[c].getSerial()].copyToImage());
-					tempCompImg.create(tempTempCompImg.getSize().y, tempTempCompImg.getSize().x);
-
-					for (int j = 0; j < tempTempCompImg.getSize().y; j++) {
-						for (int i = 0; i < tempTempCompImg.getSize().x; i++) {
-							tempCompImg.setPixel(j, i, tempTempCompImg.getPixel(i, j));
-						}
-					}
-					tempCompImg.flipHorizontally();
-
-
-					if (comp[c].angle == 90) {
-						;
-					}
-					else if (comp[c].angle == 270) {
-						tempCompImg.flipVertically();
-						tempCompImg.flipHorizontally();
-
-					}
-				}
-
-				bool rotBool = ((((int)comp[c].angle) / 90) % 2 == 1);
-
-				int fakeGap = 15 - (comp[c].getSerial() == 5) * 5;
-
-				float OffX = compBound.left - ABCD.left - !rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-				float OffY = compBound.top - ABCD.top - rotBool * (fakeGap + (75 - 2 * fakeGap - 30) / 2) + 15;
-
-				for (int j = rotBool * fakeGap; j < tempCompImg.getSize().y - rotBool * fakeGap; j++) {
-					for (int i = !rotBool * fakeGap; i < tempCompImg.getSize().x - !rotBool * fakeGap; i++) {
-						if (tempCompImg.getPixel(i, j).a == 0) continue;
-						//std::async(std::launch::async, &sf::Image::setPixel, &OutputImage, OffX + i, OffY + j, tempCompImg.getPixel(i, j));
-
-						OutputImage.setPixel(OffX + i, OffY + j, tempCompImg.getPixel(i, j));
-					}
-				}
-
-			}
-
-			//int picNo = 0;
-			//std::string picDir = "Saved-Images/Untitled-", picType = ".png";
-			//sf::Image test;
-			//while (test.loadFromFile(picDir + std::to_string(picNo++) + picType)) {
-			//	;
-			//	//cout << "\n" << picNo;
-			//}
-			//OutputImage.saveToFile(picDir + std::to_string(picNo - 1) + picType);
-
-			OutputImage.saveToFile(filepath);
-
-			WCHAR hello[260] = { 0 };
-			for (int i = 0; i < 260 && i < filepath.length(); i++) hello[i] = filepath[i];
-			ShellExecute(NULL, NULL, hello, NULL, NULL, SW_SHOWNORMAL);
-
-		}
-*/
-
-// updateEndNodes
-//void updateAllEnds() {
-	//
-	//	allEnds.clear();
-	//
-	//	int nodeCount = 0;
-	//	for (int c = 0; c < comp.size(); c++) {
-	//		static sf::Vector2f tempEnd;
-	//
-	//		for (int cc = 0; cc < 2; cc++) {
-	//
-	//			//tempEnd
-	//			if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
-	//			if (cc == 1) { /*Rear*/  tempEnd = comp[c].getEndPos(); }
-	//
-	//			bool found = 0;
-	//			for (int e = 0; e < allEnds.size(); e++) {
-	//				if (tempEnd == allEnds[e]) {
-	//					found = 1;
-	//					break;
-	//				}
-	//			}
-	//
-	//			if (!found) {
-	//				nodeCount++;
-	//
-	//				if (nodeCount <= allEnds.size()) allEnds[nodeCount] = tempEnd;
-	//				else allEnds.emplace_back(tempEnd);
-	//			}
-	//
-	//		}
-	//	}
-	//
-	//	while (nodeCount < allEnds.size())
-	//		allEnds.pop_back();
-	//
-	//}

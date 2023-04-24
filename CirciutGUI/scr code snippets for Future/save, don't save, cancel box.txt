@@ -1,0 +1,53 @@
+.rc:
+IDD_SAVE_DONTSAVE_CANCEL DIALOGEX 0, 0, 200, 80
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "My 1st Box"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "Holoy Mooly\nYou Pressed 'M'", IDC_STATIC, 10, 10, 180, 30
+    CONTROL "Save", IDC_SAVE, "Button", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 20, 50, 60, 20
+    CONTROL "Don't Save", IDC_DONTSAVE, "Button", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 85, 50, 60, 20
+    CONTROL "Cancel", IDC_CANCEL, "Button", BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 150, 50, 40, 20
+END
+
+
+
+
+.cpp:
+int result = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_SAVE_DONTSAVE_CANCEL), NULL, SaveDontSaveCancelDlgProc);
+if (result == IDC_SAVE) {
+    // User clicked "Save"
+    // Code to save the file
+} else if (result == IDC_DONTSAVE) {
+    // User clicked "Don't Save"
+    // Code to discard changes and exit without saving
+} else {
+    // User clicked "Cancel" or closed the dialog box
+    // Code to prompt the user to save or discard changes
+}
+
+
+
+
+.hpp:
+INT_PTR CALLBACK SaveDontSaveCancelDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_COMMAND:
+        switch (LOWORD(wParam))
+        {
+        case IDC_SAVE:
+            EndDialog(hDlg, IDC_SAVE);
+            return TRUE;
+        case IDC_DONTSAVE:
+            EndDialog(hDlg, IDC_DONTSAVE);
+            return TRUE;
+        case IDC_CANCEL:
+            EndDialog(hDlg, IDC_CANCEL);
+            return TRUE;
+        }
+        break;
+    }
+    return FALSE;
+}

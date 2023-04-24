@@ -73,3 +73,12 @@ std::string SaveFileDialog(const char* filter, int tempNumber = 0)
 
 	return std::string();
 }
+
+void wintest() {
+	std::cout <<
+		MessageBoxW(
+			NULL,
+			L"Holoy Mooly\nYou Pressed 'M'",
+			L"My 1st Box",
+			MB_YESNOCANCEL | MB_ICONEXCLAMATION);
+}

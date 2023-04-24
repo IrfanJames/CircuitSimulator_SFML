@@ -64,7 +64,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 
-	//std::thread printScreenTread;
 
 	////////////////// Solve //////////////////////
 	//Graph circuit;
@@ -113,15 +112,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	LocalFree(argv);//*/
 #endif
 
-
-	{
-		using CircuitGUI::wires;
-
-		//wires.emplace_back("300\t300\t315\t300\t360\t375\t390\t420\t435");
-		//wires.emplace_back("300\t300\t315\t300\t360\t360\t380\t380\t400\t400\t420\t420\t440\t440");
-
-		//LOG("\nMade wires: " << wires.size());
-	}
 
 
 
@@ -339,7 +329,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 					LOG("\n\nwires (" << wires.size() << "): ");
 					for (auto& w : wires)
-						LOG(w.size() << " ");
+						LOG(w.noOfEdges() << " ");
 
 					LOG("\ncursor: "); LOG_VEC2(cursorInSim());
 
@@ -1214,6 +1204,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 
+
 		
 		// ----------------------------------------	Draw
 		if (1 || stimuliDisplay) {
@@ -1233,7 +1224,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			drawWires();
 
-			//drawNodes();
+			drawNodes();
 
 			drawBoarders();
 

@@ -23,6 +23,8 @@ public:
 
 	void newEdge();
 
+	void clean();
+
 	void stop();
 
 	void move(const sf::Vector2f& Pos);
@@ -37,13 +39,19 @@ public:
 
 	sf::Vector2f end() const;
 
-	size_t size() const;
+	size_t noOfEdges() const;
+
+	size_t noOfDrawRects() const;
+
+	sf::FloatRect bounds(bool* sucess_ptr = nullptr) const;
 
 	bool contains(const sf::Vector2f& Point) const;
 
 	bool intersectes(const sf::FloatRect& Area) const;
 
 	std::string serialize() const;
+
+	const std::vector<sf::RectangleShape>* getRectVector() const;
 
 	void draw(sf::RenderWindow& App) const;
 };
