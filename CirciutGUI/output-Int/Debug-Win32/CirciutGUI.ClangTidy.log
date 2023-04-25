@@ -1,0 +1,1650 @@
+Error while processing D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_draw.cpp.
+Error while processing D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp.
+Error while processing D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_widgets.cpp.
+Error while processing D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp.
+Error while processing D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Entity.cpp.
+Error while processing D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Wire.cpp.
+warning: /JMC requires debug info. Use '/Zi', '/Z7' or debug options that enable debugger's stepping function; option ignored [clang-diagnostic-option-ignored]
+warning: argument unused during compilation: '/ZI' [clang-diagnostic-unused-command-line-argument]
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:6:9: warning: #pragma once in main file [clang-diagnostic-pragma-once-outside-header]
+#pragma once
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:46:2: warning: ignoring return value of function declared with 'nodiscard' attribute [clang-diagnostic-unused-result]
+        ImGui::SFML::Init(CircuitGUI::app);
+        ^~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:51:16: warning: unused variable 'debugBool' [clang-diagnostic-unused-variable]
+        bool End = 0, debugBool = 0;
+                      ^
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:54:62: warning: unused variable 'wireBool' [clang-diagnostic-unused-variable]
+        bool selectSquare = 0, Selection = 0, mouseOnCompsBool = 0, wireBool = 0;
+                                                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:57:6: warning: unused variable 'serialCompMouse' [clang-diagnostic-unused-variable]
+        int serialCompMouse = 0, serialToolMouse = 0, cursorInWin = 0;
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:124:4: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                        stimuliDisplay = 1; /*cout << "1";*/
+                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:124:4: note: Value stored to 'stimuliDisplay' is never read
+                        stimuliDisplay = 1; /*cout << "1";*/
+                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:325:6: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                        stimuliDisplay = 1; /*cout << "2";*/    stimuliEndNodes = 1;
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:325:6: note: Value stored to 'stimuliDisplay' is never read
+                                        stimuliDisplay = 1; /*cout << "2";*/    stimuliEndNodes = 1;
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:362:7: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                stimuliDisplay = 1; /*cout << "3";*/
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:362:7: note: Value stored to 'stimuliDisplay' is never read
+                                                stimuliDisplay = 1; /*cout << "3";*/
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:382:7: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                stimuliDisplay = 1;     /*cout << "4";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:382:7: note: Value stored to 'stimuliDisplay' is never read
+                                                stimuliDisplay = 1;     /*cout << "4";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:392:7: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                stimuliDisplay = 1;     /*cout << "6";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:392:7: note: Value stored to 'stimuliDisplay' is never read
+                                                stimuliDisplay = 1;     /*cout << "6";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:406:7: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                stimuliDisplay = 1; /*cout << "7";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:406:7: note: Value stored to 'stimuliDisplay' is never read
+                                                stimuliDisplay = 1; /*cout << "7";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:411:7: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                stimuliDisplay = 1; /*cout << "5";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:411:7: note: Value stored to 'stimuliDisplay' is never read
+                                                stimuliDisplay = 1; /*cout << "5";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:592:7: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                stimuliDisplay = 1; /*cout << "8";*/
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:592:7: note: Value stored to 'stimuliDisplay' is never read
+                                                stimuliDisplay = 1; /*cout << "8";*/
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:675:27: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                        stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
+                                                             ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:675:27: note: Value stored to 'stimuliDisplay' is never read
+                                        stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
+                                                             ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:685:6: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                        stimuliDisplay = 1; /*cout << "10";*/
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:685:6: note: Value stored to 'stimuliDisplay' is never read
+                                        stimuliDisplay = 1; /*cout << "10";*/
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:788:6: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                        stimuliDisplay = 1; /*cout << "a";*/
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:788:6: note: Value stored to 'stimuliDisplay' is never read
+                                        stimuliDisplay = 1; /*cout << "a";*/
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:790:7: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                stimuliDisplay = 1; /*cout << "14";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:790:7: note: Value stored to 'stimuliDisplay' is never read
+                                                stimuliDisplay = 1; /*cout << "14";*/ stimuliEndNodes = 1;
+                                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:826:6: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                        stimuliDisplay = 1; /*cout << "b";*/
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:826:6: note: Value stored to 'stimuliDisplay' is never read
+                                        stimuliDisplay = 1; /*cout << "b";*/
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:836:8: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                        stimuliDisplay = 1; /*cout << "15";*/
+                                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:836:8: note: Value stored to 'stimuliDisplay' is never read
+                                                        stimuliDisplay = 1; /*cout << "15";*/
+                                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:843:8: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                                        stimuliDisplay = 1; /*cout << "16";*/
+                                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:843:8: note: Value stored to 'stimuliDisplay' is never read
+                                                        stimuliDisplay = 1; /*cout << "16";*/
+                                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:876:6: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                        stimuliDisplay = 1; //cout << "c";
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:876:6: note: Value stored to 'stimuliDisplay' is never read
+                                        stimuliDisplay = 1; //cout << "c";
+                                        ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:905:21: warning: format string is not a string literal (potentially insecure) [clang-diagnostic-format-security]
+                                                                ImGui::Text(opt[row][0].c_str());
+                                                                            ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:905:21: note: treat the string as an argument to avoid this
+                                                                ImGui::Text(opt[row][0].c_str());
+                                                                            ^
+                                                                            "%s", 
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:954:20: warning: format string is not a string literal (potentially insecure) [clang-diagnostic-format-security]
+                                                        ImGui::Text(links[i][1].c_str());
+                                                                    ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:954:20: note: treat the string as an argument to avoid this
+                                                        ImGui::Text(links[i][1].c_str());
+                                                                    ^
+                                                                    "%s", 
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:1164:5: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                                stimuliDisplay = 1; /*cout << "18"*/;
+                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:1164:5: note: Value stored to 'stimuliDisplay' is never read
+                                stimuliDisplay = 1; /*cout << "18"*/;
+                                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:1246:3: warning: Value stored to 'stimuliDisplay' is never read [clang-analyzer-deadcode.DeadStores]
+                stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
+                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circiut_Sim_main.cpp:1246:3: note: Value stored to 'stimuliDisplay' is never read
+                stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
+                ^                ~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Entity.cpp:1:9: warning: #pragma once in main file [clang-diagnostic-pragma-once-outside-header]
+#pragma once
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Entity.cpp:155:42: warning: illegal character encoding in string literal [clang-diagnostic-invalid-source-encoding]
+        const static std::string preScalers = "n<B5>mkMG";
+                                                ^~~~
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Wire.cpp:1:9: warning: #pragma once in main file [clang-diagnostic-pragma-once-outside-header]
+#pragma once
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui-SFML.cpp:148:20: warning: unused variable 'NULL_JOYSTICK_BUTTON' [clang-diagnostic-unused-const-variable]
+const unsigned int NULL_JOYSTICK_BUTTON = sf::Joystick::ButtonCount;
+                   ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui-SFML.cpp:326:13: warning: 5 enumeration values not handled in switch: 'Unknown', 'F13', 'F14'... [clang-diagnostic-switch]
+    switch (code) {
+            ^~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui-SFML.cpp:535:13: warning: 95 enumeration values not handled in switch: 'Unknown', 'A', 'B'... [clang-diagnostic-switch]
+    switch (code) {
+            ^~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6093:36: warning: Dereference of null pointer [clang-analyzer-core.NullDereference]
+        popup_ref.ParentNavLayer = parent_window_in_stack->DC.NavLayerCurrent;
+                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6019:15: note: Assuming 'name' is not equal to null
+    IM_ASSERT(name != NULL && name[0] != '\0');     // Window name required
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ~~~~~~~^~~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6019:15: note: Left side of '&&' is true
+    IM_ASSERT(name != NULL && name[0] != '\0');     // Window name required
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6019:31: note: Assuming the condition is true
+    IM_ASSERT(name != NULL && name[0] != '\0');     // Window name required
+                              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6019:5: note: Left side of '||' is true
+    IM_ASSERT(name != NULL && name[0] != '\0');     // Window name required
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6020:5: note: Assuming field 'WithinFrameScope' is true
+    IM_ASSERT(g.WithinFrameScope);                  // Forgot to call ImGui::NewFrame()
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^~~~~~~~~~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:15: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+              ^~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6020:5: note: Left side of '||' is true
+    IM_ASSERT(g.WithinFrameScope);                  // Forgot to call ImGui::NewFrame()
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6021:15: note: Assuming field 'FrameCountEnded' is not equal to field 'FrameCount'
+    IM_ASSERT(g.FrameCountEnded != g.FrameCount);   // Called ImGui::Render() or ImGui::EndFrame() and haven't called ImGui::NewFrame() again yet
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6021:5: note: Left side of '||' is true
+    IM_ASSERT(g.FrameCountEnded != g.FrameCount);   // Called ImGui::Render() or ImGui::EndFrame() and haven't called ImGui::NewFrame() again yet
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6025:39: note: Assuming 'window' is not equal to NULL
+    const bool window_just_created = (window == NULL);
+                                      ^~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6026:9: note: 'window_just_created' is false
+    if (window_just_created)
+        ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6026:5: note: Taking false branch
+    if (window_just_created)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6032:9: note: Assuming the condition is false
+    if ((flags & ImGuiWindowFlags_NoInputs) == ImGuiWindowFlags_NoInputs)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6032:5: note: Taking false branch
+    if ((flags & ImGuiWindowFlags_NoInputs) == ImGuiWindowFlags_NoInputs)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6035:9: note: Assuming the condition is false
+    if (flags & ImGuiWindowFlags_NavFlattened)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6035:5: note: Taking false branch
+    if (flags & ImGuiWindowFlags_NavFlattened)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6039:44: note: Assuming 'current_frame' is equal to field 'LastFrameActive'
+    const bool first_begin_of_the_frame = (window->LastFrameActive != current_frame);
+                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6040:33: note: Assuming field 'Size' is not equal to 0
+    window->IsFallbackWindow = (g.CurrentWindowStack.Size == 0 && g.WithinFrameScopeWithImplicitWindow);
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6040:64: note: Left side of '&&' is false
+    window->IsFallbackWindow = (g.CurrentWindowStack.Size == 0 && g.WithinFrameScopeWithImplicitWindow);
+                                                               ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6043:43: note: Assuming the condition is false
+    bool window_just_activated_by_user = (window->LastFrameActive < current_frame - 1);   // Not using !WasActive because the implicit "Debug" window would always toggle off->on
+                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6044:9: note: Assuming the condition is false
+    if (flags & ImGuiWindowFlags_Popup)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6044:5: note: Taking false branch
+    if (flags & ImGuiWindowFlags_Popup)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6051:17: note: Field 'Appearing' is false
+    if (window->Appearing)
+                ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6051:5: note: Taking false branch
+    if (window->Appearing)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6055:9: note: 'first_begin_of_the_frame' is false
+    if (first_begin_of_the_frame)
+        ^~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6055:5: note: Taking false branch
+    if (first_begin_of_the_frame)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6069:43: note: Assuming the condition is true
+    ImGuiWindow* parent_window_in_stack = g.CurrentWindowStack.empty() ? NULL : g.CurrentWindowStack.back().Window;
+                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6069:43: note: '?' condition is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6069:5: note: 'parent_window_in_stack' initialized to a null pointer value
+    ImGuiWindow* parent_window_in_stack = g.CurrentWindowStack.empty() ? NULL : g.CurrentWindowStack.back().Window;
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6070:34: note: 'first_begin_of_the_frame' is false
+    ImGuiWindow* parent_window = first_begin_of_the_frame ? ((flags & (ImGuiWindowFlags_ChildWindow | ImGuiWindowFlags_Popup)) ? parent_window_in_stack : NULL) : window->ParentWindow;
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6070:34: note: '?' condition is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6071:15: note: Assuming 'parent_window' is not equal to null
+    IM_ASSERT(parent_window != NULL || !(flags & ImGuiWindowFlags_ChildWindow));
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ~~~~~~~^~~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6071:37: note: Left side of '||' is true
+    IM_ASSERT(parent_window != NULL || !(flags & ImGuiWindowFlags_ChildWindow));
+                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6071:5: note: Left side of '||' is true
+    IM_ASSERT(parent_window != NULL || !(flags & ImGuiWindowFlags_ChildWindow));
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6074:9: note: Assuming field 'Size' is not equal to 0
+    if (window->IDStack.Size == 0)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6074:5: note: Taking false branch
+    if (window->IDStack.Size == 0)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6086:9: note: Assuming the condition is false
+    if (flags & ImGuiWindowFlags_ChildMenu)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6086:5: note: Taking false branch
+    if (flags & ImGuiWindowFlags_ChildMenu)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6089:9: note: Assuming the condition is true
+    if (flags & ImGuiWindowFlags_Popup)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6089:5: note: Taking true branch
+    if (flags & ImGuiWindowFlags_Popup)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6093:36: note: Dereference of null pointer
+        popup_ref.ParentNavLayer = parent_window_in_stack->DC.NavLayerCurrent;
+                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:8276:9: warning: Access to field 'SkipItems' results in a dereference of a null pointer (loaded from variable 'window') [clang-analyzer-core.NullDereference]
+    if (window->SkipItems)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:12313:9: note: Assuming field 'ShowDebugLog' is true
+    if (cfg->ShowDebugLog)
+        ^~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:12313:5: note: Taking true branch
+    if (cfg->ShowDebugLog)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:12314:9: note: Calling 'ShowDebugLogWindow'
+        ShowDebugLogWindow(&cfg->ShowDebugLog);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13168:9: note: Assuming the condition is false
+    if (!(g.NextWindowData.Flags & ImGuiNextWindowDataFlags_HasSize))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13168:5: note: Taking false branch
+    if (!(g.NextWindowData.Flags & ImGuiNextWindowDataFlags_HasSize))
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13170:9: note: Assuming the condition is false
+    if (!Begin("Dear ImGui Debug Log", p_open) || GetCurrentWindow()->BeginCount > 1)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13170:9: note: Left side of '||' is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13170:51: note: Assuming field 'BeginCount' is <= 1
+    if (!Begin("Dear ImGui Debug Log", p_open) || GetCurrentWindow()->BeginCount > 1)
+                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13170:5: note: Taking false branch
+    if (!Begin("Dear ImGui Debug Log", p_open) || GetCurrentWindow()->BeginCount > 1)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13184:9: note: Assuming the condition is false
+    if (SmallButton("Clear"))
+        ^~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13184:5: note: Taking false branch
+    if (SmallButton("Clear"))
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13187:9: note: Assuming the condition is false
+    if (SmallButton("Copy"))
+        ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13187:5: note: Taking false branch
+    if (SmallButton("Copy"))
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13191:9: note: Assuming the condition is false
+    if (GetScrollY() >= GetScrollMaxY())
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13191:5: note: Taking false branch
+    if (GetScrollY() >= GetScrollMaxY())
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13193:5: note: Calling 'EndChild'
+    EndChild();
+    ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5269:15: note: Assuming the condition is true
+    IM_ASSERT(g.WithinEndChild == false);
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5269:5: note: Left side of '||' is true
+    IM_ASSERT(g.WithinEndChild == false);
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5270:5: note: Assuming the condition is false
+    IM_ASSERT(window->Flags & ImGuiWindowFlags_ChildWindow);   // Mismatched BeginChild()/EndChild() calls
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^~~~~~~~~~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:15: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+              ^~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5270:5: note: Left side of '||' is true
+    IM_ASSERT(window->Flags & ImGuiWindowFlags_ChildWindow);   // Mismatched BeginChild()/EndChild() calls
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5273:9: note: Assuming field 'BeginCount' is <= 1
+    if (window->BeginCount > 1)
+        ^~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5273:5: note: Taking false branch
+    if (window->BeginCount > 1)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5280:13: note: Assuming the condition is false
+        if (window->AutoFitChildAxises & (1 << ImGuiAxis_X)) // Arbitrary minimum zero-ish child size of 4.0f causes less trouble than a 0.0f
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5280:9: note: Taking false branch
+        if (window->AutoFitChildAxises & (1 << ImGuiAxis_X)) // Arbitrary minimum zero-ish child size of 4.0f causes less trouble than a 0.0f
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5282:13: note: Assuming the condition is false
+        if (window->AutoFitChildAxises & (1 << ImGuiAxis_Y))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5282:9: note: Taking false branch
+        if (window->AutoFitChildAxises & (1 << ImGuiAxis_Y))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5284:9: note: Calling 'End'
+        End();
+        ^~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6687:9: note: Assuming field 'Size' is > 1
+    if (g.CurrentWindowStack.Size <= 1 && g.WithinFrameScopeWithImplicitWindow)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6687:40: note: Left side of '&&' is false
+    if (g.CurrentWindowStack.Size <= 1 && g.WithinFrameScopeWithImplicitWindow)
+                                       ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6692:36: note: Field 'Size' is > 0
+    IM_ASSERT(g.CurrentWindowStack.Size > 0);
+                                   ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6692:5: note: Left side of '||' is true
+    IM_ASSERT(g.CurrentWindowStack.Size > 0);
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6695:5: note: Taking true branch
+    if (window->Flags & ImGuiWindowFlags_ChildWindow)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6696:32: note: Field 'WithinEndChild' is true
+        IM_ASSERT_USER_ERROR(g.WithinEndChild, "Must call EndChild() and not End()!");
+                               ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6696:9: note: Left side of '&&' is true
+        IM_ASSERT_USER_ERROR(g.WithinEndChild, "Must call EndChild() and not End()!");
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui_internal.h:230:51: note: expanded from macro 'IM_ASSERT_USER_ERROR'
+#define IM_ASSERT_USER_ERROR(_EXP,_MSG) IM_ASSERT((_EXP) && _MSG)   // Recoverable User Error
+                                                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6696:9: note: Left side of '||' is true
+        IM_ASSERT_USER_ERROR(g.WithinEndChild, "Must call EndChild() and not End()!");
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui_internal.h:230:41: note: expanded from macro 'IM_ASSERT_USER_ERROR'
+#define IM_ASSERT_USER_ERROR(_EXP,_MSG) IM_ASSERT((_EXP) && _MSG)   // Recoverable User Error
+                                        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6699:9: note: Assuming field 'CurrentColumns' is null
+    if (window->DC.CurrentColumns)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6699:5: note: Taking false branch
+    if (window->DC.CurrentColumns)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6704:5: note: Taking false branch
+    if (!(window->Flags & ImGuiWindowFlags_ChildWindow))    // FIXME: add more options for scope of logging
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6709:9: note: Assuming the condition is false
+    if (window->Flags & ImGuiWindowFlags_ChildMenu)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6709:5: note: Taking false branch
+    if (window->Flags & ImGuiWindowFlags_ChildMenu)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6711:9: note: Assuming the condition is false
+    if (window->Flags & ImGuiWindowFlags_Popup)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6711:5: note: Taking false branch
+    if (window->Flags & ImGuiWindowFlags_Popup)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6715:22: note: Assuming field 'Size' is equal to 0
+    SetCurrentWindow(g.CurrentWindowStack.Size == 0 ? NULL : g.CurrentWindowStack.back().Window);
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6715:22: note: '?' condition is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6715:22: note: Passing null pointer value via 1st parameter 'window'
+    SetCurrentWindow(g.CurrentWindowStack.Size == 0 ? NULL : g.CurrentWindowStack.back().Window);
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6715:5: note: Calling 'SetCurrentWindow'
+    SetCurrentWindow(g.CurrentWindowStack.Size == 0 ? NULL : g.CurrentWindowStack.back().Window);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:3345:5: note: Null pointer value stored to field 'CurrentWindow'
+    g.CurrentWindow = window;
+    ^~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:3346:22: note: 'window' is null
+    g.CurrentTable = window && window->DC.CurrentTableIdx != -1 ? g.Tables.GetByIndex(window->DC.CurrentTableIdx) : NULL;
+                     ^~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:3346:29: note: Left side of '&&' is false
+    g.CurrentTable = window && window->DC.CurrentTableIdx != -1 ? g.Tables.GetByIndex(window->DC.CurrentTableIdx) : NULL;
+                            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:3347:9: note: 'window' is null
+    if (window)
+        ^~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:3347:5: note: Taking false branch
+    if (window)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:6715:5: note: Returning from 'SetCurrentWindow'
+    SetCurrentWindow(g.CurrentWindowStack.Size == 0 ? NULL : g.CurrentWindowStack.back().Window);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5284:9: note: Returning from 'End'
+        End();
+        ^~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:5288:9: note: Calling 'ItemSize'
+        ItemSize(sz);
+        ^~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:8275:5: note: 'window' initialized to a null pointer value
+    ImGuiWindow* window = g.CurrentWindow;
+    ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:8276:9: note: Access to field 'SkipItems' results in a dereference of a null pointer (loaded from variable 'window')
+    if (window->SkipItems)
+        ^~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10416:9: warning: Forming reference to null pointer [clang-analyzer-core.NonNullParamChecker]
+        g.NavScoringNoClipRect = window->InnerRect;
+        ^                        ~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10380:5: note: 'window' initialized here
+    ImGuiWindow* window = g.NavWindow;
+    ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10382:9: note: Assuming field 'NavMoveForwardToNextFrame' is false
+    if (g.NavMoveForwardToNextFrame && window != NULL)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10382:37: note: Left side of '&&' is false
+    if (g.NavMoveForwardToNextFrame && window != NULL)
+                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10396:13: note: Assuming 'window' is null
+        if (window && !g.NavWindowingTarget && !(window->Flags & ImGuiWindowFlags_NoNavInputs))
+            ^~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10396:20: note: Left side of '&&' is false
+        if (window && !g.NavWindowingTarget && !(window->Flags & ImGuiWindowFlags_NoNavInputs))
+                   ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10410:38: note: Assuming the condition is false
+    const bool nav_keyboard_active = (io.ConfigFlags & ImGuiConfigFlags_NavEnableKeyboard) != 0;
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10412:9: note: 'window' is null
+    if (window && g.NavMoveDir == ImGuiDir_None && nav_keyboard_active)
+        ^~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10412:16: note: Left side of '&&' is false
+    if (window && g.NavMoveDir == ImGuiDir_None && nav_keyboard_active)
+               ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10414:9: note: Assuming the condition is true
+    if (scoring_rect_offset_y != 0.0f)
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10414:5: note: Taking true branch
+    if (scoring_rect_offset_y != 0.0f)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:10416:9: note: Forming reference to null pointer
+        g.NavScoringNoClipRect = window->InnerRect;
+        ^                        ~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13001:5: warning: Value stored to 'p' is never read [clang-analyzer-deadcode.DeadStores]
+    p += ImFormatString(p, buf_end - p, (tab_bar->Tabs.Size > 3) ? " ... }" : " } ");
+    ^    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui.cpp:13001:5: note: Value stored to 'p' is never read
+    p += ImFormatString(p, buf_end - p, (tab_bar->Tabs.Size > 3) ? " ... }" : " } ");
+    ^    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_draw.cpp:405:22: error: static assertion expression is not an integral constant expression [clang-diagnostic-error]
+    IM_STATIC_ASSERT(IM_OFFSETOF(ImDrawCmd, ClipRect) == 0);
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:89:37: note: expanded from macro 'IM_OFFSETOF'
+#define IM_OFFSETOF(_TYPE,_MEMBER)  offsetof(_TYPE, _MEMBER)                    // Offset of _MEMBER within _TYPE. Standardized as offsetof() in C++11
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stddef.h:47:31: note: expanded from macro 'offsetof'
+        #define offsetof(s,m) ((::size_t)&reinterpret_cast<char const volatile&>((((s*)0)->m)))
+                              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui_internal.h:216:55: note: expanded from macro 'IM_STATIC_ASSERT'
+#define IM_STATIC_ASSERT(_COND)         static_assert(_COND, "")
+                                                      ^~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_draw.cpp:405:22: note: cast that performs the conversions of a reinterpret_cast is not allowed in a constant expression
+    IM_STATIC_ASSERT(IM_OFFSETOF(ImDrawCmd, ClipRect) == 0);
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:89:37: note: expanded from macro 'IM_OFFSETOF'
+#define IM_OFFSETOF(_TYPE,_MEMBER)  offsetof(_TYPE, _MEMBER)                    // Offset of _MEMBER within _TYPE. Standardized as offsetof() in C++11
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stddef.h:47:32: note: expanded from macro 'offsetof'
+        #define offsetof(s,m) ((::size_t)&reinterpret_cast<char const volatile&>((((s*)0)->m)))
+                               ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_draw.cpp:406:22: error: static assertion expression is not an integral constant expression [clang-diagnostic-error]
+    IM_STATIC_ASSERT(IM_OFFSETOF(ImDrawCmd, TextureId) == sizeof(ImVec4));
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:89:37: note: expanded from macro 'IM_OFFSETOF'
+#define IM_OFFSETOF(_TYPE,_MEMBER)  offsetof(_TYPE, _MEMBER)                    // Offset of _MEMBER within _TYPE. Standardized as offsetof() in C++11
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stddef.h:47:31: note: expanded from macro 'offsetof'
+        #define offsetof(s,m) ((::size_t)&reinterpret_cast<char const volatile&>((((s*)0)->m)))
+                              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui_internal.h:216:55: note: expanded from macro 'IM_STATIC_ASSERT'
+#define IM_STATIC_ASSERT(_COND)         static_assert(_COND, "")
+                                                      ^~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_draw.cpp:406:22: note: cast that performs the conversions of a reinterpret_cast is not allowed in a constant expression
+    IM_STATIC_ASSERT(IM_OFFSETOF(ImDrawCmd, TextureId) == sizeof(ImVec4));
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:89:37: note: expanded from macro 'IM_OFFSETOF'
+#define IM_OFFSETOF(_TYPE,_MEMBER)  offsetof(_TYPE, _MEMBER)                    // Offset of _MEMBER within _TYPE. Standardized as offsetof() in C++11
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stddef.h:47:32: note: expanded from macro 'offsetof'
+        #define offsetof(s,m) ((::size_t)&reinterpret_cast<char const volatile&>((((s*)0)->m)))
+                               ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_draw.cpp:407:22: error: static assertion expression is not an integral constant expression [clang-diagnostic-error]
+    IM_STATIC_ASSERT(IM_OFFSETOF(ImDrawCmd, VtxOffset) == sizeof(ImVec4) + sizeof(ImTextureID));
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:89:37: note: expanded from macro 'IM_OFFSETOF'
+#define IM_OFFSETOF(_TYPE,_MEMBER)  offsetof(_TYPE, _MEMBER)                    // Offset of _MEMBER within _TYPE. Standardized as offsetof() in C++11
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stddef.h:47:31: note: expanded from macro 'offsetof'
+        #define offsetof(s,m) ((::size_t)&reinterpret_cast<char const volatile&>((((s*)0)->m)))
+                              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui_internal.h:216:55: note: expanded from macro 'IM_STATIC_ASSERT'
+#define IM_STATIC_ASSERT(_COND)         static_assert(_COND, "")
+                                                      ^~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_draw.cpp:407:22: note: cast that performs the conversions of a reinterpret_cast is not allowed in a constant expression
+    IM_STATIC_ASSERT(IM_OFFSETOF(ImDrawCmd, VtxOffset) == sizeof(ImVec4) + sizeof(ImTextureID));
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:89:37: note: expanded from macro 'IM_OFFSETOF'
+#define IM_OFFSETOF(_TYPE,_MEMBER)  offsetof(_TYPE, _MEMBER)                    // Offset of _MEMBER within _TYPE. Standardized as offsetof() in C++11
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\stddef.h:47:32: note: expanded from macro 'offsetof'
+        #define offsetof(s,m) ((::size_t)&reinterpret_cast<char const volatile&>((((s*)0)->m)))
+                               ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:64: warning: The result of the left shift is undefined due to shifting by '2147483645', which is greater or equal to the width of type 'ImU64' [clang-analyzer-core.UndefinedBinaryOperatorResult]
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                                                               ^  ~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:719:15: note: Assuming the condition is true
+    IM_ASSERT(table->IsLayoutLocked == false);
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:719:5: note: Left side of '||' is true
+    IM_ASSERT(table->IsLayoutLocked == false);
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:27: note: Assuming 'order_n' is < field 'ColumnsCount'
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:5: note: Loop condition is true.  Entering loop body
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:741:13: note: Assuming 'column_n' is equal to 'order_n'
+        if (column_n != order_n)
+            ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:741:9: note: Taking false branch
+        if (column_n != order_n)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:748:13: note: Assuming 'column_n' is < field 'DeclColumnsCount'
+        if (table->DeclColumnsCount <= column_n)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:748:9: note: Taking false branch
+        if (table->DeclColumnsCount <= column_n)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:13: note: Assuming the condition is false
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:13: note: Left side of '||' is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:59: note: Assuming the condition is false
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:9: note: Taking false branch
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:759:13: note: Assuming field 'IsUserEnabled' is equal to field 'IsUserEnabledNextFrame'
+        if (column->IsUserEnabled != column->IsUserEnabledNextFrame)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:759:9: note: Taking false branch
+        if (column->IsUserEnabled != column->IsUserEnabledNextFrame)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:29: note: Assuming field 'IsUserEnabled' is true
+        column->IsEnabled = column->IsUserEnabled && (column->Flags & ImGuiTableColumnFlags_Disabled) == 0;
+                            ^~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:29: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:54: note: Assuming the condition is true
+        column->IsEnabled = column->IsUserEnabled && (column->Flags & ImGuiTableColumnFlags_Disabled) == 0;
+                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:766:13: note: Assuming the condition is false
+        if (column->SortOrder != -1 && !column->IsEnabled)
+            ^~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:766:37: note: Left side of '&&' is false
+        if (column->SortOrder != -1 && !column->IsEnabled)
+                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:768:21: note: Field 'SortOrder' is <= 0
+        if (column->SortOrder > 0 && !(table->Flags & ImGuiTableFlags_SortMulti))
+                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:768:35: note: Left side of '&&' is false
+        if (column->SortOrder > 0 && !(table->Flags & ImGuiTableFlags_SortMulti))
+                                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:772:37: note: Assuming the condition is true
+        const bool start_auto_fit = (column->Flags & ImGuiTableColumnFlags_WidthFixed) ? (column->WidthRequest < 0.0f) : (column->StretchWeight < 0.0f);
+                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:772:37: note: '?' condition is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:773:13: note: Assuming 'start_auto_fit' is false
+        if (start_auto_fit)
+            ^~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:773:9: note: Taking false branch
+        if (start_auto_fit)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:776:22: note: Field 'IsEnabled' is true
+        if (!column->IsEnabled)
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:776:9: note: Taking false branch
+        if (!column->IsEnabled)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:785:9: note: Taking false branch
+        if (prev_visible_column_idx != -1)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:793:19: note: Assuming field 'IndexWithinEnabledSet' is <= field 'DisplayOrder'
+        IM_ASSERT(column->IndexWithinEnabledSet <= column->DisplayOrder);
+                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:793:9: note: Left side of '||' is true
+        IM_ASSERT(column->IndexWithinEnabledSet <= column->DisplayOrder);
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:797:13: note: Assuming field 'IsPreserveWidthAuto' is true
+        if (!column->IsPreserveWidthAuto)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:797:9: note: Taking false branch
+        if (!column->IsPreserveWidthAuto)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:801:42: note: Assuming the condition is false
+        const bool column_is_resizable = (column->Flags & ImGuiTableColumnFlags_NoResize) == 0;
+                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:802:13: note: 'column_is_resizable' is false
+        if (column_is_resizable)
+            ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:802:9: note: Taking false branch
+        if (column_is_resizable)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:13: note: Left side of '&&' is true
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:67: note: Assuming the condition is false
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:107: note: Left side of '&&' is false
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+                                                                                                          ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:807:13: note: Assuming field 'AutoFitQueue' is equal to 0
+        if (column->AutoFitQueue != 0x00)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:807:9: note: Taking false branch
+        if (column->AutoFitQueue != 0x00)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:809:13: note: Assuming the condition is false
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:809:9: note: Taking false branch
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:27: note: Assuming 'order_n' is >= field 'ColumnsCount'
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:5: note: Loop condition is false. Execution continues on line 820
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:820:9: note: Assuming the condition is false
+    if ((table->Flags & ImGuiTableFlags_Sortable) && table->SortSpecsCount == 0 && !(table->Flags & ImGuiTableFlags_SortTristate))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:820:51: note: Left side of '&&' is false
+    if ((table->Flags & ImGuiTableFlags_Sortable) && table->SortSpecsCount == 0 && !(table->Flags & ImGuiTableFlags_SortTristate))
+                                                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:22: note: Field 'LeftMostEnabledColumn' is >= 0
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:15: note: Left side of '&&' is true
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:5: note: Left side of '||' is true
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:828:9: note: 'has_auto_fit_request' is false
+    if (has_auto_fit_request && table->OuterWindow != table->InnerWindow)
+        ^~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:828:30: note: Left side of '&&' is false
+    if (has_auto_fit_request && table->OuterWindow != table->InnerWindow)
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:830:9: note: 'has_auto_fit_request' is false
+    if (has_auto_fit_request)
+        ^~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:830:5: note: Taking false branch
+    if (has_auto_fit_request)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:28: note: Assuming 'column_n' is < field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:5: note: Loop condition is true.  Entering loop body
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:839:13: note: Assuming the condition is false
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:839:9: note: Taking false branch
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:843:42: note: Assuming the condition is false
+        const bool column_is_resizable = (column->Flags & ImGuiTableColumnFlags_NoResize) == 0;
+                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:844:13: note: Assuming the condition is false
+        if (column->Flags & ImGuiTableColumnFlags_WidthFixed)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:844:9: note: Taking false branch
+        if (column->Flags & ImGuiTableColumnFlags_WidthFixed)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:17: note: Assuming field 'AutoFitQueue' is equal to 0
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:17: note: Left side of '||' is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:49: note: Assuming the condition is false
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:17: note: Left side of '||' is false
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+                ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:82: note: 'column_is_resizable' is false
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+                                                                                 ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:13: note: Taking true branch
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:873:21: note: Assuming the condition is false
+                if (column->InitStretchWeightOrWidth > 0.0f)
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:873:17: note: Taking false branch
+                if (column->InitStretchWeightOrWidth > 0.0f)
+                ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:875:26: note: Assuming 'table_sizing_policy' is not equal to ImGuiTableFlags_SizingStretchProp
+                else if (table_sizing_policy == ImGuiTableFlags_SizingStretchProp)
+                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:875:22: note: Taking false branch
+                else if (table_sizing_policy == ImGuiTableFlags_SizingStretchProp)
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:882:17: note: Assuming the condition is true
+            if (table->LeftMostStretchedColumn == -1 || table->Columns[table->LeftMostStretchedColumn].DisplayOrder > column->DisplayOrder)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:882:54: note: Left side of '||' is true
+            if (table->LeftMostStretchedColumn == -1 || table->Columns[table->LeftMostStretchedColumn].DisplayOrder > column->DisplayOrder)
+                                                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:884:17: note: Assuming the condition is false
+            if (table->RightMostStretchedColumn == -1 || table->Columns[table->RightMostStretchedColumn].DisplayOrder < column->DisplayOrder)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:884:17: note: Left side of '||' is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:884:58: note: Assuming 'table->Columns[table->RightMostStretchedColumn].DisplayOrder' is >= 'column->DisplayOrder'
+            if (table->RightMostStretchedColumn == -1 || table->Columns[table->RightMostStretchedColumn].DisplayOrder < column->DisplayOrder)
+                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:884:13: note: Taking false branch
+            if (table->RightMostStretchedColumn == -1 || table->Columns[table->RightMostStretchedColumn].DisplayOrder < column->DisplayOrder)
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:28: note: Assuming 'column_n' is >= field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:5: note: Loop condition is false. Execution continues on line 890
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:896:32: note: Assuming the condition is false
+    const float width_avail = ((table->Flags & ImGuiTableFlags_ScrollX) && table->InnerWidth == 0.0f) ? table->InnerClipRect.GetWidth() : work_rect.GetWidth();
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:896:73: note: Left side of '&&' is false
+    const float width_avail = ((table->Flags & ImGuiTableFlags_ScrollX) && table->InnerWidth == 0.0f) ? table->InnerClipRect.GetWidth() : work_rect.GetWidth();
+                                                                        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:28: note: Assuming 'column_n' is < field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:5: note: Loop condition is true.  Entering loop body
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:902:13: note: Assuming the condition is false
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:902:9: note: Taking false branch
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:907:13: note: Assuming the condition is false
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:907:9: note: Taking false branch
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:916:13: note: Assuming the condition is false
+        if (column->NextEnabledColumn == -1 && table->LeftMostStretchedColumn != -1)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:916:45: note: Left side of '&&' is false
+        if (column->NextEnabledColumn == -1 && table->LeftMostStretchedColumn != -1)
+                                            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:28: note: Assuming 'column_n' is < field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:5: note: Loop condition is true.  Entering loop body
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:902:13: note: Assuming the condition is false
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:902:9: note: Taking false branch
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:907:13: note: Assuming the condition is false
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:907:9: note: Taking false branch
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:916:13: note: Assuming the condition is false
+        if (column->NextEnabledColumn == -1 && table->LeftMostStretchedColumn != -1)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:916:45: note: Left side of '&&' is false
+        if (column->NextEnabledColumn == -1 && table->LeftMostStretchedColumn != -1)
+                                            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:28: note: Assuming 'column_n' is >= field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:5: note: Loop condition is false. Execution continues on line 926
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:9: note: Assuming the condition is true
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:9: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:58: note: Assuming the condition is true
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:5: note: Taking true branch
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:83: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:132: note: Assuming 'order_n' is >= 0
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                                                                   ^~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:9: note: Loop condition is true.  Entering loop body
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:17: note: Assuming the condition is true
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:13: note: Taking true branch
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:930:17: note:  Execution continues on line 927
+                continue;
+                ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:83: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:132: note: Assuming 'order_n' is >= 0
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                                                                   ^~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:9: note: Loop condition is true.  Entering loop body
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:17: note: Assuming the condition is true
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:13: note: Taking true branch
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:930:17: note:  Execution continues on line 927
+                continue;
+                ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:146: note: Value assigned to 'order_n'
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                                                                                 ^~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:83: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:132: note: Assuming 'order_n' is >= 0
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                                                                   ^~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:9: note: Loop condition is true.  Entering loop body
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:64: note: The result of the left shift is undefined due to shifting by '2147483645', which is greater or equal to the width of type 'ImU64'
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                                                               ^  ~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:64: warning: The result of the left shift is undefined due to shifting by '2147483646', which is greater or equal to the width of type 'ImU64' [clang-analyzer-core.UndefinedBinaryOperatorResult]
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                                                               ^  ~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:719:15: note: Assuming the condition is true
+    IM_ASSERT(table->IsLayoutLocked == false);
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:719:5: note: Left side of '||' is true
+    IM_ASSERT(table->IsLayoutLocked == false);
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:27: note: Assuming 'order_n' is < field 'ColumnsCount'
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:5: note: Loop condition is true.  Entering loop body
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:741:13: note: Assuming 'column_n' is equal to 'order_n'
+        if (column_n != order_n)
+            ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:741:9: note: Taking false branch
+        if (column_n != order_n)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:748:13: note: Assuming 'column_n' is < field 'DeclColumnsCount'
+        if (table->DeclColumnsCount <= column_n)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:748:9: note: Taking false branch
+        if (table->DeclColumnsCount <= column_n)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:13: note: Assuming the condition is false
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:13: note: Left side of '||' is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:59: note: Assuming the condition is false
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:9: note: Taking false branch
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:759:13: note: Assuming field 'IsUserEnabled' is equal to field 'IsUserEnabledNextFrame'
+        if (column->IsUserEnabled != column->IsUserEnabledNextFrame)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:759:9: note: Taking false branch
+        if (column->IsUserEnabled != column->IsUserEnabledNextFrame)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:29: note: Assuming field 'IsUserEnabled' is true
+        column->IsEnabled = column->IsUserEnabled && (column->Flags & ImGuiTableColumnFlags_Disabled) == 0;
+                            ^~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:29: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:54: note: Assuming the condition is true
+        column->IsEnabled = column->IsUserEnabled && (column->Flags & ImGuiTableColumnFlags_Disabled) == 0;
+                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:766:13: note: Assuming the condition is false
+        if (column->SortOrder != -1 && !column->IsEnabled)
+            ^~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:766:37: note: Left side of '&&' is false
+        if (column->SortOrder != -1 && !column->IsEnabled)
+                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:768:21: note: Field 'SortOrder' is <= 0
+        if (column->SortOrder > 0 && !(table->Flags & ImGuiTableFlags_SortMulti))
+                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:768:35: note: Left side of '&&' is false
+        if (column->SortOrder > 0 && !(table->Flags & ImGuiTableFlags_SortMulti))
+                                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:772:37: note: Assuming the condition is true
+        const bool start_auto_fit = (column->Flags & ImGuiTableColumnFlags_WidthFixed) ? (column->WidthRequest < 0.0f) : (column->StretchWeight < 0.0f);
+                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:772:37: note: '?' condition is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:773:13: note: Assuming 'start_auto_fit' is false
+        if (start_auto_fit)
+            ^~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:773:9: note: Taking false branch
+        if (start_auto_fit)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:776:22: note: Field 'IsEnabled' is true
+        if (!column->IsEnabled)
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:776:9: note: Taking false branch
+        if (!column->IsEnabled)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:785:9: note: Taking false branch
+        if (prev_visible_column_idx != -1)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:793:19: note: Assuming field 'IndexWithinEnabledSet' is <= field 'DisplayOrder'
+        IM_ASSERT(column->IndexWithinEnabledSet <= column->DisplayOrder);
+                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:793:9: note: Left side of '||' is true
+        IM_ASSERT(column->IndexWithinEnabledSet <= column->DisplayOrder);
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:797:13: note: Assuming field 'IsPreserveWidthAuto' is true
+        if (!column->IsPreserveWidthAuto)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:797:9: note: Taking false branch
+        if (!column->IsPreserveWidthAuto)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:801:42: note: Assuming the condition is false
+        const bool column_is_resizable = (column->Flags & ImGuiTableColumnFlags_NoResize) == 0;
+                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:802:13: note: 'column_is_resizable' is false
+        if (column_is_resizable)
+            ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:802:9: note: Taking false branch
+        if (column_is_resizable)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:13: note: Left side of '&&' is true
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:67: note: Assuming the condition is false
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:107: note: Left side of '&&' is false
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+                                                                                                          ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:807:13: note: Assuming field 'AutoFitQueue' is equal to 0
+        if (column->AutoFitQueue != 0x00)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:807:9: note: Taking false branch
+        if (column->AutoFitQueue != 0x00)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:809:13: note: Assuming the condition is false
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:809:9: note: Taking false branch
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:27: note: Assuming 'order_n' is >= field 'ColumnsCount'
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:5: note: Loop condition is false. Execution continues on line 820
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:820:9: note: Assuming the condition is false
+    if ((table->Flags & ImGuiTableFlags_Sortable) && table->SortSpecsCount == 0 && !(table->Flags & ImGuiTableFlags_SortTristate))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:820:51: note: Left side of '&&' is false
+    if ((table->Flags & ImGuiTableFlags_Sortable) && table->SortSpecsCount == 0 && !(table->Flags & ImGuiTableFlags_SortTristate))
+                                                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:22: note: Field 'LeftMostEnabledColumn' is >= 0
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:15: note: Left side of '&&' is true
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:5: note: Left side of '||' is true
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:828:9: note: 'has_auto_fit_request' is false
+    if (has_auto_fit_request && table->OuterWindow != table->InnerWindow)
+        ^~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:828:30: note: Left side of '&&' is false
+    if (has_auto_fit_request && table->OuterWindow != table->InnerWindow)
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:830:9: note: 'has_auto_fit_request' is false
+    if (has_auto_fit_request)
+        ^~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:830:5: note: Taking false branch
+    if (has_auto_fit_request)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:28: note: Assuming 'column_n' is < field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:5: note: Loop condition is true.  Entering loop body
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:839:13: note: Assuming the condition is false
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:839:9: note: Taking false branch
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:843:42: note: Assuming the condition is false
+        const bool column_is_resizable = (column->Flags & ImGuiTableColumnFlags_NoResize) == 0;
+                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:844:13: note: Assuming the condition is false
+        if (column->Flags & ImGuiTableColumnFlags_WidthFixed)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:844:9: note: Taking false branch
+        if (column->Flags & ImGuiTableColumnFlags_WidthFixed)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:17: note: Assuming field 'AutoFitQueue' is equal to 0
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:17: note: Left side of '||' is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:49: note: Assuming the condition is false
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+                                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:17: note: Left side of '||' is false
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+                ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:82: note: 'column_is_resizable' is false
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+                                                                                 ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:871:13: note: Taking true branch
+            if (column->AutoFitQueue != 0x00 || column->StretchWeight < 0.0f || !column_is_resizable)
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:873:21: note: Assuming the condition is false
+                if (column->InitStretchWeightOrWidth > 0.0f)
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:873:17: note: Taking false branch
+                if (column->InitStretchWeightOrWidth > 0.0f)
+                ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:875:26: note: Assuming 'table_sizing_policy' is not equal to ImGuiTableFlags_SizingStretchProp
+                else if (table_sizing_policy == ImGuiTableFlags_SizingStretchProp)
+                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:875:22: note: Taking false branch
+                else if (table_sizing_policy == ImGuiTableFlags_SizingStretchProp)
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:882:17: note: Assuming the condition is true
+            if (table->LeftMostStretchedColumn == -1 || table->Columns[table->LeftMostStretchedColumn].DisplayOrder > column->DisplayOrder)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:882:54: note: Left side of '||' is true
+            if (table->LeftMostStretchedColumn == -1 || table->Columns[table->LeftMostStretchedColumn].DisplayOrder > column->DisplayOrder)
+                                                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:884:17: note: Assuming the condition is false
+            if (table->RightMostStretchedColumn == -1 || table->Columns[table->RightMostStretchedColumn].DisplayOrder < column->DisplayOrder)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:884:17: note: Left side of '||' is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:884:58: note: Assuming 'table->Columns[table->RightMostStretchedColumn].DisplayOrder' is >= 'column->DisplayOrder'
+            if (table->RightMostStretchedColumn == -1 || table->Columns[table->RightMostStretchedColumn].DisplayOrder < column->DisplayOrder)
+                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:884:13: note: Taking false branch
+            if (table->RightMostStretchedColumn == -1 || table->Columns[table->RightMostStretchedColumn].DisplayOrder < column->DisplayOrder)
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:28: note: Assuming 'column_n' is >= field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:5: note: Loop condition is false. Execution continues on line 890
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:896:32: note: Assuming the condition is false
+    const float width_avail = ((table->Flags & ImGuiTableFlags_ScrollX) && table->InnerWidth == 0.0f) ? table->InnerClipRect.GetWidth() : work_rect.GetWidth();
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:896:73: note: Left side of '&&' is false
+    const float width_avail = ((table->Flags & ImGuiTableFlags_ScrollX) && table->InnerWidth == 0.0f) ? table->InnerClipRect.GetWidth() : work_rect.GetWidth();
+                                                                        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:28: note: Assuming 'column_n' is < field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:5: note: Loop condition is true.  Entering loop body
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:902:13: note: Assuming the condition is false
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:902:9: note: Taking false branch
+        if (!(table->EnabledMaskByIndex & ((ImU64)1 << column_n)))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:907:13: note: Assuming the condition is false
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:907:9: note: Taking false branch
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:916:13: note: Assuming the condition is false
+        if (column->NextEnabledColumn == -1 && table->LeftMostStretchedColumn != -1)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:916:45: note: Left side of '&&' is false
+        if (column->NextEnabledColumn == -1 && table->LeftMostStretchedColumn != -1)
+                                            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:28: note: Assuming 'column_n' is >= field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:5: note: Loop condition is false. Execution continues on line 926
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:9: note: Assuming the condition is true
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:9: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:58: note: Assuming the condition is true
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:5: note: Taking true branch
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:83: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:132: note: Assuming 'order_n' is >= 0
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                                                                   ^~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:9: note: Loop condition is true.  Entering loop body
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:17: note: Assuming the condition is true
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:13: note: Taking true branch
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:930:17: note:  Execution continues on line 927
+                continue;
+                ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:146: note: Value assigned to 'order_n'
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                                                                                 ^~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:83: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:132: note: Assuming 'order_n' is >= 0
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                                                                   ^~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:9: note: Loop condition is true.  Entering loop body
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:64: note: The result of the left shift is undefined due to shifting by '2147483646', which is greater or equal to the width of type 'ImU64'
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                                                               ^  ~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:64: warning: The result of the left shift is undefined due to shifting by '2147483647', which is greater or equal to the width of type 'ImU64' [clang-analyzer-core.UndefinedBinaryOperatorResult]
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                                                               ^  ~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:719:15: note: Assuming the condition is true
+    IM_ASSERT(table->IsLayoutLocked == false);
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:719:5: note: Left side of '||' is true
+    IM_ASSERT(table->IsLayoutLocked == false);
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:27: note: Assuming 'order_n' is < field 'ColumnsCount'
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:5: note: Loop condition is true.  Entering loop body
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:741:13: note: Assuming 'column_n' is equal to 'order_n'
+        if (column_n != order_n)
+            ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:741:9: note: Taking false branch
+        if (column_n != order_n)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:748:13: note: Assuming 'column_n' is < field 'DeclColumnsCount'
+        if (table->DeclColumnsCount <= column_n)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:748:9: note: Taking false branch
+        if (table->DeclColumnsCount <= column_n)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:13: note: Assuming the condition is false
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:13: note: Left side of '||' is false
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:59: note: Assuming the condition is false
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:757:9: note: Taking false branch
+        if (!(table->Flags & ImGuiTableFlags_Hideable) || (column->Flags & ImGuiTableColumnFlags_NoHide))
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:759:13: note: Assuming field 'IsUserEnabled' is equal to field 'IsUserEnabledNextFrame'
+        if (column->IsUserEnabled != column->IsUserEnabledNextFrame)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:759:9: note: Taking false branch
+        if (column->IsUserEnabled != column->IsUserEnabledNextFrame)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:29: note: Assuming field 'IsUserEnabled' is true
+        column->IsEnabled = column->IsUserEnabled && (column->Flags & ImGuiTableColumnFlags_Disabled) == 0;
+                            ^~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:29: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:764:54: note: Assuming the condition is true
+        column->IsEnabled = column->IsUserEnabled && (column->Flags & ImGuiTableColumnFlags_Disabled) == 0;
+                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:766:13: note: Assuming the condition is false
+        if (column->SortOrder != -1 && !column->IsEnabled)
+            ^~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:766:37: note: Left side of '&&' is false
+        if (column->SortOrder != -1 && !column->IsEnabled)
+                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:768:21: note: Field 'SortOrder' is <= 0
+        if (column->SortOrder > 0 && !(table->Flags & ImGuiTableFlags_SortMulti))
+                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:768:35: note: Left side of '&&' is false
+        if (column->SortOrder > 0 && !(table->Flags & ImGuiTableFlags_SortMulti))
+                                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:772:37: note: Assuming the condition is true
+        const bool start_auto_fit = (column->Flags & ImGuiTableColumnFlags_WidthFixed) ? (column->WidthRequest < 0.0f) : (column->StretchWeight < 0.0f);
+                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:772:37: note: '?' condition is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:773:13: note: Assuming 'start_auto_fit' is false
+        if (start_auto_fit)
+            ^~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:773:9: note: Taking false branch
+        if (start_auto_fit)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:776:22: note: Field 'IsEnabled' is true
+        if (!column->IsEnabled)
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:776:9: note: Taking false branch
+        if (!column->IsEnabled)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:785:9: note: Taking false branch
+        if (prev_visible_column_idx != -1)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:793:19: note: Assuming field 'IndexWithinEnabledSet' is <= field 'DisplayOrder'
+        IM_ASSERT(column->IndexWithinEnabledSet <= column->DisplayOrder);
+                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:44: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                           ^~~~~
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:17: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                ^~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:793:9: note: Left side of '||' is true
+        IM_ASSERT(column->IndexWithinEnabledSet <= column->DisplayOrder);
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:797:13: note: Assuming field 'IsPreserveWidthAuto' is true
+        if (!column->IsPreserveWidthAuto)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:797:9: note: Taking false branch
+        if (!column->IsPreserveWidthAuto)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:801:42: note: Assuming the condition is false
+        const bool column_is_resizable = (column->Flags & ImGuiTableColumnFlags_NoResize) == 0;
+                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:802:13: note: 'column_is_resizable' is false
+        if (column_is_resizable)
+            ^~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:802:9: note: Taking false branch
+        if (column_is_resizable)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:13: note: Left side of '&&' is true
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+            ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:67: note: Assuming the condition is false
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:804:107: note: Left side of '&&' is false
+        if ((column->Flags & ImGuiTableColumnFlags_WidthFixed) && column->InitStretchWeightOrWidth > 0.0f && !column_is_resizable)
+                                                                                                          ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:807:13: note: Assuming field 'AutoFitQueue' is equal to 0
+        if (column->AutoFitQueue != 0x00)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:807:9: note: Taking false branch
+        if (column->AutoFitQueue != 0x00)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:809:13: note: Assuming the condition is false
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:809:9: note: Taking false branch
+        if (column->Flags & ImGuiTableColumnFlags_WidthStretch)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:27: note: Assuming 'order_n' is >= field 'ColumnsCount'
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:738:5: note: Loop condition is false. Execution continues on line 820
+    for (int order_n = 0; order_n < table->ColumnsCount; order_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:820:9: note: Assuming the condition is false
+    if ((table->Flags & ImGuiTableFlags_Sortable) && table->SortSpecsCount == 0 && !(table->Flags & ImGuiTableFlags_SortTristate))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:820:51: note: Left side of '&&' is false
+    if ((table->Flags & ImGuiTableFlags_Sortable) && table->SortSpecsCount == 0 && !(table->Flags & ImGuiTableFlags_SortTristate))
+                                                  ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:22: note: Field 'LeftMostEnabledColumn' is >= 0
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+                     ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:15: note: Left side of '&&' is true
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+              ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:823:5: note: Left side of '||' is true
+    IM_ASSERT(table->LeftMostEnabledColumn >= 0 && table->RightMostEnabledColumn >= 0);
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui/imgui.h:85:37: note: expanded from macro 'IM_ASSERT'
+#define IM_ASSERT(_EXPR)            assert(_EXPR)                               // You can override the default assert handler by editing imconfig.h
+                                    ^
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt\assert.h:40:30: note: expanded from macro 'assert'
+            (!!(expression)) ||                                                              \
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:828:9: note: 'has_auto_fit_request' is false
+    if (has_auto_fit_request && table->OuterWindow != table->InnerWindow)
+        ^~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:828:30: note: Left side of '&&' is false
+    if (has_auto_fit_request && table->OuterWindow != table->InnerWindow)
+                             ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:830:9: note: 'has_auto_fit_request' is false
+    if (has_auto_fit_request)
+        ^~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:830:5: note: Taking false branch
+    if (has_auto_fit_request)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:28: note: Assuming 'column_n' is >= field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:837:5: note: Loop condition is false. Execution continues on line 890
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:896:32: note: Assuming the condition is false
+    const float width_avail = ((table->Flags & ImGuiTableFlags_ScrollX) && table->InnerWidth == 0.0f) ? table->InnerClipRect.GetWidth() : work_rect.GetWidth();
+                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:896:73: note: Left side of '&&' is false
+    const float width_avail = ((table->Flags & ImGuiTableFlags_ScrollX) && table->InnerWidth == 0.0f) ? table->InnerClipRect.GetWidth() : work_rect.GetWidth();
+                                                                        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:28: note: 'column_n' is >= field 'ColumnsCount'
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+                           ^~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:900:5: note: Loop condition is false. Execution continues on line 926
+    for (int column_n = 0; column_n < table->ColumnsCount; column_n++)
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:9: note: Assuming the condition is true
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:9: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:58: note: Assuming the condition is true
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:926:5: note: Taking true branch
+    if (width_remaining_for_stretched_columns >= 1.0f && !(table->Flags & ImGuiTableFlags_PreciseWidths))
+    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:14: note: 'order_n' initialized here
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+             ^~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:83: note: Assuming the condition is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:53: note: Left side of '&&' is true
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                    ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:132: note: Assuming 'order_n' is >= 0
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+                                                                                                                                   ^~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:927:9: note: Loop condition is true.  Entering loop body
+        for (int order_n = table->ColumnsCount - 1; stretch_sum_weights > 0.0f && width_remaining_for_stretched_columns >= 1.0f && order_n >= 0; order_n--)
+        ^
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:929:64: note: The result of the left shift is undefined due to shifting by '2147483647', which is greater or equal to the width of type 'ImU64'
+            if (!(table->EnabledMaskByDisplayOrder & ((ImU64)1 << order_n)))
+                                                               ^  ~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:3105:9: warning: Value stored to 'want_separator' is never read [clang-analyzer-deadcode.DeadStores]
+        want_separator = true;
+        ^                ~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:3105:9: note: Value stored to 'want_separator' is never read
+        want_separator = true;
+        ^                ~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:3398:67: warning: Value stored to 'line' is never read [clang-analyzer-deadcode.DeadStores]
+        if (sscanf(line, "Sort=%d%c%n", &n, &c, &r) == 2)       { line = ImStrSkipBlank(line + r); column->SortOrder = (ImGuiTableColumnIdx)n; column->SortDirection = (c == '^') ? ImGuiSortDirection_Descending : ImGuiSortDirection_Ascending; settings->SaveFlags |= ImGuiTableFlags_Sortable; }
+                                                                  ^      ~~~~~~~~~~~~~~~~~~~~~~~~
+D:\Programming\C++\CircuitSimulator_SFML\dependencies\imgui\imgui_tables.cpp:3398:67: note: Value stored to 'line' is never read
+        if (sscanf(line, "Sort=%d%c%n", &n, &c, &r) == 2)       { line = ImStrSkipBlank(line + r); column->SortOrder = (ImGuiTableColumnIdx)n; column->SortDirection = (c == '^') ? ImGuiSortDirection_Descending : ImGuiSortDirection_Ascending; settings->SaveFlags |= ImGuiTableFlags_Sortable; }
+                                                                  ^      ~~~~~~~~~~~~~~~~~~~~~~~~
+Suppressed 16 warnings (16 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+Found compiler error(s).

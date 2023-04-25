@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Circuit_Entity.hpp"
 #include "Circuit_Global.hpp"

@@ -1,0 +1,642 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/imgui/imgui-SFML.cpp"
+                },
+                "region": {
+                  "startLine": 1139,
+                  "startColumn": 38,
+                  "endLine": 1139,
+                  "endColumn": 86
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "`anonymous-namespace'::SetupRenderState",
+                  "decoratedName": "?SetupRenderState@?A0x36f6aaa4@@YAXPAUImDrawData@@HH@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/imgui/imgui-SFML.cpp"
+                },
+                "region": {
+                  "startLine": 1140,
+                  "startColumn": 13,
+                  "endLine": 1140,
+                  "endColumn": 61
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "`anonymous-namespace'::SetupRenderState",
+                  "decoratedName": "?SetupRenderState@?A0x36f6aaa4@@YAXPAUImDrawData@@HH@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26819",
+          "message": {
+            "text": "Unannotated fallthrough between switch labels (es.78)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/sfml/include/SFML/System/Utf.inl"
+                },
+                "region": {
+                  "startLine": 66,
+                  "startColumn": 18
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "sf::Utf<8>::decode",
+                  "decoratedName": "??$decode@PBD@?$Utf@$07@sf@@SAPBDPBD0AAII@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26819",
+          "message": {
+            "text": "Unannotated fallthrough between switch labels (es.78)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/sfml/include/SFML/System/Utf.inl"
+                },
+                "region": {
+                  "startLine": 67,
+                  "startColumn": 18
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "sf::Utf<8>::decode",
+                  "decoratedName": "??$decode@PBD@?$Utf@$07@sf@@SAPBDPBD0AAII@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26819",
+          "message": {
+            "text": "Unannotated fallthrough between switch labels (es.78)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/sfml/include/SFML/System/Utf.inl"
+                },
+                "region": {
+                  "startLine": 68,
+                  "startColumn": 18
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "sf::Utf<8>::decode",
+                  "decoratedName": "??$decode@PBD@?$Utf@$07@sf@@SAPBDPBD0AAII@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26819",
+          "message": {
+            "text": "Unannotated fallthrough between switch labels (es.78)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/sfml/include/SFML/System/Utf.inl"
+                },
+                "region": {
+                  "startLine": 69,
+                  "startColumn": 18
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "sf::Utf<8>::decode",
+                  "decoratedName": "??$decode@PBD@?$Utf@$07@sf@@SAPBDPBD0AAII@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26819",
+          "message": {
+            "text": "Unannotated fallthrough between switch labels (es.78)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/sfml/include/SFML/System/Utf.inl"
+                },
+                "region": {
+                  "startLine": 70,
+                  "startColumn": 18
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "sf::Utf<8>::decode",
+                  "decoratedName": "??$decode@PBD@?$Utf@$07@sf@@SAPBDPBD0AAII@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.35.32217.1",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/imgui/imgui-SFML.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "084a8bd25845928f9c5aa60e70d16262fe5385f2d8661daa558d7d33d8a39e02"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/Programming/C++/CircuitSimulator_SFML/dependencies/sfml/include/SFML/System/Utf.inl"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "beeaa05b903f9af7e5b42a96f66095ad05998b0870f047388d5b8856f16ba9b8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/imgui/imgui-sfml.h"
+          },
+          "hashes": {
+            "sha-256": "bf11d4c8068d7dc1ee6f579bafc7be7be0637d2af2d82ef137355c0a685bc048"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/color.hpp"
+          },
+          "hashes": {
+            "sha-256": "8d7511317301c4829d86aa154027f4091c1cee845ac3d375e9fee865090ccacd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/export.hpp"
+          },
+          "hashes": {
+            "sha-256": "f64d92379e1f430c0bb46b232dd8cefbd88d7793a352dc4741f6a08dfbd409e2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/config.hpp"
+          },
+          "hashes": {
+            "sha-256": "1762f28e80a63df8f580e0a57a20dd09b7ac9389db3d8f35dc936ddb6328fccb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/rect.hpp"
+          },
+          "hashes": {
+            "sha-256": "5f3b54ebf1ac31ef16b5e22eab087c637ad0581bbdf1adffc08d2044484909a6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/vector2.hpp"
+          },
+          "hashes": {
+            "sha-256": "57c62df7bec08a051a8378041b53dea5aec9d04e3324a4d9cf940ba8f6898274"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/vector2.inl"
+          },
+          "hashes": {
+            "sha-256": "9bc6f3fae52e9b585b066e6699c10de896f128c97506a346a927f2dc3d0dda42"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/rect.inl"
+          },
+          "hashes": {
+            "sha-256": "560ab9f638a501679174a98e3d167e91114309aa3d5c62085ce37abd87f19721"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/time.hpp"
+          },
+          "hashes": {
+            "sha-256": "b280ed9b2c6c501780fa34136d4b4f2698448b6e016a1b6cf1fdd4a9c55758b3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/export.hpp"
+          },
+          "hashes": {
+            "sha-256": "cfc62057cb1105073f902c3c50a3811737ba4a6c5771c42a6f476fa430d8a6be"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/joystick.hpp"
+          },
+          "hashes": {
+            "sha-256": "a61fb42edaeb44142540583547adafc90786ba494e1901047970efa5225e298a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/export.hpp"
+          },
+          "hashes": {
+            "sha-256": "6cd522d674c70f5492f66d94cea87bdac24f076da783637dea57a3a9beaf12d2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/string.hpp"
+          },
+          "hashes": {
+            "sha-256": "cc5e77ef50b66dab1983fec48fcd717292ae85c111f1dae713cff319bed6ae3d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/utf.hpp"
+          },
+          "hashes": {
+            "sha-256": "a2888dcdb8e6f5c3134bf059cd19a38f1362734ab14c5585f627d44db2f4c150"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/string.inl"
+          },
+          "hashes": {
+            "sha-256": "a3e230c6ca24dc167b0aacd4ea457712bbb0f6f041421d0134660a8190cd0828"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/imgui/imgui-sfml_export.h"
+          },
+          "hashes": {
+            "sha-256": "f9044e3d661c21c046b924ccbbc7ca3338e0d5a9ac18180774db9b9e1416c75d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/imgui/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "080511b7faa18159df5d53fd92e122965783c7e1eafac0ccb3332abf0a3244ef"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/imgui/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "e6f827d3c00121fce4b8a1d886f15094e75f79e8efec9d44016e8769dba689aa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/imgui/imconfig-sfml.h"
+          },
+          "hashes": {
+            "sha-256": "369bc9d010fed9561f9d7415395074afaf2fac9743c94104f249c4b7abeb38e6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/rendertarget.hpp"
+          },
+          "hashes": {
+            "sha-256": "fac7521b3fa2ad53348fe86c6dfdca5e69d7ab9376bf98d597dcb03164e1e8d1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/view.hpp"
+          },
+          "hashes": {
+            "sha-256": "1a29977decfb2138f4068b8936ddb1f1b54d663e5b73efb0e03cd219b1baf081"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/transform.hpp"
+          },
+          "hashes": {
+            "sha-256": "85bfdf518295e882f11e3d232295cfcf02a9064ed2858bfb5628c939fc69dd4f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/blendmode.hpp"
+          },
+          "hashes": {
+            "sha-256": "20d9112ea7b3afce8f4d131dae014d78b94ddf75763827b0c089e147d42e7b4e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/renderstates.hpp"
+          },
+          "hashes": {
+            "sha-256": "53a166c7791d37b356f96ef0821d897a87770d3f275c9bf851b70216471e7ed8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/primitivetype.hpp"
+          },
+          "hashes": {
+            "sha-256": "a89b62962d369cdd981e1749ccc69e12e96362aaf637d682351292b730e8c725"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/vertex.hpp"
+          },
+          "hashes": {
+            "sha-256": "4de54e63344d0f92bd81f6bcf581a096c0abe5cfa55caa296255ee7026a6cb12"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/noncopyable.hpp"
+          },
+          "hashes": {
+            "sha-256": "3b696f1692f206bb18b3d4eadd8911990307fd82fb4336295f13a377ff0571d2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/rendertexture.hpp"
+          },
+          "hashes": {
+            "sha-256": "c7c34d57eaba9dea76dfca08ad123e6bf3053b910dd687a1215e22335836d661"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/texture.hpp"
+          },
+          "hashes": {
+            "sha-256": "72fd8625411e561fec11f529032a8c3f58fef6b36b89e9e66021010a858827b4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/image.hpp"
+          },
+          "hashes": {
+            "sha-256": "845ce07d2ec6b5410e40bb367af5290bdb043f786c7c894c15d0c7a337205b44"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/glresource.hpp"
+          },
+          "hashes": {
+            "sha-256": "b44d186acff49d7d498fe81fe5ecf203605e7fc064394b6eb813459a27d905e7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/contextsettings.hpp"
+          },
+          "hashes": {
+            "sha-256": "c1ae907cd177ebdbff0667029e1e2202e1caeb66c0e118606341d224b5a0e154"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/renderwindow.hpp"
+          },
+          "hashes": {
+            "sha-256": "0e6499d59f1679019d989da3bed08b365855a2157bb8c1ac1c72abd942f9b46b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/window.hpp"
+          },
+          "hashes": {
+            "sha-256": "ed678d31ea745dc0008d962f3a63ae7f15fc78bbfc089e49081e8bf217b13f45"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/cursor.hpp"
+          },
+          "hashes": {
+            "sha-256": "054e12c30d8570617433107688bfbda1607ec16e19a48d324c046b07d02915ec"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/videomode.hpp"
+          },
+          "hashes": {
+            "sha-256": "ee9e20b2615d7c24b88780adf63695c3c412820e43079df9a962a13da312e2a1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/windowhandle.hpp"
+          },
+          "hashes": {
+            "sha-256": "cbc8d5e009eead3ffb03f93441b4410f1fdf9f3fd533934a58afb57d68cf0cb0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/windowstyle.hpp"
+          },
+          "hashes": {
+            "sha-256": "0ad992204792b1a57b311c579fc4232f71dff78c1a85dd6504e987f98dc1a903"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/clock.hpp"
+          },
+          "hashes": {
+            "sha-256": "1cd86caf7e6218638d2d7b290da41ead438ea438b654d57de5a7392ab61d4e62"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/sprite.hpp"
+          },
+          "hashes": {
+            "sha-256": "bcda08ffcba7846d53a6372dd67cda9019d1973819c107f18265384ee15a09a0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/drawable.hpp"
+          },
+          "hashes": {
+            "sha-256": "0491686a9f5cb0e3a85d649d3b81c7fae13ea2a269f8c03ab3d28f1d0744d90e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/graphics/transformable.hpp"
+          },
+          "hashes": {
+            "sha-256": "6e09d0a3b83892be0760c4e42a167ebb304769d181f89b716cd42afbdb919cc8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/opengl.hpp"
+          },
+          "hashes": {
+            "sha-256": "809213043d9f83980424a5b74a7bf117a0f4072ad51bb3fb534ac19733ca90ed"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/clipboard.hpp"
+          },
+          "hashes": {
+            "sha-256": "ab317104d636d1e66aedddfc474ff15d9dfe3e688cdb825870159831c721ba5f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/event.hpp"
+          },
+          "hashes": {
+            "sha-256": "28492d9252ab85b709351fff6a467f121cc837c58642fffcc676c16a37b61e6d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/keyboard.hpp"
+          },
+          "hashes": {
+            "sha-256": "19cb6df669d30623c1ac31e9e2503ff3325884289b4273683a9c9159306a051e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/mouse.hpp"
+          },
+          "hashes": {
+            "sha-256": "1878c3483304277c2cc2bc8553907d74f7cecb32b0c51db5f58c11d94894b348"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/sensor.hpp"
+          },
+          "hashes": {
+            "sha-256": "1de188a57c72413c30fd78d30abe6c35c5f0e9925d3f1c25663bfebf8d4834df"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/vector3.hpp"
+          },
+          "hashes": {
+            "sha-256": "992441c064f9d21f719cce64d823ad0a3e3b79a09204898c1563fafa0b05af5e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/system/vector3.inl"
+          },
+          "hashes": {
+            "sha-256": "0e970cd75f8ecbd8b1f83029d3342a226b35451662c859f7b6e18e1d32fb86fa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/programming/c++/circuitsimulator_sfml/dependencies/sfml/include/sfml/window/touch.hpp"
+          },
+          "hashes": {
+            "sha-256": "f3e1cede4de3f146db348ce96e2eb450907de7196ff5c26c2d899b527e51d606"
+          }
+        }
+      ]
+    }
+  ]
+}

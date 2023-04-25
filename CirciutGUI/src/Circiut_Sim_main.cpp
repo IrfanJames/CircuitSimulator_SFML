@@ -1,9 +1,10 @@
-// Colapse all Scopes - it'll be easier
-// Ctrl + M + A in Visual Studio
 /*
+	* Colapse all Scopes - it'll be easier
+	* Ctrl + M + A in Visual Studio
+	
+
 taskkill /F /IM CirciutGUI.exe
 */
-#pragma once
 
 #include <iostream>
 #include <direct.h>
@@ -48,13 +49,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	srand(time(NULL));
 	time_t FrameTime_for_FPS = clock();
-	bool End = 0, debugBool = 0;
+	bool End = 0/*, debugBool = 0*/;
 	bool Drag = 0, stimuliDisplay = 1, stimuliEndNodes = 0;
 	bool releaseBool = 1, wheelReleaseBool = 1, ShiftPressed = 0;
-	bool selectSquare = 0, Selection = 0, mouseOnCompsBool = 0, wireBool = 0;
+	bool selectSquare = 0, Selection = 0, mouseOnCompsBool = 0/*, wireBool = 0*/;
 	//bool PlayMode = 0/*//asdf, PlayRot = 0*/;
 
-	int serialCompMouse = 0, serialToolMouse = 0, cursorInWin = 0;
+	int /*serialCompMouse = 0,*/ serialToolMouse = 0, cursorInWin = 0;
 
 	/* Test Circle
 	bool DrawCircle = 1; int t_vertices = 34; float t_radius = 50, t_Colors[3] = { (float)204 / 255, (float)77 / 255, (float)5 / 255 }; sf::CircleShape testCircle(t_radius, t_vertices); {
@@ -902,7 +903,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 							for (int row = 0; row < 11; row++) //HardCode
 							{
 								ImGui::TableSetColumnIndex(0);
-								ImGui::Text(opt[row][0].c_str());
+								ImGui::Text("%s", opt[row][0].c_str());
 								ImGui::SameLine();
 
 								ImGui::TableSetColumnIndex(1);
@@ -951,7 +952,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 							if (ImGui::Button(links[i][0].c_str()))
 								sf::Clipboard::setString(links[i][1]);
 							ImGui::SameLine();
-							ImGui::Text(links[i][1].c_str());
+							ImGui::Text("%s", links[i][1].c_str());
 						}
 
 						ImGui::EndMenu();
@@ -1218,7 +1219,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			drawAllSqr();
 
-			qtDraw(qt);
+			//qtDraw(qt);
 
 			drawComp();
 
