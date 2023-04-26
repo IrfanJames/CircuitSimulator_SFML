@@ -1,4 +1,5 @@
 New------------------------------------
+x64 added for (SFML, CircuitGUI, CircuitCore)
 Wires in SaveAsImage()
 Wire::bounds() added
 Wire Serialization (copy, paste, open, save)

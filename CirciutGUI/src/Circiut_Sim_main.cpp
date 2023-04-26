@@ -106,7 +106,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (!temp.empty())
 		{
 			LOG("Dropped file: " << std::string(temp.begin(), temp.end()) << "\n");
-			CircuitGUI::Options::openf(std::string(temp.begin(), temp.end()).c_str());
+			CircuitGUI::Options::Open(std::string(temp.begin(), temp.end()).c_str());
 			stimuliEndNodes = 1; //CircuitGUI::updateAllSqr();
 		}
 	}
@@ -324,7 +324,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				if (evnt.key.code == sf::Keyboard::Escape) { app.close(); End = 1; continue; }
 				if (evnt.key.code == sf::Keyboard::Delete) {
 					stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
-					CircuitGUI::Options::deletef();
+					CircuitGUI::Options::Delete();
 				}
 				if (evnt.key.code == sf::Keyboard::L) {
 
@@ -382,11 +382,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					if (evnt.key.code == sf::Keyboard::R) {
 						stimuliDisplay = 1;	/*cout << "4";*/ stimuliEndNodes = 1;
 
-						CircuitGUI::Options::rotatef();
+						CircuitGUI::Options::Rotate();
 					}
 					if (evnt.key.code == sf::Keyboard::C) {
 
-						CircuitGUI::Options::copyf();
+						CircuitGUI::Options::Copy();
 						CircuitGUI::qtUpdate();
 					}
 					if (evnt.key.code == sf::Keyboard::X) {
@@ -394,19 +394,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 						// Copy
 						{
-							CircuitGUI::Options::copyf();
+							CircuitGUI::Options::Copy();
 						}
 
 						// Delete
 						{
-							CircuitGUI::Options::deletef();
+							CircuitGUI::Options::Delete();
 						}
 
 					}
 					if (evnt.key.code == sf::Keyboard::V) {
 						stimuliDisplay = 1; /*cout << "7";*/ stimuliEndNodes = 1;
 
-						CircuitGUI::Options::pastef();
+						CircuitGUI::Options::Paste();
 					}
 					if (evnt.key.code == sf::Keyboard::O) {
 						stimuliDisplay = 1; /*cout << "5";*/ stimuliEndNodes = 1;
@@ -414,7 +414,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
 						if (!filepath.empty())
-							CircuitGUI::Options::openf(filepath);
+							CircuitGUI::Options::Open(filepath);
 					}
 					if (evnt.key.code == sf::Keyboard::S) {
 						;
@@ -430,10 +430,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						if (!filepath.empty()) {
 
 							if (filepath.back() == 'T')
-								CircuitGUI::Options::savef(filepath);
+								CircuitGUI::Options::Save(filepath);
 
 							if (filepath.back() == 'G')
-								CircuitGUI::Options::saveAsImage(filepath);
+								CircuitGUI::Options::SaveAsImage(filepath);
 
 						}
 
@@ -793,7 +793,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
 						if (!filepath.empty())
-							CircuitGUI::Options::openf(filepath);
+							CircuitGUI::Options::Open(filepath);
 					}
 					if (ImGui::MenuItem("Save", "Ctrl + S")) {
 						;
@@ -810,10 +810,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						if (!filepath.empty()) {
 
 							if (filepath.back() == 'T')
-								CircuitGUI::Options::savef(filepath);
+								CircuitGUI::Options::Save(filepath);
 
 							if (filepath.back() == 'G')
-								CircuitGUI::Options::saveAsImage(filepath);
+								CircuitGUI::Options::SaveAsImage(filepath);
 
 						}
 
@@ -1252,7 +1252,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ImGui::SFML::Shutdown();
 
 #ifdef _DEBUG
-	CircuitGUI::Options::savef("temp_files/last.txt");
+	CircuitGUI::Options::Save("temp_files/last.txt");
 
 	std::cin.get();
 #else
