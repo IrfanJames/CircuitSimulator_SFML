@@ -1,4 +1,6 @@
 New------------------------------------
+new project for Dependencies:imgui
+Dist config
 x64 added for (SFML, CircuitGUI, CircuitCore)
 Wires in SaveAsImage()
 Wire::bounds() added

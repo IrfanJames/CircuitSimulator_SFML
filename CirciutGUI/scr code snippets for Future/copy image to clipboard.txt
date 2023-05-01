@@ -1,0 +1,165 @@
+/*bool copyImageToClipboard(const char* imagePath)
+	{
+		// Open the image file
+		HANDLE hImageFile = CreateFileA(imagePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hImageFile == INVALID_HANDLE_VALUE) {
+			std::cerr << "Failed to open image file: " << imagePath << std::endl;
+			return false;
+		}
+
+		// Get the size of the image file
+		DWORD dwFileSize = GetFileSize(hImageFile, NULL);
+		if (dwFileSize == INVALID_FILE_SIZE) {
+			std::cerr << "Failed to get image file size: " << imagePath << std::endl;
+			CloseHandle(hImageFile);
+			return false;
+		}
+
+		// Allocate memory to read the image file
+		LPVOID lpImageData = GlobalAlloc(GMEM_MOVEABLE, dwFileSize);
+		if (lpImageData == NULL) {
+			std::cerr << "Failed to allocate memory to read image file: " << imagePath << std::endl;
+			CloseHandle(hImageFile);
+			return false;
+		}
+
+		// Read the image file into memory
+		DWORD dwBytesRead;
+		if (!ReadFile(hImageFile, lpImageData, dwFileSize, &dwBytesRead, NULL) || dwBytesRead != dwFileSize) {
+			std::cerr << "Failed to read image file into memory: " << imagePath << std::endl;
+			CloseHandle(hImageFile);
+			GlobalFree(lpImageData);
+			return false;
+		}
+
+		// Close the image file handle
+		CloseHandle(hImageFile);
+
+		// Initialize COM library
+		if (CoInitialize(NULL) != S_OK) {
+			std::cerr << "Failed to initialize COM library." << std::endl;
+			GlobalFree(lpImageData);
+			return false;
+		}
+
+		// Get the clipboard data object
+		IDataObject* pDataObject = NULL;
+		if (OleGetClipboard(&pDataObject) != S_OK) {
+			std::cerr << "Failed to get clipboard data object." << std::endl;
+			GlobalFree(lpImageData);
+			CoUninitialize();
+			return false;
+		}
+
+		// Create a stream object to hold the image data
+		IStream* pStream = NULL;
+		if (CreateStreamOnHGlobal(lpImageData, TRUE, &pStream) != S_OK) {
+			std::cerr << "Failed to create stream object." << std::endl;
+			GlobalFree(lpImageData);
+			pDataObject->Release();
+			CoUninitialize();
+			return false;
+		}
+
+		// Create a format object to hold the image format
+		FORMATETC format;
+		format.cfFormat = CF_BITMAP;
+		format.ptd = NULL;
+		format.dwAspect = DVASPECT_CONTENT;
+		format.lindex = -1;
+		format.tymed = TYMED_GDI;
+
+		// Set the clipboard data
+		if (pDataObject->SetData(&format, pStream, TRUE) != S_OK) {
+			std::cerr << "Failed to set clipboard data." << std::endl;
+			GlobalFree(lpImageData);
+			pStream->Release();
+			pDataObject->Release();
+			CoUninitialize();
+			return false;
+		}
+
+		// Release the objects
+		GlobalFree(lpImageData);
+		pStream->Release();
+		pDataObject->Release();
+		CoUninitialize();
+
+		return true;
+	}*/
+
+	/*
+	bool copyImageToClipboard(const char* imagePath) {
+		// Initialize COM
+		if (CoInitialize(NULL) != S_OK) {
+			std::cerr << "Failed to initialize COM." << std::endl;
+			return false;
+		}
+
+		// Open the clipboard
+		if (!OpenClipboard(NULL)) {
+			std::cerr << "Failed to open clipboard." << std::endl;
+			CoUninitialize();
+			return false;
+		}
+
+		// Load the image data from file
+		HBITMAP hBitmap = (HBITMAP)LoadImageA(NULL, imagePath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		if (hBitmap == NULL) {
+			std::cerr << "Failed to load image data from file." << std::endl;
+			CloseClipboard();
+			CoUninitialize();
+			return false;
+		}
+		
+		// Load the image data from file
+		HBITMAP hBitmap = (HBITMAP)LoadImageA(NULL, imagePath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		if (hBitmap == NULL) {
+			std::cerr << "Failed to load image data from file." << std::endl;
+			CloseClipboard();
+			CoUninitialize();
+			return false;
+		}
+
+		// Create a data object with the image data
+		IDataObject* pDataObject = NULL;
+		if (CoCreateInstance(CLSID_DataObject, NULL, CLSCTX_INPROC_SERVER, IID_IDataObject, (void**)&pDataObject) != S_OK) {
+			std::cerr << "Failed to create data object." << std::endl;
+			DeleteObject(hBitmap);
+			CloseClipboard();
+			CoUninitialize();
+			return false;
+		}
+
+		FORMATETC format = { CF_BITMAP, NULL, DVASPECT_CONTENT, -1, TYMED_GDI };
+		STGMEDIUM medium = {};
+		medium.tymed = TYMED_GDI;
+		medium.hBitmap = (HBITMAP)hBitmap;
+
+		// Set the image data on the data object
+		if (pDataObject->SetData(&format, &medium, TRUE) != S_OK) {
+			std::cerr << "Failed to set data on data object." << std::endl;
+			ReleaseStgMedium(&medium);
+			pDataObject->Release();
+			CloseClipboard();
+			CoUninitialize();
+			return false;
+		}
+
+		// Close the clipboard
+		if (!CloseClipboard()) {
+			std::cerr << "Failed to close clipboard." << std::endl;
+			ReleaseStgMedium(&medium);
+			pDataObject->Release();
+			CoUninitialize();
+			return false;
+		}
+
+		// Cleanup
+		ReleaseStgMedium(&medium);
+		pDataObject->Release();
+		CoUninitialize();
+
+		return true;
+	}
+	*/

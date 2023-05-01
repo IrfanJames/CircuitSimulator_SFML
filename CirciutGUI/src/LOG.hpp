@@ -13,14 +13,28 @@ namespace LOG {
 }
 
 // LOG Function
+#ifdef MY_NDIST
+
 #ifdef _DEBUG
 #define LOG(x) std::cout << x;
 #else
 #define LOG(x) LOG::log_file << x;
 #endif
 
-// LOG_VEC Function
-#define LOG_VEC(vec) LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n");
+#else
+#define LOG(x) ;
+#endif
 
 // LOG_VEC Function
+#ifdef MY_NDIST
+#define LOG_VEC(vec) LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n");
+#else
+#define LOG_VEC(vec) ;
+#endif
+
+// LOG_VEC Function
+#ifdef MY_NDIST
 #define LOG_VEC2(vec) LOG("(" << vec.x << ", " << vec.y << "), ");
+#else
+#define LOG_VEC2(vec) ;
+#endif

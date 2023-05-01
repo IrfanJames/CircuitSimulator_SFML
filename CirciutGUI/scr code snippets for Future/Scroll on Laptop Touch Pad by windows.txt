@@ -1,0 +1,49 @@
+	sf::Vector2f viewPosition = CircuitGUI::view.getCenter();
+	bool touchpadScrolling = false;
+	POINT previousTouchpadPosition;
+
+MSG msg;
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			using namespace CircuitGUI;
+
+			if (msg.message == WM_MOUSEWHEEL && GET_WHEEL_DELTA_WPARAM(msg.wParam) != 0) {
+				int scrollDelta = GET_WHEEL_DELTA_WPARAM(msg.wParam);
+				if (scrollDelta > 0) {
+					// Handle scroll up event
+					viewPosition += sf::Vector2f(0.f, 10.f);
+					LOG("\nscroll up");
+				}
+				else {
+					// Handle scroll down event
+					viewPosition += sf::Vector2f(0.f, -10.f);
+					LOG("\nscroll down");
+				}
+				view.setCenter(viewPosition);
+			}
+			else if (msg.message == WM_LBUTTONDOWN && GET_KEYSTATE_WPARAM(msg.wParam) == MK_MBUTTON) {
+				// Handle touchpad scroll press event
+				touchpadScrolling = true;
+				GetCursorPos(&previousTouchpadPosition);
+				LOG("\nscroll press");
+			}
+			else if (msg.message == WM_LBUTTONUP && GET_KEYSTATE_WPARAM(msg.wParam) == MK_MBUTTON) {
+				// Handle touchpad scroll release event
+				touchpadScrolling = false;
+				LOG("\nscroll release");
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		if (touchpadScrolling) {
+			LOG("\ntouchpadScrolling == true\t; ");
+
+			POINT currentTouchpadPosition;
+			GetCursorPos(&currentTouchpadPosition);
+			POINT touchpadDelta = { currentTouchpadPosition.x - previousTouchpadPosition.x, currentTouchpadPosition.y - previousTouchpadPosition.y };
+			
+			viewPosition -= sf::Vector2f((touchpadDelta.x / 10.0f), (touchpadDelta.y / 10.0f));
+			LOG_VEC2(viewPosition);
+			CircuitGUI::view.setCenter(viewPosition);
+
+			previousTouchpadPosition = currentTouchpadPosition;
+		}

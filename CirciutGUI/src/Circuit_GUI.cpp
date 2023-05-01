@@ -1,6 +1,10 @@
 #include "Circuit_GUI.hpp"
 #include "LOG.hpp"
 
+#include <windows.h>
+#include <objbase.h>
+
+
 namespace CircuitGUI {
 
 	/*Constants*/
@@ -861,6 +865,7 @@ namespace CircuitGUI {
 	}
 
 
+
 	namespace Options
 	{
 		void Open(const std::string& filepath) {
@@ -1222,7 +1227,7 @@ namespace CircuitGUI {
 
 			// Wires
 			{
-				LOG("\nwire paste:\n");
+				//LOG("\nwire paste:\n");
 				sf::Vector2f offSet(OffsetX, OffsetY);
 				size_t wire_stop;
 				std::string sub;
