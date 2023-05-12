@@ -22,6 +22,8 @@ public:
 
 public:
 
+	int node1 = -1;
+	int node2 = -1;
 	double resistance = 1000;
 	double voltage = -5.032;
 	double current = 0.030405;
@@ -29,6 +31,7 @@ public:
 public:
 
 	float x, y, angle;
+	//sf::Sprite::Drawable;
 	sf::Sprite sprite;
 	sf::Text valueText;
 	sf::RectangleShape boarder;
@@ -56,8 +59,6 @@ public:
 
 	void stimuli();
 
-	void draw(sf::RenderWindow& app);
-
 public:
 
 	int getSerial() const;
@@ -74,5 +75,15 @@ public:
 
 public:
 
-	virtual void update() {}
+	virtual sf::FloatRect getBounds(bool* sucess_ptr = nullptr) const;
+
+	virtual bool contains(const sf::Vector2f& Point) const;
+
+	virtual bool intersectes(const sf::FloatRect& Area) const;
+
+	virtual std::string serialize() const;
+	
+	virtual void draw(sf::RenderWindow& app) const;
+
+	virtual void update();
 };

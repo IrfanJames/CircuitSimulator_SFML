@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <string.h>
@@ -287,6 +286,18 @@ size_t Wire::noOfDrawRects() const {
 	return count;
 }
 
+const std::vector<sf::RectangleShape>* Wire::getRectVector() const
+{
+	return &wire;
+}
+
+void Wire::draw(sf::RenderWindow& App) const
+{
+	for (int c = 0; c < wire.size(); c++)
+		App.draw(wire[c]);
+}
+
+
 sf::FloatRect Wire::bounds(bool* sucess_ptr) const
 {
 	int Left = 0;
@@ -418,15 +429,4 @@ std::string Wire::serialize() const
 	out.push_back('\n');
 
 	return out;
-}
-
-const std::vector<sf::RectangleShape>* Wire::getRectVector() const
-{
-	return &wire;
-}
-
-void Wire::draw(sf::RenderWindow& App) const
-{
-	for (int c = 0; c < wire.size(); c++)
-		App.draw(wire[c]);
 }

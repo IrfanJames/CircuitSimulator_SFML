@@ -7,8 +7,9 @@ taskkill /F /IM CirciutGUI.exe
 */
 
 #include <iostream>
-#include <direct.h>
 #include <fstream>
+#include <vector>
+#include <direct.h>
 //#include <sstream>
 //#include <string>
 //#include <thread>
@@ -24,6 +25,7 @@ taskkill /F /IM CirciutGUI.exe
 #include "Circuit_Windows_Stuff.hpp"
 #include "Resource_Manager.hpp"
 #include "Circuit_Wire.hpp"
+#include "Circuit_Item.hpp"
 //#include "Circuit_Graph.hpp"
 //#include "CircuitCore.hpp"
 
@@ -112,6 +114,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	LocalFree(argv);//*/
 #endif
+
 
 
 	//////////////// Main Loop ////////////////////
@@ -333,6 +336,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 					LOG("\n");
 				}
+				if (evnt.key.code == sf::Keyboard::E) {
+
+
+
+					//comp.emplace_back(Item(rand() % (Item::Item_Type::no_of_Comp + 1), trim(rand() % W), trim(rand() % H), 90 * (rand() % 4)));
+					//LOG("\ncomp size: " << comp.size());
+					//qtUpdate();
+					//updateVisibleVector();
+
+
+					//comp.emplace_back(Item(rand() % (Item::Item_Type::no_of_Comp + 1), trim(rand() % W), trim(rand() % H), 90 * (rand() % 4)));
+					
+					//newItems.emplace_back(rand() % (Item::Item_Type::no_of_Comp + 1), trim(rand() % W), trim(rand() % H), 90 * (rand() % 4));
+
+					//newComps.emplace_back(static_cast<std::vector<Entity>::iterator>(newItems.end()));
+					//auto att = newComps.back() - newItems.begin() - !newItems.empty();
+					//auto i_ = &newItems.at(att);
+					//LOG("\n\nptr : " << i_ << "\tValue: " << *i_);
+					//LOG("\n_Ptr: " << newComps.back()._Ptr-- /*<< "\tValue: " << (newComps.back()._Ptr--)->getSerial()*/);
+					//newComps.emplace_back(newItems.end());
+					//LOG("\nnewComps size: " << newComps.size());
+				}
 				//if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
 				//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
 				/*if (evnt.key.code == sf::Keyboard::K) {
@@ -455,26 +480,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//--------------------------------------------------------------------------------//
 
 
-		{
-			using namespace CircuitGUI;
 
-			static int index = 0;
-			static bool onWire = false;
 
-			if (releaseBool && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			{
-				onWire = false;
-				for (int i = 0; i < wires.size(); i++) {
-					if (!onWire && wires[i].contains(cursorInSim())) {
-						onWire = true; index = i;
-					}
-				}
-			}
-
-			if (onWire && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-				wires[index].move(cursorInSim());
-
-		}
 
 
 		// ----------------------------------------	Options
@@ -536,7 +543,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 									//copied in sel square selection
 									virSprite.emplace_back(comp[virSerial.back()].sprite);
-									virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+									//virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+									virSprite.back().setOrigin(comp[virSerial.back()].sprite.getOrigin());
 									virSprite.back().setColor(tempDimColor);/*
 									for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
 										virSprite.emplace_back(comp[virSerial[v]].sprite);
@@ -688,7 +696,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 					/*Selection*/
 					virSerial.clear();
+
+					// 2nd Method  --QuadTrees
 					qtExtract(selSqr.getGlobalBounds(), virSerial);
+
+					// 1st Method  --Check every component
 					/*for (int c = 0; c < CircuitGUI::comp.size(); c++) {
 						//cout << std::count(virSerial.begin(), virSerial.end(), c);
 						//bool bi = std::binary_search(virSerial.begin(), virSerial.end(), c);
@@ -720,7 +732,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 							CircuitGUI::virSerial.erase(CircuitGUI::virSerial.begin() + v);
 							//CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
 						}
-
 					}*/
 
 					//if (0 && ShiftPressed) {
@@ -746,7 +757,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			// Wire
 			{
-				using CircuitGUI::wires;
+				using namespace CircuitGUI;
+
+				{
+					static int index = 0;
+					static bool onWire = false;
+
+					if (releaseBool && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+					{
+						onWire = false;
+						for (int i = 0; i < wires.size(); i++) {
+							if (!onWire && wires[i].contains(cursorInSim())) {
+								onWire = true; index = i;
+							}
+						}
+					}
+
+					if (onWire && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+						wires[index].move(cursorInSim());
+
+				}
 
 				if (wires.empty() == false)
 					if (wires.back().isStopped() == false) {
@@ -1304,7 +1334,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 				updateVisibleVector();
 
-				/*if (comp.size() < 1000)
+				/*
+				if (comp.size() < 1000)
 					CircuitGUI::qtWrite();
 				else std::cout << "\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n";//*/
 
@@ -1329,17 +1360,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			drawAllSqr();
 
-			qtDraw(qt);
+			//qtDraw(qt);
 
-			drawComp();
+			//drawComp();
 
 			drawWires();
 
-			drawNodes();
+			//drawNodes();
 
 			drawBoarders();
 
 			drawVirSprites();
+
+			//for (auto& e : newComps)
+			//	e->draw(app);
 
 			drawSelSqr();
 

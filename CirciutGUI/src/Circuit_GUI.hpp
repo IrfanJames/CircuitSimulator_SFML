@@ -11,6 +11,7 @@
 #include "Circuit_Global.hpp"
 #include "Circuit_Entity.hpp"
 #include "Circuit_Wire.hpp"
+#include "Circuit_Item.hpp"
 #include "Resource_Manager.hpp"
 
 //extern sf::Texture compTex[8];
@@ -88,11 +89,16 @@ namespace CircuitGUI {
 	extern std::vector<sf::Vector2f> allEnds;
 	extern std::vector<sf::CircleShape> allEndCircles;
 	extern std::vector<int> visibleComps;
+
+	//extern std::vector<std::vector<Entity>::iterator> newComps;
+	//extern std::vector<Item> newItems;
+
 	extern void drawComp();
 	extern void drawVirSprites();
 	extern void drawNodes();
 	extern void drawBoarders();
 	extern void drawWires();
+	//extern void updateAllEnds_old();
 	extern void updateAllEnds();
 	extern bool makingWire();
 	
@@ -100,14 +106,15 @@ namespace CircuitGUI {
 	struct quadTree;
 	extern quadTree qt;
 	extern void qtDelete(quadTree& box);
+	extern void qtRemove(int c, quadTree& box);
 	extern void qtAdd(int c, quadTree& box);
 	extern void qtUpdate();
-	extern void qtWrite(const quadTree& box, int taaabbss);
+	extern void qtWrite(const quadTree& box = qt, int taaabbss = 0);
 	extern void qtDraw(quadTree& box);
 	extern void qtExtract(const sf::FloatRect& searchArea, std::vector<int>& output, const quadTree& box = qt);
 
 
-	extern bool occupiedAt(Entity e, const sf::Vector2f& At, bool ignoreAllVir = false);
+	extern bool occupiedAt(const Entity& en, const sf::Vector2f& At, bool ignoreAllVir = false);
 	extern sf::FloatRect areaofCollection(int collection, bool* sucess_ptr = nullptr);
 	extern void updateVisibleVector();
 

@@ -264,6 +264,7 @@
     <ClInclude Include="src\Circuit_GUI.hpp" />
     <ClInclude Include="src\Circuit_Windows_Stuff.hpp" />
     <ClInclude Include="src\Circuit_Wire.hpp" />
+    <ClInclude Include="src\Circuit_Item.hpp" />
     <ClInclude Include="src\LOG.hpp" />
     <ClInclude Include="src\pch.hpp" />
     <ClInclude Include="src\Resource_Manager.hpp" />
@@ -277,6 +278,7 @@
     <ClCompile Include="src\Circuit_Entity.cpp" />
     <ClCompile Include="src\Circuit_GUI.cpp" />
     <ClCompile Include="src\Circuit_Wire.cpp" />
+    <ClCompile Include="src\Circuit_Item.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CircuitCore\CircuitCore.vcxproj">

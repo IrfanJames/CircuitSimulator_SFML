@@ -1,8 +1,8 @@
 #include "Circuit_GUI.hpp"
 #include "LOG.hpp"
 
-#include <windows.h>
-#include <objbase.h>
+//#include <windows.h>
+//#include <objbase.h>
 
 
 namespace CircuitGUI {
@@ -176,6 +176,10 @@ namespace CircuitGUI {
 	std::vector<sf::Vector2f> allEnds;
 	std::vector<sf::CircleShape> allEndCircles;
 	std::vector<int> visibleComps;
+
+	//std::vector<std::vector<Entity>::iterator> newComps;
+	//std::vector<Item> newItems;
+
 	void drawComp() {
 		//for (int c = 0; c < CircuitGUI::comp.size(); c++) { CircuitGUI::comp[c].draw(CircuitGUI::app); }
 		for (int i = 0; i < visibleComps.size(); i++) {
@@ -198,46 +202,169 @@ namespace CircuitGUI {
 		for (int i = 0; i < wires.size(); i++)
 			wires[i].draw(app);
 	}
+	void updateAllEnds_old() {
+
+		//	allEnds.clear();
+
+		//	int nodeCount = 0;
+		//	for (int c = 0; c < comp.size(); c++) {
+		//		static sf::Vector2f tempEnd;
+
+		//		for (int cc = 0; cc < 2; cc++) {
+
+		//			//tempEnd
+		//			if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
+		//			if (cc == 1) { /*Rear*/  tempEnd = comp[c].getEndPos(); }
+
+		//			bool found = 0;
+		//			for (int e = 0; e < nodeCount/*allEnds.size()*/; e++) {
+		//				if (tempEnd == allEnds[e]) {
+		//					found = 1;
+		//					break;
+		//				}
+		//			}
+
+		//			if (!found) {
+
+		//				if (allEnds.empty())
+		//				{
+		//					allEnds.emplace_back(tempEnd);
+		//					nodeCount++;
+		//				}
+		//				else if (nodeCount < allEnds.size())
+		//					allEnds[nodeCount++] = tempEnd;
+		//				else
+		//				{
+		//					allEnds.emplace_back(tempEnd);
+		//					nodeCount++;
+		//				}
+		//			}
+
+		//		}
+		//	}
+
+		//	allEnds.erase(allEnds.begin() + nodeCount, allEnds.end());
+
+	}
 	void updateAllEnds() {
+		//int ttttttttttt = allEnds.size();
+		//LOG("Before: "); for (auto& vec : allEnds) LOG_VEC2(vec);
+		allEnds.clear();
 
-		int nodeCount = 0;
+		static std::vector<int> end1;
+		static std::vector<int> end2;
+
+		end1.reserve(comp.size());
+		end2.reserve(comp.size());
+
 		for (int c = 0; c < comp.size(); c++) {
-			static sf::Vector2f tempEnd;
+			end1.emplace_back(c);
+			end2.emplace_back(c);
+		}
 
-			for (int cc = 0; cc < 2; cc++) {
+		// Nodes
+		static const int rectSize = 3;
+		static sf::Vector2f tempVec2;
+		static sf::FloatRect searchArea;
+		static std::vector<int> intersects;
 
-				//tempEnd
-				if (cc == 0) { /*Front*/ tempEnd.x = comp[c].x; tempEnd.y = comp[c].y; }
-				if (cc == 1) { /*Rear*/  tempEnd = comp[c].getEndPos(); }
+		// Front End
+		//LOG("\nupdateAllEnds2 for\n");
 
-				bool found = 0;
-				for (int e = 0; e < nodeCount/*allEnds.size()*/; e++) {
-					if (tempEnd == allEnds[e]) {
-						found = 1;
-						break;
+
+		for (int v = 0; v < 2; v++) {
+			auto vec = &end1;
+
+			if (v == 0) { vec = &end1; /*LOG("\n11111111111111 end1");*/ }
+			if (v == 1) { vec = &end2; /*LOG("\n22222222222222 end2");*/ }
+
+			for (int i = 0; i < (*vec).size(); i++)
+				//for (int i = (*vec).size() - !((*vec).empty()); i >= 0; i--) // Just Iterating in Reverse // For Optimization sake // Optimization related to deleting in std::vector
+			{
+				int index = (*vec)[i];
+				int x = 0, y = 0;
+
+				// x, y
+				if (v == 0) {
+					x = comp[index].x;
+					y = comp[index].y;
+				}
+				else {
+					x = comp[index].getEndPos().x;
+					y = comp[index].getEndPos().y;
+				}
+				allEnds.emplace_back(x, y);
+
+				//
+				if (v == 0)
+					comp[index].node1 = allEnds.size() - !allEnds.empty();
+				else
+					comp[index].node2 = allEnds.size() - !allEnds.empty();
+
+				// finding intersecting comp. by QuadTree
+				searchArea = { x - rectSize / 2.0f, y - rectSize / 2.0f, rectSize, rectSize };
+				qtExtract(searchArea, intersects);
+
+
+				//LOG("--------------\ni = " << i << ", allEnds.back(): ");
+				//LOG_VEC2(allEnds.back());
+				//LOG_VEC(intersects);
+
+				for (int j = 0; j < intersects.size(); j++)
+				{
+					if (intersects[j] == index) continue;
+
+					tempVec2.x = comp[intersects[j]].x;
+					tempVec2.y = comp[intersects[j]].y;
+
+					if (allEnds.back() == tempVec2) // Try Front End
+					{
+						comp[intersects[j]].node1 = comp[index].node1; // = allEnds.size() - !allEnds.empty();
+
+						auto it = std::find(end1.begin(), end1.end(), intersects[j]);
+						if (it != end1.end())
+							end1.erase(it);
+					}
+					else if (allEnds.back() == comp[intersects[j]].getEndPos()) // Try Back End
+					{
+						comp[intersects[j]].node2 = comp[index].node1; // = allEnds.size() - !allEnds.empty();
+
+						auto it = std::find(end2.begin(), end2.end(), intersects[j]);
+						if (it != end2.end())
+							end2.erase(it);
+					}
+
+				}
+
+
+				// current's Front End
+				{
+					auto it = std::find((*vec).begin(), (*vec).end(), index);
+					if (it != (*vec).end()) {
+						(*vec).erase(it);
+						i--;
 					}
 				}
 
-				if (!found) {
-
-					if (allEnds.empty())
-					{
-						allEnds.emplace_back(tempEnd);
-						nodeCount++;
-					}
-					else if (nodeCount < allEnds.size())
-						allEnds[nodeCount++] = tempEnd;
-					else
-					{
-						allEnds.emplace_back(tempEnd);
-						nodeCount++;
-					}
-				}
-
+				//LOG("\nallEnds.size() : " << allEnds.size() << "\n");
+				//LOG("end1:");
+				//LOG_VEC(end1);
+				//LOG("\nend2:");
+				//LOG_VEC(end2);
 			}
 		}
 
-		allEnds.erase(allEnds.begin() + nodeCount, allEnds.end());
+		/*LOG*/ {
+			//LOG("\n\n-------------");
+			//for (int c = 0; c < comp.size(); c++)
+			//	LOG("\n" << c << ": " << comp[c].node1 << ", " << comp[c].node2);
+			//
+			//LOG("\nBefore: " << ttttttttttt);
+			//LOG("\nAfter:  " << allEnds.size());
+		}
+
+
+		//LOG("\n\nAfter:  "); for (auto& vec : allEnds) LOG_VEC2(vec);
 	}
 	bool makingWire()
 	{
@@ -250,12 +377,14 @@ namespace CircuitGUI {
 	}
 
 
+	static bool qtChangeTag = true;
 	struct quadTree {
 		static const int limit = 5;
+		bool changed = false;
 		bool isSubDivided = false;
 		unsigned int size = 0;
 		std::vector<int> arr;
-		sf::FloatRect area;
+		sf::FloatRect bounds;
 		sf::RectangleShape rectDraw;								// [0 1]
 		quadTree* sub[4] = { nullptr, nullptr ,nullptr ,nullptr };	// [2 3]
 
@@ -264,6 +393,9 @@ namespace CircuitGUI {
 		}
 	};
 	quadTree qt;
+	void qtRemove(int c, quadTree& box) {
+		;
+	}
 	void qtDelete(quadTree& box) {
 		if (box.isSubDivided) {
 			qtDelete(*box.sub[0]);
@@ -286,12 +418,12 @@ namespace CircuitGUI {
 		box.size = 0;
 		box.arr.clear();
 		box.isSubDivided = false;
-		box.area = { 0,0,0,0 };
+		box.bounds = { 0,0,0,0 };
 		box.rectDraw.setSize(zero);
 	}
 	void qtAdd(int c, quadTree& box) {
-		if (box.area.intersects(comp[c].bounds)) {
-			if ((box.arr.size() < quadTree::limit) || (std::min(box.area.width, box.area.height) < gap * 5)) {
+		if (box.bounds.intersects(comp[c].bounds)) {
+			if ((box.arr.size() < quadTree::limit) || (std::min(box.bounds.width, box.bounds.height) < gap * 5)) {
 				box.arr.emplace_back(c);
 				box.size++;// = box.arr.size();
 			}
@@ -299,15 +431,15 @@ namespace CircuitGUI {
 				if (box.isSubDivided == false) { // HardCode (5)
 					// Sub-divide
 					box.isSubDivided = true;
-					int qtHalfWidth = (int)(box.area.width / 2), qtHalfHeight = (int)(box.area.height / 2);
-					box.sub[0] = new quadTree; box.sub[0]->area.width = qtHalfWidth; box.sub[0]->area.height = qtHalfHeight; box.sub[0]->area.left = box.area.left;					box.sub[0]->area.top = box.area.top;
-					box.sub[1] = new quadTree; box.sub[1]->area.width = qtHalfWidth; box.sub[1]->area.height = qtHalfHeight; box.sub[1]->area.left = box.area.left + qtHalfWidth;	box.sub[1]->area.top = box.area.top;
-					box.sub[2] = new quadTree; box.sub[2]->area.width = qtHalfWidth; box.sub[2]->area.height = qtHalfHeight; box.sub[2]->area.left = box.area.left;					box.sub[2]->area.top = box.area.top + qtHalfHeight;
-					box.sub[3] = new quadTree; box.sub[3]->area.width = qtHalfWidth; box.sub[3]->area.height = qtHalfHeight; box.sub[3]->area.left = box.area.left + qtHalfWidth;	box.sub[3]->area.top = box.area.top + qtHalfHeight;
+					int qtHalfWidth = (int)(box.bounds.width / 2), qtHalfHeight = (int)(box.bounds.height / 2);
+					box.sub[0] = new quadTree; box.sub[0]->bounds.width = qtHalfWidth; box.sub[0]->bounds.height = qtHalfHeight; box.sub[0]->bounds.left = box.bounds.left;					box.sub[0]->bounds.top = box.bounds.top;
+					box.sub[1] = new quadTree; box.sub[1]->bounds.width = qtHalfWidth; box.sub[1]->bounds.height = qtHalfHeight; box.sub[1]->bounds.left = box.bounds.left + qtHalfWidth;	box.sub[1]->bounds.top = box.bounds.top;
+					box.sub[2] = new quadTree; box.sub[2]->bounds.width = qtHalfWidth; box.sub[2]->bounds.height = qtHalfHeight; box.sub[2]->bounds.left = box.bounds.left;					box.sub[2]->bounds.top = box.bounds.top + qtHalfHeight;
+					box.sub[3] = new quadTree; box.sub[3]->bounds.width = qtHalfWidth; box.sub[3]->bounds.height = qtHalfHeight; box.sub[3]->bounds.left = box.bounds.left + qtHalfWidth;	box.sub[3]->bounds.top = box.bounds.top + qtHalfHeight;
 
 					for (int i = 0; i < 4; i++) {
-						box.sub[i]->rectDraw.setSize(sf::Vector2f(box.sub[i]->area.width, box.sub[i]->area.height));
-						box.sub[i]->rectDraw.setPosition(sf::Vector2f(box.sub[i]->area.left, box.sub[i]->area.top));
+						box.sub[i]->rectDraw.setSize(sf::Vector2f(box.sub[i]->bounds.width, box.sub[i]->bounds.height));
+						box.sub[i]->rectDraw.setPosition(sf::Vector2f(box.sub[i]->bounds.left, box.sub[i]->bounds.top));
 						box.sub[i]->rectDraw.setFillColor(sf::Color(box.sub[i]->rectDraw.getPosition().y - box.sub[i]->rectDraw.getPosition().x,
 							box.sub[i]->rectDraw.getPosition().x + box.sub[i]->rectDraw.getLocalBounds().height,
 							box.sub[i]->rectDraw.getLocalBounds().width - box.sub[i]->rectDraw.getPosition().x, 100));
@@ -338,9 +470,10 @@ namespace CircuitGUI {
 	void qtUpdate() {
 
 		qtDelete(qt);
-		qt.area = areaofCollection(true);
-		qt.rectDraw.setSize(sf::Vector2f(qt.area.width, qt.area.height));
-		qt.rectDraw.setPosition(sf::Vector2f(qt.area.left, qt.area.top));
+
+		qt.bounds = areaofCollection(true);
+		qt.rectDraw.setSize(sf::Vector2f(qt.bounds.width, qt.bounds.height));
+		qt.rectDraw.setPosition(sf::Vector2f(qt.bounds.left, qt.bounds.top));
 		qt.rectDraw.setFillColor(sf::Color(qt.rectDraw.getPosition().y - qt.rectDraw.getPosition().x,
 			qt.rectDraw.getPosition().x + qt.rectDraw.getLocalBounds().height,
 			qt.rectDraw.getLocalBounds().width - qt.rectDraw.getPosition().x, 100));
@@ -348,15 +481,18 @@ namespace CircuitGUI {
 		int compSize = comp.size();
 		if (compSize <= quadTree::limit) {
 			qt.size = compSize;
-			for (int c = 0; c < compSize; c++)
-				qt.arr.emplace_back(c);
+			LOG("\nqt: " << qt.arr.size() << "\tcomps: " << compSize);
+			qt.arr.resize(compSize); // no del
+			LOG("\nqt: " << qt.arr.size() << "\tcomps: " << compSize << "\n");
+			for (int c = 0; c < compSize; c++) // qt.arr.size()
+				qt.arr[c] = c;
 		}
 		else {
-			for (int c = 0; c < compSize; c++) //HardCode
+			for (int c = 0; c < compSize; c++)
 				qtAdd(c, qt);
 		}
 	}
-	void qtWrite(const quadTree& box = qt, int taaabbss = 0) {
+	void qtWrite(const quadTree& box, int taaabbss) {
 
 		for (int t = 0; t < taaabbss; t++) std::cout << "\t";
 		if (box.isSubDivided) std::cout << "`";
@@ -390,14 +526,14 @@ namespace CircuitGUI {
 		if (&box == &qt)
 			output.clear();
 
-		if (searchArea.intersects(box.area)) {
+		if (searchArea.intersects(box.bounds)) {
 
 			if (box.isSubDivided == false)
 			{
 				// Check if box resides entirly in searchArea
 				// If Yes, then add all the elements of box.arr in the box
-				if (searchArea.contains(box.area.left, box.area.top) &&
-					searchArea.contains(box.area.left + box.area.width, box.area.top + box.area.height))
+				if (searchArea.contains(box.bounds.left, box.bounds.top) &&
+					searchArea.contains(box.bounds.left + box.bounds.width, box.bounds.top + box.bounds.height))
 				{
 					for (int i = 0; i < box.arr.size(); i++)
 						if (std::binary_search(output.begin(), output.end(), box.arr[i]) == false)
@@ -436,8 +572,9 @@ namespace CircuitGUI {
 	}
 
 
-	bool occupiedAt(Entity e, const sf::Vector2f& At, bool ignoreAllVir) {
-		e.x = At.x; e.y = At.y;
+	bool occupiedAt(const Entity& en, const sf::Vector2f& At, bool ignoreAllVir) {
+		static Entity e;
+		e.x = At.x; e.y = At.y; e.angle = en.angle;
 		e.stimuli();
 
 		std::vector<int> vec;
@@ -689,6 +826,10 @@ namespace CircuitGUI {
 			//ResourceID_Fonts.SetAll(IDR_FONT1, "FONT");
 			//Entity::setFont(ResourceID_Fonts.GetResource().ptr, ResourceID_Fonts.GetResource().size_bytes);
 			Entity::setFont("assets/Fonts/CalibriL_1.ttf");
+
+			//ResourceID_Fonts.SetAll(IDR_FONT1, "FONT");
+			//Item::setFont(ResourceID_Fonts.GetResource().ptr, ResourceID_Fonts.GetResource().size_bytes);
+			Item::setFont("assets/Fonts/CalibriL_1.ttf");
 		}
 
 		//renderWinInit();
@@ -699,11 +840,11 @@ namespace CircuitGUI {
 
 			app.create(sf::VideoMode((unsigned int)W, (unsigned int)H), "CircuitSim", sf::Style::Default, sf::ContextSettings(0, 0, 8));
 			W = app.getSize().x; H = app.getSize().y;
-
+			
 			app.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - W / 2, sf::VideoMode::getDesktopMode().height / 2 - H / 2 - 50));
-			app.setFramerateLimit(60);
-			app.setVerticalSyncEnabled(1);
 			app.setKeyRepeatEnabled(false);
+			//app.setVerticalSyncEnabled(true);
+			//app.setFramerateLimit(40); //60 or 0(disabled)
 
 
 #ifdef _DEBUG
@@ -849,14 +990,17 @@ namespace CircuitGUI {
 		}
 
 		/*Vectors*/ {
-			comp.reserve(3);
-			allEnds.reserve(3);
-			virSerial.reserve(3);
-			virSprite.reserve(3);
-			virSerialShift.reserve(3);
+			comp.reserve(15);
+			allEnds.reserve(30);
+			virSerial.reserve(15);
+			virSprite.reserve(15);
+			virSerialShift.reserve(5);
 			wires.reserve(8);
 			allEndCircles.reserve(17);
-			visibleComps.reserve(70);
+			visibleComps.reserve(20);
+
+			//newComps.reserve(15);
+			//newItems.reserve(5);
 		}
 
 		selSqrDesign();
@@ -1031,22 +1175,35 @@ namespace CircuitGUI {
 				int x_offset = gap + comp[c].bounds.left - Bounds_of_all_Entities.left;
 				int y_offset = gap + comp[c].bounds.top - Bounds_of_all_Entities.top;
 
+				//sf::Texture tex(*comp[c].sprite.getTexture());
+				static sf::Texture tex;
+				if (comp[c].sprite.getTexture() == nullptr)
+				{
+					tex.create(compTex.back().getSize().x, compTex.back().getSize().y);
+					tex.update(compTex.back());
+				}
+				else
+				{
+					tex.create(comp[c].sprite.getTexture()->getSize().x, comp[c].sprite.getTexture()->getSize().y);
+					tex.update(*comp[c].sprite.getTexture());
+				}
+
 				static sf::Image img;
 
 				switch ((int)comp[c].angle) {
 				case 0:
 				{
 					//std::cout << "\n"<<(int)(comp[c].sprite.getTexture()->getSize().x/2.0f - gap);
-					x_offset -= (int)(comp[c].sprite.getTexture()->getSize().x / 2.0f - gap);
-					img = comp[c].sprite.getTexture()->copyToImage();
+					x_offset -= (int)(tex.getSize().x / 2.0f - gap);
+					img = tex.copyToImage();
 					break;
 				}
 				case 180:
 				{
-					x_offset -= (int)(comp[c].sprite.getTexture()->getSize().x / 2.0f - gap);
-					y_offset -= (int)(comp[c].sprite.getTexture()->getSize().y - gap * 5);
+					x_offset -= (int)(tex.getSize().x / 2.0f - gap);
+					y_offset -= (int)(tex.getSize().y - gap * 5);
 
-					img = (comp[c].sprite.getTexture()->copyToImage());
+					img = (tex.copyToImage());
 					img.flipVertically();
 					img.flipHorizontally();
 					break;
@@ -1055,7 +1212,7 @@ namespace CircuitGUI {
 				case 270:
 				{
 					static sf::Image rot_img;
-					rot_img = comp[c].sprite.getTexture()->copyToImage();
+					rot_img = tex.copyToImage();
 					img.create(rot_img.getSize().y, rot_img.getSize().x);
 
 					for (int j = 0; j < rot_img.getSize().y; j++)
@@ -1064,11 +1221,11 @@ namespace CircuitGUI {
 					img.flipHorizontally();
 
 					if (comp[c].angle == 90) {
-						x_offset -= (int)(comp[c].sprite.getTexture()->getSize().y - gap * 5);
-						y_offset -= (int)(comp[c].sprite.getTexture()->getSize().x / 2.0f - gap);
+						x_offset -= (int)(tex.getSize().y - gap * 5);
+						y_offset -= (int)(tex.getSize().x / 2.0f - gap);
 					}
 					else if (comp[c].angle == 270) {
-						y_offset -= (int)(comp[c].sprite.getTexture()->getSize().x / 2.0f - gap);
+						y_offset -= (int)(tex.getSize().x / 2.0f - gap);
 
 						img.flipVertically();
 						img.flipHorizontally();
@@ -1242,6 +1399,7 @@ namespace CircuitGUI {
 						wires.emplace_back(sub);
 						wires.back().move(wires.back().initial() + offSet);
 					}
+					// TODO: Doesn't Work when \n is missing at the end
 					else LOG("\n[Warrning] Wire sub.size() > 3 | sub = \"" << sub << "\" | Options::Paste()");
 					wire_str.erase(wire_str.begin(), wire_str.begin() + wire_stop + 1);
 				}
@@ -1265,10 +1423,13 @@ namespace CircuitGUI {
 		void Delete() {
 
 			//erase - remove idiom
-			auto iter = std::remove_if(comp.begin(), comp.end(), [&](const auto& elem) {
-				return std::binary_search(virSerial.begin(), virSerial.end(), &elem - &comp[0]);
-				});
-			comp.erase(iter, comp.end());
+			if (virSerial.empty() == false)
+			{
+				auto iter = std::remove_if(comp.begin(), comp.end(), [&](const auto& elem) {
+					return std::binary_search(virSerial.begin(), virSerial.end(), &elem - &comp[0]);
+					});
+				comp.erase(iter, comp.end());
+			}
 
 			// Wires
 			sf::FloatRect area = selSqr.getGlobalBounds();

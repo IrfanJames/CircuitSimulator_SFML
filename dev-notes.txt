@@ -47,8 +47,9 @@ smartDisplay temp turned off (causes 100 cpu load)
 repeated coad in (last of drag) & (resizing window) of tool column
 
 Short-Term Goals:----------------------
-Wires
 Add qtExtract in updateAllEnds()
+Wires
+Optimize QuadTree qtUpdate()
 
 
 Issues:--------------------------------

@@ -1,8 +1,11 @@
 #pragma once
 
+#include "Circuit_Entity.hpp"
+
 #include "SFML/Graphics.hpp"
 
-class Wire {
+class Wire : public Entity
+{
 private:
 	static const int m_width = 2;
 	bool status_stopped = false;
@@ -10,7 +13,7 @@ private:
 	std::vector<sf::Vector2f> edge_points;
 
 public:
-
+	
 	Wire(const sf::Vector2f& IniPoint);
 
 	Wire(const std::string& Serialized_wire);
@@ -43,6 +46,11 @@ public:
 
 	size_t noOfDrawRects() const;
 
+	const std::vector<sf::RectangleShape>* getRectVector() const;
+
+	void draw(sf::RenderWindow& App) const;
+
+
 	sf::FloatRect bounds(bool* sucess_ptr = nullptr) const;
 
 	bool contains(const sf::Vector2f& Point) const;
@@ -50,8 +58,4 @@ public:
 	bool intersectes(const sf::FloatRect& Area) const;
 
 	std::string serialize() const;
-
-	const std::vector<sf::RectangleShape>* getRectVector() const;
-
-	void draw(sf::RenderWindow& App) const;
 };

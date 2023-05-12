@@ -4,7 +4,7 @@
 #include "LOG.hpp"
 
 
-/*extern*/ std::vector<sf::Texture> compTex; //sf::Texture compTex[8];
+extern std::vector<sf::Texture> compTex; //sf::Texture compTex[8];
 
 // public static variables
 //sf::RectangleShape boarderDesign;
@@ -15,6 +15,7 @@
 
 
 Entity::Entity() {
+	//LOG("\nEntity::Entity()");
 	serial = 0; x = 0.0f; y = 0.0f; angle = 0.0f;
 
 	static const int A = 0, B = 15, C = 75; //Hard Code
@@ -35,6 +36,7 @@ Entity::Entity() {
 }
 
 Entity::Entity(int s, float X, float Y, float Angle) {
+	//LOG("\nEntity::Entity(s, X, Y, Angle)");
 	x = X; y = Y; angle = Angle;
 
 	setSerial(s);
@@ -56,7 +58,10 @@ Entity::Entity(int s, float X, float Y, float Angle) {
 	stimuli();
 }
 
-Entity::~Entity() { ; }
+Entity::~Entity()
+{
+	//LOG("\nEntity::~Entity()");
+}
 
 
 
@@ -75,7 +80,7 @@ void Entity::setSerial(int s) {
 }
 
 void Entity::stimuli() {
-
+	//LOG("\nEntity::stimuli()");
 	//x = trim(x, gap);
 	//y = trim(y, gap);
 	//angle = 90 * (int)((int)angle % 360) / 90;
@@ -108,16 +113,10 @@ void Entity::stimuli() {
 	valueText.setPosition(x + offSet[(int)(angle / 90)].x, y + offSet[(int)(angle / 90)].y); // badPractice for gap = 15
 }
 
-void Entity::draw(sf::RenderWindow& app)
-{
-	app.draw(valueText);
-
-	app.draw(sprite);
-}
-
 
 
 // const functions
+
 int Entity::getSerial() const {
 	return serial;
 }
@@ -142,6 +141,45 @@ void Entity::setboarderDesgin(const sf::Color& color/* = sf::Color(0, 255, 85 Or
 	boarderDesign.setFillColor(sf::Color::Transparent);
 	boarderDesign.setOutlineThickness(1.0f);
 	boarderDesign.setOutlineColor(color);
+}
+
+
+
+// virtual functions
+sf::FloatRect Entity::getBounds(bool* sucess_ptr) const
+{
+	*sucess_ptr = true;
+
+	return bounds;
+}
+
+bool Entity::contains(const sf::Vector2f& Point) const
+{
+	return bounds.contains(Point);
+}
+
+bool Entity::intersectes(const sf::FloatRect& Area) const
+{
+	return bounds.intersects(Area);
+}
+
+std::string Entity::serialize() const
+{
+	return std::to_string(serial) + "\t" + std::to_string((int)x) + "\t" + std::to_string(y) + "\t" + std::to_string((int)angle) + "\n";
+}
+
+void Entity::draw(sf::RenderWindow& app) const 
+{
+	//LOG("\nEntity::draw " << serial);
+
+	app.draw(valueText);
+
+	app.draw(sprite);
+}
+
+void Entity::update()
+{
+
 }
 
 
@@ -227,7 +265,7 @@ void Entity::updateValueText() {
 	case Res: { str += "Ohm";	break; }
 	case Cap: { str += "F";		break; }
 	case Ind: { str += "H";		break; }
-	default: { str += "No Unit [Invalid Serial. Component not in library]"; break; }
+	default: { str = ""; LOG("\nNo Unit [Invalid Serial. Component not in library] | Entity::updateValueText()"); break; }
 	}
 
 	valueText.setString(str);
