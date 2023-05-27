@@ -103,6 +103,7 @@ namespace CircuitGUI {
 	extern void updateAllEnds();
 	extern bool makingWire();
 	
+	//extern void EndLessPit();
 
 	struct quadTree;
 	extern quadTree qt;

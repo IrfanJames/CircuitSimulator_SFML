@@ -8,8 +8,9 @@ taskkill /F /IM CirciutGUI.exe
 */
 
 #include "Circuit_App.hpp"
+#include <iostream>
 
-#define NOMINMAX // RectInt.inl error // https://en.sfml-dev.org/forums/index.php?topic=26401.0
+#define NOMINMAX // SFML RectInt.inl error // https://en.sfml-dev.org/forums/index.php?topic=26401.0
 #include <windows.h>
 
 
@@ -29,7 +30,9 @@ int main(int argc, char** argv) {
 
 	CircuitSim->Run();
 
-	return 0;
+	delete CircuitSim;
+
+	std::cin.get();
 }
 #endif
 
@@ -62,6 +65,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	CircuitSim->Run();
 
-	return 0;
+	//return 0;
 }
 #endif

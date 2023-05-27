@@ -2,6 +2,8 @@
 
 #include <string>
 #include <vector>
+#include <future>
+
 
 #include "Circuit_Graph.hpp"
 
@@ -23,6 +25,8 @@ private:
 	void Options();
 
 	void ImGUI();
+
+	void Thrads();
 
 	void Update();
 
@@ -64,4 +68,6 @@ private:
 
 	// Solver
 	Graph circuit;
+
+	std::vector<std::future<void>> futures;
 };

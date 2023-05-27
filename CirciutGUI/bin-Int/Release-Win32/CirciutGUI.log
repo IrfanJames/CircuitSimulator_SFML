@@ -12,100 +12,20 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.3253
               _Sent=wchar_t *,
               _Size=unsigned int
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Sim_main.cpp(51,24): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Sim_main.cpp(55,24): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Sim_main.cpp(51,24): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'WinMain'
-  Circuit_App.cpp
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Entity.hpp(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Windows_Stuff.hpp(17,20): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Windows_Stuff.hpp(49,20): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(37,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(139,179): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(139,157): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(139,112): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(139,58): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(166,37): warning C4244: 'initializing': conversion from 'const int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(166,35): warning C4244: 'initializing': conversion from 'const int' to 'const float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(244,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(244,48): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(256,40): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(322,24): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(327,51): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(526,30): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(526,71): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(539,49): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(610,23): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(649,22): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(656,22): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(666,23): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(761,23): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(949,25): warning C4018: '<': signed/unsigned mismatch
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(1338,241): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(1338,237): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=int
-          ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(1339,95): warning C4244: 'argument': conversion from 'const float' to 'int', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(1339,91): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=int
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\xmemory(677,68): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
-          with
-          [
-              _Ty=int
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\vector(798,27): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int&,float&,float&,int>(_Alloc &,_Objty *const ,int &,float &,float &,int &&)' being compiled
-          with
-          [
-              _Alloc=std::allocator<Entity>,
-              _Ty=Entity,
-              _Objty=Entity
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\vector(780,20): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<int&,float&,float&,int>(int &,float &,float &,int &&)' being compiled
-          with
-          [
-              _Ty=Entity
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include\vector(862,24): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_one_at_back<int&,float&,float&,int>(int &,float &,float &,int &&)' being compiled
-          with
-          [
-              _Ty=Entity
-          ]
-D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_App.cpp(512,9): message : see reference to function template instantiation '_Ty &std::vector<_Ty,std::allocator<_Ty>>::emplace_back<int&,float&,float&,int>(int &,float &,float &,int &&)' being compiled
-          with
-          [
-              _Ty=Entity
-          ]
+D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\src\Circuit_Sim_main.cpp(55,24): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'WinMain'
   Generating code
-  495 of 3359 functions (14.7%) were compiled, the rest were copied from previous compilation.
-    3 functions were new in current compilation
-    230 functions had inline decision re-evaluated but remain unchanged
+  0 of 4279 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-MSVCRT.lib(exe_winmain.obj) : warning LNK4020: a type record in 'd:\programming\c++\circuitsimulator_sfml\dependencies\imgui\bin\release-win32\imgui.pdb' is corrupted; some symbols and types may not be accessible from the debugger
+LINK : warning LNK4020: a type record in 'd:\programming\c++\circuitsimulator_sfml\dependencies\imgui\bin\release-win32\imgui.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 LINK : warning LNK4020: a type record in 'd:\programming\c++\circuitsimulator_sfml\dependencies\imgui\bin\release-win32\imgui.pdb' is corrupted; some symbols and types may not be accessible from the debugger
 LINK : warning LNK4020: a type record in 'd:\programming\c++\circuitsimulator_sfml\dependencies\imgui\bin\release-win32\imgui.pdb' is corrupted; some symbols and types may not be accessible from the debugger
   CirciutGUI.vcxproj -> D:\Programming\C++\CircuitSimulator_SFML\CirciutGUI\bin\Release-Win32\CirciutGUI_x86_Release.exe

@@ -514,6 +514,12 @@ namespace CircuitGUI {
 			return true;
 	}
 
+	void EndLessPit()
+	{
+		for (size_t i = 0; i < 9999; i++) {
+			LOG(" Falling");
+		}
+	}
 
 	static bool qtChangeTag = true;
 	struct quadTree {

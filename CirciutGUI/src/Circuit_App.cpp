@@ -11,7 +11,7 @@
 //#include <sstream>
 //#include <string>
 //#include <thread>
-//#include <future>
+#include <future>
 
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -33,6 +33,7 @@
 
 App::App(const std::vector<std::string>& filepaths)
 {
+	LOG("ON");
 	srand(time(NULL));
 	
 	CircuitGUI::initializeGUI();
@@ -74,14 +75,10 @@ App::~App()
 	ImGui::SFML::Shutdown();
 
 #ifdef _DEBUG
-	LOG("\nSaving");
 	CircuitGUI::Options::Save("temp_files/last.txt");
-
-	std::cin.get();
 #else
 	LOG::log_file.close();
 #endif
-
 }
 
 void App::Run()
@@ -95,6 +92,8 @@ void App::Run()
 		Options();
 
 		ImGUI();
+
+		Thrads();
 
 		Update();
 
@@ -283,7 +282,9 @@ void App::Events()
 			}
 			if (evnt.key.code == sf::Keyboard::E) {
 
-
+				futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, "Saved-Images/asdf.PNG"));
+				//futures.emplace_back(std::async(std::launch::async, CircuitGUI::EndLessPit));
+				//threads.emplace_back(EndLessPit);
 
 
 
@@ -306,7 +307,7 @@ void App::Events()
 				//newComps.emplace_back(newItems.end());
 				//LOG("\nnewComps size: " << newComps.size());
 			}
-
+			
 			// Ctrl
 			if (evnt.key.control) {
 				if (evnt.key.code == sf::Keyboard::A) {
@@ -383,7 +384,7 @@ void App::Events()
 							CircuitGUI::Options::Save(filepath);
 
 						if (filepath.back() == 'G')
-							CircuitGUI::Options::SaveAsImage(filepath);
+							futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, filepath));
 
 					}
 
@@ -825,8 +826,7 @@ void App::ImGUI()
 						CircuitGUI::Options::Save(filepath);
 
 					if (filepath.back() == 'G')
-						CircuitGUI::Options::SaveAsImage(filepath);
-
+						futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, filepath));
 				}
 
 			}
@@ -1309,6 +1309,31 @@ void App::ImGUI()
 							}
 							//*/
 
+}
+
+void App::Thrads()
+{
+	for (int i = 0; i < futures.size(); i++) {
+
+		std::future_status status = futures[i].wait_for(std::chrono::milliseconds(10));
+		LOG("\nThread(" << i << "): ");
+
+		if (status == std::future_status::ready) {
+			// The future is ready (thread completed or value available)
+			LOG("ready");
+
+			futures.erase(futures.begin() + i--);
+		}
+		else if (status == std::future_status::timeout) {
+			// The future is not ready within the specified duration
+			LOG("timeout");
+		}
+		else if (status == std::future_status::deferred) {
+			// The future is deferred (using std::promise and std::async(launch::deferred))
+			LOG("deferred");
+		}
+
+	}
 }
 
 void App::Update()

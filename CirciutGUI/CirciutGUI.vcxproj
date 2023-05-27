@@ -149,7 +149,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;openal32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
@@ -174,7 +174,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;user32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -198,7 +198,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;user32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -214,7 +214,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;openal32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
@@ -235,7 +235,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;user32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -257,7 +257,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;user32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>

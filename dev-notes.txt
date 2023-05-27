@@ -1,5 +1,6 @@
 
 New:
+	* App now handles Async Threads (SaveAsImage is now on async Mode)
 	* Move whole App inside a Class
 	* new project for Dependencies:imgui
 	* Dist config
@@ -49,6 +50,7 @@ New:
 
 
 Short-Term Goals
+	* Print sf::Clipboard::getString while Drap/Dropping Acrobat PDF into another Acrobat PDF Window
 	* State Machine
 	* Wires
 	* Optimize QuadTree qtUpdate()
