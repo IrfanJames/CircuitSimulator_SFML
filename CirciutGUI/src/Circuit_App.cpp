@@ -13,20 +13,23 @@
 //#include <thread>
 //#include <future>
 
-#include "LOG.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "SFML/Graphics.hpp"
 
+#include "LOG.hpp"
 #include "Circuit_GUI.hpp"
 #include "Circuit_Entity.hpp"
 #include "Circuit_Windows_Stuff.hpp"
-#include "Resource_Manager.hpp"
 #include "Circuit_Wire.hpp"
 #include "Circuit_Item.hpp"
 #include "Circuit_Graph.hpp"
+#include "Resource_Manager.hpp"
+
 #include "Circuit_App.hpp"
 //#include "CircuitCore.hpp"
+
+
 
 App::App(const std::vector<std::string>& filepaths)
 {
@@ -34,14 +37,13 @@ App::App(const std::vector<std::string>& filepaths)
 	
 	CircuitGUI::initializeGUI();
 
-	/*ImGui*/
 	ImGui::SFML::Init(CircuitGUI::app);
 
 	time_t FrameTime_for_FPS = clock();
 
 
-	Resource my_pic(IDR_CAP, "BMP");
-	Resource my_font(IDR_FONT2, "FONT");
+	//Resource my_pic(IDR_CAP, "BMP");
+	//Resource my_font(IDR_FONT2, "FONT");
 	//my_font.GetInfo();
 
 	/* Test Circle
@@ -72,19 +74,18 @@ App::~App()
 	ImGui::SFML::Shutdown();
 
 #ifdef _DEBUG
+	LOG("\nSaving");
 	CircuitGUI::Options::Save("temp_files/last.txt");
 
 	std::cin.get();
 #else
-	//LOG::log_file.close();
+	LOG::log_file.close();
 #endif
 
 }
 
 void App::Run()
 {
-	// Solver
-	Graph circuit;
 
 	//////////////// Main Loop ////////////////////
 	while (CircuitGUI::app.isOpen() && End == false)
@@ -884,23 +885,27 @@ void App::ImGUI()
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Analysis")) {
+		if (ImGui::BeginMenu("Simulation")) {
 			stimuliDisplay = 1; /*cout << "a";*/
 
 			if (ImGui::MenuItem("Generate Graph")) {
 				stimuliDisplay = 1; /*cout << "114";*/
 
-				//circuit.clearAll();
+				circuit.clearAll();
 
-				//for (int i = 0; i < allEnds.size(); i++)
-				//	circuit.newItem(i);
-				//
-				//for (auto& component : comp)
-				//	circuit.link(component.node1, component.node2);
+				for (int i = 0; i < allEnds.size(); i++)
+					circuit.newItem(i);
+				
+				for (auto& component : comp)
+					circuit.link(component.node1, component.node2);
+
+				circuit.updateWin();
 			}
 
 			if (ImGui::MenuItem("Print Graph")) {
-				//circuit.printGraph();
+
+
+				circuit.printGraph();
 			}
 
 			ImGui::EndMenu();
@@ -1358,21 +1363,21 @@ void App::Update()
 
 			updateVisibleVector();
 
-			{
-				//circuit.clearAll();
-				//
-				//for (int c = 0; c < allEnds.size(); c++)
-				//	circuit.newItem(c);
-				//
-				//for (auto& component : comp)
-				//	circuit.link(component.node1, component.node2);
-				//
-				//circuit.printGraph();
-			}
+			//{
+			//	circuit.clearAll();
+			//	
+			//	for (int c = 0; c < allEnds.size(); c++)
+			//		circuit.newItem(c);
+			//	
+			//	for (auto& component : comp)
+			//		circuit.link(component.node1, component.node2);
+			//	
+			//	circuit.printGraph();
+			//}
 		}
 	}
 
-	//circuit.updateWin();
+	circuit.updateWin();
 
 	/*asdfif (PlayRot) { CircuitGUI::view.rotate(0.9); }
 	else CircuitGUI::view.setRotation(0);*/

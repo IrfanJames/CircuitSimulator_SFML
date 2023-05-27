@@ -711,6 +711,7 @@ namespace CircuitGUI {
 
 
 	bool occupiedAt(const Entity& en, const sf::Vector2f& At, bool ignoreAllVir) {
+
 		static Entity e;
 		e.x = At.x; e.y = At.y; e.angle = en.angle;
 		e.stimuli();
@@ -719,33 +720,43 @@ namespace CircuitGUI {
 		qtExtract(e.bounds, vec);
 
 		if (ignoreAllVir)
-			for (int v = virSerial.size() - 1; v >= 0; v--) {
+		{
+			for (int v = virSerial.size() - 1; v >= 0; v--)
+			{
 				int index = lower_bound(vec.begin(), vec.end(), virSerial[v]) - vec.begin();
+				
 				if (index < vec.size() && (vec[index] == virSerial[v]))
 					vec.erase(vec.begin() + index);
 			}
+		}
 
 		int count = 0;
 		for (int i = 0; i < vec.size(); i++) {
 			count = 0;
+			static sf::Vector2f eEnd(0, 0);
+			static sf::Vector2f cEnd(0, 0);
+
+			eEnd = e.getEndPos();
+			cEnd = comp[vec[i]].getEndPos();
 
 			if (e.x == comp[vec[i]].x &&
 				e.y == comp[vec[i]].y)
 				count++;
 
-			if (e.x == comp[vec[i]].getEndPos().x &&
-				e.y == comp[vec[i]].getEndPos().y)
+			if (e.x == cEnd.x &&
+				e.y == cEnd.y)
 				count++;
 
-			if (e.getEndPos().x == comp[vec[i]].x &&
-				e.getEndPos().y == comp[vec[i]].y)
+			if (eEnd.x == comp[vec[i]].x &&
+				eEnd.y == comp[vec[i]].y)
 				count++;
 
-			if (e.getEndPos().x == comp[vec[i]].getEndPos().x &&
-				e.getEndPos().y == comp[vec[i]].getEndPos().y)
+			if (eEnd.x == cEnd.x &&
+				eEnd.y == cEnd.y)
 				count++;
 
-			if (count > 1) { Occupied = true; return 1; }
+			if (count == 0) { Occupied = true; return 1; }
+			if (count > 1)  { Occupied = true; return 1; }
 		}
 
 		if (count == 1) { Occupied = false; return 0; }

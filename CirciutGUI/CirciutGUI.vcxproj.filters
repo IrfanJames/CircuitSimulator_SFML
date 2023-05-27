@@ -65,7 +65,7 @@
     <ClCompile Include="src\Circuit_Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Circiut_Sim_main.cpp">
+    <ClCompile Include="src\Circuit_Sim_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Circuit_App.cpp">

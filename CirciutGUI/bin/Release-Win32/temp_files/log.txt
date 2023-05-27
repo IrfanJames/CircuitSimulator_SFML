@@ -1,0 +1,3 @@
+
+[Error]: wire.initial(), But vec:edge_points is empty
+[Error]: Wire::move(), But vec:edge_points is empty

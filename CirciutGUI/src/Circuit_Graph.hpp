@@ -4,8 +4,6 @@
 
 class Graph {
 
-private:
-	
 	struct Corner {
 		int item = 0;
 		std::vector<int> neighbors;
@@ -15,19 +13,13 @@ private:
 			neighbors.reserve(8);
 		}
 	};
-	sf::Event evnt;
-	sf::RenderWindow win;
-	std::vector<sf::CircleShape> allCircles;
-	std::vector<sf::RectangleShape> allVertices;
-	std::vector<Corner> Vector;
-
+	
 public:
-
 	Graph();
 	~Graph();
 	
 	void newItem(int serial);
-	void link(int Index, int Link);
+	void link(int corner1, int corner2);
 
 	void clearAll();
 	void updateWin();
@@ -35,8 +27,14 @@ public:
 	void printCorner(const Corner& corner);
 	void printGraph();
 
-
 private:
 	void setGraph();
 
+private:
+	sf::Event evnt;
+	sf::RenderWindow win;
+	std::vector<sf::CircleShape> allCircles;
+	std::vector<sf::RectangleShape> allVertices;
+	std::vector<Corner> Vector;
 };
+

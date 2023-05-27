@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "SFML/System/Clock.hpp"
+#include "Circuit_Graph.hpp"
 
 class App {
 
@@ -53,12 +53,15 @@ private:
 	float t_TollWx = 0;
 	
 	int serialToolMouse = 0;
-	//nt serialCompMouse = 0;
+	//int serialCompMouse = 0;
 	
 	time_t FrameTime_for_FPS = 0;
 	//bool PlayMode = 0; //asdf
 	//bool PlayRot = 0;  //asdf
-	
+
 	// ImGui
 	sf::Clock deltaClock;
+
+	// Solver
+	Graph circuit;
 };

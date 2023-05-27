@@ -49,9 +49,7 @@ New:
 
 
 Short-Term Goals
-	* Fix Bug occupiedAt()
-	* Generate a Ciruit(Graph) from Entities & EndNodes
-	* App class
+	* State Machine
 	* Wires
 	* Optimize QuadTree qtUpdate()
 
@@ -83,5 +81,4 @@ Stable
 Still Not Yet
 	* Threads
 	* enum (State Machine for hold)
-	* uint32_t for window size
-	* Smart Display (only on Stimuli)
+	* Smart Draw (only on Stimuli)

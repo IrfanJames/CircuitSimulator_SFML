@@ -1,136 +1,134 @@
 
-#include "Circuit_Graph.hpp"
-
 #include <iostream>
 
 #include "Circuit_Global.hpp"
 #include "LOG.hpp"
 
+#include "Circuit_Graph.hpp"
+
 
 Graph::Graph() {
-		Vector.reserve(5);
+	Vector.reserve(5);
 
-		sf::ContextSettings settings;
-		settings.antialiasingLevel = 8;
-		win.create(sf::VideoMode(500, 500), "Graph", sf::Style::Default, settings);
-		win.setVisible(false);
-	}
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 8;
+	win.create(sf::VideoMode(500, 500), "Graph", sf::Style::Default, settings);
+	win.setVisible(false);
+}
 
 Graph::~Graph() { ; }
 
 
 
 void Graph::newItem(int serial) {
-		Vector.emplace_back(serial);
-		setGraph();
-	}
+	Vector.emplace_back(serial);
+	setGraph();
+}
 
-void Graph::link(int Index, int Link) {
-		if (Vector.size() > Index && Vector.size() > Link)
-			Vector.at(Index).neighbors.emplace_back(Link);
-		setGraph();
-	}
+void Graph::link(int corner1, int corner2) {
+	if (Vector.size() > corner1 && Vector.size() > corner2)
+		Vector.at(corner1).neighbors.emplace_back(corner2);
+	setGraph();
+}
 
 void Graph::clearAll() {
-		Vector.clear();
-		allCircles.clear();
-		allVertices.clear();
-	}
+	Vector.clear();
+	allCircles.clear();
+	allVertices.clear();
+}
 
 void Graph::updateWin() {
 
-		win.setVisible(true);
+	win.setVisible(true);
 
-		if (win.isOpen()) {
+	if (win.isOpen()) {
 
-			while (win.pollEvent(evnt)) {
-				if (evnt.type == evnt.Closed) {
+		while (win.pollEvent(evnt)) {
+			if (evnt.type == evnt.Closed) {
+				win.close();
+				return;
+			}
+
+			if (evnt.type == evnt.Resized) {
+				win.setView(sf::View(sf::FloatRect(0, 0, (int)evnt.size.width, (int)evnt.size.height)));
+			}
+
+			if (evnt.type == evnt.KeyPressed) {
+				if (evnt.key.code == sf::Keyboard::Escape) {
 					win.close();
 					return;
 				}
-
-				if (evnt.type == evnt.Resized) {
-					win.setView(sf::View(sf::FloatRect(0, 0, (int)evnt.size.width, (int)evnt.size.height)));
-				}
-
-				if (evnt.type == evnt.KeyPressed) {
-					if (evnt.key.code == sf::Keyboard::Escape) {
-						win.close();
-						return;
-					}
-				}
-			}
-
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-
-				/*Finding Closest*/
-				for (int c = 0; c < allCircles.size(); c++) {
-					sf::Vector2f tempPos = allCircles[c].getPosition();
-
-					if (40 * 40 >=
-						(tempPos.x - (float)sf::Mouse::getPosition(win).x) * (tempPos.x - (float)sf::Mouse::getPosition(win).x) +
-						(tempPos.y - (float)sf::Mouse::getPosition(win).y) * (tempPos.y - (float)sf::Mouse::getPosition(win).y)) {
-
-						allCircles[c].setPosition(sf::Vector2f(sf::Mouse::getPosition(win)));
-
-
-						/*Vertices*/
-						for (int i = 0, v = 0; i < Vector.size(); i++) {
-							for (int j = 0; j < Vector[i].neighbors.size(); j++) {
-
-								int neigborSerial = (&Vector[Vector[i].neighbors[j]] - &Vector[0]);
-
-								sf::Vector2f ini = allCircles[i].getPosition(), fin = allCircles[neigborSerial].getPosition();
-
-								allVertices[v].setSize(sf::Vector2f(sqrtf((ini.x - fin.x) * (ini.x - fin.x) + (ini.y - fin.y) * (ini.y - fin.y)), 3));
-								allVertices[v].setPosition(ini);
-								allVertices[v].setRotation(atan2f((fin.y - ini.y) * DegToRad, (fin.x - ini.x) * DegToRad) * RadToDeg);
-								v++;
-							}
-						}
-
-						//Drawing
-						//win.clear();
-						//for (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
-						//for (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
-						//win.display();
-						break;
-					}
-				}
-			}
-
-			/*Drawing*/
-			{
-				win.clear();
-
-				for (auto& v : allVertices)
-					win.draw(v);
-				for (auto& circle : allCircles)
-					win.draw(circle);
-
-				win.display();
 			}
 		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+			/*Finding Closest*/
+			for (int c = 0; c < allCircles.size(); c++) {
+				sf::Vector2f tempPos = allCircles[c].getPosition();
+
+				if (40 * 40 >=
+					(tempPos.x - (float)sf::Mouse::getPosition(win).x) * (tempPos.x - (float)sf::Mouse::getPosition(win).x) +
+					(tempPos.y - (float)sf::Mouse::getPosition(win).y) * (tempPos.y - (float)sf::Mouse::getPosition(win).y)) {
+
+					allCircles[c].setPosition(sf::Vector2f(sf::Mouse::getPosition(win)));
+
+
+					/*Vertices*/
+					for (int i = 0, v = 0; i < Vector.size(); i++) {
+						for (int j = 0; j < Vector[i].neighbors.size(); j++) {
+
+							int neigborSerial = (&Vector[Vector[i].neighbors[j]] - &Vector[0]);
+
+							sf::Vector2f ini = allCircles[i].getPosition(), fin = allCircles[neigborSerial].getPosition();
+
+							allVertices[v].setSize(sf::Vector2f(sqrtf((ini.x - fin.x) * (ini.x - fin.x) + (ini.y - fin.y) * (ini.y - fin.y)), 3));
+							allVertices[v].setPosition(ini);
+							allVertices[v].setRotation(atan2f((fin.y - ini.y) * DegToRad, (fin.x - ini.x) * DegToRad) * RadToDeg);
+							v++;
+						}
+					}
+
+					//Drawing
+					//win.clear();
+					//for (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
+					//for (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
+					//win.display();
+					break;
+				}
+			}
+		}
+
+		/*Drawing*/
+		{
+			win.clear();
+
+			for (auto& v : allVertices)
+				win.draw(v);
+			for (auto& circle : allCircles)
+				win.draw(circle);
+
+			win.display();
+		}
 	}
+}
 
 
 
 void Graph::printCorner(const Corner& corner) {
-		std::cout << "\n" << corner.item << ":\t";
-		for (int c = 0; c < corner.neighbors.size(); c++) {
-			std::cout << " " << Vector[corner.neighbors[c]].item;
-		}
+	std::cout << "\n" << corner.item << ":\t";
+	for (int c = 0; c < corner.neighbors.size(); c++) {
+		std::cout << " " << Vector[corner.neighbors[c]].item;
 	}
+}
 
 void Graph::printGraph() {
-		std::cout << "\n";
-		for (int c = 0; c < Vector.size(); c++) {
-			printCorner(Vector[c]);
-		}
-		std::cout << "\n";
+	std::cout << "\n";
+	for (int c = 0; c < Vector.size(); c++) {
+		printCorner(Vector[c]);
 	}
-
-
+	std::cout << "\n";
+}
 
 void Graph::setGraph() {
 
@@ -205,4 +203,5 @@ void Graph::setGraph() {
 	//abcfor (int c = 0; c < allVertices.size(); c++) { win.draw(allVertices[c]); }
 	//abcfor (int c = 0; c < allCircles.size(); c++) { win.draw(allCircles[c]); }
 	//abcwin.display();
+
 }

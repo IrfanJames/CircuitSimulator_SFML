@@ -277,7 +277,7 @@
     <ClInclude Include="src\Resource_Manager.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Circiut_Sim_main.cpp" />
+    <ClCompile Include="src\Circuit_Sim_main.cpp" />
     <ClCompile Include="src\Circuit_App.cpp" />
     <ClCompile Include="src\Circuit_Entity.cpp" />
     <ClCompile Include="src\Circuit_Graph.cpp" />
