@@ -1,1 +1,22 @@
-﻿  imgui.vcxproj -> D:\Programming\C++\CircuitSimulator_SFML\Dependencies\imgui\bin\Release-x64\imgui.lib
+﻿  imgui-SFML.cpp
+D:\Programming\C++\CircuitSimulator_SFML\Dependencies\imgui\docking-src\imgui-SFML.cpp(560,67): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+D:\Programming\C++\CircuitSimulator_SFML\Dependencies\imgui\docking-src\imgui-SFML.cpp(560,48): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+winmm.lib(WINMM.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+gdi32.lib(GDI32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+user32.lib(USER32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+kernel32.lib(KERNEL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+winspool.lib(WINSPOOL.DRV) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+comdlg32.lib(COMDLG32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+advapi32.lib(ADVAPI32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+shell32.lib(SHELL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+ole32.lib(ole32.dll) : warning LNK4006: IsEqualGUID already defined in sfml-window-s.lib(JoystickImpl.cpp.obj); second definition ignored
+ole32.lib(ole32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+oleaut32.lib(OLEAUT32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+uuid.lib(WSCAPI.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+odbc32.lib(ODBC32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in opengl32.lib(OPENGL32.dll); second definition ignored
+  imgui.vcxproj -> D:\Programming\C++\CircuitSimulator_SFML\Dependencies\imgui\bin\Release-x64\imgui.lib

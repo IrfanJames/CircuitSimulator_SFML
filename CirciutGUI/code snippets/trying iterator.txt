@@ -1,0 +1,9 @@
+virSerialShift.push_back(rand());
+
+					newComps.emplace_back(virSerialShift.end());
+					auto att = newComps.back() - virSerialShift.begin() - !virSerialShift.empty();
+					auto i_ = &virSerialShift.at(att);
+					LOG("\n\nptr : " << i_ << "\tValue: " << *i_);
+					LOG("\n_Ptr: " << newComps.back()._Ptr-- << "\tValue: " << *newComps.back()._Ptr--);
+					//newComps.emplace_back(newItems.end());
+					LOG("\nnewComps size: " << newComps.size());

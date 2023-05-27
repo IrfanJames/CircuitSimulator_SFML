@@ -246,9 +246,11 @@ namespace CircuitGUI {
 		//	allEnds.erase(allEnds.begin() + nodeCount, allEnds.end());
 
 	}
-	void updateAllEnds() {
-		//int ttttttttttt = allEnds.size();
-		//LOG("Before: "); for (auto& vec : allEnds) LOG_VEC2(vec);
+	void updateAllEnds_a() {
+		bool Print = false;
+
+		int ttttttttttt = allEnds.size();
+		if (Print) LOG("Before: "); if (Print) for (auto& vec : allEnds) LOG_VEC2(vec);
 		allEnds.clear();
 
 		static std::vector<int> end1;
@@ -269,57 +271,58 @@ namespace CircuitGUI {
 		static std::vector<int> intersects;
 
 		// Front End
-		//LOG("\nupdateAllEnds2 for\n");
+		if (Print) LOG("\nupdateAllEnds2 for\n");
 
 
 		for (int v = 0; v < 2; v++) {
 			auto vec = &end1;
 
-			if (v == 0) { vec = &end1; /*LOG("\n11111111111111 end1");*/ }
-			if (v == 1) { vec = &end2; /*LOG("\n22222222222222 end2");*/ }
+			if (v == 0) { vec = &end1; if (Print)LOG("\n11111111111111 end1"); }
+			if (v == 1) { vec = &end2; if (Print)LOG("\n22222222222222 end2"); }
 
 			for (int i = 0; i < (*vec).size(); i++)
 				//for (int i = (*vec).size() - !((*vec).empty()); i >= 0; i--) // Just Iterating in Reverse // For Optimization sake // Optimization related to deleting in std::vector
 			{
-				int index = (*vec)[i];
+				int Index = (*vec)[i];
 				int x = 0, y = 0;
 
 				// x, y
 				if (v == 0) {
-					x = comp[index].x;
-					y = comp[index].y;
+					x = comp[Index].x;
+					y = comp[Index].y;
 				}
 				else {
-					x = comp[index].getEndPos().x;
-					y = comp[index].getEndPos().y;
+					x = comp[Index].getEndPos().x;
+					y = comp[Index].getEndPos().y;
 				}
 				allEnds.emplace_back(x, y);
+				int Node = allEnds.size() - !allEnds.empty();
 
 				//
 				if (v == 0)
-					comp[index].node1 = allEnds.size() - !allEnds.empty();
+					comp[Index].node1 = Node;
 				else
-					comp[index].node2 = allEnds.size() - !allEnds.empty();
+					comp[Index].node2 = Node;
 
 				// finding intersecting comp. by QuadTree
 				searchArea = { x - rectSize / 2.0f, y - rectSize / 2.0f, rectSize, rectSize };
 				qtExtract(searchArea, intersects);
 
 
-				//LOG("--------------\ni = " << i << ", allEnds.back(): ");
-				//LOG_VEC2(allEnds.back());
-				//LOG_VEC(intersects);
+				if (Print) LOG("--------------\ni = " << i << ", allEnds.back(): ");
+				if (Print) LOG_VEC2(allEnds.back());
+				if (Print) LOG_VEC(intersects);
 
 				for (int j = 0; j < intersects.size(); j++)
 				{
-					if (intersects[j] == index) continue;
+					if (intersects[j] == Index) continue;
 
 					tempVec2.x = comp[intersects[j]].x;
 					tempVec2.y = comp[intersects[j]].y;
 
 					if (allEnds.back() == tempVec2) // Try Front End
 					{
-						comp[intersects[j]].node1 = comp[index].node1; // = allEnds.size() - !allEnds.empty();
+						comp[intersects[j]].node1 = Node;
 
 						auto it = std::find(end1.begin(), end1.end(), intersects[j]);
 						if (it != end1.end())
@@ -327,7 +330,7 @@ namespace CircuitGUI {
 					}
 					else if (allEnds.back() == comp[intersects[j]].getEndPos()) // Try Back End
 					{
-						comp[intersects[j]].node2 = comp[index].node1; // = allEnds.size() - !allEnds.empty();
+						comp[intersects[j]].node2 = Node;
 
 						auto it = std::find(end2.begin(), end2.end(), intersects[j]);
 						if (it != end2.end())
@@ -339,32 +342,167 @@ namespace CircuitGUI {
 
 				// current's Front End
 				{
-					auto it = std::find((*vec).begin(), (*vec).end(), index);
+					auto it = std::find((*vec).begin(), (*vec).end(), Index);
 					if (it != (*vec).end()) {
 						(*vec).erase(it);
 						i--;
 					}
 				}
 
-				//LOG("\nallEnds.size() : " << allEnds.size() << "\n");
-				//LOG("end1:");
-				//LOG_VEC(end1);
-				//LOG("\nend2:");
-				//LOG_VEC(end2);
+				if (Print) {
+					LOG("\nallEnds.size() : " << allEnds.size() << "\n");
+					LOG("end1:");
+					LOG_VEC(end1);
+					LOG("\nend2:");
+					LOG_VEC(end2);
+				}
 			}
 		}
 
-		/*LOG*/ {
-			//LOG("\n\n-------------");
-			//for (int c = 0; c < comp.size(); c++)
-			//	LOG("\n" << c << ": " << comp[c].node1 << ", " << comp[c].node2);
-			//
-			//LOG("\nBefore: " << ttttttttttt);
-			//LOG("\nAfter:  " << allEnds.size());
+		if (Print) {
+
+			LOG("\n\n-------------");
+			for (int c = 0; c < comp.size(); c++)
+				LOG("\n" << c << ": " << comp[c].node1 << ", " << comp[c].node2);
+
+			LOG("\nBefore: " << ttttttttttt);
+			LOG("\nAfter:  " << allEnds.size());
 		}
 
 
-		//LOG("\n\nAfter:  "); for (auto& vec : allEnds) LOG_VEC2(vec);
+		if (Print) LOG("\n\nAfter:  "); if (Print) for (auto& vec : allEnds) LOG_VEC2(vec);
+	}
+	void updateAllEnds() {
+		bool Print = false;
+
+		int ttttttttttt = allEnds.size();
+		if(Print) LOG("Before: "); if (Print) for (auto& vec : allEnds) LOG_VEC2(vec);
+		allEnds.clear();
+
+		static std::vector<bool> end1;
+		static std::vector<bool> end2;
+
+		end1.resize(comp.size());
+		end2.resize(comp.size());
+
+		for (int i = 0; i < comp.size(); i++) {
+			end1[i] = false;
+			end2[i] = false;
+		}
+
+		// Nodes
+		static const int rectSize = 3;
+		static sf::Vector2f tempVec2;
+		static sf::FloatRect searchArea;
+		static std::vector<int> intersects;
+
+		// Front End
+		if(Print) LOG("\nupdateAllEnds2 for\n");
+
+
+		for (int v = 0; v < 2; v++) {
+			auto vec = &end1;
+
+			if (v == 0) { vec = &end1; if (Print) LOG("\n11111111111111 end1"); }
+			if (v == 1) { vec = &end2; if (Print) LOG("\n22222222222222 end2"); }
+
+			for (int i = 0; i < (*vec).size(); i++)
+				//for (int i = (*vec).size() - !((*vec).empty()); i >= 0; i--) // Just Iterating in Reverse // For Optimization sake // Optimization related to deleting in std::vector
+			{
+				//int Index = (*vec)[i];
+				if ((*vec)[i] == true) continue;
+				int x = 0, y = 0;
+
+				// x, y
+				if (v == 0) {
+					x = comp[i].x;
+					y = comp[i].y;
+				}
+				else {
+					x = comp[i].getEndPos().x;
+					y = comp[i].getEndPos().y;
+				}
+				allEnds.emplace_back(x, y);
+				int Node = allEnds.size() - !allEnds.empty();
+
+				//
+				if (v == 0)
+					comp[i].node1 = Node;
+				else
+					comp[i].node2 = Node;
+
+				// finding intersecting comp. by QuadTree
+				searchArea = { x - rectSize / 2.0f, y - rectSize / 2.0f, rectSize, rectSize };
+				qtExtract(searchArea, intersects);
+
+
+				if (Print) {
+					LOG("--------------\ni = " << i << ", allEnds.back(): ");
+					LOG_VEC2(allEnds.back());
+					LOG_VEC(intersects);
+				}
+
+				for (int j = 0; j < intersects.size(); j++)
+				{
+					if (intersects[j] == i) continue;
+
+					tempVec2.x = comp[intersects[j]].x;
+					tempVec2.y = comp[intersects[j]].y;
+
+					if (allEnds.back() == tempVec2) // Try Front End
+					{
+						comp[intersects[j]].node1 = Node;
+
+						//auto it = std::find(end1.begin(), end1.end(), intersects[j]);
+						//if (it != end1.end())
+						//	end1.erase(it);
+						end1[intersects[j]] = true;
+					}
+					else if (allEnds.back() == comp[intersects[j]].getEndPos()) // Try Back End
+					{
+						comp[intersects[j]].node2 = Node;
+
+						//auto it = std::find(end2.begin(), end2.end(), intersects[j]);
+						//if (it != end2.end())
+						//	end2.erase(it);
+						end2[intersects[j]] = true;
+					}
+
+				}
+
+
+				// current's Front End
+				{
+					//auto it = std::find((*vec).begin(), (*vec).end(), Index);
+					//if (it != (*vec).end()) {
+					//	(*vec).erase(it);
+					//	i--;
+					//}
+					(*vec)[i] = true;
+				}
+
+				if (Print) {
+					LOG("\nallEnds.size() : " << allEnds.size() << "\n");
+					LOG("end1:");
+					LOG_VEC(end1);
+					LOG("\nend2:");
+					LOG_VEC(end2);
+				}
+			}
+		}
+
+
+		if (Print) {
+
+			LOG("\n\n-------------");
+			for (int c = 0; c < comp.size(); c++)
+				LOG("\n" << c << ": " << comp[c].node1 << ", " << comp[c].node2);
+			
+			LOG("\nBefore: " << ttttttttttt);
+			LOG("\nAfter:  " << allEnds.size());
+		}
+
+		if (Print) LOG("\n\nAfter:  "); if (Print) for (auto& vec : allEnds) LOG_VEC2(vec);
 	}
 	bool makingWire()
 	{
@@ -481,9 +619,9 @@ namespace CircuitGUI {
 		int compSize = comp.size();
 		if (compSize <= quadTree::limit) {
 			qt.size = compSize;
-			LOG("\nqt: " << qt.arr.size() << "\tcomps: " << compSize);
+			//LOG("\nqt: " << qt.arr.size() << "\tcomps: " << compSize);
 			qt.arr.resize(compSize); // no del
-			LOG("\nqt: " << qt.arr.size() << "\tcomps: " << compSize << "\n");
+			//LOG("\nqt: " << qt.arr.size() << "\tcomps: " << compSize << "\n");
 			for (int c = 0; c < compSize; c++) // qt.arr.size()
 				qt.arr[c] = c;
 		}

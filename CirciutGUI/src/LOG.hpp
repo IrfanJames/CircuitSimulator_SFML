@@ -27,12 +27,12 @@ namespace LOG {
 
 // LOG_VEC Function
 #ifdef MY_NDIST
-#define LOG_VEC(vec) LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n");
+#define LOG_VEC(vec) { LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n"); }
 #else
 #define LOG_VEC(vec) ;
 #endif
 
-// LOG_VEC Function
+// LOG_VEC2 Function
 #ifdef MY_NDIST
 #define LOG_VEC2(vec) LOG("(" << vec.x << ", " << vec.y << "), ");
 #else

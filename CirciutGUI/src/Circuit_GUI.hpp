@@ -99,6 +99,7 @@ namespace CircuitGUI {
 	extern void drawBoarders();
 	extern void drawWires();
 	//extern void updateAllEnds_old();
+	extern void updateAllEnds_a();
 	extern void updateAllEnds();
 	extern bool makingWire();
 	

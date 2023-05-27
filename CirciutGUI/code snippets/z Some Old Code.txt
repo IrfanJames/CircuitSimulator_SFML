@@ -1,0 +1,113 @@
+if (evnt.key.code == sf::Keyboard::P) {
+	
+	//time_t print = clock();
+
+	/*sf::Texture tex;
+
+	tex.update(app);
+
+	sf::Image screenshot(tex.copyToImage());
+
+	screenshot.saveToFile("screenshot.png");*/
+
+	std::string filepath = SaveFileDialog("PNG (*.PNG)\0*.PNG\0", "Saved-Images");//JPEG (*.JPG)\0*.JPG\0
+
+	//screenshot = app.capture();
+	//screenshot.saveToFile("screenshot.png");
+
+	for (int c = 0; c < 1; c++) {
+		//std::thread printScreenTread { printScreen }; printScreenTread.join();
+
+		//std::async(std::launch::async, printScreen);
+		if (!filepath.empty())
+		CircuitGUI::Options::printScreen(filepath);
+	}
+	//cout << "\n" << ((float)clock() - (float)print) / (float)CLOCKS_PER_SEC;
+}
+
+
+
+std::string SaveFileDialog(const char* filter, const std::string &defaultDir, int tempNumber = 0)
+{
+	OPENFILENAMEA ofn;
+	CHAR szFile[260] = { 0 };
+	CHAR currentDir[256] = { 0 };
+	ZeroMemory(&ofn, sizeof(OPENFILENAME));
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	//ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
+	ofn.lpstrFile = szFile;
+	ofn.nMaxFile = sizeof(szFile);
+
+	// Set the default directory to "Saved-Projects"
+	for (int c = 0; c < defaultDir.size(); c++)
+		currentDir[c] = (int)defaultDir[c];
+	ofn.lpstrInitialDir = currentDir;
+
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+
+	// Sets the default extension by extracting it from the filter
+	ofn.lpstrDefExt = strchr(filter, '\0') + 1;
+
+	// Set the default file name to "Untitled-<tempNumber>"
+	std::string tn = "Untitled-" + std::to_string(tempNumber);
+	for (int c = 0; c < tn.size(); c++)
+		szFile[c] = (int)tn[c];
+
+	if (GetSaveFileNameA(&ofn) == TRUE) {
+		/*LPCWSTR temp = (wchar_t*)ofn.lpstrFile;
+		ShellExecute(NULL, NULL, temp, NULL, NULL, SW_SHOWNORMAL);*/
+		return ofn.lpstrFile;
+	}
+
+	return std::string();
+}
+
+
+
+//if (RELEASE_DEBUG/* && stimuliEndNodes*/) {
+//	while (virSerial.size() < allBoarders.size()) {
+//		allBoarders.pop_back();
+//	}
+//	while (allBoarders.size() < virSerial.size()) {
+//		allBoarders.emplace_back(boarderPic);
+//	}
+//	sf::FloatRect bounds;
+//	for (int v = 0; v < virSerial.size(); v++) {
+//		bounds = comp[virSerial[v]].getBounds();
+//		allBoarders[v].setPosition(bounds.left, bounds.top);
+//		allBoarders[v].setSize(sf::Vector2f(bounds.width, bounds.height));
+//	}
+//}
+
+/*if (debugBool) {
+	debugBool = 0;
+
+	//LPCWSTR pszPathToOpen = L"C:\\Windows";
+	//PIDLIST_ABSOLUTE pidl;
+	//if (SUCCEEDED(SHParseDisplayName(pszPathToOpen, 0, &pidl, 0, 0)))
+	//{
+	//	// we don't want to actually select anything in the folder, so we pass an empty
+	//	// PIDL in the array. if you want to select one or more items in the opened
+	//	// folder you'd need to build the PIDL array appropriately
+	//	ITEMIDLIST idNull = { 0 };
+	//	LPCITEMIDLIST pidlNull[1] = { &idNull };
+	//	SHOpenFolderAndSelectItems(pidl, 1, pidlNull, 0);
+	//	ILFree(pidl);
+	//}
+
+	ShellExecute(NULL, NULL, L"E:\\Programming\\C++\\CircuitSimulator_SFML\\Circiut_Sim\\Saved-Images", NULL, NULL, SW_SHOWNORMAL);
+
+	//system("start explorer c:\\php");
+
+}*/
+
+/*sf::Cursor cursor;
+	if (MIntool) {
+		cursor.loadFromSystem(sf::Cursor::Hand);
+		CircuitGUI::app.setMouseCursor(cursor);
+	} else {
+		cursor.loadFromSystem(sf::Cursor::Arrow);
+		CircuitGUI::app.setMouseCursor(cursor);
+	}*/

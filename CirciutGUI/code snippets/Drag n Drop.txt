@@ -1,0 +1,62 @@
+
+LRESULT CALLBACK winProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_DROPFILES:
+	{
+		std::vector<std::string> filePaths;
+
+		HDROP hDrop = (HDROP)wParam;
+		UINT fileCount = DragQueryFileW(hDrop, 0xFFFFFFFF, NULL, 0);
+
+		for (UINT i = 0; i < fileCount; ++i)
+		{
+			UINT size = DragQueryFileW(hDrop, i, NULL, 0) + 1;
+			std::wstring wFilePath(size, 0);
+			DragQueryFileW(hDrop, i, &wFilePath[0], size);
+			std::string filePath(wFilePath.begin(), wFilePath.end());
+			filePaths.push_back(filePath);
+		}
+
+		DragFinish(hDrop);
+
+		// process filePaths, which contains the paths of the dropped files
+		// ...
+
+		for (int i = 0; i < filePaths.size(); i++)
+			cout << "\n" << i << ".\t" << filePaths[i];
+
+		break;
+	}
+	}
+
+	return DefWindowProcW(hWnd, message, wParam, lParam);
+}
+
+int main(int argc, char* argv[]) {
+
+	CircuitGUI::initializeGUI();
+
+	/*ImGui*/
+	ImGui::SFML::Init(CircuitGUI::app);
+	sf::Clock deltaClock;
+
+
+
+
+	// get the window handle
+	HWND hWnd = static_cast<sf::WindowHandle>(app.getSystemHandle());
+
+	// enable file dropping
+	DragAcceptFiles(hWnd, TRUE);
+
+	// set the main window procedure
+	WNDCLASSEXW wcex;
+	memset(&wcex, 0, sizeof(wcex));
+	wcex.cbSize = sizeof(WNDCLASSEXW);
+	wcex.lpfnWndProc = winProc;
+	wcex.hInstance = GetModuleHandle(NULL);
+	wcex.lpszClassName = L"SFMLWindowClass";
+	RegisterClassExW(&wcex);
+	SetWindowLongPtrW(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(winProc));
