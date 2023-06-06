@@ -5,20 +5,19 @@
 */
 
 #include <iostream>
-#include <fstream>
 #include <vector>
+#include <fstream>
 #include <direct.h>
+#include <future>
+//#include <thread>
 //#include <sstream>
 //#include <string>
-//#include <thread>
-#include <future>
 
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "SFML/Graphics.hpp"
 
 #include "LOG.hpp"
-#include "Circuit_GUI.hpp"
 #include "Circuit_Entity.hpp"
 #include "Circuit_Windows_Stuff.hpp"
 #include "Circuit_Wire.hpp"
@@ -26,14 +25,14 @@
 #include "Circuit_Graph.hpp"
 #include "Resource_Manager.hpp"
 
+#include "Circuit_GUI.hpp"
+#include "CircuitCore.hpp"
 #include "Circuit_App.hpp"
-//#include "CircuitCore.hpp"
 
 
 
 App::App(const std::vector<std::string>& filepaths)
 {
-	LOG("ON");
 	srand(time(NULL));
 	
 	CircuitGUI::initializeGUI();
@@ -133,7 +132,11 @@ void App::Events()
 		if (evnt.type == evnt.Resized) {
 			W = CircuitGUI::app.getSize().x; H = CircuitGUI::app.getSize().y;
 
-			view = sf::View(sf::FloatRect((int)view.getCenter().x - (int)(evnt.size.width / 2), (int)view.getCenter().y - (int)(evnt.size.height / 2), (int)evnt.size.width, (int)evnt.size.height));
+			view = sf::View(sf::FloatRect(
+				(int)view.getCenter().x - (int)(evnt.size.width / 2),
+				(int)view.getCenter().y - (int)(evnt.size.height / 2),
+				(int)evnt.size.width,
+				(int)evnt.size.height));
 			//CircuitGUI::view.setSize((int)evnt.size.width, (int)evnt.size.height);
 			//CircuitGUI::view.setCenter((int)CircuitGUI::view.getCenter().x, (int)CircuitGUI::view.getCenter().y);
 
@@ -495,11 +498,13 @@ void App::Options()
 {
 	//sf::Mouse Hold
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) { //////////// Urgent need of enums , State Machine
-		if (releaseBool) {
+		if (releaseBool)
+		{
 			using namespace CircuitGUI;
-			releaseBool = 0;
+			releaseBool = false;
 			click = clock();
-			mouseHoldX = (float)sf::Mouse::getPosition(app).x; mouseHoldY = (float)sf::Mouse::getPosition(app).y;
+			mouseHoldX = (float)sf::Mouse::getPosition(app).x;
+			mouseHoldY = (float)sf::Mouse::getPosition(app).y;
 
 			/*new Comp*/
 			if (MIntool) {
@@ -577,6 +582,18 @@ void App::Options()
 					horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
 				}*/
 			}
+
+
+			// Move Wire
+			{
+				onWireindex = -1;
+				for (int i = 0; i < wires.size(); i++) {
+					if (onWireindex < 0 && wires[i].contains(cursorInSim())) {
+						onWireindex = i;
+					}
+				}
+			}
+
 		}
 	}
 	else {
@@ -633,46 +650,58 @@ void App::Options()
 		}
 	}
 
+
 	// Continoue while hold
 	{
-		if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !CircuitGUI::Click(0) /*&& releaseBool*/) {
-			using namespace CircuitGUI;
+		using namespace CircuitGUI;
+		
+		// Components
+		{
+			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !CircuitGUI::Click(0) /*&& releaseBool*/) {
 
-			static sf::Vector2f offsetPos;
-			static sf::FloatRect virArea;
+				static sf::Vector2f offsetPos;
+				static sf::FloatRect virArea;
 
-			virArea = allSqr.getGlobalBounds();
-			offsetPos.x = (int)cursorInSim().x - (virArea.left + (int)(virArea.width / 2));
-			offsetPos.y = (int)cursorInSim().y - (virArea.top + (int)(virArea.height / 2));
+				virArea = allSqr.getGlobalBounds();
+				offsetPos.x = (int)cursorInSim().x - (virArea.left + (int)(virArea.width / 2));
+				offsetPos.y = (int)cursorInSim().y - (virArea.top + (int)(virArea.height / 2));
 
-			for (int v = 0; v < virSprite.size(); v++)
-				virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
+				for (int v = 0; v < virSprite.size(); v++)
+					virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
 
-			offsetPos = trim(offsetPos);
+				offsetPos = trim(offsetPos);
 
-			bool moveAll = true;
-			sf::Vector2f temp;
-			for (int v = 0; v < virSerial.size(); v++) {
-				temp.x = offsetPos.x + comp[virSerial[v]].x;
-				temp.y = offsetPos.y + comp[virSerial[v]].y;
-
-				if (occupiedAt(comp[virSerial[v]], temp, true)) {
-					moveAll = 0;
-					break;
-				}
-			}
-			if (moveAll) {
+				bool moveAll = true;
+				sf::Vector2f temp;
 				for (int v = 0; v < virSerial.size(); v++) {
-					comp[virSerial[v]].x += (int)offsetPos.x; // += (were "=" before)
-					comp[virSerial[v]].y += (int)offsetPos.y; // += (were "=" before)
-					comp[virSerial[v]].stimuli();
-				}
-			}
+					temp.x = offsetPos.x + comp[virSerial[v]].x;
+					temp.y = offsetPos.y + comp[virSerial[v]].y;
 
-			stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
-			qtUpdate();
+					if (occupiedAt(comp[virSerial[v]], temp, true)) {
+						moveAll = 0;
+						break;
+					}
+				}
+				if (moveAll) {
+					for (int v = 0; v < virSerial.size(); v++) {
+						comp[virSerial[v]].x += (int)offsetPos.x; // += (were "=" before)
+						comp[virSerial[v]].y += (int)offsetPos.y; // += (were "=" before)
+						comp[virSerial[v]].stimuli();
+					}
+				}
+
+				stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
+				qtUpdate();
+			}
+		}
+
+		// Wires
+		{
+			if (0 <= onWireindex && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				wires[onWireindex].move(cursorInSim());
 		}
 	}
+
 
 	// Select Sqr
 	{
@@ -746,33 +775,15 @@ void App::Options()
 		else { CircuitGUI::selSqr.setSize(CircuitGUI::zero); }
 	}
 
-	// Wire
+
+	// Making Wire
 	{
-		using namespace CircuitGUI;
-
-		{
-			static int index = 0;
-			static bool onWire = false;
-
-			if (releaseBool && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-			{
-				onWire = false;
-				for (int i = 0; i < wires.size(); i++) {
-					if (!onWire && wires[i].contains(cursorInSim())) {
-						onWire = true; index = i;
-					}
-				}
-			}
-
-			if (onWire && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-				wires[index].move(cursorInSim());
-
-		}
+		using CircuitGUI::wires;
 
 		if (wires.empty() == false)
 			if (wires.back().isStopped() == false) {
 				wires.back().makeWire();
-				//stimuliDisplay = 1;/*LOG("\nmakeWire()");*/
+				// stimuliDisplay = 1;
 			}
 	}
 }
@@ -796,10 +807,15 @@ void App::ImGUI()
 	testCircle.setPointCount(t_vertices);
 	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/
 
-	if (ImGui::BeginMainMenuBar()) {
-
-		if (ImGui::BeginMenu("File")) {
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
 			stimuliDisplay = 1; /*cout << "a";*/
+			
+			if (ImGui::MenuItem("New", "Ctrl + N")) {
+				// stimuliDisplay = 1;
+			}
 			if (ImGui::MenuItem("Open...", "Ctrl + O")) {
 				stimuliDisplay = 1; /*cout << "14";*/ stimuliEndNodes = 1;
 
@@ -835,8 +851,10 @@ void App::ImGUI()
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Options")) {
+		if (ImGui::BeginMenu("Options"))
+		{
 			stimuliDisplay = 1; /*cout << "b";*/
+
 			if (ImGui::BeginMenu("Handdrawn Icons"))
 			{
 				ImGui::Text("Coming Soon...");
@@ -862,6 +880,9 @@ void App::ImGUI()
 
 				ImGui::EndMenu();
 			}
+			ImGui::Checkbox("Show QuadTree", &visible_QuadTree);
+			ImGui::MenuItem("Show QuadTree", "", &visible_QuadTree);
+
 
 			//asdf
 			/*ImGui::Separator();
@@ -885,10 +906,12 @@ void App::ImGUI()
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Simulation")) {
+		if (ImGui::BeginMenu("Simulation"))
+		{
 			stimuliDisplay = 1; /*cout << "a";*/
 
-			if (ImGui::MenuItem("Generate Graph")) {
+			if (ImGui::MenuItem("Generate Graph"))
+			{
 				stimuliDisplay = 1; /*cout << "114";*/
 
 				circuit.clearAll();
@@ -899,19 +922,20 @@ void App::ImGUI()
 				for (auto& component : comp)
 					circuit.link(component.node1, component.node2);
 
-				circuit.updateWin();
+				circuit.createWindow();
+				//circuit.updateWin();
 			}
-
-			if (ImGui::MenuItem("Print Graph")) {
-
-
+			if (ImGui::MenuItem("Print Graph"))
+			{
 				circuit.printGraph();
 			}
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Help")) {
+		if (ImGui::BeginMenu("Help"))
+		{
 			stimuliDisplay = 1; //cout << "c";
+			
 			if (ImGui::BeginMenu("Controls"))
 			{
 				if (ImGui::BeginTable("table_context_menu_2", 2))
@@ -976,7 +1000,6 @@ void App::ImGUI()
 
 				ImGui::EndMenu();
 			}
-			ImGui::Separator();
 			if (ImGui::BeginMenu("Contacts"))
 			{
 				static std::string links[2][2] = // HardCode
@@ -1015,7 +1038,6 @@ void App::ImGUI()
 
 			ImGui::EndMenu();
 		}
-
 
 		ImGui::EndMainMenuBar();
 	}
@@ -1265,49 +1287,49 @@ void App::ImGUI()
 
 	/*ImGui::Dummy(ImVec2(0, 20));
 
-					ImGui::BeginTabBar("#Additional Parameters");
-					float value = 0.0f;
-					if (ImGui::BeginTabItem("Tab Name2")) {
-						ImGui::SliderFloat("Slider", &value, 0, 1.0f);
-					}
-					if (ImGui::BeginTabItem("Tab Name3")) {
-						ImGui::Text("Tab 2");
-					}
-					if (ImGui::BeginTabItem("Tab Name4")) {
-						ImGui::Text("Tab 3");
-					}
-					if (ImGui::BeginTabItem("Tab Name5")) {
-						ImGui::Text("Tab 4");
-					}
-					ImGui::EndTabBar();*/
+	ImGui::BeginTabBar("#Additional Parameters");
+	float value = 0.0f;
+	if (ImGui::BeginTabItem("Tab Name2")) {
+		ImGui::SliderFloat("Slider", &value, 0, 1.0f);
+	}
+	if (ImGui::BeginTabItem("Tab Name3")) {
+		ImGui::Text("Tab 2");
+	}
+	if (ImGui::BeginTabItem("Tab Name4")) {
+		ImGui::Text("Tab 3");
+	}
+	if (ImGui::BeginTabItem("Tab Name5")) {
+		ImGui::Text("Tab 4");
+	}
+	ImGui::EndTabBar();*/
 
 	/*ImGui::Begin("Right-Click");
-						if (ImGui::BeginPopupContextItem()) {
-							if (ImGui::Selectable("Apple")) LOG("\nApple");
-							if (ImGui::Selectable("Banana")) LOG("\nBanana");
-							ImGui::EndPopup();
-						}
-						ImGui::End;*/
+	if (ImGui::BeginPopupContextItem()) {
+		if (ImGui::Selectable("Apple")) LOG("\nApple");
+		if (ImGui::Selectable("Banana")) LOG("\nBanana");
+		ImGui::EndPopup();
+	}
+	ImGui::End;*/
 
 	/*
-							if (debugBool) {
-								//if (ImGui::BeginMenu("Hello")) {
-								if (ImGui::OpenPopupOnItemClick) {
+	if (debugBool) {
+		//if (ImGui::BeginMenu("Hello")) {
+		if (ImGui::OpenPopupOnItemClick) {
 
-									if (ImGui::Selectable("Apple")) cout << "Apple";
-									if (ImGui::Selectable("Banana")) cout << "Banana";
+			if (ImGui::Selectable("Apple")) cout << "Apple";
+			if (ImGui::Selectable("Banana")) cout << "Banana";
 
-									if (ImGui::MenuItem("One", "Ctrl + O")) { cout << "\nOpen"; }
-									if (ImGui::MenuItem("Two", "Ctrl + S")) { cout << "\nSave"; }
-									if (ImGui::MenuItem("Save as Image")) { cout << "\nOhh Yeah"; printScreen(); }
-									ImGui::Separator();
-									if (ImGui::MenuItem("Exit", "Esc")) { cout << "\nExit"; }
+			if (ImGui::MenuItem("One", "Ctrl + O")) { cout << "\nOpen"; }
+			if (ImGui::MenuItem("Two", "Ctrl + S")) { cout << "\nSave"; }
+			if (ImGui::MenuItem("Save as Image")) { cout << "\nOhh Yeah"; printScreen(); }
+			ImGui::Separator();
+			if (ImGui::MenuItem("Exit", "Esc")) { cout << "\nExit"; }
 
-									//ImGui::EndMenu();
-									//ImGui::EndPopup();
-								}
-							}
-							//*/
+			//ImGui::EndMenu();
+			//ImGui::EndPopup();
+		}
+	}
+	//*/
 
 }
 
@@ -1316,27 +1338,27 @@ void App::Thrads()
 	for (int i = 0; i < futures.size(); i++) {
 
 		std::future_status status = futures[i].wait_for(std::chrono::milliseconds(10));
-		LOG("\nThread(" << i << "): ");
+		//LOG("\nThread(" << i << "): ");
 
-		if (status == std::future_status::ready) {
+		if (status == std::future_status::ready) //{
 			// The future is ready (thread completed or value available)
-			LOG("ready");
+		//	LOG("ready");
 
 			futures.erase(futures.begin() + i--);
-		}
-		else if (status == std::future_status::timeout) {
-			// The future is not ready within the specified duration
-			LOG("timeout");
-		}
-		else if (status == std::future_status::deferred) {
-			// The future is deferred (using std::promise and std::async(launch::deferred))
-			LOG("deferred");
-		}
+		//}
+		//else if (status == std::future_status::timeout) {
+		//	// The future is not ready within the specified duration
+		//	LOG("timeout");
+		//}
+		//else if (status == std::future_status::deferred) {
+		//	// The future is deferred (using std::promise and std::async(launch::deferred))
+		//	LOG("deferred");
+		//}
 
 	}
 }
 
-void App::Update()
+void App::Update() 
 {
 	using namespace CircuitGUI;
 
@@ -1444,12 +1466,14 @@ void App::Render()
 
 		ImGui::SFML::Render(app); // Last Thing to render
 	}
-
-	CircuitGUI::app.display();
+	
+	// CircuitGUI::app.display(); // Inside void App::EndFrame()
 }
 
 void App::EndFrame()
 {
+	CircuitGUI::app.display();
+
 	CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)(((float)clock() - (float)FrameTime_for_FPS) / (float)CLOCKS_PER_SEC) * 1000.0F) + " | " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)FrameTime_for_FPS))));
 	
 	FrameTime_for_FPS = clock();

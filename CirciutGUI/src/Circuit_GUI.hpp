@@ -107,6 +107,7 @@ namespace CircuitGUI {
 
 	struct quadTree;
 	extern quadTree qt;
+	extern bool visible_QuadTree;
 	extern void qtDelete(quadTree& box);
 	extern void qtRemove(int c, quadTree& box);
 	extern void qtAdd(int c, quadTree& box);

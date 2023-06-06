@@ -20,9 +20,10 @@ public:
 	
 	void newItem(int serial);
 	void link(int corner1, int corner2);
-
 	void clearAll();
+
 	void updateWin();
+	void createWindow();
 
 	void printCorner(const Corner& corner);
 	void printGraph();
@@ -31,6 +32,9 @@ private:
 	void setGraph();
 
 private:
+	int draggingCircle = -1;
+	sf::Vector2f mouseHold;
+	sf::Vector2f viewCenter;
 	sf::Event evnt;
 	sf::RenderWindow win;
 	std::vector<sf::CircleShape> allCircles;

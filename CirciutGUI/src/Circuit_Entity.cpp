@@ -204,7 +204,7 @@ void Entity::updateValueText() {
 	default: { value = 0; LOG("[Invalid Serial: Component not in library]");					break; }
 	}
 
-	//Value -> v*prescaler
+	//Value -> "srt(v)" + "prescaler"
 	{
 		if (value < 0) { str = "-"; value = std::abs(value); }
 

@@ -50,7 +50,10 @@ private:
 	bool releaseBool = 1;
 	bool ShiftPressed = 0;
 	bool mouseOnCompsBool = 0;
-	
+
+	int onWireindex = 0;
+
+
 	bool MInTool = 0;
 	bool MIntool = 0;
 	bool cursorInWin = 0;

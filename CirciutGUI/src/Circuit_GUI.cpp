@@ -117,8 +117,10 @@ namespace CircuitGUI {
 	float horX = 0, horY = 0;
 	int verBrightCount = 5, horBrightCount = 5;
 	void iniDrag() {
-		mouseHoldX = (float)sf::Mouse::getPosition(app).x; mouseHoldY = (float)sf::Mouse::getPosition(app).y;
-		viewX = view.getCenter().x, viewY = view.getCenter().y;
+		mouseHoldX = (float)sf::Mouse::getPosition(app).x;
+		mouseHoldY = (float)sf::Mouse::getPosition(app).y;
+		viewX = view.getCenter().x;
+		viewY = view.getCenter().y;
 		verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 		horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
 	}
@@ -522,6 +524,7 @@ namespace CircuitGUI {
 	}
 
 	static bool qtChangeTag = true;
+	bool visible_QuadTree = false;
 	struct quadTree {
 		static const int limit = 5;
 		bool changed = false;
@@ -654,6 +657,9 @@ namespace CircuitGUI {
 
 	}
 	void qtDraw(quadTree& box) {
+
+		if (visible_QuadTree == false)
+			return;
 
 		app.draw(box.rectDraw);
 
@@ -998,8 +1004,7 @@ namespace CircuitGUI {
 			
 			app.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - W / 2, sf::VideoMode::getDesktopMode().height / 2 - H / 2 - 50));
 			app.setKeyRepeatEnabled(false);
-			//app.setVerticalSyncEnabled(true);
-			//app.setFramerateLimit(40); //60 or 0(disabled)
+			app.setVerticalSyncEnabled(true);
 
 
 #ifdef _DEBUG

@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 
 	delete CircuitSim;
 
-	std::cin.get();
+	//std::cin.get();
 }
 #endif
 
@@ -64,6 +64,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	App* CircuitSim = new App(filePaths);
 
 	CircuitSim->Run();
+
+	delete CircuitSim;
 
 	//return 0;
 }

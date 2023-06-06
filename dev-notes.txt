@@ -81,6 +81,5 @@ Stable
 
 
 Still Not Yet
-	* Threads
 	* enum (State Machine for hold)
 	* Smart Draw (only on Stimuli)
