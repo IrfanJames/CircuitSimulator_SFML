@@ -1,11 +1,11 @@
-## [`Click to Download`](https://irfan-james.itch.io/circuit-simulator)
+## [`Click to Download`](https://github.com/IrfanJames/CircuitSimulator_SFML/tree/main/App)
 
 
 > Circuit Simulator from Ground up in C++ (SFML and ImGui for GUI)
 
 
 
-![](https://github.com/IrfanJames/CircuitSimulator_SFML/blob/main/Debug/Snapshot.png)
+![](https://github.com/IrfanJames/CircuitSimulator_SFML/blob/main/CirciutGUI/assets/temp/snapshot.png)
 
 | Controls  | Keys  |
 | ------------ | ------------ |

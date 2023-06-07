@@ -1004,7 +1004,7 @@ namespace CircuitGUI {
 			
 			app.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - W / 2, sf::VideoMode::getDesktopMode().height / 2 - H / 2 - 50));
 			app.setKeyRepeatEnabled(false);
-			app.setVerticalSyncEnabled(true);
+			//app.setVerticalSyncEnabled(true);
 
 
 #ifdef _DEBUG

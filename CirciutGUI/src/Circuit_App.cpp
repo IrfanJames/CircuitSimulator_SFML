@@ -112,7 +112,7 @@ void App::Events()
 		stimuliDisplay = 1; /*cout << "1";*/
 		/*ImGui*/
 		ImGui::SFML::ProcessEvent(evnt);
-
+		
 		if (evnt.type == evnt.Closed) {
 
 			std::ofstream window_size("temp_files/win_size.txt");
@@ -311,6 +311,7 @@ void App::Events()
 				//LOG("\nnewComps size: " << newComps.size());
 			}
 			
+
 			// Ctrl
 			if (evnt.key.control) {
 				if (evnt.key.code == sf::Keyboard::A) {
@@ -861,6 +862,7 @@ void App::ImGUI()
 				ImGui::EndMenu();
 			}
 			ImGui::Separator();
+			//ImGui::MenuItem("Show QuadTree", "", &visible_QuadTree);
 			if (ImGui::BeginMenu("Theme")) {
 
 				if (ImGui::MenuItem("Dark")) {
@@ -873,7 +875,7 @@ void App::ImGUI()
 				if (ImGui::MenuItem("Light")) {
 					stimuliDisplay = 1; /*cout << "16";*/
 
-					CircuitGUI::darkLightMode = true;
+					darkLightMode = true;
 
 					updateThemeColors();
 				}
@@ -881,7 +883,6 @@ void App::ImGUI()
 				ImGui::EndMenu();
 			}
 			ImGui::Checkbox("Show QuadTree", &visible_QuadTree);
-			ImGui::MenuItem("Show QuadTree", "", &visible_QuadTree);
 
 
 			//asdf
