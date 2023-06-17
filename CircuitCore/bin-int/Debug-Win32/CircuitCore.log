@@ -1,2 +1,2 @@
-﻿  LINK : program database D:\Programming\C++\CircuitSimulator_SFML\CircuitCore\bin\Debug-Win32\CircuitCore.pdb missing; performing full link
-  CircuitCore.vcxproj -> D:\Programming\C++\CircuitSimulator_SFML\CircuitCore\bin\Debug-Win32\CircuitCore.dll
+﻿  Test.cpp
+  CircuitCore.vcxproj -> D:\Programming\C++\CircuitSimulator_SFML\CircuitCore\bin\Debug-Win32\CircuitCore.lib

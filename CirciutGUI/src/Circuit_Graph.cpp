@@ -10,6 +10,8 @@
 Graph::Graph()
 {
 	Vector.reserve(5);
+
+	win.setKeyRepeatEnabled(false);
 }
 
 Graph::~Graph() { ; }
@@ -56,9 +58,10 @@ void Graph::createWindow()
 
 }
 
-void Graph::updateWin() {
+ void Graph::updateWin() {
 
-	if (win.isOpen()) {
+	if (win.isOpen())
+	{
 
 		while (win.pollEvent(evnt))
 		{
@@ -78,55 +81,19 @@ void Graph::updateWin() {
 					(int)evnt.size.height)));
 			}
 
-			if (evnt.type == evnt.MouseButtonPressed) {
-				if (evnt.mouseButton.button == sf::Mouse::Middle)
-				{
+			if (evnt.type == evnt.MouseButtonPressed)
+			{
+				if (evnt.mouseButton.button == sf::Mouse::Middle) {
+
 					mouseHold = (sf::Vector2f)sf::Mouse::getPosition(win);
 
 					viewCenter = win.getView().getCenter();
 				}
-			}
 
-			if (evnt.type == evnt.MouseButtonReleased) {
-				if (evnt.mouseButton.button == sf::Mouse::Left)
-				{
-					draggingCircle = -1;
-				}
-			}
+				if (evnt.mouseButton.button == sf::Mouse::Left) {
 
-			if (evnt.type == evnt.KeyPressed) {
-				if (evnt.key.code == sf::Keyboard::Escape) {
-					win.close();
-					return;
-				}
-			}
-		}
+					sf::Vector2f cursorWorldPosition = win.mapPixelToCoords(sf::Mouse::getPosition(win));
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)) {
-			if (win.hasFocus())
-			{
-				sf::Vector2f newViewCenter(
-					viewCenter.x + mouseHold.x - (float)sf::Mouse::getPosition(win).x,
-					viewCenter.y + mouseHold.y - (float)sf::Mouse::getPosition(win).y);
-
-				sf::View newView(newViewCenter, (sf::Vector2f)win.getSize());
-
-				win.setView(newView);
-			}
-		}
-
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-
-			// Finding Closest
-			{
-				sf::Vector2f cursorWorldPosition = win.mapPixelToCoords(sf::Mouse::getPosition(win));
-
-				if (draggingCircle >= 0 && draggingCircle <= allCircles.size() - !allCircles.empty())
-				{
-					allCircles[draggingCircle].setPosition(sf::Vector2f(cursorWorldPosition));
-				}
-				else
-				{
 					for (int c = 0; c < allCircles.size(); c++) {
 						sf::Vector2f tempPos = allCircles[c].getPosition();
 
@@ -134,7 +101,8 @@ void Graph::updateWin() {
 							(tempPos.x - (float)cursorWorldPosition.x) * (tempPos.x - (float)cursorWorldPosition.x) +
 							(tempPos.y - (float)cursorWorldPosition.y) * (tempPos.y - (float)cursorWorldPosition.y)) {
 
-							allCircles[c].setPosition(sf::Vector2f(cursorWorldPosition));
+							mouseOffSet = allCircles[c].getPosition() - cursorWorldPosition;
+							allCircles[c].setPosition(sf::Vector2f(cursorWorldPosition + mouseOffSet));
 							draggingCircle = c;
 
 							// Vertices
@@ -154,10 +122,52 @@ void Graph::updateWin() {
 				}
 			}
 
+			if (evnt.type == evnt.MouseButtonReleased) {
+				if (evnt.mouseButton.button == sf::Mouse::Left)
+				{
+					draggingCircle = -1;
+				}
+			}
+
+			if (evnt.type == evnt.KeyPressed)
+			{
+				if (evnt.key.code == sf::Keyboard::Escape) {
+					win.close();
+					return;
+				}
+			}
+				
+		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)) {
+			if (win.hasFocus())
+			{
+				sf::Vector2f newViewCenter(
+					viewCenter.x + mouseHold.x - (float)sf::Mouse::getPosition(win).x,
+					viewCenter.y + mouseHold.y - (float)sf::Mouse::getPosition(win).y);
+
+				sf::View newView(newViewCenter, (sf::Vector2f)win.getSize());
+
+				win.setView(newView);
+			}
+		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+			// Dragging Circle
+			{
+				sf::Vector2f cursorWorldPosition = win.mapPixelToCoords(sf::Mouse::getPosition(win));
+
+				if (draggingCircle >= 0 && draggingCircle <= allCircles.size() - !allCircles.empty())
+				{
+					allCircles[draggingCircle].setPosition(sf::Vector2f(cursorWorldPosition + mouseOffSet));
+				}
+			}
+
 
 			// Vertices
 			{
-				if(draggingCircle != -1)
+				if (draggingCircle != -1)
 				{
 					for (int i = 0, v = 0; i < Vector.size(); i++) {
 						for (int j = 0; j < Vector[i].neighbors.size(); j++)

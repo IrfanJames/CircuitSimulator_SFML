@@ -1,4 +1,3 @@
-
 /*
 	* Colapse all Scopes - it'll be easier
 	* Ctrl + M + A in Visual Studio
@@ -34,7 +33,7 @@
 App::App(const std::vector<std::string>& filepaths)
 {
 	srand(time(NULL));
-	
+
 	CircuitGUI::initializeGUI();
 
 	ImGui::SFML::Init(CircuitGUI::app);
@@ -54,7 +53,7 @@ App::App(const std::vector<std::string>& filepaths)
 
 
 #ifdef _DEBUG
-	// For Opening Where Left
+		// For Opening Where Left
 	CircuitGUI::Options::Open("temp_files/last.txt");
 	stimuliDisplay = 1; stimuliEndNodes = 1;
 #endif
@@ -87,7 +86,7 @@ void App::Run()
 	while (CircuitGUI::app.isOpen() && End == false)
 	{
 		Events();
-		
+
 		Options();
 
 		ImGUI();
@@ -112,7 +111,7 @@ void App::Events()
 		stimuliDisplay = 1; /*cout << "1";*/
 		/*ImGui*/
 		ImGui::SFML::ProcessEvent(evnt);
-		
+
 		if (evnt.type == evnt.Closed) {
 
 			std::ofstream window_size("temp_files/win_size.txt");
@@ -154,7 +153,8 @@ void App::Events()
 			updateVisibleVector();
 		}
 
-		if (evnt.type == evnt.MouseButtonPressed) {
+		if (evnt.type == evnt.MouseButtonPressed)
+		{
 			if (evnt.mouseButton.button == sf::Mouse::Left) {
 				using namespace CircuitGUI;
 
@@ -221,16 +221,20 @@ void App::Events()
 						wires.back().newEdge();
 
 			}
+
 			if (evnt.mouseButton.button == sf::Mouse::Middle) {
-				Drag = true;
+				dragBool = true;
 				mouseOnCompsBool = 0;
 				CircuitGUI::iniDrag();
 			}
 		}
 
-		if (evnt.type == evnt.MouseButtonReleased) {
+		if (evnt.type == evnt.MouseButtonReleased)
+		{
 			if (evnt.mouseButton.button == sf::Mouse::Left) {
+
 				releaseBool = 1;
+
 				if (Selection) {
 					Selection = 0;
 
@@ -241,7 +245,8 @@ void App::Events()
 						virSprite.back().setColor(CircuitGUI::tempDimColor); }*/
 
 
-					for (int v = 0; v < virSerial.size() && v < virSprite.size(); v++) {
+					for (int v = 0; v < virSerial.size() && v < virSprite.size(); v++)
+					{
 						virSprite[v] = comp[virSerial[v]].sprite;
 						virSprite[v].setColor(CircuitGUI::tempDimColor);
 					}
@@ -253,25 +258,56 @@ void App::Events()
 
 					if (virSerial.size() > virSprite.size())
 					{
-						for (int v = virSprite.size(); v < virSerial.size(); v++) {
+						for (int v = virSprite.size(); v < virSerial.size(); v++)
+						{
 							virSprite.emplace_back(comp[virSerial[v]].sprite);
 							virSprite.back().setColor(CircuitGUI::tempDimColor);
 						}
-
 					}
 
 				}
 			}
+
 			if (evnt.mouseButton.button == sf::Mouse::Middle) {
-				Drag = false;
+				dragBool = false;
 			}
 		}
 
-		if (evnt.type == evnt.KeyPressed) {
-			if (evnt.key.code == sf::Keyboard::Escape) { app.close(); End = 1; continue; }
+		if (evnt.type == evnt.KeyPressed)
+		{
+			if (evnt.key.code == sf::Keyboard::Escape) {
+				app.close();
+				End = 1;
+				continue;
+			}
 			if (evnt.key.code == sf::Keyboard::Delete) {
 				stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
 				CircuitGUI::Options::Delete();
+			}
+			if (evnt.key.code == sf::Keyboard::Tab)
+			{
+				if (visibleComps.empty() == false)
+				{
+					if (serialComp_Tab == visibleComps.size())
+					{
+						serialComp_Tab = 0;
+						virSerial.clear();
+					}
+					else if (serialComp_Tab <= visibleComps.size() - 1)
+					{
+						virSerial.clear();
+						virSprite.clear();
+
+						virSerial.emplace_back(visibleComps[serialComp_Tab]);
+						virSprite.emplace_back(comp[virSerial.back()].sprite);
+						virSprite.back().setColor(tempDimColor);
+
+						serialComp_Tab++;
+					}
+					else serialComp_Tab = 0;
+
+					LOG_VEC(virSerial);
+				}
 			}
 			if (evnt.key.code == sf::Keyboard::L) {
 
@@ -310,7 +346,49 @@ void App::Events()
 				//newComps.emplace_back(newItems.end());
 				//LOG("\nnewComps size: " << newComps.size());
 			}
-			
+
+			// Up, Down, Right, Left Arrows
+			{
+				// Moving Components
+				if (virSerial.empty() == false) {
+
+					int dx = 0;
+					int dy = 0;
+
+					if (evnt.key.code == sf::Keyboard::Up) { dy = -gap; }
+					if (evnt.key.code == sf::Keyboard::Down) { dy = +gap; }
+					if (evnt.key.code == sf::Keyboard::Right) { dx = +gap; }
+					if (evnt.key.code == sf::Keyboard::Left) { dx = -gap; }
+
+					for (int v : virSerial) {
+
+						comp[v].x += dx;
+						comp[v].y += dy;
+
+						comp[v].stimuli();
+
+						stimuliDisplay = 1;
+						stimuliEndNodes = 1;
+					}
+
+				}
+
+				// Dragging the View
+				else {
+					
+					;
+					
+					/*int dx = 0;
+					int dy = 0;
+
+					if (evnt.key.code == sf::Keyboard::Up) { dy = -gap; }
+					if (evnt.key.code == sf::Keyboard::Down) { dy = +gap; }
+					if (evnt.key.code == sf::Keyboard::Right) { dx = +gap; }
+					if (evnt.key.code == sf::Keyboard::Left) { dx = -gap; }
+
+					view.move(dx, dy);*/
+				}
+			}
 
 			// Ctrl
 			if (evnt.key.control) {
@@ -397,8 +475,7 @@ void App::Events()
 
 			//if (evnt.key.code == sf::Keyboard::W) { wireBool = !wireBool; }
 			//if (evnt.key.code == sf::Keyboard::N) { debugBool = !debugBool;}
-
-			/*if (evnt.key.code == sf::Keyboard::K) {
+			/*if (evnt.key.code == sf::Keyboard::P) {
 				LOG("\nCurrent Frame");
 				sf::Texture texture;
 				texture.create(app.getSize().x, app.getSize().y);
@@ -409,19 +486,10 @@ void App::Events()
 				screenshot.saveToFile("screenshot-" + std::to_string(count++) + ".png");
 			}*/
 
-			/*if (evnt.key.code == sf::Keyboard::K) {
-				LOG("test img");
-				sf::Texture texture;
-				texture.create(75, 100);
-				texture.update(compTex[Entity::Dod], 10, 10);
-
-				sf::Image test = texture.copyToImage();
-				test.saveToFile("test.png");
-			}*/
-
 		}
 
-		{
+		; {
+
 			//if (evnt.type == evnt.MouseButtonPressed && evnt.mouseButton.button == sf::Mouse::Left) {
 			//	bool onNode = 0;
 			//	static int sensitivity = 7;
@@ -493,6 +561,7 @@ void App::Events()
 	MIntool = !!(cursorInWin && MInTool && sf::Mouse::getPosition(CircuitGUI::app).y < (Entity::no_of_Comp - 1) * CircuitGUI::c_toolColWidth);
 	t_TollWx = CircuitGUI::toolCol.getPosition().x;
 	// myWinState = CircuitGUI::Response::State::None;
+
 }
 
 void App::Options()
@@ -504,8 +573,7 @@ void App::Options()
 			using namespace CircuitGUI;
 			releaseBool = false;
 			click = clock();
-			mouseHoldX = (float)sf::Mouse::getPosition(app).x;
-			mouseHoldY = (float)sf::Mouse::getPosition(app).y;
+			mouseHold = (sf::Vector2f)sf::Mouse::getPosition(app);
 
 			/*new Comp*/
 			if (MIntool) {
@@ -537,7 +605,16 @@ void App::Options()
 			else {
 				mouseOnCompsBool = 0;
 
-				if (virSerial.size() > 0 && allSqr.getGlobalBounds().contains(cursorInSim())) mouseOnCompsBool = 1;
+				if (virSerial.size() > 0 && allSqr.getGlobalBounds().contains(cursorInSim())) {
+					mouseOnCompsBool = 1;
+
+					if (allSqr.getSize().x >= gap && allSqr.getSize().y >= gap) {
+
+						mouseOffSet = allSqr.getPosition() - cursorInSim();
+
+					}
+
+				}
 				else {
 
 					/*Check every component for Mouse*/
@@ -545,7 +622,7 @@ void App::Options()
 
 						if (comp[c].bounds.contains(cursorInSim())) {
 
-							mouseOnCompsBool = 1; Drag = 0;
+							mouseOnCompsBool = 1; dragBool = false;
 
 							if (!ShiftPressed) {
 								CircuitGUI::virSerial.clear();
@@ -577,7 +654,7 @@ void App::Options()
 				/*Wheel*/
 				/*Drag Background*/
 				/*if (!mouseOnCompsBool && !selectSquare) {
-					Drag = 1; mouseOnCompsBool = 0;
+					dragBool = 1; mouseOnCompsBool = 0;
 					viewX = view.getCenter().x, viewY = view.getCenter().y;
 					verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
 					horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
@@ -598,7 +675,7 @@ void App::Options()
 		}
 	}
 	else {
-		/*Wheel*//*Drag = 0;*/ mouseOnCompsBool = 0; selectSquare = 0;
+		/*Wheel*//*dragBool = 0;*/ mouseOnCompsBool = 0; selectSquare = 0;
 
 		if (0 && ShiftPressed) {
 			CircuitGUI::virSerialShift = CircuitGUI::virSerial;
@@ -655,7 +732,7 @@ void App::Options()
 	// Continoue while hold
 	{
 		using namespace CircuitGUI;
-		
+
 		// Components
 		{
 			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !CircuitGUI::Click(0) /*&& releaseBool*/) {
@@ -664,8 +741,9 @@ void App::Options()
 				static sf::FloatRect virArea;
 
 				virArea = allSqr.getGlobalBounds();
-				offsetPos.x = (int)cursorInSim().x - (virArea.left + (int)(virArea.width / 2));
-				offsetPos.y = (int)cursorInSim().y - (virArea.top + (int)(virArea.height / 2));
+				offsetPos.x = (int)cursorInSim().x - (virArea.left/* + (int)(virArea.width/ 2)*/) + (int)mouseOffSet.x;
+				offsetPos.y = (int)cursorInSim().y - (virArea.top /*+ (int)(virArea.height/ 2)*/) + (int)mouseOffSet.y;
+
 
 				for (int v = 0; v < virSprite.size(); v++)
 					virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
@@ -692,7 +770,7 @@ void App::Options()
 				}
 
 				stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
-				qtUpdate();
+				CircuitGUI::qtUpdate();
 			}
 		}
 
@@ -813,7 +891,7 @@ void App::ImGUI()
 		if (ImGui::BeginMenu("File"))
 		{
 			stimuliDisplay = 1; /*cout << "a";*/
-			
+
 			if (ImGui::MenuItem("New", "Ctrl + N")) {
 				// stimuliDisplay = 1;
 			}
@@ -919,7 +997,7 @@ void App::ImGUI()
 
 				for (int i = 0; i < allEnds.size(); i++)
 					circuit.newItem(i);
-				
+
 				for (auto& component : comp)
 					circuit.link(component.node1, component.node2);
 
@@ -936,7 +1014,7 @@ void App::ImGUI()
 		if (ImGui::BeginMenu("Help"))
 		{
 			stimuliDisplay = 1; //cout << "c";
-			
+
 			if (ImGui::BeginMenu("Controls"))
 			{
 				if (ImGui::BeginTable("table_context_menu_2", 2))
@@ -1068,269 +1146,269 @@ void App::ImGUI()
 			ImGui::EndTabBar();
 		}//*/
 
-	/*
-			ImGui::SFML::Update(app, deltaClock.restart());
-			// Enable docking
-			ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		/*
+				ImGui::SFML::Update(app, deltaClock.restart());
+				// Enable docking
+				ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-			// Create docking space
-			ImGui::DockSpaceOverViewport();
+				// Create docking space
+				ImGui::DockSpaceOverViewport();
 
-			{
-				// If you strip some features of, this demo is pretty much equivalent to calling DockSpaceOverViewport()!
-				// In most cases you should be able to just call DockSpaceOverViewport() and ignore all the code below!
-				// In this specific demo, we are not using DockSpaceOverViewport() because:
-				// - we allow the host window to be floating/moveable instead of filling the viewport (when opt_fullscreen == false)
-				// - we allow the host window to have padding (when opt_padding == true)
-				// - we have a local menu bar in the host window (vs. you could use BeginMainMenuBar() + DockSpaceOverViewport() in your code!)
-				// TL;DR; this demo is more complicated than what you would normally use.
-				// If we removed all the options we are showcasing, this demo would become:
-				//     void ShowExampleAppDockSpace()
-				//     {
-				//         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-				//     }
-
-				static bool opt_fullscreen = true;
-				static bool opt_padding = false;
-				static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
-				// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-				// because it would be confusing to have two docking targets within each others.
-				ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-				if (opt_fullscreen)
 				{
-					const ImGuiViewport* viewport = ImGui::GetMainViewport();
-					ImGui::SetNextWindowPos(viewport->WorkPos);
-					ImGui::SetNextWindowSize(viewport->WorkSize);
-					ImGui::SetNextWindowViewport(viewport->ID);
-					ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-					ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-					window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-					window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-				}
-				else
-				{
-					dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
-				}
+					// If you strip some features of, this demo is pretty much equivalent to calling DockSpaceOverViewport()!
+					// In most cases you should be able to just call DockSpaceOverViewport() and ignore all the code below!
+					// In this specific demo, we are not using DockSpaceOverViewport() because:
+					// - we allow the host window to be floating/moveable instead of filling the viewport (when opt_fullscreen == false)
+					// - we allow the host window to have padding (when opt_padding == true)
+					// - we have a local menu bar in the host window (vs. you could use BeginMainMenuBar() + DockSpaceOverViewport() in your code!)
+					// TL;DR; this demo is more complicated than what you would normally use.
+					// If we removed all the options we are showcasing, this demo would become:
+					//     void ShowExampleAppDockSpace()
+					//     {
+					//         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+					//     }
 
-				// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
-				// and handle the pass-thru hole, so we ask Begin() to not render a background.
-				if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-					window_flags |= ImGuiWindowFlags_NoBackground;
+					static bool opt_fullscreen = true;
+					static bool opt_padding = false;
+					static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-				// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-				// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-				// all active windows docked into it will lose their parent and become undocked.
-				// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-				// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-				if (!opt_padding)
-					ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-				// Begin main dockspace
-				//ImGui::Begin("DockSpace Demo", nullptr, window_flags);
-				ImGui::Begin("Main Dockspace", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar);
-				if (!opt_padding)
-					ImGui::PopStyleVar();
-
-				if (opt_fullscreen)
-					ImGui::PopStyleVar(2);
-
-				// Submit the DockSpace
-				ImGuiIO& io = ImGui::GetIO();
-				if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-				{
-					ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-					ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-				}
-
-				if (ImGui::BeginMenuBar())
-				{
-					if (ImGui::BeginMenu("Options"))
+					// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+					// because it would be confusing to have two docking targets within each others.
+					ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+					if (opt_fullscreen)
 					{
-						// Disabling fullscreen would allow the window to be moved to the front of other windows,
-						// which we can't undo at the moment without finer window depth/z control.
-						ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-						ImGui::MenuItem("Padding", NULL, &opt_padding);
-						ImGui::Separator();
-
-						if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-						if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-						if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-						if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-						if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-						ImGui::Separator();
-						ImGui::EndMenu();
+						const ImGuiViewport* viewport = ImGui::GetMainViewport();
+						ImGui::SetNextWindowPos(viewport->WorkPos);
+						ImGui::SetNextWindowSize(viewport->WorkSize);
+						ImGui::SetNextWindowViewport(viewport->ID);
+						ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+						ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+						window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+						window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+					}
+					else
+					{
+						dockspace_flags &= ~ImGuiDockNodeFlags_PassthruCentralNode;
 					}
 
-					ImGui::EndMenuBar();
-				}
+					// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
+					// and handle the pass-thru hole, so we ask Begin() to not render a background.
+					if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+						window_flags |= ImGuiWindowFlags_NoBackground;
 
+					// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
+					// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
+					// all active windows docked into it will lose their parent and become undocked.
+					// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
+					// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
+					if (!opt_padding)
+						ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+					// Begin main dockspace
+					//ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+					ImGui::Begin("Main Dockspace", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar);
+					if (!opt_padding)
+						ImGui::PopStyleVar();
 
-				ImGui::Begin("Settings");
-				ImGui::Button("Click Me");
-				float value = 10.0f, value2[2] = { 15.0f,16.0f };
-				ImGui::DragFloat("Value", &value);
-				ImGui::DragFloat2("Values", value2);
-				ImGui::End();
+					if (opt_fullscreen)
+						ImGui::PopStyleVar(2);
 
-
-
-				ImGui::End();
-			}
-			*/
-
-	/*if (ImGui::TreeNode("Advanced & Close Button"))
-				{
-					// Expose a couple of the available flags. In most cases you may just call BeginTabBar() with no flags (0).
-					static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
-					ImGui::CheckboxFlags("ImGuiTabBarFlags_Reorderable", &tab_bar_flags, ImGuiTabBarFlags_Reorderable);
-					ImGui::CheckboxFlags("ImGuiTabBarFlags_AutoSelectNewTabs", &tab_bar_flags, ImGuiTabBarFlags_AutoSelectNewTabs);
-					ImGui::CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton);
-					ImGui::CheckboxFlags("ImGuiTabBarFlags_NoCloseWithMiddleMouseButton", &tab_bar_flags, ImGuiTabBarFlags_NoCloseWithMiddleMouseButton);
-					if ((tab_bar_flags & ImGuiTabBarFlags_FittingPolicyMask_) == 0)
-						tab_bar_flags |= ImGuiTabBarFlags_FittingPolicyDefault_;
-					if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
-						tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyResizeDown);
-					if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyScroll", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyScroll))
-						tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyScroll);
-
-					// Tab Bar
-					const char* names[4] = { "Artichoke", "Beetroot", "Celery", "Daikon" };
-					static bool opened[4] = { true, true, true, true }; // Persistent user state
-					for (int n = 0; n < IM_ARRAYSIZE(opened); n++)
+					// Submit the DockSpace
+					ImGuiIO& io = ImGui::GetIO();
+					if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 					{
-						if (n > 0) { ImGui::SameLine(); }
-						ImGui::Checkbox(names[n], &opened[n]);
+						ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+						ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 					}
 
-					// Passing a bool* to BeginTabItem() is similar to passing one to Begin():
-					// the underlying bool will be set to false when the tab is closed.
-					if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+					if (ImGui::BeginMenuBar())
 					{
-						for (int n = 0; n < IM_ARRAYSIZE(opened); n++)
-							if (opened[n] && ImGui::BeginTabItem(names[n], &opened[n], ImGuiTabItemFlags_None))
-							{
-								ImGui::Text("This is the %s tab!", names[n]);
-								if (n & 1)
-									ImGui::Text("I am an odd tab.");
-								ImGui::EndTabItem();
-							}
-						ImGui::EndTabBar();
-					}
-					ImGui::Separator();
-					ImGui::TreePop();
-				}
-
-				if (ImGui::TreeNode("TabItemButton & Leading/Trailing flags"))
-				{
-					static ImVector<int> active_tabs;
-					static int next_tab_id = 0;
-					if (next_tab_id == 0) // Initialize with some default tabs
-						for (int i = 0; i < 3; i++)
-							active_tabs.push_back(next_tab_id++);
-
-					// TabItemButton() and Leading/Trailing flags are distinct features which we will demo together.
-					// (It is possible to submit regular tabs with Leading/Trailing flags, or TabItemButton tabs without Leading/Trailing flags...
-					// but they tend to make more sense together)
-					static bool show_leading_button = true;
-					static bool show_trailing_button = true;
-					ImGui::Checkbox("Show Leading TabItemButton()", &show_leading_button);
-					ImGui::Checkbox("Show Trailing TabItemButton()", &show_trailing_button);
-
-					// Expose some other flags which are useful to showcase how they interact with Leading/Trailing tabs
-					static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_AutoSelectNewTabs | ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyResizeDown;
-					ImGui::CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton);
-					if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
-						tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyResizeDown);
-					if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyScroll", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyScroll))
-						tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyScroll);
-
-					if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
-					{
-						// Demo a Leading TabItemButton(): click the "?" button to open a menu
-						if (show_leading_button)
-							if (ImGui::TabItemButton("?", ImGuiTabItemFlags_Leading | ImGuiTabItemFlags_NoTooltip))
-								ImGui::OpenPopup("MyHelpMenu");
-						if (ImGui::BeginPopup("MyHelpMenu"))
+						if (ImGui::BeginMenu("Options"))
 						{
-							ImGui::Selectable("Hello!");
-							ImGui::EndPopup();
+							// Disabling fullscreen would allow the window to be moved to the front of other windows,
+							// which we can't undo at the moment without finer window depth/z control.
+							ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
+							ImGui::MenuItem("Padding", NULL, &opt_padding);
+							ImGui::Separator();
+
+							if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
+							if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
+							if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
+							if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
+							if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
+							ImGui::Separator();
+							ImGui::EndMenu();
 						}
 
-						// Demo Trailing Tabs: click the "+" button to add a new tab (in your app you may want to use a font icon instead of the "+")
-						// Note that we submit it before the regular tabs, but because of the ImGuiTabItemFlags_Trailing flag it will always appear at the end.
-						if (show_trailing_button)
-							if (ImGui::TabItemButton("+", ImGuiTabItemFlags_Trailing | ImGuiTabItemFlags_NoTooltip))
-								active_tabs.push_back(next_tab_id++); // Add new tab
+						ImGui::EndMenuBar();
+					}
 
-						// Submit our regular tabs
-						for (int n = 0; n < active_tabs.Size; )
-						{
-							bool open = true;
-							char name[16];
-							snprintf(name, IM_ARRAYSIZE(name), "%04d", active_tabs[n]);
-							if (ImGui::BeginTabItem(name, &open, ImGuiTabItemFlags_None))
+
+					ImGui::Begin("Settings");
+					ImGui::Button("Click Me");
+					float value = 10.0f, value2[2] = { 15.0f,16.0f };
+					ImGui::DragFloat("Value", &value);
+					ImGui::DragFloat2("Values", value2);
+					ImGui::End();
+
+
+
+					ImGui::End();
+				}
+				*/
+
+				/*if (ImGui::TreeNode("Advanced & Close Button"))
 							{
-								ImGui::Text("This is the %s tab!", name);
-								ImGui::EndTabItem();
+								// Expose a couple of the available flags. In most cases you may just call BeginTabBar() with no flags (0).
+								static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
+								ImGui::CheckboxFlags("ImGuiTabBarFlags_Reorderable", &tab_bar_flags, ImGuiTabBarFlags_Reorderable);
+								ImGui::CheckboxFlags("ImGuiTabBarFlags_AutoSelectNewTabs", &tab_bar_flags, ImGuiTabBarFlags_AutoSelectNewTabs);
+								ImGui::CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton);
+								ImGui::CheckboxFlags("ImGuiTabBarFlags_NoCloseWithMiddleMouseButton", &tab_bar_flags, ImGuiTabBarFlags_NoCloseWithMiddleMouseButton);
+								if ((tab_bar_flags & ImGuiTabBarFlags_FittingPolicyMask_) == 0)
+									tab_bar_flags |= ImGuiTabBarFlags_FittingPolicyDefault_;
+								if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
+									tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyResizeDown);
+								if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyScroll", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyScroll))
+									tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyScroll);
+
+								// Tab Bar
+								const char* names[4] = { "Artichoke", "Beetroot", "Celery", "Daikon" };
+								static bool opened[4] = { true, true, true, true }; // Persistent user state
+								for (int n = 0; n < IM_ARRAYSIZE(opened); n++)
+								{
+									if (n > 0) { ImGui::SameLine(); }
+									ImGui::Checkbox(names[n], &opened[n]);
+								}
+
+								// Passing a bool* to BeginTabItem() is similar to passing one to Begin():
+								// the underlying bool will be set to false when the tab is closed.
+								if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+								{
+									for (int n = 0; n < IM_ARRAYSIZE(opened); n++)
+										if (opened[n] && ImGui::BeginTabItem(names[n], &opened[n], ImGuiTabItemFlags_None))
+										{
+											ImGui::Text("This is the %s tab!", names[n]);
+											if (n & 1)
+												ImGui::Text("I am an odd tab.");
+											ImGui::EndTabItem();
+										}
+									ImGui::EndTabBar();
+								}
+								ImGui::Separator();
+								ImGui::TreePop();
 							}
 
-							if (!open)
-								active_tabs.erase(active_tabs.Data + n);
-							else
-								n++;
-						}
+							if (ImGui::TreeNode("TabItemButton & Leading/Trailing flags"))
+							{
+								static ImVector<int> active_tabs;
+								static int next_tab_id = 0;
+								if (next_tab_id == 0) // Initialize with some default tabs
+									for (int i = 0; i < 3; i++)
+										active_tabs.push_back(next_tab_id++);
 
-						ImGui::EndTabBar();
-					}
-					ImGui::Separator();
-					ImGui::TreePop();
-				}*/
+								// TabItemButton() and Leading/Trailing flags are distinct features which we will demo together.
+								// (It is possible to submit regular tabs with Leading/Trailing flags, or TabItemButton tabs without Leading/Trailing flags...
+								// but they tend to make more sense together)
+								static bool show_leading_button = true;
+								static bool show_trailing_button = true;
+								ImGui::Checkbox("Show Leading TabItemButton()", &show_leading_button);
+								ImGui::Checkbox("Show Trailing TabItemButton()", &show_trailing_button);
 
-	/*ImGui::Dummy(ImVec2(0, 20));
+								// Expose some other flags which are useful to showcase how they interact with Leading/Trailing tabs
+								static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_AutoSelectNewTabs | ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyResizeDown;
+								ImGui::CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton);
+								if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
+									tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyResizeDown);
+								if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyScroll", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyScroll))
+									tab_bar_flags &= ~(ImGuiTabBarFlags_FittingPolicyMask_ ^ ImGuiTabBarFlags_FittingPolicyScroll);
 
-	ImGui::BeginTabBar("#Additional Parameters");
-	float value = 0.0f;
-	if (ImGui::BeginTabItem("Tab Name2")) {
-		ImGui::SliderFloat("Slider", &value, 0, 1.0f);
-	}
-	if (ImGui::BeginTabItem("Tab Name3")) {
-		ImGui::Text("Tab 2");
-	}
-	if (ImGui::BeginTabItem("Tab Name4")) {
-		ImGui::Text("Tab 3");
-	}
-	if (ImGui::BeginTabItem("Tab Name5")) {
-		ImGui::Text("Tab 4");
-	}
-	ImGui::EndTabBar();*/
+								if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+								{
+									// Demo a Leading TabItemButton(): click the "?" button to open a menu
+									if (show_leading_button)
+										if (ImGui::TabItemButton("?", ImGuiTabItemFlags_Leading | ImGuiTabItemFlags_NoTooltip))
+											ImGui::OpenPopup("MyHelpMenu");
+									if (ImGui::BeginPopup("MyHelpMenu"))
+									{
+										ImGui::Selectable("Hello!");
+										ImGui::EndPopup();
+									}
 
-	/*ImGui::Begin("Right-Click");
-	if (ImGui::BeginPopupContextItem()) {
-		if (ImGui::Selectable("Apple")) LOG("\nApple");
-		if (ImGui::Selectable("Banana")) LOG("\nBanana");
-		ImGui::EndPopup();
-	}
-	ImGui::End;*/
+									// Demo Trailing Tabs: click the "+" button to add a new tab (in your app you may want to use a font icon instead of the "+")
+									// Note that we submit it before the regular tabs, but because of the ImGuiTabItemFlags_Trailing flag it will always appear at the end.
+									if (show_trailing_button)
+										if (ImGui::TabItemButton("+", ImGuiTabItemFlags_Trailing | ImGuiTabItemFlags_NoTooltip))
+											active_tabs.push_back(next_tab_id++); // Add new tab
 
-	/*
-	if (debugBool) {
-		//if (ImGui::BeginMenu("Hello")) {
-		if (ImGui::OpenPopupOnItemClick) {
+									// Submit our regular tabs
+									for (int n = 0; n < active_tabs.Size; )
+									{
+										bool open = true;
+										char name[16];
+										snprintf(name, IM_ARRAYSIZE(name), "%04d", active_tabs[n]);
+										if (ImGui::BeginTabItem(name, &open, ImGuiTabItemFlags_None))
+										{
+											ImGui::Text("This is the %s tab!", name);
+											ImGui::EndTabItem();
+										}
 
-			if (ImGui::Selectable("Apple")) cout << "Apple";
-			if (ImGui::Selectable("Banana")) cout << "Banana";
+										if (!open)
+											active_tabs.erase(active_tabs.Data + n);
+										else
+											n++;
+									}
 
-			if (ImGui::MenuItem("One", "Ctrl + O")) { cout << "\nOpen"; }
-			if (ImGui::MenuItem("Two", "Ctrl + S")) { cout << "\nSave"; }
-			if (ImGui::MenuItem("Save as Image")) { cout << "\nOhh Yeah"; printScreen(); }
-			ImGui::Separator();
-			if (ImGui::MenuItem("Exit", "Esc")) { cout << "\nExit"; }
+									ImGui::EndTabBar();
+								}
+								ImGui::Separator();
+								ImGui::TreePop();
+							}*/
 
-			//ImGui::EndMenu();
-			//ImGui::EndPopup();
-		}
-	}
-	//*/
+							/*ImGui::Dummy(ImVec2(0, 20));
+
+							ImGui::BeginTabBar("#Additional Parameters");
+							float value = 0.0f;
+							if (ImGui::BeginTabItem("Tab Name2")) {
+								ImGui::SliderFloat("Slider", &value, 0, 1.0f);
+							}
+							if (ImGui::BeginTabItem("Tab Name3")) {
+								ImGui::Text("Tab 2");
+							}
+							if (ImGui::BeginTabItem("Tab Name4")) {
+								ImGui::Text("Tab 3");
+							}
+							if (ImGui::BeginTabItem("Tab Name5")) {
+								ImGui::Text("Tab 4");
+							}
+							ImGui::EndTabBar();*/
+
+							/*ImGui::Begin("Right-Click");
+							if (ImGui::BeginPopupContextItem()) {
+								if (ImGui::Selectable("Apple")) LOG("\nApple");
+								if (ImGui::Selectable("Banana")) LOG("\nBanana");
+								ImGui::EndPopup();
+							}
+							ImGui::End;*/
+
+							/*
+							if (debugBool) {
+								//if (ImGui::BeginMenu("Hello")) {
+								if (ImGui::OpenPopupOnItemClick) {
+
+									if (ImGui::Selectable("Apple")) cout << "Apple";
+									if (ImGui::Selectable("Banana")) cout << "Banana";
+
+									if (ImGui::MenuItem("One", "Ctrl + O")) { cout << "\nOpen"; }
+									if (ImGui::MenuItem("Two", "Ctrl + S")) { cout << "\nSave"; }
+									if (ImGui::MenuItem("Save as Image")) { cout << "\nOhh Yeah"; printScreen(); }
+									ImGui::Separator();
+									if (ImGui::MenuItem("Exit", "Esc")) { cout << "\nExit"; }
+
+									//ImGui::EndMenu();
+									//ImGui::EndPopup();
+								}
+							}
+							//*/
 
 }
 
@@ -1359,13 +1437,13 @@ void App::Thrads()
 	}
 }
 
-void App::Update() 
+void App::Update()
 {
 	using namespace CircuitGUI;
 
 	// Drag
 	{
-		if (Drag) {
+		if (dragBool) {
 			stimuliDisplay = 1; /*cout << "18"*/;
 			CircuitGUI::Drag();
 			CircuitGUI::colorBrightLineGrid();
@@ -1378,15 +1456,15 @@ void App::Update()
 	//Tool Win
 	{
 		//if (MInTool) { stimuliDisplay = 1; /*cout << "\nMInTool == true;\tIn Update{}";*/ }
-		if (Drag)  toolCol.setPosition(onScreen(0, 0));
+		if (dragBool)  toolCol.setPosition(onScreen(0, 0));
 		else toolCol.setPosition((MInTool) * (t_TollWx + (toolWinRestPos.x + 0 - t_TollWx) / 7) + (!MInTool) * (t_TollWx + (toolWinRestPos.x - c_toolColWidth - t_TollWx) / 7), toolWinRestPos.y);
 	}
 
 	// Tool Sqr
 	{
 		t_TollWx = ToolBoxLittleBox.getPosition().x;
-		if (!Drag) ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (toolWinRestPos.x + 0 - t_TollWx) / 7) + (!MIntool) * (t_TollWx + (toolWinRestPos.x - c_toolColWidth - t_TollWx) / 7), toolWinRestPos.y + trim(sf::Mouse::getPosition(app).y, c_toolColWidth));
-		if (Drag)  ToolBoxLittleBox.setPosition(onScreen(0, 0 + trim(sf::Mouse::getPosition(app).y, c_toolColWidth)));
+		if (!dragBool) ToolBoxLittleBox.setPosition((MIntool) * (t_TollWx + (toolWinRestPos.x + 0 - t_TollWx) / 7) + (!MIntool) * (t_TollWx + (toolWinRestPos.x - c_toolColWidth - t_TollWx) / 7), toolWinRestPos.y + trim(sf::Mouse::getPosition(app).y, c_toolColWidth));
+		if (dragBool)  ToolBoxLittleBox.setPosition(onScreen(0, 0 + trim(sf::Mouse::getPosition(app).y, c_toolColWidth)));
 		if (MIntool) serialToolMouse = (int)(sf::Mouse::getPosition(app).y / c_toolColWidth); else serialToolMouse = 0;
 	}
 
@@ -1402,7 +1480,7 @@ void App::Update()
 
 			updateAllSqr();
 
-			qtUpdate();
+			CircuitGUI::qtUpdate();
 
 			/*
 			if (comp.size() < 1000)
@@ -1467,7 +1545,7 @@ void App::Render()
 
 		ImGui::SFML::Render(app); // Last Thing to render
 	}
-	
+
 	// CircuitGUI::app.display(); // Inside void App::EndFrame()
 }
 
@@ -1476,9 +1554,9 @@ void App::EndFrame()
 	CircuitGUI::app.display();
 
 	CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)(((float)clock() - (float)FrameTime_for_FPS) / (float)CLOCKS_PER_SEC) * 1000.0F) + " | " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)FrameTime_for_FPS))));
-	
-	FrameTime_for_FPS = clock();
-	
-	stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
-}
 
+	FrameTime_for_FPS = clock();
+
+	stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
+
+}

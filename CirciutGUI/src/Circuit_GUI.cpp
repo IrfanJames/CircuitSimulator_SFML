@@ -30,10 +30,15 @@ namespace CircuitGUI {
 
 
 	/*Cursor*/
-	float mouseHoldX, mouseHoldY;
+	sf::Vector2f mouseHold;
+	sf::Vector2f mouseOffSet;
 	time_t click = clock(); // Time passed since Click
 	bool Click(int Sensitivity = 3) {
-		return (((float)clock() - (float)click) < 100) && !!(!sf::Mouse::isButtonPressed(sf::Mouse::Left) && abs(mouseHoldX - (float)sf::Mouse::getPosition(app).x) <= Sensitivity && abs(mouseHoldY - (float)sf::Mouse::getPosition(app).y) <= Sensitivity);
+		return (
+			((float)clock() - (float)click) < 100) &&
+			!!(!sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
+			abs(mouseHold.x - (float)sf::Mouse::getPosition(app).x) <= Sensitivity &&
+			abs(mouseHold.y - (float)sf::Mouse::getPosition(app).y) <= Sensitivity );
 	}
 	sf::Vector2f cursorInSim() {
 		return app.mapPixelToCoords(sf::Mouse::getPosition(app));
@@ -112,22 +117,22 @@ namespace CircuitGUI {
 
 	/*Drag*/
 	bool dragBool = 0;
-	float viewX = 0, viewY = 0;
-	float verX = 0, verY = 0;
-	float horX = 0, horY = 0;
+	sf::Vector2f viewPos(0,0);
+	sf::Vector2f ver(0,0);
+	sf::Vector2f hor(0,0);
 	int verBrightCount = 5, horBrightCount = 5;
 	void iniDrag() {
-		mouseHoldX = (float)sf::Mouse::getPosition(app).x;
-		mouseHoldY = (float)sf::Mouse::getPosition(app).y;
-		viewX = view.getCenter().x;
-		viewY = view.getCenter().y;
-		verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
-		horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
+		mouseHold = (sf::Vector2f)sf::Mouse::getPosition(app);
+		viewPos = view.getCenter();
+		ver = vLines[0].getPosition();
+		hor = hLines[0].getPosition();
 	}
 	void Drag() {
-		view.setCenter(sf::Vector2f(viewX + mouseHoldX - (float)sf::Mouse::getPosition(app).x, viewY + mouseHoldY - (float)sf::Mouse::getPosition(app).y));
-		float newVerY = verY + mouseHoldY - (float)sf::Mouse::getPosition(app).y;
-		float newHorX = horX + mouseHoldX - (float)sf::Mouse::getPosition(app).x;
+		
+		view.setCenter( viewPos + mouseHold - (sf::Vector2f)sf::Mouse::getPosition(app) );
+
+		float newVerY = ver.y + mouseHold.y - (float)sf::Mouse::getPosition(app).y;
+		float newHorX = hor.x + mouseHold.x - (float)sf::Mouse::getPosition(app).x;
 
 
 		float verBrightX = vLines[verBrightCount].getPosition().x;
@@ -639,9 +644,9 @@ namespace CircuitGUI {
 				qtAdd(c, qt);
 		}
 	}
-	void qtWrite(const quadTree& box, int taaabbss) {
+	void qtWrite(const quadTree& box, int indentation) {
 
-		for (int t = 0; t < taaabbss; t++) std::cout << "\t";
+		for (int t = 0; t < indentation; t++) std::cout << "\t";
 		if (box.isSubDivided) std::cout << "`";
 		std::cout << "(" << box.size << "): ";
 		for (int i = 0; i < box.arr.size(); i++)
@@ -649,10 +654,10 @@ namespace CircuitGUI {
 		std::cout << "\b\b \n";
 
 		if (box.isSubDivided) {
-			qtWrite(*box.sub[0], taaabbss + 1);
-			qtWrite(*box.sub[1], taaabbss + 1);
-			qtWrite(*box.sub[2], taaabbss + 1);
-			qtWrite(*box.sub[3], taaabbss + 1);
+			qtWrite(*box.sub[0], indentation + 1);
+			qtWrite(*box.sub[1], indentation + 1);
+			qtWrite(*box.sub[2], indentation + 1);
+			qtWrite(*box.sub[3], indentation + 1);
 		}
 
 	}
@@ -1004,7 +1009,7 @@ namespace CircuitGUI {
 			
 			app.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - W / 2, sf::VideoMode::getDesktopMode().height / 2 - H / 2 - 50));
 			app.setKeyRepeatEnabled(false);
-			//app.setVerticalSyncEnabled(true);
+			app.setVerticalSyncEnabled(true);
 
 
 #ifdef _DEBUG

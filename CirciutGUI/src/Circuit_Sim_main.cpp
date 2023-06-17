@@ -8,7 +8,6 @@ taskkill /F /IM CirciutGUI.exe
 */
 
 #include "Circuit_App.hpp"
-#include <iostream>
 
 #define NOMINMAX // SFML RectInt.inl error // https://en.sfml-dev.org/forums/index.php?topic=26401.0
 #include <windows.h>
@@ -16,7 +15,6 @@ taskkill /F /IM CirciutGUI.exe
 
 #ifdef _DEBUG
 // Debug  Mode
-
 int main(int argc, char** argv) {
 
 	// Dropped Files
@@ -34,6 +32,7 @@ int main(int argc, char** argv) {
 
 	//std::cin.get();
 }
+
 #endif
 
 

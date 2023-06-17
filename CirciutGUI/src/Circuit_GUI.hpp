@@ -31,9 +31,9 @@ namespace CircuitGUI {
 
 	/*Textures*/
 	//void loadTextures()
-	extern Resource Resource_Logo;
-	extern Resource Resource_Font;
-	extern std::vector<Resource> Resource_Images;
+	//extern Resource Resource_Logo;
+	//extern Resource Resource_Font;
+	//extern std::vector<Resource> Resource_Images;
 
 	extern sf::Event evnt;
 	extern sf::RenderWindow app;
@@ -43,7 +43,9 @@ namespace CircuitGUI {
 
 
 	/*Cursor*/
-	extern float mouseHoldX, mouseHoldY;
+	//extern float mouseHoldX, mouseHoldY;
+	extern sf::Vector2f mouseHold;
+	extern sf::Vector2f mouseOffSet;
 	extern time_t click; // Time passed since Click
 	 
 	extern bool Click(int Sensitivity);
@@ -58,23 +60,23 @@ namespace CircuitGUI {
 
 
 	/*Grid*/
-	extern int virtualBoarder;
-	extern std::vector<sf::RectangleShape> vLines;
-	extern std::vector<sf::RectangleShape> hLines;
-	extern sf::Color gridColor;
+	//extern int virtualBoarder;
+	//extern std::vector<sf::RectangleShape> vLines;
+	//extern std::vector<sf::RectangleShape> hLines;
+	//extern sf::Color gridColor;
 	extern sf::Color backColor;
-	extern void colorGrid();
-	extern void colorBackground();
+	//extern void colorGrid();
+	//extern void colorBackground();
 	extern void drawGrid();
 	//void initializeGrid()
 
 
 	/*Drag*/
 	extern bool dragBool;
-	extern float viewX, viewY;
-	extern float verX, verY;
-	extern float horX, horY;
-	extern int verBrightCount, horBrightCount;
+	//extern float viewX, viewY;
+	//extern float verX, verY;
+	//extern float horX, horY;
+	//extern int verBrightCount, horBrightCount;
 	extern void iniDrag();
 	extern void Drag();
 	extern void colorBrightLineGrid();
@@ -99,7 +101,7 @@ namespace CircuitGUI {
 	extern void drawBoarders();
 	extern void drawWires();
 	//extern void updateAllEnds_old();
-	extern void updateAllEnds_a();
+	//extern void updateAllEnds_a();
 	extern void updateAllEnds();
 	extern bool makingWire();
 	
@@ -112,7 +114,7 @@ namespace CircuitGUI {
 	extern void qtRemove(int c, quadTree& box);
 	extern void qtAdd(int c, quadTree& box);
 	extern void qtUpdate();
-	extern void qtWrite(const quadTree& box = qt, int taaabbss = 0);
+	extern void qtWrite(const quadTree& box = qt, int indentation = 0);
 	extern void qtDraw(quadTree& box);
 	extern void qtExtract(const sf::FloatRect& searchArea, std::vector<int>& output, const quadTree& box = qt);
 
@@ -140,8 +142,8 @@ namespace CircuitGUI {
 	extern sf::RectangleShape toolCol;
 	extern sf::RectangleShape ToolBoxLittleBox;
 	//void toolBoxInit()
-	extern sf::Sprite ToolSpr[Entity::no_of_Comp - 1];
-	extern sf::Vector2f ToolSprPOS[Entity::no_of_Comp - 1];
+	//extern sf::Sprite ToolSpr[Entity::no_of_Comp - 1];
+	//extern sf::Vector2f ToolSprPOS[Entity::no_of_Comp - 1];
 	extern void updatePosToolBox();
 	extern void updateEndCircles();
 	extern void drawToolColumn(bool MInTool, bool MIntool);

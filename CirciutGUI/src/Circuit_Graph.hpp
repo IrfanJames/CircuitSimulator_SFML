@@ -33,10 +33,12 @@ private:
 
 private:
 	int draggingCircle = -1;
+	sf::Vector2f mouseOffSet;
 	sf::Vector2f mouseHold;
 	sf::Vector2f viewCenter;
 	sf::Event evnt;
 	sf::RenderWindow win;
+
 	std::vector<sf::CircleShape> allCircles;
 	std::vector<sf::RectangleShape> allVertices;
 	std::vector<Corner> Vector;

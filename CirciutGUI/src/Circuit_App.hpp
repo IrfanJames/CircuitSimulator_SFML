@@ -39,7 +39,7 @@ private:
 
 	bool End = 0;
 
-	bool Drag = 0;
+	//bool Drag = 0;
 	bool selectSquare = 0;
 	// bool wireBool = 0;
 	
@@ -60,6 +60,7 @@ private:
 	float t_TollWx = 0;
 	
 	int serialToolMouse = 0;
+	int serialComp_Tab = 0;
 	//int serialCompMouse = 0;
 	
 	time_t FrameTime_for_FPS = 0;

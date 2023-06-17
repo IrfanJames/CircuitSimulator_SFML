@@ -1,5 +1,7 @@
 
 New:
+	* Move selected components by Arrow Keys
+	* Rotated Selection of components by 'Tab'
 	* App now handles Async Threads (SaveAsImage is now on async Mode)
 	* Move whole App inside a Class
 	* new project for Dependencies:imgui
@@ -21,7 +23,7 @@ New:
 	* Control Key-mapping added in Help Section in TitleBar
 	* File is opened after saving(proj(TXT), img(PNG)) by Shell
 	* FINALLY!!! Textures don't pixcelate when window resize
-	* When Opening/Pasting, components appeare in Center,Selected(virSerial)
+	* When Opening/Pasting, components appeare in Center, Selected(virSerial)
 	* Drag Multiple components at once
 	* Most of GUI in CircuitGUI namespace
 	* Open/Save As Dialog Box
@@ -50,18 +52,23 @@ New:
 
 
 Short-Term Goals
-	* Print sf::Clipboard::getString while Drap/Dropping Acrobat PDF into another Acrobat PDF Window
 	* State Machine
 	* Wires
+	* Usable through Keyboard
+	  * Move Components with Arrow Keys (Done, but collisions not implemented yet)
+	  * Drag from Keyboard
+	* Print sf::Clipboard::getString while Drap/Dropping Acrobat PDF into another Acrobat PDF Window
 	* Optimize QuadTree qtUpdate()
 
 
+
 Issues
-	* Can't Include Graph.hpp in App.hpp
+	* Generating Graph too Slow
+	* Wires
 
 
 Unstable
-	* Wires
+	* N/A
 
 
 Stable
