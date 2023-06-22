@@ -183,15 +183,14 @@ namespace CircuitGUI {
 	std::vector<sf::Vector2f> allEnds;
 	std::vector<sf::CircleShape> allEndCircles;
 	std::vector<int> visibleComps;
+	std::vector<int> visibleEndNodes;
 
 	//std::vector<std::vector<Entity>::iterator> newComps;
 	//std::vector<Item> newItems;
 
 	void drawComp() {
-		//for (int c = 0; c < CircuitGUI::comp.size(); c++) { CircuitGUI::comp[c].draw(CircuitGUI::app); }
-		for (int i = 0; i < visibleComps.size(); i++) {
-			comp[visibleComps[i]].draw(app);
-		}
+		for (int i : visibleComps)
+			comp[i].draw(app);
 	}
 	void drawVirSprites() {
 		if (Occupied)
@@ -199,7 +198,8 @@ namespace CircuitGUI {
 				CircuitGUI::app.draw(CircuitGUI::virSprite[v]);
 	}
 	void drawNodes() {
-		for (int e = 0; e < CircuitGUI::allEndCircles.size(); e++) { CircuitGUI::app.draw(CircuitGUI::allEndCircles[e]); }
+		for (int i : visibleEndNodes)
+			app.draw(allEndCircles[i]);
 	}
 	void drawBoarders() {
 		for (int v = 0; v < CircuitGUI::virSerial.size(); v++)
@@ -379,7 +379,7 @@ namespace CircuitGUI {
 
 		if (Print) LOG("\n\nAfter:  "); if (Print) for (auto& vec : allEnds) LOG_VEC2(vec);
 	}
-	void updateAllEnds() {
+	void updateAllEnds_print() {
 		bool Print = false;
 
 		int ttttttttttt = allEnds.size();
@@ -511,6 +511,107 @@ namespace CircuitGUI {
 
 		if (Print) LOG("\n\nAfter:  "); if (Print) for (auto& vec : allEnds) LOG_VEC2(vec);
 	}
+	void updateAllEnds() {
+
+		allEnds.clear();
+
+		static std::vector<bool> end1;
+		static std::vector<bool> end2;
+
+		end1.resize(comp.size());
+		end2.resize(comp.size());
+
+		for (int i = 0; i < comp.size(); i++) {
+			end1[i] = false;
+			end2[i] = false;
+		}
+
+		// Nodes
+		static const int rectSize = 3;
+		static sf::Vector2f tempVec2;
+		static sf::FloatRect searchArea;
+		static std::vector<int> intersects;
+
+		// Front End
+
+		for (int v = 0; v < 2; v++) {
+			auto vec = &end1;
+
+			if (v == 0) vec = &end1;
+			if (v == 1) vec = &end2;
+
+			for (int i = 0; i < (*vec).size(); i++)
+				//for (int i = (*vec).size() - !((*vec).empty()); i >= 0; i--) // Just Iterating in Reverse // For Optimization sake // Optimization related to deleting in std::vector
+			{
+				//int Index = (*vec)[i];
+				if ((*vec)[i] == true) continue;
+				int x = 0, y = 0;
+
+				// x, y
+				if (v == 0) {
+					x = comp[i].x;
+					y = comp[i].y;
+				}
+				else {
+					x = comp[i].getEndPos().x;
+					y = comp[i].getEndPos().y;
+				}
+				allEnds.emplace_back(x, y);
+				int Node = allEnds.size() - !allEnds.empty();
+
+				//
+				if (v == 0)
+					comp[i].node1 = Node;
+				else
+					comp[i].node2 = Node;
+
+				// finding intersecting comp. by QuadTree
+				searchArea = { x - rectSize / 2.0f, y - rectSize / 2.0f, rectSize, rectSize };
+				qtExtract(searchArea, intersects);
+
+				for (int j = 0; j < intersects.size(); j++)
+				{
+					if (intersects[j] == i) continue;
+
+					tempVec2.x = comp[intersects[j]].x;
+					tempVec2.y = comp[intersects[j]].y;
+
+					if (allEnds.back() == tempVec2) // Try Front End
+					{
+						comp[intersects[j]].node1 = Node;
+
+						//auto it = std::find(end1.begin(), end1.end(), intersects[j]);
+						//if (it != end1.end())
+						//	end1.erase(it);
+						end1[intersects[j]] = true;
+					}
+					else if (allEnds.back() == comp[intersects[j]].getEndPos()) // Try Back End
+					{
+						comp[intersects[j]].node2 = Node;
+
+						//auto it = std::find(end2.begin(), end2.end(), intersects[j]);
+						//if (it != end2.end())
+						//	end2.erase(it);
+						end2[intersects[j]] = true;
+					}
+
+				}
+
+
+				// current's Front End
+				{
+					//auto it = std::find((*vec).begin(), (*vec).end(), Index);
+					//if (it != (*vec).end()) {
+					//	(*vec).erase(it);
+					//	i--;
+					//}
+					(*vec)[i] = true;
+				}
+
+			}
+		}
+
+	}
 	bool makingWire()
 	{
 		if (wires.empty())
@@ -529,19 +630,23 @@ namespace CircuitGUI {
 	}
 
 	static bool qtChangeTag = true;
-	bool visible_QuadTree = false;
+	bool visible_QuadTree = true;
 	struct quadTree {
-		static const int limit = 5;
 		bool changed = false;
 		bool isSubDivided = false;
-		unsigned int size = 0;
-		std::vector<int> arr;
-		sf::FloatRect bounds;
-		sf::RectangleShape rectDraw;								// [0 1]
-		quadTree* sub[4] = { nullptr, nullptr ,nullptr ,nullptr };	// [2 3]
+		static const int sizeLimit = 5; // Ignored if the boxSize reaches boxSizeLimit
+		static const int boxSizeLimit = 5 * gap;
+		//unsigned int size = 0;
+		std::vector<int> arr; // Sorted Indices
+		sf::FloatRect bounds; // Bounding Box for Calculation
+		sf::RectangleShape rectDraw; // For Drawing only
+
+		// [0 1]
+		// [2 3]
+		quadTree* sub[4] = { nullptr, nullptr ,nullptr ,nullptr };
 
 		quadTree() {
-			arr.reserve(quadTree::limit);
+			arr.reserve(quadTree::sizeLimit);
 		}
 	};
 	quadTree qt;
@@ -567,7 +672,7 @@ namespace CircuitGUI {
 
 		}
 
-		box.size = 0;
+		//box.size = 0;
 		box.arr.clear();
 		box.isSubDivided = false;
 		box.bounds = { 0,0,0,0 };
@@ -575,31 +680,48 @@ namespace CircuitGUI {
 	}
 	void qtAdd(int c, quadTree& box) {
 		if (box.bounds.intersects(comp[c].bounds)) {
-			if ((box.arr.size() < quadTree::limit) || (std::min(box.bounds.width, box.bounds.height) < gap * 5)) {
+			if ((box.arr.size() < quadTree::sizeLimit) || (std::min(box.bounds.width, box.bounds.height) < quadTree::boxSizeLimit)) {
 				box.arr.emplace_back(c);
-				box.size++;// = box.arr.size();
+				//box.size++; // = box.arr.size();
 			}
 			else {
-				if (box.isSubDivided == false) { // HardCode (5)
-					// Sub-divide
-					box.isSubDivided = true;
-					int qtHalfWidth = (int)(box.bounds.width / 2), qtHalfHeight = (int)(box.bounds.height / 2);
-					box.sub[0] = new quadTree; box.sub[0]->bounds.width = qtHalfWidth; box.sub[0]->bounds.height = qtHalfHeight; box.sub[0]->bounds.left = box.bounds.left;					box.sub[0]->bounds.top = box.bounds.top;
-					box.sub[1] = new quadTree; box.sub[1]->bounds.width = qtHalfWidth; box.sub[1]->bounds.height = qtHalfHeight; box.sub[1]->bounds.left = box.bounds.left + qtHalfWidth;	box.sub[1]->bounds.top = box.bounds.top;
-					box.sub[2] = new quadTree; box.sub[2]->bounds.width = qtHalfWidth; box.sub[2]->bounds.height = qtHalfHeight; box.sub[2]->bounds.left = box.bounds.left;					box.sub[2]->bounds.top = box.bounds.top + qtHalfHeight;
-					box.sub[3] = new quadTree; box.sub[3]->bounds.width = qtHalfWidth; box.sub[3]->bounds.height = qtHalfHeight; box.sub[3]->bounds.left = box.bounds.left + qtHalfWidth;	box.sub[3]->bounds.top = box.bounds.top + qtHalfHeight;
 
-					for (int i = 0; i < 4; i++) {
-						box.sub[i]->rectDraw.setSize(sf::Vector2f(box.sub[i]->bounds.width, box.sub[i]->bounds.height));
-						box.sub[i]->rectDraw.setPosition(sf::Vector2f(box.sub[i]->bounds.left, box.sub[i]->bounds.top));
-						box.sub[i]->rectDraw.setFillColor(sf::Color(box.sub[i]->rectDraw.getPosition().y - box.sub[i]->rectDraw.getPosition().x,
-							box.sub[i]->rectDraw.getPosition().x + box.sub[i]->rectDraw.getLocalBounds().height,
-							box.sub[i]->rectDraw.getLocalBounds().width - box.sub[i]->rectDraw.getPosition().x, 100));
+				if (box.isSubDivided == false) { // HardCode (5)
+					
+					// Sub-divide
+					{
+						box.isSubDivided = true;
+						int qtHalfWidth = (int)(box.bounds.width / 2);
+						int qtHalfHeight = (int)(box.bounds.height / 2);
+
+						for (int i = 0; i < 4; i++) {
+							box.sub[i] = new quadTree;
+
+							box.sub[i]->bounds.width = qtHalfWidth;
+							box.sub[i]->bounds.height = qtHalfHeight;
+							box.sub[i]->bounds.left = box.bounds.left;
+							box.sub[i]->bounds.top = box.bounds.top;
+						}
+						box.sub[1]->bounds.left += qtHalfWidth;
+						box.sub[2]->bounds.top += qtHalfHeight;
+						box.sub[3]->bounds.left += qtHalfWidth;
+						box.sub[3]->bounds.top += qtHalfHeight;
+
+
+						for (int i = 0; i < 4; i++) {
+							box.sub[i]->rectDraw.setSize(sf::Vector2f(box.sub[i]->bounds.width, box.sub[i]->bounds.height));
+							box.sub[i]->rectDraw.setPosition(sf::Vector2f(box.sub[i]->bounds.left, box.sub[i]->bounds.top));
+							box.sub[i]->rectDraw.setFillColor(sf::Color(
+								box.sub[i]->rectDraw.getPosition().y - box.sub[i]->rectDraw.getPosition().x,
+								box.sub[i]->rectDraw.getPosition().x + box.sub[i]->rectDraw.getLocalBounds().height,
+								box.sub[i]->rectDraw.getLocalBounds().width - box.sub[i]->rectDraw.getPosition().x, 100));
+						}
+
 					}
 
 
 					// Add qtArr in subdivided areas
-					for (int i = 0; i < quadTree::limit; i++)
+					for (int i = 0; i < quadTree::sizeLimit; i++)
 					{
 						qtAdd(box.arr[i], *box.sub[0]);
 						qtAdd(box.arr[i], *box.sub[1]);
@@ -612,13 +734,13 @@ namespace CircuitGUI {
 				qtAdd(c, *box.sub[1]);
 				qtAdd(c, *box.sub[2]);
 				qtAdd(c, *box.sub[3]);
-				box.size++;
+				//box.size++;
 			}
 
 			//return 1;
 		}
 		//else return 0;
-	}
+	} 
 	void qtUpdate() {
 
 		qtDelete(qt);
@@ -626,13 +748,14 @@ namespace CircuitGUI {
 		qt.bounds = areaofCollection(true);
 		qt.rectDraw.setSize(sf::Vector2f(qt.bounds.width, qt.bounds.height));
 		qt.rectDraw.setPosition(sf::Vector2f(qt.bounds.left, qt.bounds.top));
-		qt.rectDraw.setFillColor(sf::Color(qt.rectDraw.getPosition().y - qt.rectDraw.getPosition().x,
+		qt.rectDraw.setFillColor(sf::Color(
+			qt.rectDraw.getPosition().y - qt.rectDraw.getPosition().x,
 			qt.rectDraw.getPosition().x + qt.rectDraw.getLocalBounds().height,
 			qt.rectDraw.getLocalBounds().width - qt.rectDraw.getPosition().x, 100));
 
 		int compSize = comp.size();
-		if (compSize <= quadTree::limit) {
-			qt.size = compSize;
+		if (compSize <= quadTree::sizeLimit) {
+			//qt.size = compSize;
 			//LOG("\nqt: " << qt.arr.size() << "\tcomps: " << compSize);
 			qt.arr.resize(compSize); // no del
 			//LOG("\nqt: " << qt.arr.size() << "\tcomps: " << compSize << "\n");
@@ -646,12 +769,13 @@ namespace CircuitGUI {
 	}
 	void qtWrite(const quadTree& box, int indentation) {
 
-		for (int t = 0; t < indentation; t++) std::cout << "\t";
-		if (box.isSubDivided) std::cout << "`";
-		std::cout << "(" << box.size << "): ";
+		for (int t = 0; t < indentation; t++) LOG("\t");
+		if (box.isSubDivided) LOG("`");
+		//LOG("(" << box.size << "): ");
+		LOG("(" << box.arr.size() << "): ");
 		for (int i = 0; i < box.arr.size(); i++)
-			std::cout << box.arr[i] << ", ";
-		std::cout << "\b\b \n";
+			LOG(box.arr[i] << ", ");
+		LOG("\b\b \n");
 
 		if (box.isSubDivided) {
 			qtWrite(*box.sub[0], indentation + 1);
@@ -666,7 +790,23 @@ namespace CircuitGUI {
 		if (visible_QuadTree == false)
 			return;
 
-		app.draw(box.rectDraw);
+		static sf::FloatRect searchArea;
+		
+		if (&box == &qt) {
+			searchArea = {
+			sf::Vector2f(
+				view.getCenter().x - view.getSize().x / 2,
+				view.getCenter().y - view.getSize().y / 2), view.getSize()
+			};
+
+			//LOG("\n\nqt:");
+		}
+
+		if (box.bounds.intersects(searchArea)) {
+			app.draw(box.rectDraw);
+			//LOG("\t\nbox");
+		}
+		else return;
 
 		if (box.isSubDivided) {
 			qtDraw(*box.sub[0]);
@@ -869,6 +1009,23 @@ namespace CircuitGUI {
 		sf::FloatRect searcharea(sf::Vector2f(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2), view.getSize());
 
 		qtExtract(searcharea, visibleComps);
+
+		// visibleEndNodes
+		{
+			visibleEndNodes.clear();
+
+			for (int i : visibleComps) {
+
+				if (binary_search(visibleEndNodes.begin(), visibleEndNodes.end(), comp[i].node1) == false)
+					visibleEndNodes.emplace_back(comp[i].node1);
+
+				if (binary_search(visibleEndNodes.begin(), visibleEndNodes.end(), comp[i].node2) == false)
+					visibleEndNodes.emplace_back(comp[i].node2);
+
+			}
+
+		}
+
 	}
 
 
@@ -1163,6 +1320,7 @@ namespace CircuitGUI {
 			wires.reserve(8);
 			allEndCircles.reserve(17);
 			visibleComps.reserve(20);
+			visibleEndNodes.reserve(20);
 
 			//newComps.reserve(15);
 			//newItems.reserve(5);

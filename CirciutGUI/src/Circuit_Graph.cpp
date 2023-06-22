@@ -19,14 +19,24 @@ Graph::~Graph() { ; }
 
 
 void Graph::newItem(int serial) {
-	Vector.emplace_back(serial);
+	Graph::newItem_noSetGUI(serial);
 	setGraph();
 }
 
+void Graph::newItem_noSetGUI(int serial)
+{
+	Vector.emplace_back(serial);
+}
+
 void Graph::link(int corner1, int corner2) {
+	Graph::link_noSetGUI(corner1, corner2);
+	setGraph();
+}
+
+void Graph::link_noSetGUI(int corner1, int corner2)
+{
 	if (Vector.size() > corner1 && Vector.size() > corner2)
 		Vector.at(corner1).neighbors.emplace_back(corner2);
-	setGraph();
 }
 
 void Graph::clearAll() {
@@ -219,8 +229,6 @@ void Graph::printGraph() {
 	}
 	std::cout << "\n";
 }
-
-
 
 void Graph::setGraph() {
 

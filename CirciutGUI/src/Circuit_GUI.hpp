@@ -91,6 +91,7 @@ namespace CircuitGUI {
 	extern std::vector<sf::Vector2f> allEnds;
 	extern std::vector<sf::CircleShape> allEndCircles;
 	extern std::vector<int> visibleComps;
+	extern std::vector<int> visibleEndNodes;
 
 	//extern std::vector<std::vector<Entity>::iterator> newComps;
 	//extern std::vector<Item> newItems;

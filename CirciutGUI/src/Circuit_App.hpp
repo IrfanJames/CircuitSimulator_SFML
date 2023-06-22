@@ -26,7 +26,7 @@ private:
 
 	void ImGUI();
 
-	void Thrads();
+	void Threads();
 
 	void Update();
 
@@ -60,7 +60,6 @@ private:
 	float t_TollWx = 0;
 	
 	int serialToolMouse = 0;
-	int serialComp_Tab = 0;
 	//int serialCompMouse = 0;
 	
 	time_t FrameTime_for_FPS = 0;

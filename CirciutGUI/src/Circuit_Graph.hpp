@@ -19,7 +19,9 @@ public:
 	~Graph();
 	
 	void newItem(int serial);
+	void newItem_noSetGUI(int serial);
 	void link(int corner1, int corner2);
+	void link_noSetGUI(int corner1, int corner2);
 	void clearAll();
 
 	void updateWin();
@@ -28,7 +30,6 @@ public:
 	void printCorner(const Corner& corner);
 	void printGraph();
 
-private:
 	void setGraph();
 
 private:
