@@ -35,7 +35,7 @@ void Graph::link(int corner1, int corner2) {
 
 void Graph::link_noSetGUI(int corner1, int corner2)
 {
-	if (Vector.size() > corner1 && Vector.size() > corner2)
+	if (corner1 <= Vector.size() - !Vector.empty() && corner2 <= Vector.size() - !Vector.empty())
 		Vector.at(corner1).neighbors.emplace_back(corner2);
 }
 
@@ -44,8 +44,6 @@ void Graph::clearAll() {
 	allCircles.clear();
 	allVertices.clear();
 }
-
-
 
 void Graph::createWindow()
 {
@@ -56,6 +54,8 @@ void Graph::createWindow()
 		sf::ContextSettings settings;
 		settings.antialiasingLevel = 8;
 		win.create(sf::VideoMode(500, 500), "Graph", sf::Style::Default, settings);
+		win.clear();
+		win.display();
 	}
 	else {
 		mouseHold = sf::Vector2f(0, 0);
@@ -72,7 +72,6 @@ void Graph::createWindow()
 
 	if (win.isOpen())
 	{
-
 		while (win.pollEvent(evnt))
 		{
 			if (evnt.type == evnt.Closed)
@@ -107,7 +106,7 @@ void Graph::createWindow()
 					for (int c = 0; c < allCircles.size(); c++) {
 						sf::Vector2f tempPos = allCircles[c].getPosition();
 
-						if (40 * 40 >=
+						if (20 * 20 >=
 							(tempPos.x - (float)cursorWorldPosition.x) * (tempPos.x - (float)cursorWorldPosition.x) +
 							(tempPos.y - (float)cursorWorldPosition.y) * (tempPos.y - (float)cursorWorldPosition.y)) {
 
@@ -204,6 +203,7 @@ void Graph::createWindow()
 
 			for (auto& v : allVertices)
 				win.draw(v);
+
 			for (auto& circle : allCircles)
 				win.draw(circle);
 
@@ -215,19 +215,17 @@ void Graph::createWindow()
 
 
 
-void Graph::printCorner(const Corner& corner) {
-	std::cout << "\n" << corner.item << ":\t";
-	for (int c = 0; c < corner.neighbors.size(); c++) {
-		std::cout << " " << Vector[corner.neighbors[c]].item;
-	}
-}
+ void Graph::printCorner(const Corner& corner) {
+	 LOG("\n" << corner.item << ":\t");
+	 for (int i : corner.neighbors)
+		 LOG(" " << Vector[i].item);
+ }
 
 void Graph::printGraph() {
-	std::cout << "\n";
-	for (int c = 0; c < Vector.size(); c++) {
+	LOG("\n");
+	for (int c = 0; c < Vector.size(); c++)
 		printCorner(Vector[c]);
-	}
-	std::cout << "\n";
+	LOG("\n");
 }
 
 void Graph::setGraph() {
@@ -247,7 +245,7 @@ void Graph::setGraph() {
 
 		while (allCircles.size() < Vector.size()) {
 			static int radius = 20;
-			allCircles.emplace_back(radius, radius);
+			allCircles.emplace_back(radius);
 			allCircles.back().setOrigin(radius, radius);
 			allCircles.back().setOutlineThickness(2);
 			allCircles.back().setFillColor(sf::Color(23, 24, 25));

@@ -1,13 +1,4 @@
-﻿  imgui-SFML.cpp
-D:\Programming\C++\CircuitSimulator_SFML\Dependencies\imgui\docking-src\imgui-SFML.cpp(560,67): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-D:\Programming\C++\CircuitSimulator_SFML\Dependencies\imgui\docking-src\imgui-SFML.cpp(560,48): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-  imgui.cpp
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_tables.cpp
-  imgui_widgets.cpp
-  Generating Code...
-sfml-window-d.lib(sfml-window-d-2.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in sfml-graphics-d.lib(sfml-graphics-d-2.dll); second definition ignored
+﻿sfml-window-d.lib(sfml-window-d-2.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in sfml-graphics-d.lib(sfml-graphics-d-2.dll); second definition ignored
 sfml-system-d.lib(sfml-system-d-2.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in sfml-graphics-d.lib(sfml-graphics-d-2.dll); second definition ignored
 opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in sfml-graphics-d.lib(sfml-graphics-d-2.dll); second definition ignored
 openal32.lib(OpenAL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in sfml-graphics-d.lib(sfml-graphics-d-2.dll); second definition ignored

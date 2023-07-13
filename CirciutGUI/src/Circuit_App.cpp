@@ -37,6 +37,7 @@ App::App(const std::vector<std::string>& filepaths)
 	CircuitGUI::initializeGUI();
 
 	ImGui::SFML::Init(CircuitGUI::app);
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	time_t FrameTime_for_FPS = clock();
 
@@ -87,9 +88,9 @@ void App::Run()
 	{
 		Events();
 
-		Options();
-
 		ImGUI();
+
+		Options();
 
 		Threads();
 
@@ -150,7 +151,7 @@ void App::Events()
 			window_size << CircuitGUI::app.getPosition().y << "\t";
 			window_size.close();
 
-			updateVisibleVector();
+			CircuitGUI::updateVisibleVectors();
 		}
 
 		if (evnt.type == evnt.MouseButtonPressed)
@@ -222,6 +223,11 @@ void App::Events()
 
 			}
 
+			if (evnt.mouseButton.button == sf::Mouse::Right) {
+				RightClickMenu = true;
+			}
+			else RightClickMenu = false;
+
 			if (evnt.mouseButton.button == sf::Mouse::Middle) {
 				dragBool = true;
 				mouseOnCompsBool = 0;
@@ -281,13 +287,15 @@ void App::Events()
 				continue;
 			}
 			if (evnt.key.code == sf::Keyboard::Delete) {
+				if (ImGuiInFocus) return;
+
 				stimuliDisplay = 1; /*cout << "2";*/	stimuliEndNodes = 1;
 				CircuitGUI::Options::Delete();
 			}
 			if (evnt.key.code == sf::Keyboard::Tab)
 			{
 				static int serialComp_Tab = 0;
-
+				
 				if (visibleComps.empty() == false)
 				{
 					if (serialComp_Tab == visibleComps.size())
@@ -306,8 +314,10 @@ void App::Events()
 
 						serialComp_Tab++;
 					}
-					else serialComp_Tab = 0;
+					else // Error: Index Out of Bounds
+						serialComp_Tab = 0;
 
+					CircuitGUI::updateVisibleVectors();
 				}
 			}
 			if (evnt.key.code == sf::Keyboard::L) {
@@ -320,19 +330,25 @@ void App::Events()
 
 				LOG("\n");
 			}
-			if (evnt.key.code == sf::Keyboard::E) {
+			if (evnt.key.code == sf::Keyboard::T) {
 
-				futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, "Saved-Images/asdf.PNG"));
+				//static int i = -1;
+				//if (comp.empty() == false && ++i <= comp.size() - !comp.empty())
+				//{
+				//	LOG("\n" << i << ": ");
+				//	qtRemove(i);
+				//	qtWrite();
+				//}
+				//else i = -1;
+
+				//futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, "Saved-Images/asdf.PNG"));
 				//futures.emplace_back(std::async(std::launch::async, CircuitGUI::EndLessPit));
 				//threads.emplace_back(EndLessPit);
-
-
 
 				//comp.emplace_back(Item(rand() % (Item::Item_Type::no_of_Comp + 1), trim(rand() % W), trim(rand() % H), 90 * (rand() % 4)));
 				//LOG("\ncomp size: " << comp.size());
 				//qtUpdate();
 				//updateVisibleVector();
-
 
 				//LOG("----------\n\n\n" << component.node1 << ", " << component.node2<<"\n");
 				//comp.emplace_back(Item(rand() % (Item::Item_Type::no_of_Comp + 1), trim(rand() % W), trim(rand() % H), 90 * (rand() % 4)));
@@ -347,9 +363,17 @@ void App::Events()
 				//newComps.emplace_back(newItems.end());
 				//LOG("\nnewComps size: " << newComps.size());
 			}
+			/*if (evnt.key.code == sf::Keyboard::Y) {
+				qtClean();
+				qtWrite();
+			}
+			if (evnt.key.code == sf::Keyboard::W) qtWrite();*/
+
 
 			// Up, Down, Right, Left Arrows
 			{
+				if (ImGuiInFocus) return;
+
 				// Moving Components
 				if (virSerial.empty() == false) {
 
@@ -360,25 +384,28 @@ void App::Events()
 					if (evnt.key.code == sf::Keyboard::Down) { dy = +gap; }
 					if (evnt.key.code == sf::Keyboard::Right) { dx = +gap; }
 					if (evnt.key.code == sf::Keyboard::Left) { dx = -gap; }
+					
+					if (dx != 0 || dy != 0) {
 
-					for (int v : virSerial) {
+						for (int v : virSerial) {
 
-						comp[v].x += dx;
-						comp[v].y += dy;
+							comp[v].x += dx;
+							comp[v].y += dy;
 
-						comp[v].stimuli();
+							comp[v].stimuli();
 
-						stimuliDisplay = 1;
-						stimuliEndNodes = 1;
+							stimuliDisplay = 1;
+							stimuliEndNodes = 1;
+						}
 					}
 
 				}
 
 				// Dragging the View
 				else {
-					
+
 					;
-					
+
 					/*int dx = 0;
 					int dy = 0;
 
@@ -394,61 +421,58 @@ void App::Events()
 			// Ctrl
 			if (evnt.key.control) {
 				if (evnt.key.code == sf::Keyboard::A) {
-					stimuliDisplay = 1; /*cout << "3";*/
 
-					while (CircuitGUI::comp.size() < CircuitGUI::virSerial.size()) {
-						CircuitGUI::virSerial.pop_back();
-						CircuitGUI::virSprite.pop_back();
+					while (comp.size() < virSerial.size()) {
+						virSerial.pop_back();
+						virSprite.pop_back();
 					}
 
-					for (int v = 0; v < CircuitGUI::virSerial.size(); v++) {
-						CircuitGUI::virSerial[v] = v;
-						CircuitGUI::virSprite[v] = CircuitGUI::comp[CircuitGUI::virSerial[v]].sprite;
+					for (int v = 0; v < virSerial.size(); v++) {
+						virSerial[v] = v;
+						virSprite[v] = comp[virSerial[v]].sprite;
 					}
 
-					for (int c = CircuitGUI::virSerial.size(); c < CircuitGUI::comp.size(); c++) {
-						CircuitGUI::virSerial.emplace_back(c);
-						CircuitGUI::virSprite.emplace_back(CircuitGUI::comp[CircuitGUI::virSerial.back()].sprite);
+					for (int c = virSerial.size(); c < comp.size(); c++) {
+						virSerial.emplace_back(c);
+						virSprite.emplace_back(comp[virSerial.back()].sprite);
 					}
 
+					stimuliDisplay = 1;
 					CircuitGUI::updateAllSqr();
+					CircuitGUI::updateVisibleVectors();
 				}
 				if (evnt.key.code == sf::Keyboard::R) {
-					stimuliDisplay = 1;	/*cout << "4";*/ stimuliEndNodes = 1;
 
 					CircuitGUI::Options::Rotate();
+
+					stimuliDisplay = 1;	stimuliEndNodes = 1;
 				}
 				if (evnt.key.code == sf::Keyboard::C) {
 
 					CircuitGUI::Options::Copy();
-					CircuitGUI::qtUpdate();
 				}
 				if (evnt.key.code == sf::Keyboard::X) {
-					stimuliDisplay = 1;	/*cout << "6";*/ stimuliEndNodes = 1;
 
-					// Copy
-					{
-						CircuitGUI::Options::Copy();
-					}
+					CircuitGUI::Options::Copy();
+					CircuitGUI::Options::Delete();
 
-					// Delete
-					{
-						CircuitGUI::Options::Delete();
-					}
-
+					stimuliDisplay = 1;	stimuliEndNodes = 1;
 				}
 				if (evnt.key.code == sf::Keyboard::V) {
-					stimuliDisplay = 1; /*cout << "7";*/ stimuliEndNodes = 1;
 
 					CircuitGUI::Options::Paste();
+
+					stimuliDisplay = 1; stimuliEndNodes = 1;
 				}
 				if (evnt.key.code == sf::Keyboard::O) {
-					stimuliDisplay = 1; /*cout << "5";*/ stimuliEndNodes = 1;
 
 					std::string filepath = OpenFileDialog("text file (*.txt)\0*.txt\0");
 
 					if (!filepath.empty())
 						CircuitGUI::Options::Open(filepath);
+
+					stimuliDisplay = 1; stimuliEndNodes = 1;
+					CircuitGUI::updateVisibleVectors();
 				}
 				if (evnt.key.code == sf::Keyboard::S) {
 					;
@@ -565,312 +589,9 @@ void App::Events()
 
 }
 
-void App::Options()
-{
-	//sf::Mouse Hold
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) { //////////// Urgent need of enums , State Machine
-		if (releaseBool)
-		{
-			using namespace CircuitGUI;
-			releaseBool = false;
-			click = clock();
-			mouseHold = (sf::Vector2f)sf::Mouse::getPosition(app);
-
-			/*new Comp*/
-			if (MIntool) {
-				MIntool = 0;
-				float tempNewCompX = 150 + view.getCenter().x - W / 2, tempNewCompY = 150 + view.getCenter().y - H / 2;
-				tempNewCompX = trim(tempNewCompX);
-				tempNewCompY = trim(tempNewCompY);
-
-				comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
-				comp.back().stimuli();
-
-				/*Collisions*/
-				tempNewCompX = trim(tempNewCompX, gap);
-				while (occupiedAt(comp.back(), sf::Vector2f(tempNewCompX, tempNewCompY))) {
-					tempNewCompX = trim(tempNewCompX + 6 * gap);
-
-					if (tempNewCompX + 7 * gap - 150 - view.getCenter().x + W / 2 + 91 >= W) {
-						tempNewCompX = 150 + view.getCenter().x - W / 2;
-						tempNewCompY = trim(tempNewCompY + 6 * gap);
-					}
-				}
-
-				comp.back().x = (int)trim(tempNewCompX); comp.back().y = (int)trim(tempNewCompY);
-				comp.back().stimuli();
-
-				stimuliEndNodes = 1;
-				CircuitGUI::qtUpdate();
-			}
-			else {
-				mouseOnCompsBool = 0;
-
-				if (virSerial.size() > 0 && allSqr.getGlobalBounds().contains(cursorInSim())) {
-					mouseOnCompsBool = 1;
-
-					if (allSqr.getSize().x >= gap && allSqr.getSize().y >= gap) {
-
-						mouseOffSet = allSqr.getPosition() - cursorInSim();
-
-					}
-
-				}
-				else {
-
-					/*Check every component for Mouse*/
-					for (int c = 0; /*!mouseOnCompsBool &&*/ c < comp.size(); c++) {
-
-						if (comp[c].bounds.contains(cursorInSim())) {
-
-							mouseOnCompsBool = 1; dragBool = false;
-
-							if (!ShiftPressed) {
-								CircuitGUI::virSerial.clear();
-								CircuitGUI::virSprite.clear();
-								CircuitGUI::virSerialShift.clear();
-							}
-							virSerial.emplace_back(c);
-
-							//copied in sel square selection
-							virSprite.emplace_back(comp[virSerial.back()].sprite);
-							//virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-							virSprite.back().setOrigin(comp[virSerial.back()].sprite.getOrigin());
-							virSprite.back().setColor(tempDimColor);/*
-							for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
-								virSprite.emplace_back(comp[virSerial[v]].sprite);
-								virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-								virSprite.back().setColor(tempDimColor);
-							}*/
-
-							break;
-						}
-					}
-					updateAllSqr();
-
-					/*SelSqr*/
-					if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; selSqr.setPosition(cursorInSim()); }
-				}
-
-				/*Wheel*/
-				/*Drag Background*/
-				/*if (!mouseOnCompsBool && !selectSquare) {
-					dragBool = 1; mouseOnCompsBool = 0;
-					viewX = view.getCenter().x, viewY = view.getCenter().y;
-					verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
-					horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
-				}*/
-			}
-
-
-			// Move Wire
-			{
-				onWireindex = -1;
-				for (int i = 0; i < wires.size(); i++) {
-					if (onWireindex < 0 && wires[i].contains(cursorInSim())) {
-						onWireindex = i;
-					}
-				}
-			}
-
-		}
-	}
-	else {
-		/*Wheel*//*dragBool = 0;*/ mouseOnCompsBool = 0; selectSquare = 0;
-
-		if (0 && ShiftPressed) {
-			CircuitGUI::virSerialShift = CircuitGUI::virSerial;
-
-			/*for (int vs = 0; vs < virSerialShift.size(); vs++) {
-				static bool found = 0;
-				for (int v = 0; v < virSerial.size(); v++) {
-					if (virSerial[v] == virSerialShift[vs]) {
-						found = 1;
-						break;
-					}
-				}
-				if (!found) {
-					virSerial.emplace_back(virSerialShift[vs]);
-					virSprite.emplace_back(comp[virSerial.back()].sprite);
-				}
-			}*/
-		}
-		/*Click*/
-		else {
-			if (/*//asdf!PlayMode &&*/CircuitGUI::Click(CircuitGUI::gap)) {
-				stimuliDisplay = 1; /*cout << "8";*/
-
-				// Open/Close the Switch
-				using namespace CircuitGUI;
-				for (int v = 0; v < virSerial.size(); v++) {
-					if (comp[virSerial[v]].bounds.contains(cursorInSim())) {
-
-						// Changing Serial
-						if (comp[virSerial[v]].getSerial() == Entity::SwC)
-							comp[virSerial[v]].setSerial(Entity::SwO);
-						else
-							if (comp[virSerial[v]].getSerial() == Entity::SwO)
-								comp[virSerial[v]].setSerial(Entity::SwC);
-
-						virSerial.erase(virSerial.begin() + v);
-						virSprite.erase(virSprite.begin() + v);
-
-						break;
-					}
-
-				}
-
-			}
-
-			if (CircuitGUI::Click(3)) {
-				CircuitGUI::virSprite.clear();  ///// 
-				CircuitGUI::virSerial.clear();  ///// 
-			}
-		}
-	}
-
-
-	// Continoue while hold
-	{
-		using namespace CircuitGUI;
-
-		// Components
-		{
-			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !CircuitGUI::Click(0) /*&& releaseBool*/) {
-
-				static sf::Vector2f offsetPos;
-				static sf::FloatRect virArea;
-
-				virArea = allSqr.getGlobalBounds();
-				offsetPos.x = (int)cursorInSim().x - (virArea.left/* + (int)(virArea.width/ 2)*/) + (int)mouseOffSet.x;
-				offsetPos.y = (int)cursorInSim().y - (virArea.top /*+ (int)(virArea.height/ 2)*/) + (int)mouseOffSet.y;
-
-
-				for (int v = 0; v < virSprite.size(); v++)
-					virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
-
-				offsetPos = trim(offsetPos);
-
-				bool moveAll = true;
-				sf::Vector2f temp;
-				for (int v = 0; v < virSerial.size(); v++) {
-					temp.x = offsetPos.x + comp[virSerial[v]].x;
-					temp.y = offsetPos.y + comp[virSerial[v]].y;
-
-					if (occupiedAt(comp[virSerial[v]], temp, true)) {
-						moveAll = 0;
-						break;
-					}
-				}
-				if (moveAll) {
-					for (int v = 0; v < virSerial.size(); v++) {
-						comp[virSerial[v]].x += (int)offsetPos.x; // += (were "=" before)
-						comp[virSerial[v]].y += (int)offsetPos.y; // += (were "=" before)
-						comp[virSerial[v]].stimuli();
-					}
-				}
-
-				stimuliEndNodes = 1; stimuliDisplay = 1; /*cout << "9";*/
-				CircuitGUI::qtUpdate();
-			}
-		}
-
-		// Wires
-		{
-			if (0 <= onWireindex && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-				wires[onWireindex].move(cursorInSim());
-		}
-	}
-
-
-	// Select Sqr
-	{
-		if (selectSquare && !releaseBool /*//asdf&& !PlayMode*/) {
-			using namespace CircuitGUI;
-
-			stimuliDisplay = 1; /*cout << "10";*/
-			Selection = 1;
-			/*Sel Sqr*/
-			selSqr.setSize(cursorInSim() - selSqr.getPosition());
-
-
-			/*Selection*/
-			virSerial.clear();
-
-			// 2nd Method  --QuadTrees
-			qtExtract(selSqr.getGlobalBounds(), virSerial);
-
-			// 1st Method  --Check every component
-			/*for (int c = 0; c < CircuitGUI::comp.size(); c++) {
-				//cout << std::count(virSerial.begin(), virSerial.end(), c);
-				//bool bi = std::binary_search(virSerial.begin(), virSerial.end(), c);
-				//auto mk = std::find(virSerial.begin(), virSerial.end(), c);
-				int v = lower_bound(virSerial.begin(), virSerial.end(), c) - virSerial.begin();
-				bool compFound = 0;
-				if (v < virSerial.size()) compFound = (virSerial[v] == c);
-				//bool compFound = 0;
-				//int v = 0;
-				//for (; v < CircuitGUI::virSerial.size() && c >= CircuitGUI::virSerial[v]; v++) { // if(CircuitGUI::virSerial[v]) break; // Ensures the virSerial is Sorted by breaking at the right time
-				//	if (c == CircuitGUI::virSerial[v]) { compFound = 1; break; }
-				//}
-				//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
-
-
-				if (CircuitGUI::comp[c].bounds.intersects(CircuitGUI::selSqr.getGlobalBounds())) {
-					if (!compFound)
-					{
-						CircuitGUI::virSerial.insert(CircuitGUI::virSerial.begin() + v, c);
-						//CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
-						//CircuitGUI::virSprite[v].setColor(tempDimColor);
-
-						//virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
-						//virSprite.back().setColor(tempDimColor);
-					}
-				}
-				else if (compFound)
-				{
-					CircuitGUI::virSerial.erase(CircuitGUI::virSerial.begin() + v);
-					//CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
-				}
-			}*/
-
-			//if (0 && ShiftPressed) {
-			//	for (int vs = 0; vs < virSerialShift.size(); vs++) {
-			//		static bool found = 0;
-			//		for (int v = 0; v < virSerial.size(); v++) {
-			//			if (virSerial[v] == virSerialShift[vs]) {
-			//				found = 1;
-			//				break;
-			//			}
-			//		}
-			//		if (!found) {
-			//			virSerial.emplace_back(virSerialShift[vs]);
-			//			virSprite.emplace_back(comp[virSerial.back()].sprite);
-			//		}
-			//	}
-			//}
-
-			updateAllSqr();
-		}
-		else { CircuitGUI::selSqr.setSize(CircuitGUI::zero); }
-	}
-
-
-	// Making Wire
-	{
-		using CircuitGUI::wires;
-
-		if (wires.empty() == false)
-			if (wires.back().isStopped() == false) {
-				wires.back().makeWire();
-				// stimuliDisplay = 1;
-			}
-	}
-}
-
-void App::ImGUI()
-{
+void App::ImGUI() {
 	using namespace CircuitGUI;
+	ImGuiInFocus = false;
 
 	ImGui::SFML::Update(app, deltaClock.restart());
 	/*
@@ -885,12 +606,17 @@ void App::ImGUI()
 	testCircle.setRadius(t_radius);
 	testCircle.setOrigin(testCircle.getRadius(), testCircle.getRadius());
 	testCircle.setPointCount(t_vertices);
-	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/	
+	testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255)));//*/
 
 	if (ImGui::BeginMainMenuBar())
 	{
+		if (/*ImGui::IsWindowFocused() || */ ImGui::IsWindowHovered()) {
+			//LOG("\nMainBar");
+			ImGuiInFocus = true;
+		}
 		if (ImGui::BeginMenu("File"))
 		{
+			ImGuiInFocus = true;
 			stimuliDisplay = 1; /*cout << "a";*/
 
 			if (ImGui::MenuItem("New", "Ctrl + N")) {
@@ -922,7 +648,8 @@ void App::ImGUI()
 						CircuitGUI::Options::Save(filepath);
 
 					if (filepath.back() == 'G')
-						futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, filepath));
+						CircuitGUI::Options::SaveAsImage(filepath);
+						//futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, filepath));
 				}
 
 			}
@@ -933,6 +660,7 @@ void App::ImGUI()
 		}
 		if (ImGui::BeginMenu("Options"))
 		{
+			ImGuiInFocus = true;
 			stimuliDisplay = 1; /*cout << "b";*/
 
 			if (ImGui::BeginMenu("Handdrawn Icons"))
@@ -988,6 +716,7 @@ void App::ImGUI()
 		}
 		if (ImGui::BeginMenu("Simulation"))
 		{
+			ImGuiInFocus = true;
 			stimuliDisplay = 1; /*cout << "a";*/
 
 			if (ImGui::MenuItem("Generate Graph"))
@@ -996,8 +725,13 @@ void App::ImGUI()
 
 				circuit.clearAll();
 
+				//LOG("\n");
 				for (int i = 0; i < allEnds.size(); i++)
+				{
+					//LOG("\n");
+					//LOG_VEC2(allEnds[i]);
 					circuit.newItem_noSetGUI(i);
+				}
 
 				for (auto& component : comp)
 					circuit.link_noSetGUI(component.node1, component.node2);
@@ -1016,13 +750,13 @@ void App::ImGUI()
 		}
 		if (ImGui::BeginMenu("Help"))
 		{
+			ImGuiInFocus = true;
 			stimuliDisplay = 1; //cout << "c";
 
 			if (ImGui::BeginMenu("Controls"))
 			{
 				if (ImGui::BeginTable("table_context_menu_2", 2))
 				{
-
 					static const std::string opt[11][2] = { //HardCode
 						{ "Drag View", "Press Scroll-Wheel + Drag" },
 						{ "Selection Mode", "Click + Hold + Drag" },
@@ -1139,8 +873,493 @@ void App::ImGUI()
 		}
 		ImGui::EndPopup();*/
 
-		
+		if (ImGui::Checkbox("", &visible_QuadTree)) {
+			ImGuiInFocus = true;
+		}
+
+		//if (ImGui::SmallButton("AD")) {
+		//	LOG("\nAds");
+		//}
+		//
+		//if (ImGui::Button("ad")) {
+		//	LOG("\nAds");
+		//}
+
 		ImGui::EndMainMenuBar();
+	}
+
+	//Docking
+	; {
+		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+		ImGui::Begin("Docking Space", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground);
+
+		ImGuiID dockspaceID = ImGui::GetID("MyDockspace");
+		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+		//ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+
+		ImGui::End();
+	}
+
+	if (ImGui::Begin("Window-A##ID"))
+	{
+		if (ImGui::IsWindowFocused() || ImGui::IsWindowHovered())
+		{
+			ImGuiInFocus = true;
+			//LOG("O");
+		}
+
+		ImGui::Text("Hello");
+
+		if (ImGui::Button("Apple"))
+			LOG("\nApple");
+
+		if (ImGui::Button("Banana"))
+			LOG("\nBanana");
+
+		static int prefix = 4;
+		static float sliderValue = -0.123;
+
+		// Slider
+		{
+			//if (virSerial.empty() == false)
+			//{
+			//	double value = comp[virSerial.front()].value;
+			//	bool isNegative = value < 0;
+			//
+			//	sliderValue = value;
+			//	prefix = 4;
+			//
+			//	value = std::abs(value);
+			//
+			//	if (value == 0) { sliderValue = 0; prefix = 4; }
+			//	else if (value < 1) { ; }
+			//	else { ; }
+			//
+			//}
+
+
+			float sensitivity = (abs(sliderValue) <= 1.1f) ? 0.01f : std::log10f(std::abs(sliderValue));
+			//ImGui::SetNextItemWidth(120);
+			ImGui::DragFloat("Value", &sliderValue, sensitivity, -999.99999f, 999.99999f);
+
+			//ImGui::Text("New Value:");
+			//ImGui::SameLine();
+			//
+			//static char valueInput[32];
+			//ImGui::InputText("##ValueInput", valueInput, sizeof(valueInput)); // Crashes on Ctrl+V
+			//
+			//bool safe = false;
+			//double newValue = 0;
+			//std::string test(valueInput);
+			//if (test.empty() == false &&												  // Input String not Empty
+			//	('0' <= test[0] && test[0] <= '9') ||									  // 1st character is a digit [0-9]
+			//	(test[0] == '-' && 2 <= test.size() && '0' <= test[1] && test[1] <= '9')) // In case of Negative Numbers: 1st char is '-' and 2nd char is a digit [0-9]
+			//	safe = true;
+			//
+			//if (safe) newValue = std::stod(test);
+			//
+			// LOG("\ntest: " << test);
+			// LOG("\tnewValue: " << newValue);
+		}
+
+		// Prefix
+		{
+			static const std::string prefixes[8] = { "p", "n", "u", "m", "1", "k", "M", "G" };
+
+			for (int i = 0; i < 8; i++) {
+				if (ImGui::RadioButton(prefixes[i].c_str(), prefix == i))
+					prefix = i;
+
+				if (i != 3) ImGui::SameLine();
+			}
+		}
+
+		if (ImGui::Button("Apply")) {
+
+			for (int i : virSerial) {
+				comp[i].value = sliderValue * std::powl(10, (prefix - 4) * 3);
+				comp[i].updateValueText();
+			}
+		}
+
+	}
+	ImGui::End();
+
+	if (0 && RightClickMenu) {
+		ImGui::SetNextWindowPos(ImGui::GetMousePos());
+		if (ImGui::Begin("Window-B##ID"))
+		{
+			ImGui::Text("Hello");
+
+			if (ImGui::Button("Apple"))
+				LOG("\nApple");
+
+			if (ImGui::Button("Banana"))
+				LOG("\nBanana");
+
+			ImGui::Text("New Value:");
+			ImGui::SameLine();
+
+		}
+		ImGui::End();
+		RightClickMenu = false;
+	}
+
+
+	//ImGui::SetNextWindowPos(ImVec2(70, 70));
+	//ImGui::SetNextWindowPos(ImGui::GetMousePos());
+	//if (ImGui::BeginPopup("Change Value")) {
+	//	ImGui::Text("New Value:");
+	//
+	//	// Input field for the new value
+	//	static char valueInput[32];
+	//	ImGui::InputText("##ValueInput", valueInput, sizeof(valueInput));
+	//
+	//	if (ImGui::Button("Apply")) {
+	//		// Parse the new value from the input field
+	//		double newValue = std::stod(valueInput);
+	//
+	//		// Update the component value
+	//		LOG("\nnewValue: " << newValue);
+	//
+	//		ImGui::CloseCurrentPopup();
+	//	}
+	//
+	//	ImGui::EndPopup();
+	//}
+
+	//LOG("\nImGuiInFocus: " << ImGuiInFocus);
+}
+
+void App::Options() {
+
+	if (ImGuiInFocus) return;
+
+	//sf::Mouse Hold
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) { //////////// Urgent need of enums , State Machine
+		if (releaseBool)
+		{
+			using namespace CircuitGUI;
+			releaseBool = false;
+			click = clock();
+			mouseHold = (sf::Vector2f)sf::Mouse::getPosition(app);
+
+			/*new Comp*/
+			if (MIntool) {
+				MIntool = 0;
+				float tempNewCompX = 150 + view.getCenter().x - W / 2, tempNewCompY = 150 + view.getCenter().y - H / 2;
+				tempNewCompX = trim(tempNewCompX);
+				tempNewCompY = trim(tempNewCompY);
+
+				comp.emplace_back(serialToolMouse, tempNewCompX, tempNewCompY, 0);
+				comp.back().stimuli();
+
+				/*Collisions*/
+				tempNewCompX = trim(tempNewCompX, gap);
+				while (occupiedAt(comp.back(), sf::Vector2f(tempNewCompX, tempNewCompY))) {
+					tempNewCompX = trim(tempNewCompX + 6 * gap);
+
+					if (tempNewCompX + 7 * gap - 150 - view.getCenter().x + W / 2 + 91 >= W) {
+						tempNewCompX = 150 + view.getCenter().x - W / 2;
+						tempNewCompY = trim(tempNewCompY + 6 * gap);
+					}
+				}
+
+				comp.back().x = (int)trim(tempNewCompX); comp.back().y = (int)trim(tempNewCompY);
+				comp.back().stimuli();
+
+				stimuliEndNodes = 1;
+				CircuitGUI::qtUpdate();
+			}
+			else {
+				mouseOnCompsBool = 0;
+
+				if (virSerial.size() > 0 && allSqr.getGlobalBounds().contains(cursorInSim()))
+				{	
+					mouseOnCompsBool = 1;
+
+					if (allSqr.getSize().x >= gap && allSqr.getSize().y >= gap)
+						mouseOffSet = allSqr.getPosition() - cursorInSim();
+				}
+				else {
+
+					/*Check every component for Mouse*/
+					static sf::FloatRect searchArea;
+					static std::vector<int> vec;
+
+					{
+						int halfSide = 5;
+						sf::Vector2f cursor = cursorInSim();
+
+						searchArea.left = cursor.x - halfSide;
+						searchArea.top = cursor.y - halfSide;
+						searchArea.width = 2 * halfSide;
+						searchArea.height = 2 * halfSide;
+					}
+
+					qtExtract(searchArea, vec);
+
+					//for (int c = 0; /*!mouseOnCompsBool &&*/ c < comp.size(); c++) {
+					for (int i : vec) {
+
+						if (comp[i].bounds.contains(cursorInSim())) {
+
+							mouseOnCompsBool = 1; dragBool = false;
+
+							if (!ShiftPressed) {
+								virSerial.clear();
+								virSprite.clear();
+								virSerialShift.clear();
+							}
+							virSerial.emplace_back(i);
+
+							//LOG("\n\ncomp[c].boundswidth: " << comp[c].bounds.width);
+							//LOG("\ncomp[c].boundsheight: " << comp[c].bounds.height);
+							//LOG("\ncomp[c].boundsleft: " << comp[c].bounds.left);
+							//LOG("\ncomp[c].boundstop: " << comp[c].bounds.top);
+							CircuitGUI::updateAllSqr();
+							mouseOffSet = allSqr.getPosition() - cursorInSim();
+
+							//copied in sel square selection
+							virSprite.emplace_back(comp[virSerial.back()].sprite);
+							//virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+							virSprite.back().setOrigin(comp[virSerial.back()].sprite.getOrigin());
+							virSprite.back().setColor(tempDimColor);/*
+							for (int v = 0; v < virSerial.size(); v++) {//copied in sel square selection
+								virSprite.emplace_back(comp[virSerial[v]].sprite);
+								virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+								virSprite.back().setColor(tempDimColor);
+							}*/
+
+							break;
+						}
+					}
+
+					/*SelSqr*/
+					if (!mouseOnCompsBool /*Wheel*/ /*&& selectSquare*/) { selectSquare = 1; selSqr.setPosition(cursorInSim()); }
+				}
+
+				/*Wheel*/
+				/*Drag Background*/
+				/*if (!mouseOnCompsBool && !selectSquare) {
+					dragBool = 1; mouseOnCompsBool = 0;
+					viewX = view.getCenter().x, viewY = view.getCenter().y;
+					verX = vLines[0].getPosition().x; verY = vLines[0].getPosition().y;
+					horX = hLines[0].getPosition().x; horY = hLines[0].getPosition().y;
+				}*/
+			}
+
+
+			// Move Wire
+			{
+				onWireIndex = -1;
+				for (int i = 0; i < wires.size(); i++) {
+					if (onWireIndex < 0 && wires[i].contains(cursorInSim())) {
+						onWireIndex = i;
+					}
+				}
+			}
+
+		}
+	}
+	else {
+		/*Wheel*//*dragBool = 0;*/ mouseOnCompsBool = 0; selectSquare = 0;
+
+		if (0 && ShiftPressed) {
+			CircuitGUI::virSerialShift = CircuitGUI::virSerial;
+
+			/*for (int vs = 0; vs < virSerialShift.size(); vs++) {
+				static bool found = 0;
+				for (int v = 0; v < virSerial.size(); v++) {
+					if (virSerial[v] == virSerialShift[vs]) {
+						found = 1;
+						break;
+					}
+				}
+				if (!found) {
+					virSerial.emplace_back(virSerialShift[vs]);
+					virSprite.emplace_back(comp[virSerial.back()].sprite);
+				}
+			}*/
+		}
+		/*Click*/
+		else {
+			if (/*//asdf!PlayMode &&*/CircuitGUI::Click(CircuitGUI::gap)) {
+				stimuliDisplay = 1; /*cout << "8";*/
+
+				// Open/Close the Switch
+				using namespace CircuitGUI;
+				for (int v = 0; v < virSerial.size(); v++) {
+					if (comp[virSerial[v]].bounds.contains(cursorInSim())) {
+
+						// Changing Serial
+						if (comp[virSerial[v]].getSerial() == Entity::SwC)
+							comp[virSerial[v]].setSerial(Entity::SwO);
+						else
+							if (comp[virSerial[v]].getSerial() == Entity::SwO)
+								comp[virSerial[v]].setSerial(Entity::SwC);
+
+						virSerial.erase(virSerial.begin() + v);
+						virSprite.erase(virSprite.begin() + v);
+
+						break;
+					}
+
+				}
+
+			}
+
+			if (CircuitGUI::Click(3)) {
+				CircuitGUI::virSprite.clear();  ///// 
+				CircuitGUI::virSerial.clear();  ///// 
+			}
+		}
+	}
+
+
+	// Continoue while hold
+	{
+		using namespace CircuitGUI;
+
+		// Components
+		{
+			if (!selectSquare && mouseOnCompsBool /*//asdf&& !PlayMode*/ && !Click(0) /*&& releaseBool*/ && !makingWire()) {
+
+				static sf::Vector2f offsetPos;
+				static sf::FloatRect virArea;
+
+				virArea = allSqr.getGlobalBounds();
+
+				offsetPos.x = (int)cursorInSim().x - (virArea.left/* + (int)(virArea.width/ 2)*/) + (int)mouseOffSet.x;
+				offsetPos.y = (int)cursorInSim().y - (virArea.top /*+ (int)(virArea.height/ 2)*/) + (int)mouseOffSet.y;
+
+
+				for (int v = 0; v < virSprite.size(); v++)
+					virSprite[v].setPosition(offsetPos.x + comp[virSerial[v]].x, offsetPos.y + comp[virSerial[v]].y);
+
+				offsetPos = trim(offsetPos);
+
+				bool moveAll = true;
+				sf::Vector2f temp;
+				for (int v : virSerial) {
+					temp.x = offsetPos.x + comp[v].x;
+					temp.y = offsetPos.y + comp[v].y;
+
+					if (occupiedAt(comp[v], temp, true)) {
+						moveAll = 0;
+						break;
+					}
+				}
+				if (moveAll) {
+					for (int v : virSerial) {
+						//qtRemove(v);
+
+						comp[v].x += (int)offsetPos.x; // += (were "=" before)
+						comp[v].y += (int)offsetPos.y; // += (were "=" before)
+						comp[v].stimuli();
+
+						//qtAdd(v, qt);
+					}
+
+					stimuliEndNodes = 1;
+				}
+
+				stimuliDisplay = 1;
+				//stimuliEndNodes = 1;
+				// CircuitGUI::qtUpdate();
+			}
+		}
+
+		// Wires
+		{
+			if (0 <= onWireIndex && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				wires[onWireIndex].move(cursorInSim());
+		}
+	}
+
+
+	// Select Sqr
+	{
+		if (selectSquare && !releaseBool /*//asdf&& !PlayMode*/) {
+			using namespace CircuitGUI;
+
+			/*Sel Sqr*/
+			selSqr.setSize(cursorInSim() - selSqr.getPosition());
+
+
+			/*Selection*/
+			virSerial.clear();
+
+			// 2nd Method  --QuadTrees
+			qtExtract(selSqr.getGlobalBounds(), virSerial);
+
+			// 1st Method  --Check every component
+			/*for (int c = 0; c < CircuitGUI::comp.size(); c++) {
+				//cout << std::count(virSerial.begin(), virSerial.end(), c);
+				//bool bi = std::binary_search(virSerial.begin(), virSerial.end(), c);
+				//auto mk = std::find(virSerial.begin(), virSerial.end(), c);
+				int v = lower_bound(virSerial.begin(), virSerial.end(), c) - virSerial.begin();
+				bool compFound = 0;
+				if (v < virSerial.size()) compFound = (virSerial[v] == c);
+				//bool compFound = 0;
+				//int v = 0;
+				//for (; v < CircuitGUI::virSerial.size() && c >= CircuitGUI::virSerial[v]; v++) { // if(CircuitGUI::virSerial[v]) break; // Ensures the virSerial is Sorted by breaking at the right time
+				//	if (c == CircuitGUI::virSerial[v]) { compFound = 1; break; }
+				//}
+				//(!(Keyboard::isKeyPressed(Keyboard::RShift) || Keyboard::isKeyPressed(Keyboard::LShift)));
+
+
+				if (CircuitGUI::comp[c].bounds.intersects(CircuitGUI::selSqr.getGlobalBounds())) {
+					if (!compFound)
+					{
+						CircuitGUI::virSerial.insert(CircuitGUI::virSerial.begin() + v, c);
+						//CircuitGUI::virSprite.insert(CircuitGUI::virSprite.begin() + v, CircuitGUI::comp[c].sprite);
+						//CircuitGUI::virSprite[v].setColor(tempDimColor);
+
+						//virSprite.back().setOrigin(virSprite.back().getTexture()->getSize().x / 2, virSprite.back().getTexture()->getSize().y / 2);
+						//virSprite.back().setColor(tempDimColor);
+					}
+				}
+				else if (compFound)
+				{
+					CircuitGUI::virSerial.erase(CircuitGUI::virSerial.begin() + v);
+					//CircuitGUI::virSprite.erase(CircuitGUI::virSprite.begin() + v);
+				}
+			}*/
+
+			//if (0 && ShiftPressed) {
+			//	for (int vs = 0; vs < virSerialShift.size(); vs++) {
+			//		static bool found = 0;
+			//		for (int v = 0; v < virSerial.size(); v++) {
+			//			if (virSerial[v] == virSerialShift[vs]) {
+			//				found = 1;
+			//				break;
+			//			}
+			//		}
+			//		if (!found) {
+			//			virSerial.emplace_back(virSerialShift[vs]);
+			//			virSprite.emplace_back(comp[virSerial.back()].sprite);
+			//		}
+			//	}
+			//}
+
+			stimuliDisplay = 1; Selection = 1;
+			CircuitGUI::updateAllSqr();
+			CircuitGUI::updateVisibleVectors();
+		}
+		else { CircuitGUI::selSqr.setSize(CircuitGUI::zero); }
+	}
+
+
+	// Making Wire
+	{
+		using CircuitGUI::wires;
+
+		if (wires.empty() == false)
+			if (wires.back().isStopped() == false) {
+				wires.back().makeWire();
+				// stimuliDisplay = 1;
+			}
 	}
 
 }
@@ -1181,7 +1400,7 @@ void App::Update()
 			CircuitGUI::Drag();
 			CircuitGUI::colorBrightLineGrid();
 			CircuitGUI::updatePosToolBox();
-			CircuitGUI::updateVisibleVector();
+			CircuitGUI::updateVisibleVectors();
 		}
 		//testCircle.setPosition(CircuitGUI::onScreen(300, 300));
 	}
@@ -1205,22 +1424,15 @@ void App::Update()
 	{
 		if (stimuliEndNodes)
 		{
-			using namespace CircuitGUI;
-
-			updateAllEnds();
-
-			updateEndCircles();
-
-			updateAllSqr();
+			CircuitGUI::updateAllSqr();
 
 			CircuitGUI::qtUpdate();
 
-			/*
-			if (comp.size() < 1000)
-				qtWrite();
-			else LOG("\nNot Printing QuadTree [No. of Elements(" << comp.size() << ") is more that 1000]\n\t* Not Printing because the sheer amount of time it would take\n");//*/
+			CircuitGUI::updateAllEnds();
+			
+			CircuitGUI::updateEndCircles();
 
-			updateVisibleVector();
+			CircuitGUI::updateVisibleVectors();
 
 			//{
 			//	circuit.clearAll();
@@ -1254,7 +1466,7 @@ void App::Render()
 
 		drawGrid();
 
-		drawAllSqr();
+		//drawAllSqr();
 
 		qtDraw(qt);
 
@@ -1265,6 +1477,7 @@ void App::Render()
 		drawNodes();
 
 		drawBoarders();
+		drawAllSqr();
 
 		drawVirSprites();
 
@@ -1293,3 +1506,4 @@ void App::EndFrame()
 	stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
 
 }
+

@@ -22,9 +22,9 @@ private:
 
 	void Events();
 
-	void Options();
-
 	void ImGUI();
+
+	void Options();
 
 	void Threads();
 
@@ -41,6 +41,7 @@ private:
 
 	//bool Drag = 0;
 	bool selectSquare = 0;
+	bool RightClickMenu = 0;
 	// bool wireBool = 0;
 	
 	bool stimuliDisplay = 1;
@@ -50,8 +51,9 @@ private:
 	bool releaseBool = 1;
 	bool ShiftPressed = 0;
 	bool mouseOnCompsBool = 0;
+	bool ImGuiInFocus = 0;
 
-	int onWireindex = 0;
+	int onWireIndex = -1;
 
 
 	bool MInTool = 0;

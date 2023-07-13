@@ -1,3 +1,4 @@
+
 // Colapse all Scopes - it'll be easier
 // Ctrl + M + A in Visual Studio
 #pragma once
@@ -29,7 +30,7 @@ namespace CircuitGUI {
 	extern bool darkLightMode;
 	extern sf::Color tempDimColor;
 
-	/*Textures*/
+	// Textures	
 	//void loadTextures()
 	//extern Resource Resource_Logo;
 	//extern Resource Resource_Font;
@@ -42,7 +43,7 @@ namespace CircuitGUI {
 	//viewInit();
 
 
-	/*Cursor*/
+	// Cursor
 	//extern float mouseHoldX, mouseHoldY;
 	extern sf::Vector2f mouseHold;
 	extern sf::Vector2f mouseOffSet;
@@ -59,7 +60,7 @@ namespace CircuitGUI {
 	extern sf::Vector2f trim(sf::Vector2f vec, int wrt = gap);
 
 
-	/*Grid*/
+	// Grid
 	//extern int virtualBoarder;
 	//extern std::vector<sf::RectangleShape> vLines;
 	//extern std::vector<sf::RectangleShape> hLines;
@@ -71,7 +72,7 @@ namespace CircuitGUI {
 	//void initializeGrid()
 
 
-	/*Drag*/
+	// Drag
 	extern bool dragBool;
 	//extern float viewX, viewY;
 	//extern float verX, verY;
@@ -82,7 +83,7 @@ namespace CircuitGUI {
 	extern void colorBrightLineGrid();
 
 
-	/*Vectors*/
+	// Vectors
 	extern std::vector<Entity> comp;
 	extern std::vector<int> virSerial;
 	extern std::vector<sf::Sprite> virSprite;
@@ -92,6 +93,7 @@ namespace CircuitGUI {
 	extern std::vector<sf::CircleShape> allEndCircles;
 	extern std::vector<int> visibleComps;
 	extern std::vector<int> visibleEndNodes;
+	extern std::vector<int> visibleBoarders;
 
 	//extern std::vector<std::vector<Entity>::iterator> newComps;
 	//extern std::vector<Item> newItems;
@@ -111,18 +113,19 @@ namespace CircuitGUI {
 	struct quadTree;
 	extern quadTree qt;
 	extern bool visible_QuadTree;
+	//extern void qtClean(quadTree& box = qt);
+	//extern void qtRemove(int c, quadTree& box = qt);
 	extern void qtDelete(quadTree& box);
-	extern void qtRemove(int c, quadTree& box);
 	extern void qtAdd(int c, quadTree& box);
 	extern void qtUpdate();
-	extern void qtWrite(const quadTree& box = qt, int indentation = 0);
+	//extern void qtWrite(const quadTree& box = qt, int indentation = 0);
 	extern void qtDraw(quadTree& box);
 	extern void qtExtract(const sf::FloatRect& searchArea, std::vector<int>& output, const quadTree& box = qt);
 
 
 	extern bool occupiedAt(const Entity& en, const sf::Vector2f& At, bool ignoreAllVir = false);
 	extern sf::FloatRect areaofCollection(int collection, bool* sucess_ptr = nullptr);
-	extern void updateVisibleVector();
+	extern void updateVisibleVectors();
 
 
 	extern void colorEntityboarder();

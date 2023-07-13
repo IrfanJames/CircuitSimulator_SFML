@@ -6,11 +6,6 @@
 
 class Wire : public Entity
 {
-private:
-	static const int m_width = 2;
-	bool status_stopped = false;
-	std::vector<sf::RectangleShape> wire;
-	std::vector<sf::Vector2f> edge_points;
 
 public:
 	
@@ -58,4 +53,11 @@ public:
 	bool intersectes(const sf::FloatRect& Area) const;
 
 	std::string serialize() const;
+
+private:
+	static const int m_width = 2;
+	bool status_stopped = false;
+	sf::Vector2f DragOffset;
+	std::vector<sf::RectangleShape> wire;
+	std::vector<sf::Vector2f> edge_points;
 };

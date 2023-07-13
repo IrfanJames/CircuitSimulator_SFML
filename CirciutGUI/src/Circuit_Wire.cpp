@@ -112,15 +112,15 @@ void Wire::clean() {
 
 	;
 
-	//for (int i = 0; i < wire.size(); i++) {
+	/*for (int i = 0; i < wire.size(); i++) {
 
-	//	int x = wire[i].getSize().x;
-	//	int y = wire[i].getSize().y;
+		int x = wire[i].getSize().x;
+		int y = wire[i].getSize().y;
 
-	//	if (abs(x) < 2 || abs(y) < 2) // HardCode
-	//		wire.erase(wire.begin() + i--);
+		if (abs(x) < 2 || abs(y) < 2) // HardCode
+			wire.erase(wire.begin() + i--);
 
-	//}
+	}*/
 
 }
 
@@ -293,8 +293,8 @@ const std::vector<sf::RectangleShape>* Wire::getRectVector() const
 
 void Wire::draw(sf::RenderWindow& App) const
 {
-	for (int c = 0; c < wire.size(); c++)
-		App.draw(wire[c]);
+	for (auto& rec : wire)
+		App.draw(rec);
 }
 
 

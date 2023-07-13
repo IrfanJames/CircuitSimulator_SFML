@@ -52,23 +52,23 @@ New:
 
 
 Short-Term Goals
-	* State Machine
+	* Make Quad-Trees Stable
 	* Wires
+	* State Machine
+	* Optimize QuadTree qtUpdate()
 	* Usable through Keyboard
 	  * Move Components with Arrow Keys (Done, but collisions not implemented yet)
 	  * Drag from Keyboard
 	* Print sf::Clipboard::getString while Drap/Dropping Acrobat PDF into another Acrobat PDF Window
-	* Optimize QuadTree qtUpdate()
-
 
 
 Issues
-	* Generating Graph too Slow
 	* Wires
 
 
 Unstable
-	* N/A
+	* Crash in Option::Paste()
+	* Crash in SaveAsImage() when image size is greater than allowed imgae-size
 
 
 Stable

@@ -12,8 +12,10 @@ class Graph {
 			item = Item;
 			neighbors.reserve(8);
 		}
+
 	};
-	
+
+
 public:
 	Graph();
 	~Graph();

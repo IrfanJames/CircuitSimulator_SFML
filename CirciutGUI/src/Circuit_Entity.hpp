@@ -18,15 +18,11 @@ public:
 		no_of_Comp
 	};
 
-	inline static sf::RectangleShape boarderDesign;
-
 public:
 
-	int node1 = -1;
-	int node2 = -1;
-	double resistance = 1000;
-	double voltage = -5.032;
-	double current = 0.030405;
+	int node1 = -1; // (-1) not valid;
+	int node2 = -1; // (-1) not valid;
+	double value = 0;
 
 public:
 
@@ -41,11 +37,11 @@ private:
 
 	inline static sf::Font s_font;
 
+	inline static sf::RectangleShape boarderDesign;
+
 private:
 
 	int serial = 0;
-
-	void updateValueText();
 
 public:
 
@@ -58,6 +54,8 @@ public:
 	void setSerial(int s);
 
 	void stimuli();
+
+	void updateValueText();
 
 public:
 
