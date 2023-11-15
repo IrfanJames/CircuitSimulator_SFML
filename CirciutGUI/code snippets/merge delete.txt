@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+void remove_elements(std::vector<int>& mainVec, const std::vector<int>& valuesToRemove) {
+    std::vector<int> result;
+    result.reserve(mainVec.size());
+
+    size_t mainIndex = 0;
+    size_t removeIndex = 0;
+
+    while (mainIndex < mainVec.size() && removeIndex < valuesToRemove.size()) {
+        if (mainVec[mainIndex] < valuesToRemove[removeIndex]) {
+            result.push_back(mainVec[mainIndex]);
+            mainIndex++;
+        } else if (mainVec[mainIndex] > valuesToRemove[removeIndex]) {
+            removeIndex++;
+        } else {
+            mainIndex++;
+            removeIndex++;
+        }
+    }
+
+    while (mainIndex < mainVec.size()) {
+        result.push_back(mainVec[mainIndex]);
+        mainIndex++;
+    }
+
+    mainVec = result;
+}
+
+int main() {
+    std::vector<int> mainVec = {1, 2, 3, 4, 5, 6, 7, 8};
+    std::vector<int> valuesToRemove = {3, 5, 8};
+
+    remove_elements(mainVec, valuesToRemove);
+
+    for (int num : mainVec) {
+        std::cout << num << " ";
+    }
+
+    return 0;
+}

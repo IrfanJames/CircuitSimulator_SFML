@@ -269,6 +269,7 @@
     <ClInclude Include="src\Circuit_Global.hpp" />
     <ClInclude Include="src\Circuit_Graph.hpp" />
     <ClInclude Include="src\Circuit_GUI.hpp" />
+    <ClInclude Include="src\Circuit_Timer.hpp" />
     <ClInclude Include="src\Circuit_Windows_Stuff.hpp" />
     <ClInclude Include="src\Circuit_Wire.hpp" />
     <ClInclude Include="src\Circuit_Item.hpp" />

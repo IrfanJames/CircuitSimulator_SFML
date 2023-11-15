@@ -15,8 +15,9 @@
 |  Copy |  `Ctrl` + `C` |
 |  Paste |  `Ctrl` + `V` |
 |  Cut |  `Ctrl` + `X` |
-|  Rotate |  `Ctrl` + `R` |
 |  Delete |  `Del` |
+|  Rotate |  `Ctrl` + `R` |
+|  Rotate Block |  `Ctrl` + `Shift` + `R` |
 |  Open Project | `Ctrl` + `O` |
 |  Save Project |  `Ctrl` + `S` |
 |Save as Image/Project| `Ctrl` + `Shift` + `S`|

@@ -3,14 +3,14 @@
 #include <iostream>
 #include <fstream>
 
+#ifdef NDEBUG
 namespace LOG {
 
-#ifdef NDEBUG
 	// Making .txt File For Logging in Release Mode
 	inline std::ofstream log_file("temp_files/log.txt", std::ios::out, std::ios::trunc);
-#endif
 
 }
+#endif
 
 // LOG Function
 #ifdef MY_NDIST
@@ -27,7 +27,7 @@ namespace LOG {
 
 // LOG_VEC Function
 #ifdef MY_NDIST
-#define LOG_VEC(vec) { LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); LOG("\n"); }
+#define LOG_VEC(vec) { LOG("\n(" << vec.size() << "): "); for (size_t i = 0; i < vec.size(); i++) LOG(vec[i] << " "); }
 #else
 #define LOG_VEC(vec) ;
 #endif

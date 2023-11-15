@@ -1,3 +1,4 @@
+
 /*
 	* Colapse all Scopes - it'll be easier
 	* Ctrl + M + A in Visual Studio
@@ -7,7 +8,9 @@
 #include <vector>
 #include <fstream>
 #include <direct.h>
+#include <chrono>
 #include <future>
+
 //#include <thread>
 //#include <sstream>
 //#include <string>
@@ -17,17 +20,17 @@
 #include "SFML/Graphics.hpp"
 
 #include "LOG.hpp"
+#include "Circuit_Timer.hpp"
+#include "Circuit_Global.hpp"
 #include "Circuit_Entity.hpp"
 #include "Circuit_Windows_Stuff.hpp"
 #include "Circuit_Wire.hpp"
 #include "Circuit_Item.hpp"
 #include "Circuit_Graph.hpp"
-#include "Resource_Manager.hpp"
 
 #include "Circuit_GUI.hpp"
 #include "CircuitCore.hpp"
 #include "Circuit_App.hpp"
-
 
 
 App::App(const std::vector<std::string>& filepaths)
@@ -38,8 +41,6 @@ App::App(const std::vector<std::string>& filepaths)
 
 	ImGui::SFML::Init(CircuitGUI::app);
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-	time_t FrameTime_for_FPS = clock();
 
 
 	//Resource my_pic(IDR_CAP, "BMP");
@@ -52,14 +53,13 @@ App::App(const std::vector<std::string>& filepaths)
 		testCircle.setPosition(W / 2, H / 2);
 		testCircle.setFillColor(sf::Color((int)(t_Colors[0] * 255), (int)(t_Colors[1] * 255), (int)(t_Colors[2] * 255))); }//*/
 
-
 #ifdef _DEBUG
-		// For Opening Where Left
+	// For Opening Where Left
 	CircuitGUI::Options::Open("temp_files/last.txt");
 	stimuliDisplay = 1; stimuliEndNodes = 1;
 #endif
 
-	////////////////// argv ///////////////////////
+	//////////////// argv //////////////////
 	if (filepaths.empty() == false)
 	{
 		CircuitGUI::Options::Open(filepaths.back());
@@ -82,7 +82,6 @@ App::~App()
 
 void App::Run()
 {
-
 	//////////////// Main Loop ////////////////////
 	while (CircuitGUI::app.isOpen() && End == false)
 	{
@@ -323,8 +322,11 @@ void App::Events()
 			if (evnt.key.code == sf::Keyboard::L) {
 
 				LOG("\n\nwires (" << wires.size() << "): ");
-				for (auto& w : wires)
-					LOG(w.noOfEdges() << " ");
+				for (auto& wire : wires) {
+					LOG("\n" << wire.noOfEdges() << " ");
+					for (sf::Vector2f& vec : wire.edge_points)
+						LOG_VEC2(vec);
+				}
 
 				LOG("\ncursor: "); LOG_VEC2(cursorInSim());
 
@@ -363,6 +365,7 @@ void App::Events()
 				//newComps.emplace_back(newItems.end());
 				//LOG("\nnewComps size: " << newComps.size());
 			}
+
 			/*if (evnt.key.code == sf::Keyboard::Y) {
 				qtClean();
 				qtWrite();
@@ -403,18 +406,19 @@ void App::Events()
 
 				// Dragging the View
 				else {
-
 					;
 
-					/*int dx = 0;
+					/*
+					int dx = 0;
 					int dy = 0;
+					int disp = gap * 3;
 
-					if (evnt.key.code == sf::Keyboard::Up) { dy = -gap; }
-					if (evnt.key.code == sf::Keyboard::Down) { dy = +gap; }
-					if (evnt.key.code == sf::Keyboard::Right) { dx = +gap; }
-					if (evnt.key.code == sf::Keyboard::Left) { dx = -gap; }
+					if (evnt.key.code == sf::Keyboard::Up) { dy = -disp; }
+					if (evnt.key.code == sf::Keyboard::Down) { dy = +disp; }
+					if (evnt.key.code == sf::Keyboard::Right) { dx = +disp; }
+					if (evnt.key.code == sf::Keyboard::Left) { dx = -disp; }
 
-					view.move(dx, dy);*/
+					view.move(dx, dy);//*/
 				}
 			}
 
@@ -443,7 +447,10 @@ void App::Events()
 				}
 				if (evnt.key.code == sf::Keyboard::R) {
 
-					CircuitGUI::Options::Rotate();
+					if(evnt.key.shift)
+						CircuitGUI::Options::Rotate(true);
+					else
+						CircuitGUI::Options::Rotate(false);
 
 					stimuliDisplay = 1;	stimuliEndNodes = 1;
 				}
@@ -474,11 +481,6 @@ void App::Events()
 					stimuliDisplay = 1; stimuliEndNodes = 1;
 					CircuitGUI::updateVisibleVectors();
 				}
-				if (evnt.key.code == sf::Keyboard::S) {
-					;
-					//_mkdir("Saved-Images");		// Alredy Exists(-1) else Created(0)
-					//_mkdir("Saved-Projects");	// Alredy Exists(-1) else Created(0)
-				}
 				if (evnt.key.code == sf::Keyboard::S && evnt.key.shift) {
 
 					_mkdir("Saved-Images");		// Alredy Exists(-1) else Created(0)
@@ -495,6 +497,11 @@ void App::Events()
 
 					}
 
+				}
+				else if (evnt.key.code == sf::Keyboard::S) {
+					;
+					//_mkdir("Saved-Images");		// Alredy Exists(-1) else Created(0)
+					//_mkdir("Saved-Projects");	// Alredy Exists(-1) else Created(0)
 				}
 			}
 
@@ -648,8 +655,8 @@ void App::ImGUI() {
 						CircuitGUI::Options::Save(filepath);
 
 					if (filepath.back() == 'G')
-						CircuitGUI::Options::SaveAsImage(filepath);
-						//futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, filepath));
+						futures.emplace_back(std::async(std::launch::async, CircuitGUI::Options::SaveAsImage, filepath));
+						//CircuitGUI::Options::SaveAsImage(filepath);
 				}
 
 			}
@@ -757,12 +764,13 @@ void App::ImGUI() {
 			{
 				if (ImGui::BeginTable("table_context_menu_2", 2))
 				{
-					static const std::string opt[11][2] = { //HardCode
+					static const std::string opt[12][2] = { //HardCode
 						{ "Drag View", "Press Scroll-Wheel + Drag" },
 						{ "Selection Mode", "Click + Hold + Drag" },
 						{ "Select All",		"Ctrl + A" },
-						{ "Rotate",			"Ctrl + R" },
 						{ "Delete",			"Del" },
+						{ "Rotate",			"Ctrl + R" },
+						{ "Rotate Block",	"Ctrl + Shift + R" },
 						{ "Copy",			"Ctrl + C" },
 						{ "Paste",			"Ctrl + V" },
 						{ "Open",			"Ctrl + O" },
@@ -777,7 +785,7 @@ void App::ImGUI() {
 					ImGui::TableHeadersRow();
 					ImGui::TableNextRow();
 
-					for (int row = 0; row < 11; row++) //HardCode
+					for (int row = 0; row < 12; row++) //HardCode
 					{
 						ImGui::TableSetColumnIndex(0);
 						ImGui::Text("%s", opt[row][0].c_str());
@@ -903,18 +911,15 @@ void App::ImGUI() {
 	if (ImGui::Begin("Window-A##ID"))
 	{
 		if (ImGui::IsWindowFocused() || ImGui::IsWindowHovered())
-		{
-			ImGuiInFocus = true;
-			//LOG("O");
-		}
+			ImGuiInFocus = true; //LOG("O");
 
-		ImGui::Text("Hello");
-
-		if (ImGui::Button("Apple"))
-			LOG("\nApple");
-
-		if (ImGui::Button("Banana"))
-			LOG("\nBanana");
+		//ImGui::Text("Hello");
+		//
+		//if (ImGui::Button("Apple"))
+		//	LOG("\nApple");
+		//
+		//if (ImGui::Button("Banana"))
+		//	LOG("\nBanana");
 
 		static int prefix = 4;
 		static float sliderValue = -0.123;
@@ -936,7 +941,6 @@ void App::ImGUI() {
 			//	else { ; }
 			//
 			//}
-
 
 			float sensitivity = (abs(sliderValue) <= 1.1f) ? 0.01f : std::log10f(std::abs(sliderValue));
 			//ImGui::SetNextItemWidth(120);
@@ -966,11 +970,12 @@ void App::ImGUI() {
 		{
 			static const std::string prefixes[8] = { "p", "n", "u", "m", "1", "k", "M", "G" };
 
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < 8; i++)
+			{
 				if (ImGui::RadioButton(prefixes[i].c_str(), prefix == i))
 					prefix = i;
 
-				if (i != 3) ImGui::SameLine();
+				if (i != 3 && i != 7) ImGui::SameLine();
 			}
 		}
 
@@ -1035,7 +1040,7 @@ void App::Options() {
 
 	if (ImGuiInFocus) return;
 
-	//sf::Mouse Hold
+	// Left Click Logic
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) { //////////// Urgent need of enums , State Machine
 		if (releaseBool)
 		{
@@ -1185,27 +1190,35 @@ void App::Options() {
 		/*Click*/
 		else {
 			if (/*//asdf!PlayMode &&*/CircuitGUI::Click(CircuitGUI::gap)) {
-				stimuliDisplay = 1; /*cout << "8";*/
 
 				// Open/Close the Switch
 				using namespace CircuitGUI;
+
+				bool changed = false;
 				for (int v = 0; v < virSerial.size(); v++) {
 					if (comp[virSerial[v]].bounds.contains(cursorInSim())) {
 
 						// Changing Serial
 						if (comp[virSerial[v]].getSerial() == Entity::SwC)
+						{
 							comp[virSerial[v]].setSerial(Entity::SwO);
-						else
-							if (comp[virSerial[v]].getSerial() == Entity::SwO)
-								comp[virSerial[v]].setSerial(Entity::SwC);
+							changed = true;
+						}
+						else if (comp[virSerial[v]].getSerial() == Entity::SwO)
+						{
+							comp[virSerial[v]].setSerial(Entity::SwC);
+							changed = true;
+						}
 
 						virSerial.erase(virSerial.begin() + v);
 						virSprite.erase(virSprite.begin() + v);
 
 						break;
 					}
-
 				}
+
+				if (changed) stimuliEndNodes = true;
+				stimuliDisplay = 1; /*LOG("\nstimuliDisplay: Open/Close the Switch");*/
 
 			}
 
@@ -1217,7 +1230,7 @@ void App::Options() {
 	}
 
 
-	// Continoue while hold
+	// Drag while hold
 	{
 		using namespace CircuitGUI;
 
@@ -1239,29 +1252,32 @@ void App::Options() {
 
 				offsetPos = trim(offsetPos);
 
-				bool moveAll = true;
-				sf::Vector2f temp;
-				for (int v : virSerial) {
-					temp.x = offsetPos.x + comp[v].x;
-					temp.y = offsetPos.y + comp[v].y;
-
-					if (occupiedAt(comp[v], temp, true)) {
-						moveAll = 0;
-						break;
-					}
-				}
-				if (moveAll) {
+				if (offsetPos != zero)
+				{
+					bool moveAll = true;
+					sf::Vector2f temp;
 					for (int v : virSerial) {
-						//qtRemove(v);
+						temp.x = offsetPos.x + comp[v].x;
+						temp.y = offsetPos.y + comp[v].y;
 
-						comp[v].x += (int)offsetPos.x; // += (were "=" before)
-						comp[v].y += (int)offsetPos.y; // += (were "=" before)
-						comp[v].stimuli();
-
-						//qtAdd(v, qt);
+						if (occupiedAt(comp[v], temp, true)) {
+							moveAll = 0;
+							break;
+						}
 					}
+					if (moveAll) {
+						for (int v : virSerial) {
+							//qtRemove(v);
 
-					stimuliEndNodes = 1;
+							comp[v].x += (int)offsetPos.x; // += (were "=" before)
+							comp[v].y += (int)offsetPos.y; // += (were "=" before)
+							comp[v].stimuli();
+
+							//qtAdd(v, qt);
+						}
+
+						stimuliEndNodes = 1;
+					}
 				}
 
 				stimuliDisplay = 1;
@@ -1356,25 +1372,25 @@ void App::Options() {
 		using CircuitGUI::wires;
 
 		if (wires.empty() == false)
-			if (wires.back().isStopped() == false) {
-				wires.back().makeWire();
-				// stimuliDisplay = 1;
-			}
+			if (wires.back().isStopped() == false)
+				wires.back().makeWire(); // stimuliDisplay = 1;
 	}
 
 }
 
 void App::Threads()
 {
+	static Timer timer;
+
+	if (!timer.repeatEvery(2000)) return;
+
 	for (int i = 0; i < futures.size(); i++) {
 
 		std::future_status status = futures[i].wait_for(std::chrono::milliseconds(10));
-		//LOG("\nThread(" << i << "): ");
 
 		if (status == std::future_status::ready) //{
 			// The future is ready (thread completed or value available)
-		//	LOG("ready");
-
+			//	LOG("ready");
 			futures.erase(futures.begin() + i--);
 		//}
 		//else if (status == std::future_status::timeout) {
@@ -1422,29 +1438,29 @@ void App::Update()
 
 	// endNodes
 	{
-		if (stimuliEndNodes)
+		if (stimuliEndNodes || CircuitGUI::makingWire())
 		{
 			CircuitGUI::updateAllSqr();
 
 			CircuitGUI::qtUpdate();
 
 			CircuitGUI::updateAllEnds();
-			
-			CircuitGUI::updateEndCircles();
 
 			CircuitGUI::updateVisibleVectors();
 
-			//{
-			//	circuit.clearAll();
-			//	
-			//	for (int c = 0; c < allEnds.size(); c++)
-			//		circuit.newItem(c);
-			//	
-			//	for (auto& component : comp)
-			//		circuit.link(component.node1, component.node2);
-			//	
-			//	circuit.printGraph();
-			//}
+			CircuitGUI::updateAllEndsbyWires();
+
+			{
+				circuit.clearAll();
+
+				for (int i = 0; i < allEnds.size(); i++)
+					circuit.newItem_noSetGUI(i);
+
+				for (auto& component : comp)
+					circuit.link_noSetGUI(component.node1, component.node2);
+
+				circuit.setGraph();
+			}
 		}
 	}
 
@@ -1466,18 +1482,17 @@ void App::Render()
 
 		drawGrid();
 
-		//drawAllSqr();
-
 		qtDraw(qt);
+
+		drawAllSqr();
+
+		drawBoarders();
 
 		drawComp();
 
-		drawWires();
-
 		drawNodes();
 
-		drawBoarders();
-		drawAllSqr();
+		drawWires();
 
 		drawVirSprites();
 
@@ -1498,12 +1513,11 @@ void App::Render()
 void App::EndFrame()
 {
 	CircuitGUI::app.display();
-
-	CircuitGUI::app.setTitle("CircuitSim   " + std::to_string((float)(((float)clock() - (float)FrameTime_for_FPS) / (float)CLOCKS_PER_SEC) * 1000.0F) + " | " + std::to_string((float)((float)CLOCKS_PER_SEC / ((float)clock() - (float)FrameTime_for_FPS))));
-
-	FrameTime_for_FPS = clock();
-
 	stimuliDisplay = 0; stimuliEndNodes = 0; CircuitGUI::Occupied = 0;
 
+	static Timer FPS;
+	double duration = FPS.duration();
+	CircuitGUI::app.setTitle("CircuitSim   " + std::to_string(duration) + " | " + std::to_string(1000 / duration));
+	FPS.reset();
 }
 

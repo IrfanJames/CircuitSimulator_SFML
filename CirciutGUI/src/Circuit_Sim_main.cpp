@@ -15,6 +15,7 @@ taskkill /F /IM CirciutGUI.exe
 
 #ifdef _DEBUG
 // Debug  Mode
+
 int main(int argc, char** argv) {
 
 	// Dropped Files
@@ -29,8 +30,6 @@ int main(int argc, char** argv) {
 	CircuitSim->Run();
 
 	delete CircuitSim;
-
-	//std::cin.get();
 }
 
 #endif
@@ -65,7 +64,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CircuitSim->Run();
 
 	delete CircuitSim;
-
-	//return 0;
 }
 #endif

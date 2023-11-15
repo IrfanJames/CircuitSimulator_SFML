@@ -63,10 +63,11 @@ private:
 	
 	int serialToolMouse = 0;
 	//int serialCompMouse = 0;
-	
-	time_t FrameTime_for_FPS = 0;
+
 	//bool PlayMode = 0; //asdf
 	//bool PlayRot = 0;  //asdf
+	
+	//time_t FrameTime_for_FPS = 0;
 
 	// ImGui
 	sf::Clock deltaClock;

@@ -29,6 +29,8 @@ LRESULT CALLBACK winProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		break;
 	}
+default:
+            return DefWindowProcW(hWnd, message, wParam, lParam);
 	}
 
 	return DefWindowProcW(hWnd, message, wParam, lParam);

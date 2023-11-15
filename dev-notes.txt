@@ -1,5 +1,6 @@
 
 New:
+	* Now whole Block can be Rotated
 	* Move selected components by Arrow Keys
 	* Rotated Selection of components by 'Tab'
 	* App now handles Async Threads (SaveAsImage is now on async Mode)

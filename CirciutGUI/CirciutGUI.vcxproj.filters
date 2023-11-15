@@ -51,6 +51,9 @@
     <ClInclude Include="src\Circuit_App.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Circuit_Timer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Circuit_Wire.cpp">

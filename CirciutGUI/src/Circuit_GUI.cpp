@@ -1,4 +1,12 @@
+
+/*
+	* Colapse all Scopes - it'll be easier
+	* Ctrl + M + A in Visual Studio
+*/
+
 #include "Circuit_GUI.hpp"
+#include "Circuit_Global.hpp"
+#include "Resource_Manager.hpp"
 #include "LOG.hpp"
 
 //#include <windows.h>
@@ -7,7 +15,7 @@
 
 namespace CircuitGUI {
 
-	/*Constants*/
+	// Constants
 	const int gap = 15;
 	const sf::Vector2f zero(0, 0);
 	const sf::Color normalCompColor(230, 230, 230);
@@ -16,11 +24,11 @@ namespace CircuitGUI {
 	bool darkLightMode = false;
 	sf::Color tempDimColor(60, 60, 60/*150, 150, 150*/);
 
-	/*Textures*/
-	//void loadTextures()
+	// Textures
+	std::vector<Resource> Resource_Images;
 	Resource Resource_Logo;
 	Resource Resource_Font;
-	std::vector<Resource> Resource_Images;
+	//void loadTextures()
 
 	sf::Event evnt;
 	sf::RenderWindow app;
@@ -94,28 +102,38 @@ namespace CircuitGUI {
 	}
 
 
-	/*Grid*/
+	// Grid
 	int virtualBoarder = 80;
 	std::vector<sf::RectangleShape> vLines;
 	std::vector<sf::RectangleShape> hLines;
 	sf::Color gridColor(100, 105, 110, 20);
 	sf::Color backColor(23, 24, 25);
-	void colorGrid() {
-		if (darkLightMode)CircuitGUI::gridColor = { 212, 232, 247, 50 };
-		else CircuitGUI::gridColor = { 100, 105, 110, 20 }; //R,G,B,a
+	void colorGrid()
+	{
+		if (darkLightMode)
+			gridColor = { 212, 232, 247, 50 };
+		else
+			gridColor = { 100, 105, 110, 20 }; // R,G,B,a
 	}
-	void colorBackground() {
-		if (darkLightMode) CircuitGUI::backColor = { 36, 133, 202 };
-		else CircuitGUI::backColor = { 23, 24, 25 }; //R,G,B
+	void colorBackground()
+	{
+		if (darkLightMode)
+			backColor = { 36, 133, 202 };
+		else
+			backColor = { 23, 24, 25 }; // R,G,B
 	}
-	void drawGrid() {
-		for (int c = 0; c < vLines.size(); c++) { app.draw(vLines[c]); }
-		for (int c = 0; c < hLines.size(); c++) { app.draw(hLines[c]); }
+	void drawGrid()
+	{
+		for (auto& rectangle : vLines)
+			app.draw(rectangle);
+
+		for (auto& rectangle : hLines)
+			app.draw(rectangle);
 	}
 	//void initializeGrid()
 
 
-	/*Drag*/
+	// Drag
 	bool dragBool = 0;
 	sf::Vector2f viewPos(0,0);
 	sf::Vector2f ver(0,0);
@@ -174,20 +192,16 @@ namespace CircuitGUI {
 	}
 
 
-	/*Vectors*/
-	std::vector<Entity> comp; // All Components
-	std::vector<int> virSerial; // Selected Components' Indices - sorted
-	std::vector<sf::Sprite> virSprite; // Copies of Selected Components' (Dark Shaded) Sprites
-	std::vector<int> virSerialShift; // For Selecting extra components, while holding 'SHIFT'
-	std::vector<Wire> wires; // All Wires
-	std::vector<sf::Vector2f> allEnds; // Position of All End-Nodes
-	std::vector<sf::CircleShape> allEndCircles; // All Nodes' Circle Shapes - Only for Rendering
-	std::vector<int> visibleComps; // All Visible components - by Indices
-	std::vector<int> visibleEndNodes; // All Visible End-Nodes - by Indices
-	std::vector<int> visibleBoarders; // All Visible Selected components - by Indices
-
-	//std::vector<std::vector<Entity>::iterator> newComps;
-	//std::vector<Item> newItems;
+	// Vectors
+	std::vector<Entity> comp;
+	std::vector<int> virSerial;
+	std::vector<sf::Sprite> virSprite;
+	std::vector<int> virSerialShift;
+	std::vector<Wire> wires;
+	std::vector<sf::Vector2f> allEnds;
+	std::vector<int> visibleComps;
+	std::vector<int> visibleEndNodes;
+	std::vector<int> visibleBoarders;
 
 	void drawComp() {
 
@@ -204,8 +218,12 @@ namespace CircuitGUI {
 	}
 	void drawNodes() {
 
-		for (int i : visibleEndNodes)
-			app.draw(allEndCircles[i]);
+		;
+
+		//for (int i : visibleEndNodes) {
+		//	nodePic.setPosition(allEnds[i]);
+		//	app.draw(nodePic);
+		//}
 	}
 	void drawBoarders() {
 
@@ -547,32 +565,20 @@ namespace CircuitGUI {
 		static std::vector<bool> end1;
 		static std::vector<bool> end2;
 
-		end1.resize(comp.size(), false);
-		end2.resize(comp.size(), false);
-
-
-		for (int i = 0; i < comp.size(); i++) {
-			end1[i] = false;
-			end2[i] = false;
-		}
-
-		//for (int i = 0; i < comp.size(); i++)
-		//	end1[i] = false;
-		//
-		//for (int i = 0; i < comp.size(); i++)
-		//	end2[i] = false;
+		end1.assign(comp.size(), false); // assign() changes the size (_Count) of the vector
+		end2.assign(comp.size(), false); // and assigns the value (_Val) in one operation
 
 		// Nodes
-		static const int rectSize = 6;
-		static sf::Vector2f tempVec2;
-		static sf::FloatRect searchArea;
+		/*static*/ const int rectSize = 10;
+		/*static*/ sf::Vector2f tempVec2;
+		/*static*/ sf::FloatRect searchArea;
 		static std::vector<int> intersects;
 
 		// Front End
 
 		for (int v = 0; v < 2; v++) {
 			auto vec = &end1;
-
+			
 			if (v == 0) vec = &end1;
 			if (v == 1) vec = &end2;
 
@@ -581,6 +587,10 @@ namespace CircuitGUI {
 			{
 				//int Index = (*vec)[i];
 				if ((*vec)[i] == true) continue;
+
+				// TODO: this
+				//if (comp[i].getSerial() == Entity::SwO) continue;
+
 				int x = 0, y = 0;
 
 				// x, y
@@ -648,6 +658,139 @@ namespace CircuitGUI {
 		}
 
 	}
+	void updateAllEndsbyWires()
+	{
+		LOG("\n\nupdateAllEndsbyWires:");
+
+		enum Rotation {
+			None = 0,
+			Vertical,
+			Horizontal
+		};
+		int c = 0;
+		for (auto& wire : wires) {
+
+			//int index = -1; // Index in endNodes vector  |  -1 means invalid node index
+			std::vector<int> compsOnWire; // Indices of vector: comp - sorted and unique
+			std::vector<int> connectedEndNode; // Indices of vector: allEnds - sorted and unique
+
+			if (wire.edge_points.size() < 2) {
+				LOG("[X] Error: " << wire.edge_points.size() << "<2 points");
+				continue;
+			}
+
+			for (unsigned long i = 0; i + 1 < wire.edge_points.size(); )
+			{
+				sf::Vector2f edge1 = wire.edge_points[i];
+				sf::Vector2f edge2 = wire.edge_points[++i];
+
+				Rotation rotation = Vertical;
+				sf::FloatRect searchArea;
+				std::vector<int> vec;
+
+				if (edge1.x == edge2.x)
+					rotation = Vertical;
+				else if (edge1.y == edge2.y)
+					rotation = Horizontal;
+
+				// SearchArea
+				{
+					int margin = 6;
+
+					if (rotation == Horizontal)
+					{
+						searchArea.top = edge1.y - margin;
+						searchArea.left = (edge1.x < edge2.x) ? edge1.x - margin : edge2.x - margin;
+
+						searchArea.height = 2 * margin;
+						searchArea.width = std::abs(edge1.x - edge2.x) + 2 * margin;
+					}
+					else if (rotation == Vertical)
+					{
+						searchArea.top = (edge1.y < edge2.y) ? edge1.y - margin : edge2.y - margin;
+						searchArea.left = edge1.x - margin;
+
+						searchArea.width = 2 * margin;
+						searchArea.height = std::abs(edge1.y - edge2.y) + 2 * margin;
+					}
+				}
+
+				qtExtract(searchArea, vec);
+
+				for (int i : vec)
+				{
+					if (rotation == Horizontal)
+					{
+						if (edge1.y == comp[i].y)
+						{
+							addToVector(i, compsOnWire);
+							addToVector(comp[i].node1, connectedEndNode);
+							comp[i].node1 = connectedEndNode.front();
+						}
+						else if (edge1.y == comp[i].getEndPos().y)
+						{
+							addToVector(i, compsOnWire);
+							addToVector(comp[i].node2, connectedEndNode);
+							comp[i].node2 = connectedEndNode.front();
+						}
+
+						/*if ((edge1.y == comp[i].y) ||
+							(edge1.y == comp[i].getEndPos().y)) {
+							addToVector(i, compsOnWire);
+							addToVector(comp[i].node1, connectedEndNode);
+
+							if (connectedEndNode.empty() == false)
+								comp[i].node1 = connectedEndNode.front();
+						}*/
+					}
+					else if (rotation == Vertical)
+					{
+						if (edge1.x == comp[i].x)
+						{
+							addToVector(i, compsOnWire);
+							addToVector(comp[i].node1, connectedEndNode);
+							comp[i].node1 = connectedEndNode.front();
+						}
+						else if (edge1.x == comp[i].getEndPos().x)
+						{
+							addToVector(i, compsOnWire);
+							addToVector(comp[i].node2, connectedEndNode);
+							comp[i].node2 = connectedEndNode.front();
+						}
+
+						/*if ((edge1.x == comp[i].x) ||
+							(edge1.x == comp[i].getEndPos().x)) {
+							addToVector(i, compsOnWire);
+							addToVector(comp[i].node2, connectedEndNode);
+
+							if (connectedEndNode.empty() == false)
+								comp[i].node2 = connectedEndNode.front();
+						}*/
+					}
+				}
+
+			}
+
+			
+			{
+				//erase - remove idiom
+				//auto iter = std::remove_if(allEnds.begin(), allEnds.end(),
+				//	[&](const auto& elem) {
+				//		return std::binary_search(connectedEndNode.begin() + 1, connectedEndNode.end(), &elem - &allEnds[0]);
+				//	}
+				//);
+				//allEnds.erase(iter, allEnds.end());
+			}
+			
+			//updateVisibleVectors();
+
+
+
+			//LOG("\ncompsOnWire:"); LOG_VEC(compsOnWire);
+			LOG(++c << " connectedEndNode:"); LOG_VEC(connectedEndNode);
+
+		}
+	}
 	bool makingWire() {
 		if (wires.empty())
 			return false;
@@ -658,7 +801,7 @@ namespace CircuitGUI {
 	}
 
 	void EndLessPit() {
-		for (size_t i = 0; i < 9999; i++)
+		for (long long i = 0; i < 9999; i++)
 			LOG(" Falling");
 	}
 
@@ -740,7 +883,9 @@ namespace CircuitGUI {
 
 	}
 	void qtDelete(quadTree& box) {
+
 		if (box.isSubDivided) {
+
 			qtDelete(*box.sub[0]);
 			qtDelete(*box.sub[1]);
 			qtDelete(*box.sub[2]);
@@ -750,19 +895,9 @@ namespace CircuitGUI {
 			delete box.sub[1];
 			delete box.sub[2];
 			delete box.sub[3];
-
-			box.sub[0] = nullptr;
-			box.sub[1] = nullptr;
-			box.sub[2] = nullptr;
-			box.sub[3] = nullptr;
-
 		}
 
-		//box.size = 0;
-		box.arr.clear();
 		box.isSubDivided = false;
-		box.bounds = { 0,0,0,0 };
-		box.rectDraw.setSize(zero);
 	}
 	void qtAdd(int c, quadTree& box) {
 		if (box.bounds.intersects(comp[c].bounds)) {
@@ -803,6 +938,9 @@ namespace CircuitGUI {
 								box.sub[i]->rectDraw.getPosition().y - box.sub[i]->rectDraw.getPosition().x,
 								box.sub[i]->rectDraw.getPosition().x + box.sub[i]->rectDraw.getLocalBounds().height,
 								box.sub[i]->rectDraw.getLocalBounds().width - box.sub[i]->rectDraw.getPosition().x, 100));
+
+							//box.sub[i]->rectDraw.setOutlineColor(sf::Color::Blue);
+							//box.sub[i]->rectDraw.setOutlineThickness(10);
 						}
 
 					}
@@ -889,7 +1027,7 @@ namespace CircuitGUI {
 		}
 
 	}
-	void qtDraw(quadTree& box) {
+	void qtDrawZ(quadTree& box) {
 
 		if (visible_QuadTree == false)
 			return;
@@ -900,7 +1038,7 @@ namespace CircuitGUI {
 			searchArea = { sf::Vector2f(
 				view.getCenter().x - view.getSize().x / 2,
 				view.getCenter().y - view.getSize().y / 2), view.getSize()
-			};
+		};
 
 		if (box.bounds.intersects(searchArea))
 			app.draw(box.rectDraw);
@@ -914,9 +1052,34 @@ namespace CircuitGUI {
 		}
 
 	}
-	void qtExtract(const sf::FloatRect& searchArea, std::vector<int>& output, const quadTree& box) {
+	void qtDraw(quadTree& box) {
+
+		if (visible_QuadTree == false)
+			return;
+
+		static sf::FloatRect searchArea;
 
 		if (&box == &qt)
+			searchArea = { sf::Vector2f(
+				view.getCenter().x - view.getSize().x / 2,
+				view.getCenter().y - view.getSize().y / 2), view.getSize()
+		};
+
+		if (box.bounds.intersects(searchArea))
+		{
+			if (box.isSubDivided) {
+				qtDraw(*box.sub[0]);
+				qtDraw(*box.sub[1]);
+				qtDraw(*box.sub[2]);
+				qtDraw(*box.sub[3]);
+			}
+			else app.draw(box.rectDraw);
+		}
+		else return;
+	}
+	void qtExtract(const sf::FloatRect& searchArea, std::vector<int>& output, const quadTree& box, bool clearVector) {
+
+		if (&box == &qt && clearVector)
 			output.clear();
 
 		if (searchArea.intersects(box.bounds)) {
@@ -929,39 +1092,13 @@ namespace CircuitGUI {
 					searchArea.contains(box.bounds.left + box.bounds.width, box.bounds.top + box.bounds.height))
 				{
 					for (int i : box.arr)
-						//if (std::binary_search(output.begin(), output.end(), i) == false)
-					{
-						auto it = std::lower_bound(output.begin(), output.end(), i);
-						if (it == output.end()) // Not Found
-							output.emplace_back(i);
-						else {
-							//if (output[it - output.begin() + 1] != i)
-							//output.emplace(it, i);
-
-							int insert_pos = it - output.begin();
-							if (insert_pos <= output.size() - !output.empty() && output[insert_pos] != i)
-								output.insert(output.begin() + insert_pos, i);
-						}
-					}
+						addToVector(i, output);
 				}
 				else
 				{
 					for (int i : box.arr)
 						if (searchArea.intersects(comp[i].bounds))
-							//if (std::binary_search(output.begin(), output.end(), i) == false)
-						{
-							auto it = std::lower_bound(output.begin(), output.end(), i);
-							if (it == output.end()) // Not Found
-								output.emplace_back(i);
-							else {
-								//if (output[it - output.begin() + 1] != i)
-								//output.emplace(it, i);
-
-								int insert_pos = it - output.begin();
-								if (insert_pos <= output.size() - !output.empty() && output[insert_pos] != i)
-									output.insert(output.begin() + insert_pos, i);
-							}
-						}
+							addToVector(i, output);
 				}
 			}
 			else {
@@ -973,7 +1110,6 @@ namespace CircuitGUI {
 		}
 
 	}
-
 
 	bool occupiedAt(const Entity& en, const sf::Vector2f& At, bool ignoreAllVir) {
 
@@ -1130,24 +1266,35 @@ namespace CircuitGUI {
 				if (std::binary_search(virSerial.begin(), virSerial.end(), i))
 					visibleBoarders.emplace_back(i);
 		}
-
+		
 		// visibleEndNodes
 		{
 			visibleEndNodes.clear();
 
 			for (int i : visibleComps) {
-
-				if (binary_search(visibleEndNodes.begin(), visibleEndNodes.end(), comp[i].node1) == false)
-					visibleEndNodes.emplace_back(comp[i].node1);
-
-				if (binary_search(visibleEndNodes.begin(), visibleEndNodes.end(), comp[i].node2) == false)
-					visibleEndNodes.emplace_back(comp[i].node2);
+				addToVector(comp[i].node1, visibleEndNodes);
+				addToVector(comp[i].node2, visibleEndNodes);
 			}
-
 		}
 
 	}
+	void addToVector(int integer, std::vector<int>& vec)
+	{
+		//if (std::binary_search(vec.begin(), vec.end(), integer) == false)
+		{
+			auto it = std::lower_bound(vec.begin(), vec.end(), integer);
+			if (it == vec.end()) // Not Found
+				vec.emplace_back(integer);
+			else {
+				//if (vec[it - vec.begin() + 1] != integer)
+				//vec.emplace(it, integer);
 
+				int insert_pos = it - vec.begin();
+				if (insert_pos <= vec.size() - !vec.empty() && vec[insert_pos] != integer)
+					vec.insert(vec.begin() + insert_pos, integer);
+			}
+		}
+	}
 
 	void colorEntityboarder() {
 
@@ -1156,12 +1303,12 @@ namespace CircuitGUI {
 		if (darkLightMode)
 			temp = { 0, 255, 85 };
 		else
-			temp = { 0/*200*/, 204, 102 };
+			temp = { 0/*200*/, 204, 102 }; // 44, 116, 97, 200
 
 		Entity::setboarderDesgin(temp);
 
-		for (int c = 0; c < comp.size(); c++)
-			comp[c].boarder.setOutlineColor(temp);
+		for (auto& entity : comp)
+			entity.boarder.setOutlineColor(temp);
 
 	}
 	sf::CircleShape nodePic(4, 15);
@@ -1198,12 +1345,12 @@ namespace CircuitGUI {
 
 	}
 	void drawAllSqr() {
-		//if (virSerial.size() > 1)
+		if (virSerial.size() > 1)
 			app.draw(allSqr);
 	}
 
 
-	/*ToolBox*/
+	// ToolBox
 	const float c_toolColWidth = 100;
 	sf::Vector2f toolWinRestPos(0, 0);
 	sf::RectangleShape toolCol(sf::Vector2f(c_toolColWidth, CircuitGUI::view.getSize().y));
@@ -1216,24 +1363,6 @@ namespace CircuitGUI {
 		toolWinRestPos = onScreen(0, 0);
 		for (int c = 0; c < (Entity::no_of_Comp - 1); c++)
 			ToolSpr[c].setPosition(onScreen(ToolSprPOS[c].x, ToolSprPOS[c].y));
-	}
-	void updateEndCircles()
-	{
-		if (allEnds.size() < allEndCircles.size())
-			allEndCircles.erase(allEndCircles.begin() + allEnds.size(), allEndCircles.end());
-
-
-		//while (allEndCircles.size() < allEnds.size())
-		//	allEndCircles.emplace_back(nodePic);
-
-		if (allEndCircles.size() < allEnds.size())
-			allEndCircles.resize(allEnds.size(), nodePic);
-
-
-		for (int e = 0; e < allEndCircles.size(); e++)
-			allEndCircles[e].setPosition(allEnds[e]);
-
-		//cout << "\n" << allEnds.size();
 	}
 	void drawToolColumn(bool MInTool, bool MIntool) {
 		if (MInTool) {
@@ -1275,14 +1404,14 @@ namespace CircuitGUI {
 			if (H < c_toolColWidth * 7) H = c_toolColWidth * 7;
 
 			app.create(sf::VideoMode((unsigned int)W, (unsigned int)H), "CircuitSim", sf::Style::Default, sf::ContextSettings(0, 0, 8));
-			app.display();
 			app.clear(backColor);
+			app.display();
 			W = app.getSize().x; H = app.getSize().y;
 			
 			app.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - W / 2, sf::VideoMode::getDesktopMode().height / 2 - H / 2 - 50));
 			app.setKeyRepeatEnabled(false);
 			app.setVerticalSyncEnabled(true);
-
+			
 
 #ifdef _DEBUG
 			std::ifstream window_size("temp_files/win_size.txt");
@@ -1448,7 +1577,6 @@ namespace CircuitGUI {
 			virSprite.reserve(15);
 			virSerialShift.reserve(5);
 			wires.reserve(8);
-			allEndCircles.reserve(17);
 			visibleComps.reserve(20);
 			visibleEndNodes.reserve(20);
 			visibleBoarders.reserve(20);
@@ -1493,6 +1621,7 @@ namespace CircuitGUI {
 				comp.emplace_back(S, trim(X), trim(Y), ((A % 360) / 90) * 90);
 			}
 
+
 			// Wires
 			wires.reserve(3);
 			std::string line;
@@ -1509,6 +1638,7 @@ namespace CircuitGUI {
 
 
 			input.close();
+
 
 			// Centering
 			sf::FloatRect virArea = areaofCollection(true);
@@ -1866,11 +1996,28 @@ namespace CircuitGUI {
 
 		}
 
-		void Rotate() {
+		void Rotate(bool RotateAll) {
 
-			for (int v : virSerial) {
+			sf::FloatRect bounds = areaofCollection(0);
+			sf::Vector2f origin(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+			origin = trim(origin);
+			origin.x = (int)origin.x;
+			origin.y = (int)origin.y;
+
+			for (int v : virSerial)
+			{
 				comp[v].angle += 90;
 				comp[v].angle -= (int)(comp[v].angle / 360) * 360;
+				comp[v].stimuli();
+
+				if (RotateAll)
+				{
+					sf::Vector2f pos(comp[v].x, comp[v].y);
+
+					comp[v].x = origin.x + origin.y - pos.y;
+					comp[v].y = origin.y + pos.x - origin.x;
+				}
+
 				comp[v].stimuli();
 			}
 
@@ -1885,9 +2032,12 @@ namespace CircuitGUI {
 			//erase - remove idiom
 			if (virSerial.empty() == false)
 			{
-				auto iter = std::remove_if(comp.begin(), comp.end(), [&](const auto& elem) {
-					return std::binary_search(virSerial.begin(), virSerial.end(), &elem - &comp[0]);
-					});
+				auto iter = std::remove_if(comp.begin(), comp.end(),
+					[&](const auto& elem) {
+						return std::binary_search(virSerial.begin(), virSerial.end(), &elem - &comp[0]);
+					}
+				);
+
 				comp.erase(iter, comp.end());
 			}
 
