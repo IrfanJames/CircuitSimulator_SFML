@@ -64,7 +64,7 @@ Short-Term Goals
 
 
 Issues
-	* Wires
+	* Wires aren't user friendly
 
 
 Unstable
@@ -86,6 +86,7 @@ Stable
 	* Copy/Paste
 	* Enerything till Themes
 	* QuadTree
+	* Generating Graph from a circuit
 
 
 Still Not Yet

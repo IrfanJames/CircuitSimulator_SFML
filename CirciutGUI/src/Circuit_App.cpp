@@ -898,14 +898,9 @@ void App::ImGUI() {
 
 	//Docking
 	; {
-		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
-		ImGui::Begin("Docking Space", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground);
-
 		ImGuiID dockspaceID = ImGui::GetID("MyDockspace");
 		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 		//ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
-
-		ImGui::End();
 	}
 
 	if (ImGui::Begin("Window-A##ID"))
@@ -989,6 +984,42 @@ void App::ImGUI() {
 
 	}
 	ImGui::End();
+
+	//if (ImGui::Begin("Console##ID"))
+	//{
+	//	ImGui::Text("Please support this podcast by checking out our sponsors:\
+	//		\n- LMNT: https://drinkLMNT.com/lex to get free sample pack\
+	//		\n-Eight Sleep : https://www.eightsleep.com/lex to get special savings\
+	//		\n-BetterHelp : https ://betterhelp.com/lex to get 10% off\
+	//		\n-SimpliSafe : https ://simplisafe.com/lex to get free security camera plus 20% off\
+	//		\n-Shopify : https ://shopify.com/lex to get $1 per month trial\
+	//		\n- LMNT: https://drinkLMNT.com/lex to get free sample pack\
+	//		\n-Eight Sleep : https://www.eightsleep.com/lex to get special savings\
+	//		\n-BetterHelp : https ://betterhelp.com/lex to get 10% off\
+	//		\n-SimpliSafe : https ://simplisafe.com/lex to get free security camera plus 20% off\
+	//		\n-Shopify : https ://shopify.com/lex to get $1 per month trial\
+	//		\n- LMNT: https://drinkLMNT.com/lex to get free sample pack\
+	//		\n-Eight Sleep : https://www.eightsleep.com/lex to get special savings\
+	//		\n-BetterHelp : https ://betterhelp.com/lex to get 10% off\
+	//		\n-SimpliSafe : https ://simplisafe.com/lex to get free security camera plus 20% off\
+	//		\n-Shopify : https ://shopify.com/lex to get $1 per month trial\
+	//		\n- LMNT: https://drinkLMNT.com/lex to get free sample pack\
+	//		\n-Eight Sleep : https://www.eightsleep.com/lex to get special savings\
+	//		\n-BetterHelp : https ://betterhelp.com/lex to get 10% off\
+	//		\n-SimpliSafe : https ://simplisafe.com/lex to get free security camera plus 20% off\
+	//		\n-Shopify : https ://shopify.com/lex to get $1 per month trial\
+	//		\n- LMNT: https://drinkLMNT.com/lex to get free sample pack\
+	//		\n-Eight Sleep : https://www.eightsleep.com/lex to get special savings\
+	//		\n-BetterHelp : https ://betterhelp.com/lex to get 10% off\
+	//		\n-SimpliSafe : https ://simplisafe.com/lex to get free security camera plus 20% off\
+	//		\n-Shopify : https ://shopify.com/lex to get $1 per month trial\
+	//		\n-NetSuite : http ://netsuite.com/lex to get free product tour");
+	//
+	//	static Timer t;
+	//	if (t.repeatEvery(2000))
+	//		ImGui::SetScrollHereY(1.0f);
+	//}
+	//ImGui::End();
 
 	if (0 && RightClickMenu) {
 		ImGui::SetNextWindowPos(ImGui::GetMousePos());

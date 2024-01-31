@@ -99,41 +99,41 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableClangTidyCodeAnalysis>false</EnableClangTidyCodeAnalysis>
     <TargetName>$(ProjectName)_x86_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableClangTidyCodeAnalysis>false</EnableClangTidyCodeAnalysis>
     <TargetName>$(ProjectName)_x86_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|Win32'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableClangTidyCodeAnalysis>false</EnableClangTidyCodeAnalysis>
     <TargetName>$(ProjectName)_x86_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>$(ProjectName)_x64_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>$(ProjectName)_x64_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
     <TargetName>$(ProjectName)_x64_$(Configuration)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -150,7 +150,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)dependencies\sfml\$(PlatformShortName)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;openal32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
     </Link>
@@ -175,7 +175,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)dependencies\sfml\$(PlatformShortName)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;user32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -199,7 +199,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x86\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)dependencies\sfml\$(PlatformShortName)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;user32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -216,7 +216,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <Profile>true</Profile>
-      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)dependencies\sfml\$(PlatformShortName)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;opengl32.lib;openal32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -236,7 +236,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)dependencies\sfml\$(PlatformShortName)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;user32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -258,7 +258,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(Platform);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(Platform);$(SolutionDir)dependencies\sfml\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)CircuitCore\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)Dependencies\imgui\bin\$(Configuration)-$(PlatformShortName);$(SolutionDir)dependencies\sfml\$(PlatformShortName)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>CircuitCore.lib;imgui.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;user32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

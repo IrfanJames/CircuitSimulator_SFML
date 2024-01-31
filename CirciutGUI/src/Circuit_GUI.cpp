@@ -914,8 +914,8 @@ namespace CircuitGUI {
 					// Sub-divide
 					{
 						box.isSubDivided = true;
-						int qtHalfWidth = (int)(box.bounds.width / 2);
-						int qtHalfHeight = (int)(box.bounds.height / 2);
+						float qtHalfWidth = (int)(box.bounds.width / 2);
+						float qtHalfHeight = (int)(box.bounds.height / 2);
 
 						for (int i = 0; i < 4; i++) {
 							box.sub[i] = new quadTree;

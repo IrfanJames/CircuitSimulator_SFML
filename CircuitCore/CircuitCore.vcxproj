@@ -99,28 +99,28 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|Win32'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
-    <OutDir>$(ProjectDir)bin\$(Configuration)-$(Platform)\</OutDir>
-    <IntDir>$(ProjectDir)bin-int\$(Configuration)-$(Platform)\</IntDir>
+    <OutDir>$(ProjectDir)bin\$(Configuration)-$(PlatformShortName)\</OutDir>
+    <IntDir>$(ProjectDir)bin-Int\$(Configuration)-$(PlatformShortName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
