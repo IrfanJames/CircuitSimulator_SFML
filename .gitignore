@@ -1,2 +1,36 @@
+#Ignore files built by Visual Studio
+*.obj
+#*.exe
+*.pdb
+**.idb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.*db
+[Bb]in[-_][Ii]nt
+#[Dd]ebug*/
+*.lib
+*.sbr
+obj/
+
 # Directories
-.vs
+.vs/
+**/bin-[Ii]nt/*
+#[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+
+
+#Nuget packages folder
+packages/

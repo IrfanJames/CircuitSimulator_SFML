@@ -15,13 +15,12 @@ class Graph {
 
 	};
 
-
 public:
 	Graph();
 	~Graph();
 	
-	void newItem(int serial);
-	void newItem_noSetGUI(int serial);
+	void newItem(int data);
+	void newItem_noSetGUI(int data);
 	void link(int corner1, int corner2);
 	void link_noSetGUI(int corner1, int corner2);
 	void clearAll();

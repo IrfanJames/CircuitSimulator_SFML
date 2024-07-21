@@ -660,7 +660,7 @@ namespace CircuitGUI {
 	}
 	void updateAllEndsbyWires()
 	{
-		LOG("\n\nupdateAllEndsbyWires:");
+		////////LOG("\n\nupdateAllEndsbyWires:");
 
 		enum Rotation {
 			None = 0,
@@ -787,7 +787,7 @@ namespace CircuitGUI {
 
 
 			//LOG("\ncompsOnWire:"); LOG_VEC(compsOnWire);
-			LOG(++c << " connectedEndNode:"); LOG_VEC(connectedEndNode);
+			////////LOG(++c << " connectedEndNode:"); LOG_VEC(connectedEndNode);
 
 		}
 	}
@@ -1432,9 +1432,10 @@ namespace CircuitGUI {
 		
 		//setFont
 		{
-			//ResourceID_Fonts.SetAll(IDR_FONT1, "FONT");
-			//Entity::setFont(ResourceID_Fonts.GetResource().ptr, ResourceID_Fonts.GetResource().size_bytes);
-			Entity::setFont("assets/Fonts/CalibriL_1.ttf");
+			
+			Resource_Font.SetAll(IDR_FONT2, "TTF");
+			Entity::setFont(Resource_Font.GetResource().ptr, Resource_Font.GetResource().size_bytes);
+			//Entity::setFont("assets/Fonts/CalibriL_1.ttf");
 
 			//ResourceID_Fonts.SetAll(IDR_FONT1, "FONT");
 			//Item::setFont(ResourceID_Fonts.GetResource().ptr, ResourceID_Fonts.GetResource().size_bytes);

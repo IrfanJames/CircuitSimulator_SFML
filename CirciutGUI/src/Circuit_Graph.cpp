@@ -18,14 +18,14 @@ Graph::~Graph() { ; }
 
 
 
-void Graph::newItem(int serial) {
-	Graph::newItem_noSetGUI(serial);
+void Graph::newItem(int data) {
+	Graph::newItem_noSetGUI(data);
 	setGraph();
 }
 
-void Graph::newItem_noSetGUI(int serial)
+void Graph::newItem_noSetGUI(int data)
 {
-	Vector.emplace_back(serial);
+	Vector.emplace_back(data);
 }
 
 void Graph::link(int corner1, int corner2) {
@@ -35,7 +35,9 @@ void Graph::link(int corner1, int corner2) {
 
 void Graph::link_noSetGUI(int corner1, int corner2)
 {
-	if (corner1 <= Vector.size() - !Vector.empty() && corner2 <= Vector.size() - !Vector.empty())
+	//if (corner1 <= Vector.size() - !Vector.empty() && corner2 <= Vector.size() - !Vector.empty())
+	if (0 <= corner1 && corner1 <= Vector.size() &&
+		0 <= corner2 && corner2 <= Vector.size())
 		Vector.at(corner1).neighbors.emplace_back(corner2);
 }
 
